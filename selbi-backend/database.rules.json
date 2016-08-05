@@ -1,6 +1,24 @@
 {
-  "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
-  }
+	"rules": {
+	    "users" : {
+	    	"$uid" : {
+	    		".write": "$uid === auth.uid",
+                ".read": "auth.uid != null",
+
+	    		 ".validate": "newData.hasChildren(['firstName', 'lastName'])",
+
+	    		"firstName": {
+	    			".validate" : "newData.isString()"
+	    		},
+	    		"lastName": {
+	    			".validate" : "newData.isString()"
+	    		},
+	    		// TODO: Validate email is valid as well.
+	    		"email": {
+	    			".validate" : "newData.isString()"
+	    		}
+
+	    	}
+	    }
+  	}
 }
