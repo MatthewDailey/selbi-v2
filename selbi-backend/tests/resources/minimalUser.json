@@ -1,0 +1,8 @@
+{
+  "name" : {
+    "first" : "test",
+    "last" : "user"
+  },
+  "email" : "minimal@selbi.io",
+  "userAgreementAccepted" : false
+}

@@ -5,7 +5,7 @@
 	    		".write": "$uid === auth.uid",
                 ".read": "auth.uid != null",
 
-	    		 ".validate": "newData.hasChildren(['name', 'email'])",
+	    		 ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
 
 	    		"name": {
                     "first": {

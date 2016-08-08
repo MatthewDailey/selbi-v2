@@ -1,12 +1,13 @@
 import firebase from 'firebase';
+import { expect } from 'chai';
 
 const testUserData = require('./resources/testUser.json');
+const minimalUserData = require('./resources/minimalUser.json');
 
-/*
- * This suite tests the /users endpoint for loading user data.
- */
-
+const extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
 const testUserUid = '3imZ3SbitbMUXL6Pt2FmVYCUtDo2';
+const minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
+
 const testUserConfig = {
   serviceAccount: './selbi-staging-schema-test-service-account.json',
   databaseURL: 'https://selbi-staging.firebaseio.com',
@@ -16,11 +17,22 @@ const testUserConfig = {
 };
 const testUserFirebaseApp = firebase.initializeApp(testUserConfig, 'testUser');
 
+const minimalUserConfig = {
+  serviceAccount: './selbi-staging-schema-test-service-account.json',
+  databaseURL: 'https://selbi-staging.firebaseio.com',
+  databaseAuthVariableOverride: {
+    uid: minimalUserUid,
+  },
+};
+const minimalUserFirebaseApp = firebase.initializeApp(minimalUserConfig, 'minimalUser');
+
 const serviceAccountConfig = {
   serviceAccount: './selbi-staging-schema-test-service-account.json',
   databaseURL: 'https://selbi-staging.firebaseio.com',
 };
 const serviceAccountFirebaseApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
+
+
 
 describe('/users', () => {
   function getCreateFakeUsersFunction(done) {
@@ -34,7 +46,7 @@ describe('/users', () => {
         .set(testUserData);
 
       const createFakeUserPromise = usersRef
-        .child('secondFakeUser')
+        .child(extraUserUid)
         .set(testUserData);
 
       Promise.all([createFakeUserPromise, createTestUserPromise])
@@ -62,8 +74,59 @@ describe('/users', () => {
       .catch(done);
   });
 
-  it('is a list', () => {
-    throw new Error('TODO');
+  it('is a list', (done) => {
+    serviceAccountFirebaseApp
+      .database()
+      .ref('/users')
+      .once('value')
+      .then((snapshot) => {
+        console.log(snapshot.val())
+        expect(Object.keys(snapshot.val()).length).to.equal(2);
+        done();
+      })
+      .catch(done);
+  });
+
+  describe('minimal user', () => {
+    const usersRef = minimalUserFirebaseApp
+      .database()
+      .ref('/users');
+
+    it('accepts minimal user', (done) => {
+      usersRef
+        .child(minimalUserUid)
+        .set(minimalUserData)
+        .then(done)
+        .catch(done);
+    });
+
+    function testMinimalDataWithoutField(fieldToDelete, done) {
+      const minimalDataMinusName = Object.assign({}, minimalUserData);
+      delete minimalDataMinusName[fieldToDelete];
+
+      usersRef
+        .child(minimalUserUid)
+        .set(minimalDataMinusName)
+        .then(() => {
+          done(new Error('Should not be able to store user data without name.'));
+        })
+        .catch((error) => {
+          expect(error.code).to.equal('PERMISSION_DENIED');
+          done();
+        });
+    }
+
+    it('requires name', (done) => {
+      testMinimalDataWithoutField('name', done);
+    });
+
+    it('requires email', (done) => {
+      testMinimalDataWithoutField('email', done);
+    });
+
+    it('requires userAgreementAccepted', (done) => {
+      testMinimalDataWithoutField('userAgreementAccepted', done);
+    });
   });
 
   describe('as schemaTestUser', () => {
