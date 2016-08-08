@@ -336,7 +336,7 @@ describe('/users', () => {
         });
 
       const minimalDataEmailString = Object.assign({}, minimalUserData);
-      minimalDataEmailString.profileImageUrl = "cool url string";
+      minimalDataEmailString.profileImageUrl = 'cool url string';
       const stringPromise = usersRef
         .child(minimalUserUid)
         .set(minimalDataEmailString)
