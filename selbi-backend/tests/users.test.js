@@ -1,5 +1,7 @@
 import firebase from 'firebase';
 
+const testUserData = require('./resources/testUser.json');
+
 /*
  * This suite tests the /users endpoint for loading user data.
  */
@@ -14,21 +16,50 @@ const testUserConfig = {
 };
 const testUserFirebaseApp = firebase.initializeApp(testUserConfig, 'testUser');
 
-const serviceAcccountConfig = {
+const serviceAccountConfig = {
   serviceAccount: './selbi-staging-schema-test-service-account.json',
   databaseURL: 'https://selbi-staging.firebaseio.com',
 };
-const serviceAccountFirebaseApp = firebase.initializeApp(serviceAcccountConfig, 'serviceUser');
-
+const serviceAccountFirebaseApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
 
 describe('/users', () => {
-  before((done) => {
-    console.log('Deleting all /users data prior to test.')
+  function getCreateFakeUsersFunction(done) {
+    return () => {
+      const usersRef = serviceAccountFirebaseApp
+        .database()
+        .ref('/users');
+
+      const createTestUserPromise = usersRef
+        .child(testUserUid)
+        .set(testUserData);
+
+      const createFakeUserPromise = usersRef
+        .child('secondFakeUser')
+        .set(testUserData);
+
+      Promise.all([createFakeUserPromise, createTestUserPromise])
+        .then(() => {
+          done();
+        })
+        .catch(done);
+    };
+  }
+
+  /*
+   * Delete all existing /users data and create 2 new users. Timeout is increased for this query.
+   *
+   * Note that we use function() syntax instead of lexical arrow syntax because Mocha does not
+   * work with lexical arrows.
+   */
+  before(function (done) {
+    this.timeout(6000);
+
     serviceAccountFirebaseApp
       .database()
       .ref('/users')
       .remove()
-      .then(done);
+      .then(getCreateFakeUsersFunction(done))
+      .catch(done);
   });
 
   it('is a list', () => {
@@ -78,7 +109,7 @@ describe('/users', () => {
       throw new Error('TODO');
     });
 
-    it('profileImage', () => {
+    it('profileImageUrl', () => {
       throw new Error('TODO');
     });
 
@@ -121,7 +152,7 @@ describe('/users', () => {
         });
       });
 
-      it('shipTo', () => {
+      describe('shipTo', () => {
         it('address1', () => {
           throw new Error('TODO');
         });

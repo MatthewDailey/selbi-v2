@@ -1,0 +1,65 @@
+{
+  "name" : {
+    "first" : "test",
+    "last" : "user"
+  },
+  "locations" : {
+    "sellingFrom": {
+      "address1": "655 Natoma Street",
+      "address2": "Apt C",
+      "city": "San Francisco",
+      "state": "California",
+      "zip": "94013",
+      "country": "United States"
+    },
+    "shippingTo": {
+      "address1": "655 Natoma Street",
+      "address2": "Apt C",
+      "city": "San Francisco",
+      "state": "California",
+      "zip": "94013",
+      "country": "United States"
+    }
+  },
+  "listings" : {
+    "all" : [
+      "fakeListingId1",
+      "fakeListingId2",
+      "fakeListingId3"
+    ],
+    "active" : [
+      "fakeListingId1"
+    ],
+    "paused" : [
+      "fakeListingId2"
+    ],
+    "sold" : [
+      "fakeListingId3"
+    ]
+  },
+  "payments" : [
+    {
+      "stripeCustomerId" : "fakeStripeCustomerId",
+      "stripeCardId" : "fakeStipeCardId",
+      "cardType" : "fakeCardType",
+      "lastFour" : "1234",
+      "expirationData" : "01/19"
+    }
+  ],
+  "merchant" : {
+    "accountNumberLast4" : "4444",
+    "routingNumber" : "325181028",
+    "publicKey" : "fakePublicKey",
+    "privateKey" : "fakePrivateKey",
+    "stripeBankId" : "fakeStripeBankId",
+    "stripeManagedAccountId" : "fakeManagedAccountId",
+    "stripeVerified" : true
+  },
+  "email" : "matt@selbi.io",
+  "profileImageUrl" : "http://fakeprofileimage.com/matt",
+  "phoneNumber" : "1234567890",
+  "userAgreementAccepted" : true,
+  "friends" : [
+    "anotherFakeUsersId"
+  ]
+}

@@ -5,19 +5,21 @@
 	    		".write": "$uid === auth.uid",
                 ".read": "auth.uid != null",
 
-	    		 ".validate": "newData.hasChildren(['firstName', 'lastName'])",
+	    		 ".validate": "newData.hasChildren(['name', 'email'])",
 
-	    		"firstName": {
-	    			".validate" : "newData.isString()"
+	    		"name": {
+                    "first": {
+                      ".validate" : "newData.isString()"
+                    },
+                    "last": {
+                      ".validate" : "newData.isString()"
+                    }
 	    		},
-	    		"lastName": {
-	    			".validate" : "newData.isString()"
-	    		},
+
 	    		// TODO: Validate email is valid as well.
 	    		"email": {
 	    			".validate" : "newData.isString()"
 	    		}
-
 	    	}
 	    }
   	}
