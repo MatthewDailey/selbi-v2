@@ -1,6 +1,18 @@
 import firebase from 'firebase';
 import { expect } from 'chai';
 
+/*
+ * In this test we use 4 different users to probe the schema requirements and demonstrate how
+ * to craft certain queries.
+ *
+ * The users are:
+ * - testUser: generic user.
+ * - minimalUser: user with the minimal acceptable data.
+ * - extraUser: second generic user that test user can try to interact with.
+ * - serviceUser: user simulating a backend server interacting with firebase.
+ *
+ */
+
 const testUserData = require('./resources/testUser.json');
 const minimalUserData = require('./resources/minimalUser.json');
 
@@ -178,12 +190,45 @@ describe('/users', () => {
   });
 
   describe('as serviceUser', () => {
-    it('Can read user data.', () => {
-      throw new Error('TODO');
+    const usersRef = serviceAccountFirebaseApp.database().ref('/users');
+
+    it('Can read user data.', (done) => {
+      const readTestUserPromise = usersRef
+        .child(testUserUid)
+        .once('value')
+        .then((snapshot) => {
+          expect(snapshot.val().email).to.equal('test@selbi.io');
+        });
+
+      const readExtraUserPromise = usersRef
+        .child(extraUserUid)
+        .once('value')
+        .then((snapshot) => {
+          expect(snapshot.val().email).to.equal('test@selbi.io');
+        });
+
+      Promise.all([readExtraUserPromise, readTestUserPromise])
+        .then(() => {
+          done();
+        })
+        .catch(done);
     });
 
-    it('Can write user data.', () => {
-      throw new Error('TODO');
+    it('Can write user data.', (done) => {
+      const writeTestUserPromise = usersRef
+        .child(testUserUid)
+        .child('email')
+        .set('test@selbi.io');
+      const writeExtraUserPromise = usersRef
+        .child(extraUserUid)
+        .child('email')
+        .set('test@selbi.io');
+
+      Promise.all([writeExtraUserPromise, writeTestUserPromise])
+        .then(() => {
+          done();
+        })
+        .catch(done);
     });
   });
 
