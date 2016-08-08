@@ -1,5 +1,5 @@
 {
-  "name": "selbi-backend-schema-tests",
+  "name": "selbi-firebase-schema-tests",
   "version": "1.0.0",
   "description": "Tests that verify the firebase db rules behave as expected for selbi-backend. Run against selbi-staging firebase project.",
   "main": "index.js",
@@ -9,11 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^3.2.1"
+    "firebase": "^3.2.1",
+    "babel-core": "^6.11.4",
+    "babel-preset-es2015": "^6.9.0"
   },
   "devDependencies": {
-    "babel-core": "^6.11.4",
-    "babel-preset-es2015": "^6.9.0",
     "eslint": "^3.2.2",
     "eslint-config-airbnb": "^10.0.0",
     "eslint-plugin-import": "^1.12.0",
