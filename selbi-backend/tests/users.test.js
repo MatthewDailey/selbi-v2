@@ -22,6 +22,15 @@ const serviceAccountFirebaseApp = firebase.initializeApp(serviceAcccountConfig, 
 
 
 describe('/users', () => {
+  before((done) => {
+    console.log('Deleting all /users data prior to test.')
+    serviceAccountFirebaseApp
+      .database()
+      .ref('/users')
+      .remove()
+      .then(done);
+  });
+
   it('is a list', () => {
     throw new Error('TODO');
   });
@@ -86,12 +95,56 @@ describe('/users', () => {
     });
 
     describe('locations', () => {
-      it('sellingFrom', () => {
-        throw new Error('TODO');
+      describe('sellingFrom', () => {
+        it('address1', () => {
+          throw new Error('TODO');
+        });
+
+        it('address2', () => {
+          throw new Error('TODO');
+        });
+
+        it('city', () => {
+          throw new Error('TODO');
+        });
+
+        it('state', () => {
+          throw new Error('TODO');
+        });
+
+        it('zip', () => {
+          throw new Error('TODO');
+        });
+
+        it('country', () => {
+          throw new Error('TODO');
+        });
       });
 
       it('shipTo', () => {
-        throw new Error('TODO');
+        it('address1', () => {
+          throw new Error('TODO');
+        });
+
+        it('address2', () => {
+          throw new Error('TODO');
+        });
+
+        it('city', () => {
+          throw new Error('TODO');
+        });
+
+        it('state', () => {
+          throw new Error('TODO');
+        });
+
+        it('zip', () => {
+          throw new Error('TODO');
+        });
+
+        it('country', () => {
+          throw new Error('TODO');
+        });
       });
     });
 
