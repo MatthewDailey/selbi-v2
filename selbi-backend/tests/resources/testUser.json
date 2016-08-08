@@ -55,7 +55,7 @@
     "stripeManagedAccountId" : "fakeManagedAccountId",
     "stripeVerified" : true
   },
-  "email" : "matt@selbi.io",
+  "email" : "test@selbi.io",
   "profileImageUrl" : "http://fakeprofileimage.com/matt",
   "phoneNumber" : "1234567890",
   "userAgreementAccepted" : true,

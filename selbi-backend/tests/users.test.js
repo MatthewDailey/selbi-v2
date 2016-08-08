@@ -32,8 +32,6 @@ const serviceAccountConfig = {
 };
 const serviceAccountFirebaseApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
 
-
-
 describe('/users', () => {
   function getCreateFakeUsersFunction(done) {
     return () => {
@@ -80,7 +78,6 @@ describe('/users', () => {
       .ref('/users')
       .once('value')
       .then((snapshot) => {
-        console.log(snapshot.val())
         expect(Object.keys(snapshot.val()).length).to.equal(2);
         done();
       })
@@ -130,20 +127,53 @@ describe('/users', () => {
   });
 
   describe('as schemaTestUser', () => {
-    it('Can read own data.', () => {
-      throw new Error('TODO');
+    const usersRef = testUserFirebaseApp.database().ref('/users');
+
+    it('Can read own data.', (done) => {
+      usersRef
+        .child(testUserUid)
+        .once('value')
+        .then((snapshot) => {
+          expect(snapshot.val().email).to.equal('test@selbi.io');
+          done();
+        })
+        .catch(done);
     });
 
-    it('Can write own data.', () => {
-      throw new Error('TODO');
+    it('Can write own data.', (done) => {
+      usersRef
+        .child(testUserUid)
+        .child('email')
+        .set('test@selbi.io')
+        .then(done)
+        .catch(done);
     });
 
-    it('Cannot read other\'s data.', () => {
-      throw new Error('TODO');
+    it('Cannot read other\'s data.', (done) => {
+      usersRef
+        .child(extraUserUid)
+        .once('value')
+        .then(() => {
+          done(new Error('Should not be able to read other users data.'));
+        })
+        .catch((error) => {
+          expect(error.code).to.equal('PERMISSION_DENIED');
+          done();
+        });
     });
 
-    it('Cannot write other\'s data.', () => {
-      throw new Error('TODO');
+    it('Cannot write other\'s data.', (done) => {
+      usersRef
+        .child(extraUserUid)
+        .child('email')
+        .set('test@selbi.io')
+        .then(() => {
+          done(new Error('Should not be able to write other users data.'));
+        })
+        .catch((error) => {
+          expect(error.code).to.equal('PERMISSION_DENIED');
+          done();
+        });
     });
   });
 

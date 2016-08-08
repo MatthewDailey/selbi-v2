@@ -3,7 +3,7 @@
 	    "users" : {
 	    	"$uid" : {
 	    		".write": "$uid === auth.uid",
-                ".read": "auth.uid != null",
+                ".read": "$uid === auth.uid",
 
 	    		 ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
 
