@@ -8,6 +8,8 @@
 	    		 ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
 
 	    		"name": {
+                    ".validate": "newData.hasChildren(['first', 'last'])",
+
                     "first": {
                       ".validate" : "newData.isString()"
                     },

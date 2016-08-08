@@ -110,12 +110,12 @@ describe('/users', () => {
     });
 
     function testMinimalDataWithoutField(fieldToDelete, done) {
-      const minimalDataMinusName = Object.assign({}, minimalUserData);
-      delete minimalDataMinusName[fieldToDelete];
+      const minimalDataWithDeletedField = Object.assign({}, minimalUserData);
+      delete minimalDataWithDeletedField[fieldToDelete];
 
       usersRef
         .child(minimalUserUid)
-        .set(minimalDataMinusName)
+        .set(minimalDataWithDeletedField)
         .then(() => {
           done(new Error('Should not be able to store user data without name.'));
         })
@@ -232,19 +232,94 @@ describe('/users', () => {
     });
   });
 
+  // This suite works by modifying the minimal data to add fields and verify that they pass the
+  // schema checks.
   describe('user fields', () => {
+    const usersRef = minimalUserFirebaseApp
+      .database()
+      .ref('/users');
+
     describe('name', () => {
-      it('first', () => {
-        throw new Error('TODO');
+      it('first required and is string', (done) => {
+        const minimalDataMinusFirstName = Object.assign({}, minimalUserData);
+        delete minimalDataMinusFirstName.name.first;
+        const minimalDataMinusFirstNamePromise = usersRef
+          .child(minimalUserUid)
+          .set(minimalDataMinusFirstName)
+          .then(() => {
+            done(new Error('Should not be able to store user data without name.first'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+          });
+
+        const minimalDataFirstNameNotString = Object.assign({}, minimalUserData);
+        minimalDataFirstNameNotString.name.first = 1;
+        const minimalDataFirstNameNotStringPromise = usersRef
+          .child(minimalUserUid)
+          .set(minimalDataFirstNameNotString)
+          .then(() => {
+            done(new Error('Should not be able to store user data without string name.first'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+          });
+
+        Promise.all([minimalDataMinusFirstNamePromise,
+            minimalDataFirstNameNotStringPromise])
+          .then(() => {
+            done();
+          })
+          .catch(done);
       });
 
-      it('last', () => {
-        throw new Error('TODO');
+      it('last required and is string', (done) => {
+        const minimalDataMinusLastName = Object.assign({}, minimalUserData);
+        delete minimalDataMinusLastName.name.last;
+        const minimalDataMinusLastNamePromise = usersRef
+          .child(minimalUserUid)
+          .set(minimalDataMinusLastName)
+          .then(() => {
+            done(new Error('Should not be able to store user data without name.last'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+          });
+
+        const minimalDataLastNameNotString = Object.assign({}, minimalUserData);
+        minimalDataLastNameNotString.name.last = 1;
+        const minimalDataLastNameNotStringPromise = usersRef
+          .child(minimalUserUid)
+          .set(minimalDataLastNameNotString)
+          .then(() => {
+            done(new Error('Should not be able to store user data without string name.last'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+          });
+
+        Promise.all([minimalDataMinusLastNamePromise,
+            minimalDataLastNameNotStringPromise])
+          .then(() => {
+            done();
+          })
+          .catch(done);
       });
     });
 
-    it('email', () => {
-      throw new Error('TODO');
+    it('email is string', (done) => {
+      const minimalDataEmailNotString = Object.assign({}, minimalUserData);
+      minimalDataEmailNotString.email = 1;
+      usersRef
+        .child(minimalUserUid)
+        .set(minimalDataEmailNotString)
+        .then(() => {
+          done(new Error('Should not be able to store user data without string name.last'));
+        })
+        .catch((error) => {
+          expect(error.code).to.equal('PERMISSION_DENIED');
+          done();
+        });
     });
 
     it('profileImageUrl', () => {
