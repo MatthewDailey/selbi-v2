@@ -18,6 +18,11 @@
                     }
 	    		},
 
+                // TODO: Validate profileImageUrl is url.
+                "profileImageUrl" : {
+                    ".validate" : "newData.isString()"
+                },
+
 	    		// TODO: Validate email is valid as well.
 	    		"email": {
 	    			".validate" : "newData.isString()"

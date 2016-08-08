@@ -314,7 +314,7 @@ describe('/users', () => {
         .child(minimalUserUid)
         .set(minimalDataEmailNotString)
         .then(() => {
-          done(new Error('Should not be able to store user data without string name.last'));
+          done(new Error('Should not be able to store user data without string email'));
         })
         .catch((error) => {
           expect(error.code).to.equal('PERMISSION_DENIED');
@@ -322,8 +322,31 @@ describe('/users', () => {
         });
     });
 
-    it('profileImageUrl', () => {
-      throw new Error('TODO');
+    it('profileImageUrl is string', (done) => {
+      const minimalDataEmailNotString = Object.assign({}, minimalUserData);
+      minimalDataEmailNotString.profileImageUrl = 1;
+      const nonStringPromise = usersRef
+        .child(minimalUserUid)
+        .set(minimalDataEmailNotString)
+        .then(() => {
+          done(new Error('Should not be able to store user data with non-string profileImageUrl'));
+        })
+        .catch((error) => {
+          expect(error.code).to.equal('PERMISSION_DENIED');
+        });
+
+      const minimalDataEmailString = Object.assign({}, minimalUserData);
+      minimalDataEmailString.profileImageUrl = "cool url string";
+      const stringPromise = usersRef
+        .child(minimalUserUid)
+        .set(minimalDataEmailString)
+        .catch(done);
+
+      Promise.all([nonStringPromise, stringPromise])
+        .then(() => {
+          done();
+        })
+        .catch(done);
     });
 
     it('dateOfBirth', () => {
