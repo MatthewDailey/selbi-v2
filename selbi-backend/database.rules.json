@@ -29,11 +29,56 @@
 
                 // YYYY-MM-DD
                 "dateOfBirth" : {
-                  ".validate": "newData.isString() && newData.val().matches(/^(19|20)[0-9][0-9][-\\/. ](0[1-9]|1[012])[-\\/. ](0[1-9]|[12][0-9]|3[01])$/)"
+                    ".validate": "newData.isString() && newData.val().matches(/^(19|20)[0-9][0-9][-\\/. ](0[1-9]|1[012])[-\\/. ](0[1-9]|[12][0-9]|3[01])$/)"
                 },
 
                 "phoneNumber" : {
-                  ".validate" : "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
+                    ".validate" : "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
+                },
+
+                "locations" : {
+                    "shipTo" : {
+                        ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+                        "address1" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "address2" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "city" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "state" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "zip" : {
+                          ".validate" : "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
+                        },
+                        "country" : {
+                          ".validate" : "newData.isString()"
+                        }
+                    },
+                    "sellingFrom" : {
+                        ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+                        "address1" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "address2" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "city" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "state" : {
+                          ".validate" : "newData.isString()"
+                        },
+                        "zip" : {
+                          ".validate" : "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
+                        },
+                        "country" : {
+                          ".validate" : "newData.isString()"
+                        }
+                    }
                 }
 	    	}
 	    }

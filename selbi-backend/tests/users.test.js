@@ -256,7 +256,7 @@ describe('/users', () => {
         .child(minimalUserUid)
         .set(minimalUserDataCopy)
         .then(() => {
-          done(new Error('Should not be able to store user data without string name.first'));
+          done(new Error('Should not be able to store data.'));
         })
         .catch((error) => {
           expect(error.code).to.equal('PERMISSION_DENIED');
@@ -392,7 +392,6 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.phoneNumber = 1234567890;
-            console.log(data)
           }, done);
       });
     });
@@ -408,56 +407,105 @@ describe('/users', () => {
     });
 
     describe('locations', () => {
+      function testAddress(addressType) {
+        const simpleAddressData = {
+          address1: 'first address',
+          address2: 'second address',
+          city: 'san francisco',
+          state: 'california',
+          zip: 95100,
+          country: 'usa' };
+
+        it('successful store', (done) => {
+          setPropertyAndExpectSuccessfulStore(
+            (data) => {
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = simpleAddressData;
+            }, done);
+        });
+
+        it('requires address1', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.address1;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+            }, done);
+        });
+
+        it('requires address2', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.address2;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+            }, done);
+        });
+
+        it('requires city', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.city;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+            }, done);
+        });
+
+        it('requires state', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.state;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+            }, done);
+        });
+
+        it('requires zip', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.zip;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+            }, done);
+        });
+
+        it('requires country', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              delete modifiedAddress.country;
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
+              console.log(data);
+            }, done);
+        });
+      }
+
       describe('sellingFrom', () => {
-        it('address1', () => {
-          throw new Error('TODO');
-        });
-
-        it('address2', () => {
-          throw new Error('TODO');
-        });
-
-        it('city', () => {
-          throw new Error('TODO');
-        });
-
-        it('state', () => {
-          throw new Error('TODO');
-        });
-
-        it('zip', () => {
-          throw new Error('TODO');
-        });
-
-        it('country', () => {
-          throw new Error('TODO');
-        });
+        testAddress('sellingFrom');
       });
 
       describe('shipTo', () => {
-        it('address1', () => {
-          throw new Error('TODO');
-        });
-
-        it('address2', () => {
-          throw new Error('TODO');
-        });
-
-        it('city', () => {
-          throw new Error('TODO');
-        });
-
-        it('state', () => {
-          throw new Error('TODO');
-        });
-
-        it('zip', () => {
-          throw new Error('TODO');
-        });
-
-        it('country', () => {
-          throw new Error('TODO');
-        });
+        testAddress('shipTo');
       });
     });
 
