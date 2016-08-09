@@ -84,6 +84,23 @@ describe('/users', () => {
       .catch(done);
   });
 
+  it('user no extra params', (done) => {
+    const testUserDataWithExtra = JSON.parse(JSON.stringify(testUserData));
+    testUserDataWithExtra.extra = 'extraProp';
+    testUserFirebaseApp
+      .database()
+      .ref('/users')
+      .child(testUserUid)
+      .set(testUserDataWithExtra)
+      .then(() => {
+        done(new Error('Should not be able to store user data with extra property.'));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  });
+
   it('is a list', (done) => {
     serviceAccountFirebaseApp
       .database()
@@ -265,6 +282,14 @@ describe('/users', () => {
     }
 
     describe('name', () => {
+      it('takes no extra parameters', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.name.extra = "extraParam";
+          }, done);
+      });
+
       describe('first', () => {
         it('is required', (done) => {
           setPropertyAndExpectPermissionDenied(
@@ -495,10 +520,31 @@ describe('/users', () => {
               data.locations = {};
               // noinspection Eslint
               data.locations[addressType] = modifiedAddress;
-              console.log(data);
+            }, done);
+        });
+
+        it('takes no extra props', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const modifiedAddress = Object.assign({}, simpleAddressData);
+              modifiedAddress.extra = 'extraProp';
+              // noinspection Eslint
+              data.locations = {};
+              // noinspection Eslint
+              data.locations[addressType] = modifiedAddress;
             }, done);
         });
       }
+
+      it('takes no extra parameter', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.locations = {
+              extra: 'extraProp'
+            };
+          }, done);
+      });
 
       describe('sellingFrom', () => {
         testAddress('sellingFrom');

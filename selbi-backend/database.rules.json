@@ -5,10 +5,11 @@
 	    		".write": "$uid === auth.uid",
                 ".read": "$uid === auth.uid",
 
-	    		 ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
+                ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
 
 	    		"name": {
                     ".validate": "newData.hasChildren(['first', 'last'])",
+                    "$other": { ".validate": false },
 
                     "first": {
                       ".validate" : "newData.isString()"
@@ -60,8 +61,13 @@
                 },
 
                 "locations" : {
+                    "$other": { ".validate": false },
+
                     "shipTo" : {
                         ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+
+                        "$other": { ".validate": false },
+
                         "address1" : {
                           ".validate" : "newData.isString()"
                         },
@@ -83,6 +89,9 @@
                     },
                     "sellingFrom" : {
                         ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+
+                        "$other": { ".validate": false },
+
                         "address1" : {
                           ".validate" : "newData.isString()"
                         },
