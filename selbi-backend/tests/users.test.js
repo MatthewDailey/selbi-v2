@@ -344,8 +344,30 @@ describe('/users', () => {
       });
     });
 
-    it('dateOfBirth', () => {
-      throw new Error('TODO');
+    describe('dateOfBirth', () => {
+      it('must be string', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.dateOfBirth = 1;
+          }, done);
+      });
+
+      it('doesnt match differing formats', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.dateOfBirth = 'March 20 1990';
+          }, done);
+      });
+
+      it('matches format 1990-03-20', (done) => {
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.dateOfBirth = '1990-03-20';
+          }, done);
+      });
     });
 
     it('phoneNumber', () => {
