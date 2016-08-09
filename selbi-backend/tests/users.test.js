@@ -397,8 +397,14 @@ describe('/users', () => {
       });
     });
 
-    it('userAgreementAccepted', () => {
-      throw new Error('TODO');
+    describe('userAgreementAccepted', () => {
+      it('is required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            delete data.userAgreementAccepted;
+          }, done);
+      });
     });
 
     describe('locations', () => {
