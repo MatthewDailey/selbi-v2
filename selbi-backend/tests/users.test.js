@@ -601,7 +601,6 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.payments = paymentData;
-            console.log(data);
           }, done);
       });
 
@@ -665,7 +664,7 @@ describe('/users', () => {
           }, done);
       });
 
-      it('accepts no other data', (done) => {
+      it('accepts no extra data', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const modifiedPayment = Object.assign({}, paymentData);
@@ -677,32 +676,146 @@ describe('/users', () => {
     });
 
     describe('merchant', () => {
-      it('accountNumberLast4', () => {
-        throw new Error('TODO');
+      const merchantData = {
+        accountNumberLast4: 4444,
+        routingNumber: 325181028,
+        publicKey: 'fakePublicKey',
+        privateKey: 'fakePrivateKey',
+        stripeBankId: 'fakeStripeBankId',
+        stripeManagedAccountId: 'fakeManagedAccountId',
+        stripeVerified: true,
+      };
+
+      it('stores valid date', (done) => {
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.merchant = merchantData;
+          }, done);
       });
 
-      it('routingNumber', () => {
-        throw new Error('TODO');
+      it('stores minimal valid date', (done) => {
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.merchant = {
+              stripeVerified: false
+            };
+          }, done);
       });
 
-      it('publicKey', () => {
-        throw new Error('TODO');
+      it('accepts no extra data', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataWithExtra = Object.assign({}, merchantData);
+            merchantDataWithExtra.extra = 'extraProp';
+            // noinspection Eslint
+            data.merchant = merchantDataWithExtra;
+          }, done);
       });
 
-      it('secretKey', () => {
-        throw new Error('TODO');
+      it('accountNumberLast4 is number', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.accountNumberLast4 = 'a string';
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
       });
 
-      it('stripeBankId', () => {
-        throw new Error('TODO');
+      it('accountNumberLast4 is >3 digits', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.accountNumberLast4 = 123;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
       });
 
-      it('stripeManagedAccountId', () => {
-        throw new Error('TODO');
+      it('accountNumberLast4 is <5 digits', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.accountNumberLast4 = 12345;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
       });
 
-      it('stripeVerified', () => {
-        throw new Error('TODO');
+      it('routingNumber is number', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.routingNumber = 'a string';
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
+      });
+
+      it('publicKey is string', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.publicKey = 1;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
+      });
+
+      it('privateKey is string', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.privateKey = 1;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
+      });
+
+      it('stripeBankId is string', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.stripeBankId = 1;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
+      });
+
+      it('stripeManagedAccountId is string', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const merchantDataCopy = Object.assign({}, merchantData);
+            merchantDataCopy.stripeManagedAccountId = 1;
+            // noinspection Eslint
+            data.merchant = merchantDataCopy;
+          }, done);
+      });
+
+      it('stripeVerified required', () => {
+        it('stores valid date', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const merchantDataCopy = Object.assign({}, merchantData);
+              delete merchantDataCopy.stripeVerified;
+              // noinspection Eslint
+              data.merchant = mermerchantDataCopychantData;
+            }, done);
+        });
+      });
+
+      it('stripeVerified is boolean', () => {
+        it('stores valid date', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              const merchantDataCopy = Object.assign({}, merchantData);
+              merchantDataCopy.stripeVerified = 'a string';
+              // noinspection Eslint
+              data.merchant = mermerchantDataCopychantData;
+            }, done);
+        });
       });
     });
   });
