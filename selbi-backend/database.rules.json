@@ -36,6 +36,29 @@
                     ".validate" : "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
                 },
 
+                "payments" : {
+                  ".validate" : "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
+
+                  "$other": { ".validate": false },
+
+                  "stripeCustomerId" : {
+                      ".validate" : "newData.isString()"
+                  },
+                  "stripeCardId" : {
+                      ".validate" : "newData.isString()"
+                  },
+                  "cardType" : {
+                      ".validate" : "newData.isString()"
+                  },
+                  "lastFour" : {
+                      ".validate" : "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+                  },
+                  // MM-YY
+                  "expirationDate" : {
+                      ".validate" : "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+                  }
+                },
+
                 "locations" : {
                     "shipTo" : {
                         ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",

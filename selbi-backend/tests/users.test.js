@@ -522,7 +522,7 @@ describe('/users', () => {
         throw new Error('TODO');
       });
 
-      it('soldListings', () => {
+      it('sold', () => {
         throw new Error('TODO');
       });
     });
@@ -532,30 +532,90 @@ describe('/users', () => {
     });
 
     describe('payments', () => {
-      it('is a list', () => {
-        throw new Error('TODO');
+      const paymentData = {
+        stripeCustomerId: 'fakeStripeCustomerId',
+        stripeCardId: 'fakeStipeCardId',
+        cardType: 'fakeCardType',
+        lastFour: 1234,
+        expirationDate: '01-19',
+      };
+
+      it('accepts valid payment data', (done) => {
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.payments = paymentData;
+          }, done);
       });
 
-      describe('payment fields', () => {
-        it('stripeCustomerId', () => {
-          throw new Error('TODO');
-        });
+      it('stripeCustomerId required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            delete modifiedPayment.stripeCustomerId;
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
 
-        it('stripeCardId', () => {
-          throw new Error('TODO');
-        });
+      it('stripeCardId required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            delete modifiedPayment.stripeCardId;
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
 
-        it('cardType', () => {
-          throw new Error('TODO');
-        });
+      it('cardType required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            delete modifiedPayment.cardType;
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
 
-        it('lastFour', () => {
-          throw new Error('TODO');
-        });
+      it('lastFour required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            delete modifiedPayment.lastFour;
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
 
-        it('expirationDate', () => {
-          throw new Error('TODO');
-        });
+      it('expirationDate required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            delete modifiedPayment.expirationDate;
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
+
+      it('expirationDate matches MM-YY', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            modifiedPayment.expirationDate = '13-19';
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
+      });
+
+      it('accepts no other data', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = Object.assign({}, paymentData);
+            modifiedPayment.extraData = 'randomExtra';
+            // noinspection Eslint
+            data.payments = modifiedPayment;
+          }, done);
       });
     });
 

@@ -37,15 +37,13 @@
       "fakeListingId3"
     ]
   },
-  "payments" : [
-    {
-      "stripeCustomerId" : "fakeStripeCustomerId",
-      "stripeCardId" : "fakeStipeCardId",
-      "cardType" : "fakeCardType",
-      "lastFour" : "1234",
-      "expirationData" : "01/19"
-    }
-  ],
+  "payment" : {
+    "stripeCustomerId" : "fakeStripeCustomerId",
+    "stripeCardId" : "fakeStipeCardId",
+    "cardType" : "fakeCardType",
+    "lastFour" : 1234,
+    "expirationDate" : "01-19"
+  },
   "merchant" : {
     "accountNumberLast4" : "4444",
     "routingNumber" : "325181028",
