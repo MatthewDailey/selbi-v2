@@ -241,7 +241,7 @@ describe('/users', () => {
 
     describe('name', () => {
       it('first required and is string', (done) => {
-        const minimalDataMinusFirstName = Object.assign({}, minimalUserData);
+        const minimalDataMinusFirstName = JSON.parse(JSON.stringify(minimalUserData));
         delete minimalDataMinusFirstName.name.first;
         const minimalDataMinusFirstNamePromise = usersRef
           .child(minimalUserUid)
@@ -253,7 +253,7 @@ describe('/users', () => {
             expect(error.code).to.equal('PERMISSION_DENIED');
           });
 
-        const minimalDataFirstNameNotString = Object.assign({}, minimalUserData);
+        const minimalDataFirstNameNotString = JSON.parse(JSON.stringify(minimalUserData));
         minimalDataFirstNameNotString.name.first = 1;
         const minimalDataFirstNameNotStringPromise = usersRef
           .child(minimalUserUid)
@@ -274,7 +274,7 @@ describe('/users', () => {
       });
 
       it('last required and is string', (done) => {
-        const minimalDataMinusLastName = Object.assign({}, minimalUserData);
+        const minimalDataMinusLastName = JSON.parse(JSON.stringify(minimalUserData));
         delete minimalDataMinusLastName.name.last;
         const minimalDataMinusLastNamePromise = usersRef
           .child(minimalUserUid)
@@ -286,7 +286,7 @@ describe('/users', () => {
             expect(error.code).to.equal('PERMISSION_DENIED');
           });
 
-        const minimalDataLastNameNotString = Object.assign({}, minimalUserData);
+        const minimalDataLastNameNotString = JSON.parse(JSON.stringify(minimalUserData));
         minimalDataLastNameNotString.name.last = 1;
         const minimalDataLastNameNotStringPromise = usersRef
           .child(minimalUserUid)
@@ -308,7 +308,7 @@ describe('/users', () => {
     });
 
     it('email is string', (done) => {
-      const minimalDataEmailNotString = Object.assign({}, minimalUserData);
+      const minimalDataEmailNotString = JSON.parse(JSON.stringify(minimalUserData));
       minimalDataEmailNotString.email = 1;
       usersRef
         .child(minimalUserUid)
@@ -322,31 +322,59 @@ describe('/users', () => {
         });
     });
 
-    it('profileImageUrl is string', (done) => {
-      const minimalDataEmailNotString = Object.assign({}, minimalUserData);
-      minimalDataEmailNotString.profileImageUrl = 1;
-      const nonStringPromise = usersRef
-        .child(minimalUserUid)
-        .set(minimalDataEmailNotString)
-        .then(() => {
-          done(new Error('Should not be able to store user data with non-string profileImageUrl'));
-        })
-        .catch((error) => {
-          expect(error.code).to.equal('PERMISSION_DENIED');
-        });
+    describe('profileImageUrl', () => {
+      it('cannot be non-string', (done) => {
+        const minimalDataProfileImageUrlNotString = JSON.parse(JSON.stringify(minimalUserData));
+        minimalDataProfileImageUrlNotString.profileImageUrl = 1;
+        usersRef
+          .child(minimalUserUid)
+          .set(minimalDataProfileImageUrlNotString)
+          .then(() => {
+            done(new Error('Should not be able to store user data with non-string ' +
+              'profileImageUrl'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+            done();
+          });
+      });
 
-      const minimalDataEmailString = Object.assign({}, minimalUserData);
-      minimalDataEmailString.profileImageUrl = 'cool url string';
-      const stringPromise = usersRef
-        .child(minimalUserUid)
-        .set(minimalDataEmailString)
-        .catch(done);
+      it('cannot be non-url string', (done) => {
+        const minimalProfileImageUrlNotUrl = JSON.parse(JSON.stringify(minimalUserData));
+        minimalProfileImageUrlNotUrl.profileImageUrl = 'not a url';
+        usersRef
+          .child(minimalUserUid)
+          .set(minimalProfileImageUrlNotUrl)
+          .then(() => {
+            done(new Error('Should not be able to store user data with non-string ' +
+              'profileImageUrl'));
+          })
+          .catch((error) => {
+            expect(error.code).to.equal('PERMISSION_DENIED');
+            done();
+          });
+      });
 
-      Promise.all([nonStringPromise, stringPromise])
-        .then(() => {
-          done();
-        })
-        .catch(done);
+      it('may begin with http://', (done) => {
+        const minimalDataProfileImageUrlHttp = JSON.parse(JSON.stringify(minimalUserData));
+        minimalDataProfileImageUrlHttp.profileImageUrl = 'http://cooldomain';
+        usersRef
+          .child(minimalUserUid)
+          .set(minimalDataProfileImageUrlHttp)
+          .then(done)
+          .catch(done);
+      });
+
+      it('may begin with https://', (done) => {
+        const minimalDataProfileImageUrlHttps = JSON.parse(JSON.stringify(minimalUserData));
+        minimalDataProfileImageUrlHttps.profileImageUrl = 'https://cooldomain';
+        console.log(minimalDataProfileImageUrlHttps);
+        usersRef
+          .child(minimalUserUid)
+          .set(minimalDataProfileImageUrlHttps)
+          .then(done)
+          .catch(done);
+      });
     });
 
     it('dateOfBirth', () => {
