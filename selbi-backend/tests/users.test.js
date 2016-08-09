@@ -281,6 +281,16 @@ describe('/users', () => {
         });
     }
 
+    describe('userAgreementAccepted', () => {
+      it('is boolean', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.userAgreementAccepted = 1;
+          }, done);
+      });
+    });
+
     describe('name', () => {
       it('takes no extra parameters', (done) => {
         setPropertyAndExpectPermissionDenied(
@@ -591,6 +601,7 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.payments = paymentData;
+            console.log(data);
           }, done);
       });
 

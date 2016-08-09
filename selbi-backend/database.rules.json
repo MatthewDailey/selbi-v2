@@ -7,8 +7,15 @@
 
                 ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
 
+                "$other": { ".validate": false },
+
+                "userAgreementAccepted" : {
+                  ".validate" : "newData.isBoolean()"
+                },
+
 	    		"name": {
                     ".validate": "newData.hasChildren(['first', 'last'])",
+
                     "$other": { ".validate": false },
 
                     "first": {
