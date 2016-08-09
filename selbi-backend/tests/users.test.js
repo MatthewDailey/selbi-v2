@@ -345,7 +345,7 @@ describe('/users', () => {
     });
 
     describe('dateOfBirth', () => {
-      it('must be string', (done) => {
+      it('is a string', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             // noinspection Eslint
@@ -370,8 +370,31 @@ describe('/users', () => {
       });
     });
 
-    it('phoneNumber', () => {
-      throw new Error('TODO');
+    describe('phoneNumber', () => {
+      it('is an integer', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.phoneNumber = "a string";
+          }, done);
+      });
+
+      it('cannot have other than 10 digit', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.phoneNumber = 12;
+          }, done);
+      });
+
+      it('has 10 digit', (done) => {
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.phoneNumber = 1234567890;
+            console.log(data)
+          }, done);
+      });
     });
 
     it('userAgreementAccepted', () => {
