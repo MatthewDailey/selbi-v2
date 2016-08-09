@@ -239,141 +239,108 @@ describe('/users', () => {
       .database()
       .ref('/users');
 
-    describe('name', () => {
-      it('first required and is string', (done) => {
-        const minimalDataMinusFirstName = JSON.parse(JSON.stringify(minimalUserData));
-        delete minimalDataMinusFirstName.name.first;
-        const minimalDataMinusFirstNamePromise = usersRef
-          .child(minimalUserUid)
-          .set(minimalDataMinusFirstName)
-          .then(() => {
-            done(new Error('Should not be able to store user data without name.first'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-          });
-
-        const minimalDataFirstNameNotString = JSON.parse(JSON.stringify(minimalUserData));
-        minimalDataFirstNameNotString.name.first = 1;
-        const minimalDataFirstNameNotStringPromise = usersRef
-          .child(minimalUserUid)
-          .set(minimalDataFirstNameNotString)
-          .then(() => {
-            done(new Error('Should not be able to store user data without string name.first'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-          });
-
-        Promise.all([minimalDataMinusFirstNamePromise,
-            minimalDataFirstNameNotStringPromise])
-          .then(() => {
-            done();
-          })
-          .catch(done);
-      });
-
-      it('last required and is string', (done) => {
-        const minimalDataMinusLastName = JSON.parse(JSON.stringify(minimalUserData));
-        delete minimalDataMinusLastName.name.last;
-        const minimalDataMinusLastNamePromise = usersRef
-          .child(minimalUserUid)
-          .set(minimalDataMinusLastName)
-          .then(() => {
-            done(new Error('Should not be able to store user data without name.last'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-          });
-
-        const minimalDataLastNameNotString = JSON.parse(JSON.stringify(minimalUserData));
-        minimalDataLastNameNotString.name.last = 1;
-        const minimalDataLastNameNotStringPromise = usersRef
-          .child(minimalUserUid)
-          .set(minimalDataLastNameNotString)
-          .then(() => {
-            done(new Error('Should not be able to store user data without string name.last'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-          });
-
-        Promise.all([minimalDataMinusLastNamePromise,
-            minimalDataLastNameNotStringPromise])
-          .then(() => {
-            done();
-          })
-          .catch(done);
-      });
-    });
-
-    it('email is string', (done) => {
-      const minimalDataEmailNotString = JSON.parse(JSON.stringify(minimalUserData));
-      minimalDataEmailNotString.email = 1;
+    function setPropertyAndExpectSuccessfulStore(objectModification, done) {
+      const minimalUserDataCopy = JSON.parse(JSON.stringify(minimalUserData));
+      objectModification(minimalUserDataCopy);
       usersRef
         .child(minimalUserUid)
-        .set(minimalDataEmailNotString)
+        .set(minimalUserDataCopy)
+        .then(done)
+        .catch(done);
+    }
+
+    function setPropertyAndExpectPermissionDenied(objectModification, done) {
+      const minimalUserDataCopy = JSON.parse(JSON.stringify(minimalUserData));
+      objectModification(minimalUserDataCopy)
+      usersRef
+        .child(minimalUserUid)
+        .set(minimalUserDataCopy)
         .then(() => {
-          done(new Error('Should not be able to store user data without string email'));
+          done(new Error('Should not be able to store user data without string name.first'));
         })
         .catch((error) => {
           expect(error.code).to.equal('PERMISSION_DENIED');
           done();
         });
+    }
+
+    describe('name', () => {
+      describe('first', () => {
+        it('is required', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              // noinspection Eslint
+              delete data.name.first;
+            }, done);
+        });
+
+        it('is string', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              // noinspection Eslint
+              data.name.first = 1;
+            }, done);
+        });
+      });
+
+      describe('last', () => {
+        it('is required', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              // noinspection Eslint
+              delete data.name.last;
+            }, done);
+        });
+
+        it('is string', (done) => {
+          setPropertyAndExpectPermissionDenied(
+            (data) => {
+              // noinspection Eslint
+              data.name.last = 1;
+            }, done);
+        });
+      });
+    });
+
+    it('email is string', (done) => {
+      setPropertyAndExpectPermissionDenied(
+        (data) => {
+          // noinspection Eslint
+          data.email = 1;
+        }, done);
     });
 
     describe('profileImageUrl', () => {
       it('cannot be non-string', (done) => {
-        const minimalDataProfileImageUrlNotString = JSON.parse(JSON.stringify(minimalUserData));
-        minimalDataProfileImageUrlNotString.profileImageUrl = 1;
-        usersRef
-          .child(minimalUserUid)
-          .set(minimalDataProfileImageUrlNotString)
-          .then(() => {
-            done(new Error('Should not be able to store user data with non-string ' +
-              'profileImageUrl'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-            done();
-          });
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.profileImageUrl = 1;
+          }, done);
       });
 
       it('cannot be non-url string', (done) => {
-        const minimalProfileImageUrlNotUrl = JSON.parse(JSON.stringify(minimalUserData));
-        minimalProfileImageUrlNotUrl.profileImageUrl = 'not a url';
-        usersRef
-          .child(minimalUserUid)
-          .set(minimalProfileImageUrlNotUrl)
-          .then(() => {
-            done(new Error('Should not be able to store user data with non-string ' +
-              'profileImageUrl'));
-          })
-          .catch((error) => {
-            expect(error.code).to.equal('PERMISSION_DENIED');
-            done();
-          });
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // noinspection Eslint
+            data.profileImageUrl = "not a url";
+          }, done);
       });
 
       it('may begin with http://', (done) => {
-        const minimalDataProfileImageUrlHttp = JSON.parse(JSON.stringify(minimalUserData));
-        minimalDataProfileImageUrlHttp.profileImageUrl = 'http://cooldomain';
-        usersRef
-          .child(minimalUserUid)
-          .set(minimalDataProfileImageUrlHttp)
-          .then(done)
-          .catch(done);
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.profileImageUrl = 'http://cooldomain';
+          }, done);
       });
 
       it('may begin with https://', (done) => {
-        const minimalDataProfileImageUrlHttps = JSON.parse(JSON.stringify(minimalUserData));
-        minimalDataProfileImageUrlHttps.profileImageUrl = 'https://cooldomain';
-        console.log(minimalDataProfileImageUrlHttps);
-        usersRef
-          .child(minimalUserUid)
-          .set(minimalDataProfileImageUrlHttps)
-          .then(done)
-          .catch(done);
+        setPropertyAndExpectSuccessfulStore(
+          (data) => {
+            // noinspection Eslint
+            data.profileImageUrl = 'https://cooldomain';
+          }, done);
       });
     });
 
