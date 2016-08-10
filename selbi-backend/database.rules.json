@@ -50,7 +50,12 @@
 
         // All data about individual listings.
         "listings" : {
+            // No read permissions at /listings so listings cannot be iterated over.
             "$listingId" : {
+                // TODO Limit write to owner and read to allowed readers via userListings.
+                ".write" : true,
+                ".read" : true,
+
                 "title" : {
                     ".validate" : "newData.isString()"
                 },
@@ -61,7 +66,7 @@
                     ".validate" : "newData.isNumber() && newData.val() > 0"
                 },
                 "sellerId" : {
-                    ".validate" : "root.child('/users/' + newData.val()).exists()"
+                    ".validate" : "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
                 },
                 "imageUrls" : {
                     // TODO: Validate are urls.
@@ -85,6 +90,7 @@
 
         // All background data about a user.
 	    "users" : {
+            // No read permissions at /users so users cannot be iterated over.
 	    	"$uid" : {
 	    		".write": "$uid === auth.uid",
                 ".read": "$uid === auth.uid",

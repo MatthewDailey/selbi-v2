@@ -3,6 +3,9 @@ import firebase from 'firebase';
 const testUserData = require('./resources/testUser.json');
 const minimalUserData = require('./resources/minimalUser.json');
 
+const testListingOne = require('./resources/minimalUserListingOne.json');
+const testListingTwo = require('./resources/minimalUserListingTwo.json');
+
 class TestFirebaseConnections {
   constructor() {
     this.extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
@@ -41,6 +44,14 @@ class TestFirebaseConnections {
 
   getTestUserData() {
     return JSON.parse(JSON.stringify(testUserData));
+  }
+
+  getMinimalUserListingOne() {
+    return JSON.parse(JSON.stringify(testListingOne));
+  }
+
+  getMinimalUserListingTwo() {
+    return JSON.parse(JSON.stringify(testListingTwo));
   }
 
   /*
