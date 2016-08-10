@@ -35,11 +35,11 @@ class TestFirebaseConnections {
     this.serviceAccountApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
   }
 
-  minimalUserData() {
+  getMinimalUserData() {
     return JSON.parse(JSON.stringify(minimalUserData));
   }
 
-  testUserData() {
+  getTestUserData() {
     return JSON.parse(JSON.stringify(testUserData));
   }
 

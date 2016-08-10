@@ -1,5 +1,5 @@
-import firebase from 'firebase';
 import { expect } from 'chai';
+import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './FirebaseTestConnections';
 
 /*
  * In this test we use 4 different users to probe the schema requirements and demonstrate how
@@ -13,51 +13,20 @@ import { expect } from 'chai';
  *
  */
 
-const testUserData = require('./resources/testUser.json');
-const minimalUserData = require('./resources/minimalUser.json');
-
-const extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
-const testUserUid = '3imZ3SbitbMUXL6Pt2FmVYCUtDo2';
-const minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
-
-const testUserConfig = {
-  serviceAccount: './selbi-staging-schema-test-service-account.json',
-  databaseURL: 'https://selbi-staging.firebaseio.com',
-  databaseAuthVariableOverride: {
-    uid: testUserUid,
-  },
-};
-const testUserFirebaseApp = firebase.initializeApp(testUserConfig, 'testUser');
-
-const minimalUserConfig = {
-  serviceAccount: './selbi-staging-schema-test-service-account.json',
-  databaseURL: 'https://selbi-staging.firebaseio.com',
-  databaseAuthVariableOverride: {
-    uid: minimalUserUid,
-  },
-};
-const minimalUserFirebaseApp = firebase.initializeApp(minimalUserConfig, 'minimalUser');
-
-const serviceAccountConfig = {
-  serviceAccount: './selbi-staging-schema-test-service-account.json',
-  databaseURL: 'https://selbi-staging.firebaseio.com',
-};
-const serviceAccountFirebaseApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
-
 describe('/users', () => {
   function getCreateFakeUsersFunction(done) {
     return () => {
-      const usersRef = serviceAccountFirebaseApp
+      const usersRef = FirebaseTest.serviceAccountApp
         .database()
         .ref('/users');
 
       const createTestUserPromise = usersRef
-        .child(testUserUid)
-        .set(testUserData);
+        .child(FirebaseTest.testUserUid)
+        .set(FirebaseTest.getTestUserData());
 
       const createFakeUserPromise = usersRef
-        .child(extraUserUid)
-        .set(testUserData);
+        .child(FirebaseTest.extraUserUid)
+        .set(FirebaseTest.getTestUserData());
 
       Promise.all([createFakeUserPromise, createTestUserPromise])
         .then(() => {
@@ -76,21 +45,20 @@ describe('/users', () => {
   before(function (done) {
     this.timeout(6000);
 
-    serviceAccountFirebaseApp
-      .database()
-      .ref('/users')
-      .remove()
+    FirebaseTest
+      .dropDatabase()
       .then(getCreateFakeUsersFunction(done))
       .catch(done);
   });
 
   it('user no extra params', (done) => {
-    const testUserDataWithExtra = JSON.parse(JSON.stringify(testUserData));
+    const testUserDataWithExtra = FirebaseTest.getTestUserData();
     testUserDataWithExtra.extra = 'extraProp';
-    testUserFirebaseApp
+    FirebaseTest
+      .testUserApp
       .database()
       .ref('/users')
-      .child(testUserUid)
+      .child(FirebaseTest.testUserUid)
       .set(testUserDataWithExtra)
       .then(() => {
         done(new Error('Should not be able to store user data with extra property.'));
@@ -102,7 +70,8 @@ describe('/users', () => {
   });
 
   it('is a list', (done) => {
-    serviceAccountFirebaseApp
+    FirebaseTest
+      .serviceAccountApp
       .database()
       .ref('/users')
       .once('value')
@@ -114,20 +83,21 @@ describe('/users', () => {
   });
 
   describe('minimal user', () => {
-    const usersRef = minimalUserFirebaseApp
+    const usersRef = FirebaseTest
+      .minimalUserApp
       .database()
       .ref('/users');
 
     it('accepts minimal user', (done) => {
       usersRef
         .child(minimalUserUid)
-        .set(minimalUserData)
+        .set(FirebaseTest.getMinimalUserData())
         .then(done)
         .catch(done);
     });
 
     function testMinimalDataWithoutField(fieldToDelete, done) {
-      const minimalDataWithDeletedField = Object.assign({}, minimalUserData);
+      const minimalDataWithDeletedField = FirebaseTest.getMinimalUserData();
       delete minimalDataWithDeletedField[fieldToDelete];
 
       usersRef
@@ -156,7 +126,7 @@ describe('/users', () => {
   });
 
   describe('as schemaTestUser', () => {
-    const usersRef = testUserFirebaseApp.database().ref('/users');
+    const usersRef = FirebaseTest.testUserApp.database().ref('/users');
 
     it('Can read own data.', (done) => {
       usersRef
@@ -207,7 +177,7 @@ describe('/users', () => {
   });
 
   describe('as serviceUser', () => {
-    const usersRef = serviceAccountFirebaseApp.database().ref('/users');
+    const usersRef = FirebaseTest.serviceAccountApp.database().ref('/users');
 
     it('Can read user data.', (done) => {
       const readTestUserPromise = usersRef
@@ -252,12 +222,10 @@ describe('/users', () => {
   // This suite works by modifying the minimal data to add fields and verify that they pass the
   // schema checks.
   describe('user fields', () => {
-    const usersRef = minimalUserFirebaseApp
-      .database()
-      .ref('/users');
+    const usersRef = FirebaseTest.minimalUserApp.database().ref('/users');
 
     function setPropertyAndExpectSuccessfulStore(objectModification, done) {
-      const minimalUserDataCopy = JSON.parse(JSON.stringify(minimalUserData));
+      const minimalUserDataCopy = FirebaseTest.getMinimalUserData();
       objectModification(minimalUserDataCopy);
       usersRef
         .child(minimalUserUid)
@@ -267,7 +235,7 @@ describe('/users', () => {
     }
 
     function setPropertyAndExpectPermissionDenied(objectModification, done) {
-      const minimalUserDataCopy = JSON.parse(JSON.stringify(minimalUserData));
+      const minimalUserDataCopy = FirebaseTest.getMinimalUserData();
       objectModification(minimalUserDataCopy);
       usersRef
         .child(minimalUserUid)
