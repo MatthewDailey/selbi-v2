@@ -154,7 +154,23 @@ describe('/listings', () => {
   });
 
   describe('imageUrls', () => {
-    it('TODO', () => { throw new Error('TODO'); });
+    it('Must be list', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.imageUrls = 1;
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'ImageUrls cannot be int',
+        done);
+    });
+
+    it('List must contain urls', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.imageUrls = ['normal string'];
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'ImageUrls content must be urls',
+        done);
+    });
   });
 
   describe('category', () => {

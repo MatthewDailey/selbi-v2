@@ -69,7 +69,10 @@
                     ".validate" : "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
                 },
                 "imageUrls" : {
-                    // TODO: Validate are urls.
+                    ".validate" : "newData.hasChildren()",
+                    "$arrayIndex" : {
+                        ".validate" : "newData.val().matches(/^http(s)?:/)"
+                    }
                 },
                 "status" : {
                     ".validate" : "newData.isString() && (newData.val() == 'inactive' || newData.val() == 'private' || newData.val() == 'public' || newData.val() == 'sold' || newData.val() == 'salePending')"
