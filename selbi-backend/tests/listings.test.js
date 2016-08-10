@@ -123,7 +123,7 @@ describe('/listings', () => {
   describe('description', () => {
     it('Must be string', (done) => {
       const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.title = 1;
+      modifiedMinimalUserListing.description = 1;
       storeListingAsMinimalUserAndExpectFailure(
         modifiedMinimalUserListing,
         'Description cannot be an int.',
@@ -132,7 +132,23 @@ describe('/listings', () => {
   });
 
   describe('price', () => {
-    it('TODO', () => { throw new Error('TODO'); });
+    it('Must be number', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.price = 'a string';
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'Price cannot be a string.',
+        done);
+    });
+
+    it('Must be >0', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.price = -1;
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'Price cannot be negative',
+        done);
+    });
   });
 
   describe('sellerId', () => {
@@ -146,7 +162,7 @@ describe('/listings', () => {
   describe('category', () => {
     it('Must be string', (done) => {
       const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.title = 1;
+      modifiedMinimalUserListing.category = 1;
       storeListingAsMinimalUserAndExpectFailure(
         modifiedMinimalUserListing,
         'Category cannot be an int.',
