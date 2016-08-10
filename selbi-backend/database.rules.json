@@ -15,7 +15,7 @@
                 // Only owner can write. Owner and friends can read.
                 "private": {
                     ".write": "$uid === auth.uid",
-                    ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists",
+                    ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists()",
                     "$listingId" : {
                       ".validate" : "newData.isBoolean()"
                     }
@@ -45,8 +45,7 @@
                     }
                 },
                 "$other": { ".validate": false }
-            },
-            "$other": { ".validate": false }
+            }
         },
 
         // All data about individual listings.
@@ -74,16 +73,14 @@
                     ".validate" : "newData.isString()"
                 },
                 "$other": { ".validate": false }
-            },
-            "$other": { ".validate": false }
+            }
         },
 
         // Mapping of geo data to listing id.
         "geolistings" : {
             "$listingId" : {
               // TODO Validate Geofire format.
-            },
-            "$other": { ".validate": false }
+            }
         },
 
         // All background data about a user.
