@@ -533,10 +533,6 @@ describe('/users', () => {
       });
     });
 
-    it('friends', () => {
-      throw new Error('TODO');
-    });
-
     describe('payments', () => {
       const paymentData = {
         stripeCustomerId: 'fakeStripeCustomerId',
