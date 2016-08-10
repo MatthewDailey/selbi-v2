@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import FirebaseTest, { minimalUserUid } from './FirebaseTestConnections';
 
 describe('/listings', () => {
-
   before(function (done) {
     this.timeout(6000);
 
@@ -19,6 +18,22 @@ describe('/listings', () => {
       .then(done)
       .catch(done);
   });
+
+  function storeListingAsMinimalUserAndExpectFailure(dataToStore, errorMessage, done) {
+    FirebaseTest
+      .minimalUserApp
+      .database()
+      .ref('/listings')
+      .child('shouldNotExist')
+      .set(dataToStore)
+      .then(() => {
+        done(new Error(errorMessage));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  }
 
   it('is list', (done) => {
     const promiseStoreFirstListing = FirebaseTest
@@ -88,27 +103,32 @@ describe('/listings', () => {
   it('cannot have any extra properties', (done) => {
     const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
     modifiedMinimalUserListing.extraProp = 'extra-prop';
-    FirebaseTest
-      .minimalUserApp
-      .database()
-      .ref('/listings')
-      .child('listingTwo')
-      .set(modifiedMinimalUserListing)
-      .then(() => {
-        done(new Error('Should not be able to create listings for non-existant user.'));
-      })
-      .catch((error) => {
-        expect(error.code).to.equal('PERMISSION_DENIED');
-        done();
-      });
+    storeListingAsMinimalUserAndExpectFailure(
+      modifiedMinimalUserListing,
+      'Should not be able to create listings for non-existant user.',
+      done);
   });
 
   describe('title', () => {
-    it('TODO', () => { throw new Error('TODO'); });
+    it('Must be string', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.title = 1;
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'Title cannot be an int.',
+        done);
+    });
   });
 
   describe('description', () => {
-    it('TODO', () => { throw new Error('TODO'); });
+    it('Must be string', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.title = 1;
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'Description cannot be an int.',
+        done);
+    });
   });
 
   describe('price', () => {
@@ -124,6 +144,13 @@ describe('/listings', () => {
   });
 
   describe('category', () => {
-    it('TODO', () => { throw new Error('TODO'); });
+    it('Must be string', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.title = 1;
+      storeListingAsMinimalUserAndExpectFailure(
+        modifiedMinimalUserListing,
+        'Category cannot be an int.',
+        done);
+    });
   });
 });
