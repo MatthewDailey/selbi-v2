@@ -268,7 +268,7 @@ describe('/users', () => {
 
     function setPropertyAndExpectPermissionDenied(objectModification, done) {
       const minimalUserDataCopy = JSON.parse(JSON.stringify(minimalUserData));
-      objectModification(minimalUserDataCopy)
+      objectModification(minimalUserDataCopy);
       usersRef
         .child(minimalUserUid)
         .set(minimalUserDataCopy)
@@ -563,29 +563,6 @@ describe('/users', () => {
       describe('shipTo', () => {
         testAddress('shipTo');
       });
-    });
-
-    describe('listings', () => {
-      it('all', () => {
-        throw new Error('TODO');
-      });
-
-      it('active', () => {
-        throw new Error('TODO');
-      });
-
-      it('paused', () => {
-        throw new Error('TODO');
-      });
-
-      it('sold', () => {
-        throw new Error('TODO');
-      });
-
-      it('salePending', () => {
-        throw new Error('TODO');
-      });
-
     });
 
     it('friends', () => {

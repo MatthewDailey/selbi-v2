@@ -67,32 +67,37 @@
                   }
                 },
 
+                "listings" : {
+                    ".validate": "newData.hasChildren(['public', 'private', 'inactive', 'sold', 'salePending'])",
+                    "$other": { ".validate": false }
+                },
+
                 "merchant" : {
-                  ".validate" : "newData.hasChildren(['stripeVerified'])",
+                    ".validate" : "newData.hasChildren(['stripeVerified'])",
 
-                  "$other": { ".validate": false },
+                    "$other": { ".validate": false },
 
-                  "accountNumberLast4" : {
-                    ".validate" : "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-                  },
-                  "routingNumber" : {
-                    ".validate" : "newData.isNumber()"
-                  },
-                  "publicKey" : {
-                    ".validate" : "newData.isString()"
-                  },
-                  "privateKey" : {
-                    ".validate" : "newData.isString()"
-                  },
-                  "stripeBankId" : {
-                    ".validate" : "newData.isString()"
-                  },
-                  "stripeManagedAccountId" : {
-                    ".validate" : "newData.isString()"
-                  },
-                  "stripeVerified" : {
-                    ".validate" : "newData.isBoolean()"
-                  }
+                    "accountNumberLast4" : {
+                      ".validate" : "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+                    },
+                    "routingNumber" : {
+                      ".validate" : "newData.isNumber()"
+                    },
+                    "publicKey" : {
+                      ".validate" : "newData.isString()"
+                    },
+                    "privateKey" : {
+                      ".validate" : "newData.isString()"
+                    },
+                    "stripeBankId" : {
+                      ".validate" : "newData.isString()"
+                    },
+                    "stripeManagedAccountId" : {
+                      ".validate" : "newData.isString()"
+                    },
+                    "stripeVerified" : {
+                      ".validate" : "newData.isBoolean()"
+                    }
                 },
 
                 "locations" : {

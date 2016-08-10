@@ -79,6 +79,12 @@ Firebase Database Endpoints
 - only visible to chat room participants
 
 
+Friends format and process
+==========================
+Friends are modelled as a bi-directional link.
+
+
+
 Listings States and where they'll be stored.
 ===========================================
 

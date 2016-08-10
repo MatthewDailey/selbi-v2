@@ -1,0 +1,15 @@
+{
+  "title" : "Test listing title",
+  "description" : "test description",
+  "price" : 1.2,
+  "imageUrls" : [
+    "http://imgurl",
+    "https://imgurl"
+  ],
+  "sellerId" : "test-seller-id",
+  "status" : "inactive",
+  "categories" : [
+    "electronics",
+    "all"
+  ]
+}
