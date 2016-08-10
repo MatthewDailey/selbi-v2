@@ -52,4 +52,36 @@ describe('/listings', () => {
       .then(verifyThatBothListingsAreStored)
       .catch(done);
   });
+
+  it('user can only create own listings', (done) => {
+    FirebaseTest
+      .testUserApp
+      .database()
+      .ref('/listings')
+      .child('shouldNotExist')
+      .set(FirebaseTest.getMinimalUserListingOne())
+      .then(() => {
+        done(new Error('Should not be able to create listings for another user.'));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  });
+
+  it('can only create listings for existing user', (done) => {
+    FirebaseTest
+      .testUserApp
+      .database()
+      .ref('/listings')
+      .child('shouldNotExist')
+      .set(FirebaseTest.getTestUserListingOne())
+      .then(() => {
+        done(new Error('Should not be able to create listings for non-existant user.'));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  });
 });

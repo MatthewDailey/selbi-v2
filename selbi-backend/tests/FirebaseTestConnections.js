@@ -3,8 +3,10 @@ import firebase from 'firebase';
 const testUserData = require('./resources/testUser.json');
 const minimalUserData = require('./resources/minimalUser.json');
 
-const testListingOne = require('./resources/minimalUserListingOne.json');
-const testListingTwo = require('./resources/minimalUserListingTwo.json');
+const minimalUserListingOne = require('./resources/minimalUserListingOne.json');
+const minimalUserListingTwo = require('./resources/minimalUserListingTwo.json');
+
+const testUserListingOne = require('./resources/testUserListingOne.json');
 
 class TestFirebaseConnections {
   constructor() {
@@ -46,12 +48,16 @@ class TestFirebaseConnections {
     return JSON.parse(JSON.stringify(testUserData));
   }
 
+  getTestUserListingOne() {
+    return JSON.parse(JSON.stringify(testUserListingOne));
+  }
+
   getMinimalUserListingOne() {
-    return JSON.parse(JSON.stringify(testListingOne));
+    return JSON.parse(JSON.stringify(minimalUserListingOne));
   }
 
   getMinimalUserListingTwo() {
-    return JSON.parse(JSON.stringify(testListingTwo));
+    return JSON.parse(JSON.stringify(minimalUserListingTwo));
   }
 
   /*
