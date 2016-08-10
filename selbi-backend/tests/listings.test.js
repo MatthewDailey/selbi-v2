@@ -85,6 +85,24 @@ describe('/listings', () => {
       });
   });
 
+  it('cannot have any extra properties', (done) => {
+    const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+    modifiedMinimalUserListing.extraProp = 'extra-prop';
+    FirebaseTest
+      .minimalUserApp
+      .database()
+      .ref('/listings')
+      .child('listingTwo')
+      .set(modifiedMinimalUserListing)
+      .then(() => {
+        done(new Error('Should not be able to create listings for non-existant user.'));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  });
+
   describe('title', () => {
     it('TODO', () => { throw new Error('TODO'); });
   });
