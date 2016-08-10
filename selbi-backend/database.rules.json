@@ -1,5 +1,84 @@
 {
 	"rules": {
+        // Mapping state to listing id for an individual user. All states take the form of
+        // objects mapping listing id to true.
+        "userListings" : {
+            "$uid" : {
+                // Only owner can read and write.
+                "inactive": {
+                    ".write": "$uid === auth.uid",
+                    ".read": "$uid === auth.uid",
+                    "$listingId" : {
+                        ".validate" : "newData.isBoolean()"
+                    }
+                },
+                // Only owner can write. Owner and friends can read.
+                "private": {
+                    ".write": "$uid === auth.uid",
+                    ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists",
+                    "$listingId" : {
+                      ".validate" : "newData.isBoolean()"
+                    }
+                },
+                // Owner can write, anyone can read.
+                "public": {
+                    ".write": "$uid === auth.uid",
+                    ".read": true,
+                    "$listingId" : {
+                      ".validate" : "newData.isBoolean()"
+                    }
+                },
+                // Only owner read. No one (except service account) can edit.
+                "sold": {
+                    ".write" : false,
+                    ".read": "$uid === auth.uid",
+                    "$listingId" : {
+                      ".validate" : "newData.isBoolean()"
+                    }
+                },
+                // Only owner read. No one (except service account) can edit.
+                "salePending": {
+                    ".write" : false,
+                    ".read": "$uid === auth.uid",
+                    "$listingId" : {
+                      ".validate" : "newData.isBoolean()"
+                    }
+                },
+                "$other": { ".validate": false }
+            },
+            "$other": { ".validate": false }
+        },
+
+        // All data about individual listings.
+        "listings" : {
+            "$listingId" : {
+                "title" : {
+                    ".validate" : "newData.isString()"
+                },
+                "description" : {
+                    ".validate" : "newData.isString()"
+                },
+                "price" : {
+                    ".validate" : "newData.isNumber() && newData.val() > 0"
+                },
+                "sellerId" : {
+                    ".validate" : "root.child('/users/' + newData.val()).exists()"
+                },
+                "imageUrls" : {
+                    // TODO: Validate are urls.
+                },
+                "status" : {
+                    ".validate" : "newData.isString() && (newData.val() == 'inactive' || newData.val() == 'private' || newData.val() == 'public' || newData.val() == 'sold' || newData.val() == 'salePending')"
+                },
+                "category" : {
+                    ".validate" : "newData.isString()"
+                },
+                "$other": { ".validate": false }
+            },
+            "$other": { ".validate": false }
+        },
+
+        // All background data about a user.
 	    "users" : {
 	    	"$uid" : {
 	    		".write": "$uid === auth.uid",
@@ -65,11 +144,6 @@
                   "expirationDate" : {
                       ".validate" : "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
                   }
-                },
-
-                "listings" : {
-                    ".validate": "newData.hasChildren(['public', 'private', 'inactive', 'sold', 'salePending'])",
-                    "$other": { ".validate": false }
                 },
 
                 "merchant" : {

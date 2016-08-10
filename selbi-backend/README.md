@@ -44,11 +44,13 @@ Firebase Database Endpoints
 /users
 - user data.
 - conatins pointers to all listings, chatRooms
-/users/<uid>/listings/inactive - editable by user
-/users/<uid>/listings/private - editable by user
-/users/<uid>/listings/public - editable by user
-/users/<uid>/listings/purchasePending - editable only by service account
-/users/<uid>/listings/sold - editable only by service account
+
+
+/userListings/<uid>/inactive - editable by user
+/userListings/<uid>/private - editable by user
+/userListings/<uid>/public - editable by user
+/userListings/<uid>/purchasePending - editable only by service account
+/userListings/<uid>/sold - editable only by service account
 
 /listings
 - listing data.

@@ -8,8 +8,5 @@
   ],
   "sellerId" : "test-seller-id",
   "status" : "inactive",
-  "categories" : [
-    "electronics",
-    "all"
-  ]
+  "categor" : "electronics"
 }
