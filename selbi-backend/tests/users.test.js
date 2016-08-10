@@ -581,6 +581,11 @@ describe('/users', () => {
       it('sold', () => {
         throw new Error('TODO');
       });
+
+      it('salePending', () => {
+        throw new Error('TODO');
+      });
+
     });
 
     it('friends', () => {
