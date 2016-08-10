@@ -52,6 +52,7 @@ describe('listings', () => {
     });
 
     it('accepts empty listings objects', (done) => {
+      // This test passes because Firebase ignores empty objects.
       const modifiedMinimalUserData = JSON.parse(JSON.stringify(minimalUserData));
       modifiedMinimalUserData.listings = {};
       usersRef

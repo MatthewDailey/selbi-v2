@@ -78,6 +78,14 @@
             "$other": { ".validate": false }
         },
 
+        // Mapping of geo data to listing id.
+        "geolistings" : {
+            "$listingId" : {
+              // TODO Validate Geofire format.
+            },
+            "$other": { ".validate": false }
+        },
+
         // All background data about a user.
 	    "users" : {
 	    	"$uid" : {

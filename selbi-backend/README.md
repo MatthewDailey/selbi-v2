@@ -58,6 +58,7 @@ Firebase Database Endpoints
 
 /geolistings
 - tie together: geo + listing id
+- https://github.com/firebase/geofire-js/blob/master/docs/reference.md
 
 /requestedPayments
 - only visible to service account
@@ -84,6 +85,12 @@ Firebase Database Endpoints
 Friends format and process
 ==========================
 Friends are modelled as a bi-directional link.
+
+/friendRequests/$uid
+- get list of people requesting to be friends with user
+
+/friends/$uid
+- get list of people who have accepted friends
 
 
 
