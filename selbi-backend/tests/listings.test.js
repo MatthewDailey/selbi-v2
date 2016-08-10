@@ -84,4 +84,28 @@ describe('/listings', () => {
         done();
       });
   });
+
+  describe('title', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
+
+  describe('description', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
+
+  describe('price', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
+
+  describe('sellerId', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
+
+  describe('imageUrls', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
+
+  describe('category', () => {
+    it('TODO', () => { throw new Error('TODO'); });
+  });
 });
