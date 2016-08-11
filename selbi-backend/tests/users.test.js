@@ -95,34 +95,6 @@ describe('/users', () => {
         .then(done)
         .catch(done);
     });
-
-    function testMinimalDataWithoutField(fieldToDelete, done) {
-      const minimalDataWithDeletedField = FirebaseTest.getMinimalUserData();
-      delete minimalDataWithDeletedField[fieldToDelete];
-
-      usersRef
-        .child(minimalUserUid)
-        .set(minimalDataWithDeletedField)
-        .then(() => {
-          done(new Error('Should not be able to store user data without name.'));
-        })
-        .catch((error) => {
-          expect(error.code).to.equal('PERMISSION_DENIED');
-          done();
-        });
-    }
-
-    it('requires name', (done) => {
-      testMinimalDataWithoutField('name', done);
-    });
-
-    it('requires email', (done) => {
-      testMinimalDataWithoutField('email', done);
-    });
-
-    it('requires userAgreementAccepted', (done) => {
-      testMinimalDataWithoutField('userAgreementAccepted', done);
-    });
   });
 
   describe('as schemaTestUser', () => {
@@ -257,12 +229,35 @@ describe('/users', () => {
             data.userAgreementAccepted = 1;
           }, done);
       });
+
+      it('is required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            // We need to add a name because an empty node will succeed but nothing will be stored.
+            // noinspection Eslint
+            data.name = {
+              first: 'test',
+              last: 'user',
+            };
+            // noinspection Eslint
+            delete data.userAgreementAccepted;
+          }, done);
+      });
     });
 
     describe('name', () => {
+      function addNameToData(data) {
+        // noinspection Eslint
+        data.name = {
+          first: 'test',
+          last: 'user',
+        };
+      }
+
       it('takes no extra parameters', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
+            addNameToData(data);
             // noinspection Eslint
             data.name.extra = "extraParam";
           }, done);
@@ -272,6 +267,7 @@ describe('/users', () => {
         it('is required', (done) => {
           setPropertyAndExpectPermissionDenied(
             (data) => {
+              addNameToData(data);
               // noinspection Eslint
               delete data.name.first;
             }, done);
@@ -280,6 +276,7 @@ describe('/users', () => {
         it('is string', (done) => {
           setPropertyAndExpectPermissionDenied(
             (data) => {
+              addNameToData(data);
               // noinspection Eslint
               data.name.first = 1;
             }, done);
@@ -290,6 +287,7 @@ describe('/users', () => {
         it('is required', (done) => {
           setPropertyAndExpectPermissionDenied(
             (data) => {
+              addNameToData(data);
               // noinspection Eslint
               delete data.name.last;
             }, done);
@@ -298,6 +296,7 @@ describe('/users', () => {
         it('is string', (done) => {
           setPropertyAndExpectPermissionDenied(
             (data) => {
+              addNameToData(data);
               // noinspection Eslint
               data.name.last = 1;
             }, done);
@@ -395,16 +394,6 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.phoneNumber = 1234567890;
-          }, done);
-      });
-    });
-
-    describe('userAgreementAccepted', () => {
-      it('is required', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            // noinspection Eslint
-            delete data.userAgreementAccepted;
           }, done);
       });
     });
@@ -546,7 +535,7 @@ describe('/users', () => {
         setPropertyAndExpectSuccessfulStore(
           (data) => {
             // noinspection Eslint
-            data.payments = paymentData;
+            data.payment = paymentData;
           }, done);
       });
 

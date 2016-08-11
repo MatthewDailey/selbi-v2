@@ -104,7 +104,7 @@
 	    		".write": "$uid === auth.uid",
                 ".read": "$uid === auth.uid",
 
-                ".validate": "newData.hasChildren(['name', 'email', 'userAgreementAccepted'])",
+                ".validate": "newData.hasChildren(['userAgreementAccepted'])",
 
                 "$other": { ".validate": false },
 
