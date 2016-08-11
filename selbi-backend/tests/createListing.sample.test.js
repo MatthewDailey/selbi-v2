@@ -89,6 +89,8 @@ function loadListingData(listingId, firebaseDb) {
  * friends and then loading their public and private listings. It's also useful for loading a
  * user's inventory of listings.
  *
+ * Note that this will fail if ANY listing fails to load.
+ *
  * @param status String status of listings to load. Must be inactive, public, private, sold,
  * salePending.
  * @param uid String user id of the user whose listings to load.
@@ -122,9 +124,59 @@ function loadListingsByStatus(status, uid, firebaseDb) {
     });
 }
 
+/*
+ * This code snippet demonstrates how to load all public listings at a certain location.
+ *
+ * This is useful for the 'nearby-listings' view for listings within X km of the user. See
+ * https://github.com/firebase/geofire-js/blob/master/docs/reference.md for more info about GeoFire.
+ *
+ * Note that this will fail if ANY listing fails to load.
+ *
+ * @param latlon Array of [lat, lon], pulled from user device (either address or device location).
+ * @param radiusKm Number of km radius to search around latlon.
+ * @param firebaseDb We pass in the database in this sample test.
+ *
+ * @return Promise fulfilled with list of listing DataSnapshots.
+ */
+function loadListingByLocation(latlon, radiusKm, firebaseDb) {
+  const geoListings = new GeoFire(firebaseDb.ref('/geolistings'));
+
+  const geoQuery = geoListings.query({
+    center: latlon,
+    radius: radiusKm,
+  });
+
+  return new Promise((fulfill) => {
+    const listingsInArea = [];
+    const loadListingsPromises = [];
+
+    geoQuery.on('key_entered', (listingId) => {
+      // Once we know the listing id of a listing in the area, start loading the listing data.
+      loadListingsPromises.push(
+        loadListingData(listingId, firebaseDb)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              listingsInArea.push(snapshot);
+            }
+          }));
+    });
+
+    // Ready is called once all pre-existing data has been read.
+    geoQuery.on('ready', () => {
+      geoQuery.cancel();
+
+      // Now wait on loading the actual listing data.
+      Promise.all(loadListingsPromises)
+        .then(() => {
+          fulfill(listingsInArea);
+        });
+    });
+  });
+}
+
 describe('Listing Samples', () => {
   beforeEach(function (done) {
-    this.timeout(15000);
+    this.timeout(25000);
 
     const createTestUser = () => FirebaseTest
       .testUserApp
@@ -173,6 +225,34 @@ describe('Listing Samples', () => {
         const resultTitles = [results[0].val().title, results[1].val().title];
         expect(resultTitles).contains('listing 1');
         expect(resultTitles).contains('listing 2');
+      })
+      .then(done)
+      .catch(done);
+  });
+
+  it('can load listing by location', function (done) {
+    this.timeout(5000);
+
+    createTestUserListing('listing 1')
+      .then(() => loadListingByLocation(
+        [37.79, -122.41],
+        10,
+        FirebaseTest.minimalUserApp.database()))
+      .then((results) => {
+        expect(results.length).to.equal(1);
+        expect(results[0].val().title).to.equal('listing 1');
+      })
+      .then(done)
+      .catch(done);
+  });
+
+  it('can load empty list for location if no listing exists', (done) => {
+    loadListingByLocation(
+      [37.79, -122.41],
+      10,
+      FirebaseTest.minimalUserApp.database())
+      .then((results) => {
+        expect(results.length).to.equal(0);
       })
       .then(done)
       .catch(done);
