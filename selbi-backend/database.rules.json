@@ -92,9 +92,29 @@
 
         // Mapping of geo data to listing id.
         "geolistings" : {
-            "$listingId" : {
-              // TODO Validate Geofire format.
+          ".read": true,
+
+          "$listingId" : {
+            ".write": "root.child('/listings/' + $listingId + '/sellerId').val() == auth.uid",
+
+            ".validate" : "newData.hasChildren(['g', 'l'])",
+            "$other": { ".validate": false },
+
+            "g" : {
+              ".validate": "newData.isString()"
+            },
+            "l" : {
+              ".validate": "newData.hasChildren(['0', '1'])",
+              "$other": { ".validate": false },
+
+              "0": {
+                ".validate": "newData.isNumber()"
+              },
+              "1": {
+                ".validate": "newData.isNumber()"
+              }
             }
+          }
         },
 
         // All background data about a user.
