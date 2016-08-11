@@ -34,7 +34,7 @@ describe('/userListings', () => {
       .database()
       .ref('/userListings')
       .child(minimalUserUid)
-      .set(FirebaseTest.getUserListingComplete());
+      .set(FirebaseTest.getUserListingCompleteForUser());
 
     const promiseStorePartialUserListing = FirebaseTest
       .testUserApp
@@ -49,7 +49,7 @@ describe('/userListings', () => {
       .database()
       .ref('/userListings')
       .child(extraUserUid)
-      .set(FirebaseTest.getUserListingSoldAndSalePending());
+      .set(FirebaseTest.getUserListingComplete());
 
     Promise.all([promiseStoreCompleteUserListing,
         promiseStorePartialUserListing,
@@ -75,7 +75,7 @@ describe('/userListings', () => {
       .database()
       .ref('/userListings')
       .child(minimalUserUid)
-      .set(FirebaseTest.getUserListingSoldAndSalePending())
+      .set(FirebaseTest.getUserListingComplete())
       .then(() => {
         done(new Error('Should not be able to write to salePending or sold'));
       })
@@ -85,7 +85,7 @@ describe('/userListings', () => {
       });
   });
 
-  function testUserCannotWriteTo(userListingType) {
+  function testUserCannotWriteOwn(userListingType) {
     it(`user cannot write to /userListings/$uid/${userListingType}`, (done) => {
       FirebaseTest
         .minimalUserApp
@@ -106,7 +106,7 @@ describe('/userListings', () => {
     });
   }
 
-  function testUserCanWriteTo(userListingType) {
+  function testUserCanWriteOwn(userListingType) {
     it(`user can write to /userListings/$uid/${userListingType}`, (done) => {
       FirebaseTest
         .minimalUserApp
@@ -122,14 +122,46 @@ describe('/userListings', () => {
     });
   }
 
-  testUserCanWriteTo('inactive');
+  function testUserCanReadOwn(userListingType) {
+    it(`user can read /userListings/$uid/${userListingType}`, (done) => {
+      const verifyThatUserListingTypePresent = () => FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('/userListings')
+        .child(minimalUserUid)
+        .child(userListingType)
+        .once('value')
+        .then((snapshot) => {
+          expect(snapshot.exists()).to.equal(true);
+          done();
+        })
+        .catch(done);
 
-  testUserCanWriteTo('private');
+      //
+      FirebaseTest
+        .serviceAccountApp
+        .database()
+        .ref('/userListings')
+        .child(minimalUserUid)
+        .child(userListingType)
+        .update({
+          listingOne: true,
+        })
+        .then(verifyThatUserListingTypePresent)
+        .catch(done);
+    });
+  }
 
-  testUserCanWriteTo('public');
+  testUserCanWriteOwn('inactive');
+  testUserCanWriteOwn('private');
+  testUserCanWriteOwn('public');
 
-  testUserCannotWriteTo('sold');
+  testUserCannotWriteOwn('sold');
+  testUserCannotWriteOwn('salePending');
 
-  testUserCannotWriteTo('salePending');
-
+  testUserCanReadOwn('inactive');
+  testUserCanReadOwn('private');
+  testUserCanReadOwn('public');
+  testUserCanReadOwn('sold');
+  testUserCanReadOwn('salePending');
 });

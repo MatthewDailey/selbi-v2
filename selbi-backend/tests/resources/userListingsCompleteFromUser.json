@@ -5,7 +5,7 @@
   "private" : {
     "listingTwo" : true
   },
-  "salePending" : {
+  "public" : {
     "listingThree" : true
   }
 }

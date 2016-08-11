@@ -6,6 +6,12 @@
     "listingTwo" : true
   },
   "public" : {
+    "listingTwo" : true
+  },
+  "sold" : {
     "listingThree" : true
+  },
+  "salePending" : {
+    "listingFour" : true
   }
 }

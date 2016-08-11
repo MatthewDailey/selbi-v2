@@ -8,9 +8,9 @@ const minimalUserListingTwo = require('./resources/minimalUserListingTwo.json');
 
 const testUserListingOne = require('./resources/testUserListingOne.json');
 
-const partialUserListing = require('./resources/userListingsComplete.json');
+const partialUserListing = require('./resources/userListingsCompleteFromUser.json');
 const completeUserListing = require('./resources/userListingsPartial.json');
-const soldUserListing = require('./resources/userListingsWithSoldAndSalePending.json');
+const soldUserListing = require('./resources/userListingsComplete.json');
 
 function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -72,11 +72,11 @@ class TestFirebaseConnections {
     return deepCopy(partialUserListing);
   }
 
-  getUserListingComplete() {
+  getUserListingCompleteForUser() {
     return deepCopy(completeUserListing);
   }
 
-  getUserListingSoldAndSalePending() {
+  getUserListingComplete() {
     return deepCopy(soldUserListing);
   }
 
