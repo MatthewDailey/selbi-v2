@@ -223,9 +223,53 @@ function changeListingToPublic(listingId, latlon, firebaseDb) {
       const promiseAddGeoListing = new GeoFire(firebaseDb.ref('/geolistings'))
         .set(listingId, latlon);
 
-      Promise.all([promiseRemoveOldUserListing,
+      return Promise.all([promiseRemoveOldUserListing,
           promiseAddNewUserListing,
           promiseAddGeoListing])
+        .then(() => Promise.resolve(oldSnapshot));
+    });
+}
+
+function changeListingToPrivate(listingId, firebaseDb) {
+  // Start by loading the existing snapshot and verifying it exists.
+  return firebaseDb
+    .ref('listings')
+    .child(listingId)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Update status on /listing data.
+        return firebaseDb
+          .ref('listings')
+          .child(listingId)
+          .update({
+            status: 'private',
+          })
+          .then(() => Promise.resolve(snapshot));
+      }
+      throw new Error('No such listing.');
+    })
+    .then((oldSnapshot) => {
+      const promiseRemoveOldUserListing = firebaseDb
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child(oldSnapshot.val().status)
+        .child(listingId)
+        .remove();
+
+      const promiseAddNewUserListing = firebaseDb
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child('private')
+        .child(listingId)
+        .set(true);
+
+      const promiseRemoveGeoListing = new GeoFire(firebaseDb.ref('/geolistings'))
+        .remove(listingId);
+
+      Promise.all([promiseRemoveOldUserListing,
+          promiseAddNewUserListing,
+          promiseRemoveGeoListing])
         .then(() => Promise.resolve(oldSnapshot));
     });
 }
@@ -314,6 +358,28 @@ describe('Listing Samples', () => {
       FirebaseTest.minimalUserApp.database())
       .then((results) => {
         expect(results.length).to.equal(0);
+      })
+      .then(done)
+      .catch(done);
+  });
+
+  it('can change to public then change back to private', function (done) {
+    this.timeout(5000);
+
+    // Create the listing as testUser.
+    createTestUserListing('listing 1')
+    // Use the testUser db to make the listing public.
+      .then((newListingId) => changeListingToPublic(newListingId,
+        [37.79, -122.41],
+        FirebaseTest.testUserApp.database()))
+      .then((oldListingSnapshot) => changeListingToPrivate(oldListingSnapshot.key,
+        FirebaseTest.testUserApp.database()))
+      .then(() => loadListingsByStatus('private',
+          testUserUid,
+          FirebaseTest.testUserApp.database()))
+      .then((results) => {
+        expect(results.length).to.equal(1);
+        expect(results[0].val().title).to.equal('listing 1');
       })
       .then(done)
       .catch(done);
