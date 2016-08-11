@@ -69,7 +69,7 @@ function createListing(titleInput,
 /*
  * This code snippet shows how to load a single listing from the db once you have the listing's id.
  *
- * @param listingId String id of the listign to load.
+ * @param listingId String id of the listing to load.
  * @param firebaseDb We pass in the database in this sample test.
  *
  * @returns Promise fulfilled with DataSnapshot of the listing if the listing exists.
@@ -81,9 +81,50 @@ function loadListingData(listingId, firebaseDb) {
     .once('value');
 }
 
+/*
+ * This code snippet shows how to load listings based on the status, for example, load all private
+ * listings for a given user.
+ *
+ * This is useful for loading listings of users a user is following by first loading the user's
+ * friends and then loading their public and private listings. It's also useful for loading a
+ * user's inventory of listings.
+ *
+ * @param status String status of listings to load. Must be inactive, public, private, sold,
+ * salePending.
+ * @param uid String user id of the user whose listings to load.
+ * @param firebaseDb We pass in the database in this sample test.
+ *
+ * @returns Promise fulfilled with list of listings of a given status.
+ */
+function loadListingsByStatus(status, uid, firebaseDb) {
+  return firebaseDb
+    .ref('/userListings')
+    .child(uid)
+    .child(status)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return Promise.resolve(snapshot.val());
+      }
+      return Promise.resolve({});
+    })
+    .then((listingsOfStatus) => {
+      const allListings = [];
+      Object.keys(listingsOfStatus)
+        .forEach((listingId) => {
+          allListings.push(
+            firebaseDb
+              .ref('/listings')
+              .child(listingId)
+              .once('value'));
+        });
+      return Promise.all(allListings);
+    });
+}
+
 describe('Listing Samples', () => {
   beforeEach(function (done) {
-    this.timeout(6000);
+    this.timeout(15000);
 
     const createTestUser = () => FirebaseTest
       .testUserApp
@@ -99,12 +140,39 @@ describe('Listing Samples', () => {
       .catch(done);
   });
 
+  function createTestUserListing(title) {
+    return createListing(title,
+      'desc',
+      4.5,
+      ['http://img'],
+      'category',
+      [37.79, -122.41],
+      testUserUid,
+      FirebaseTest.testUserApp.database());
+  }
+
   it('create new listing', (done) => {
-    createListing('title', 'desc', 4.5, ['http://img'], 'category', [37.79, -122.41], testUserUid,
-      FirebaseTest.testUserApp.database())
+    createTestUserListing('title')
       .then((listingId) => loadListingData(listingId, FirebaseTest.testUserApp.database()))
       .then((snapshot) => {
         expect(snapshot.val().title).to.equal('title');
+      })
+      .then(done)
+      .catch(done);
+  });
+
+  it('can load listings by status', (done) => {
+    createTestUserListing('listing 1')
+      .then(() => createTestUserListing('listing 2'))
+      .then(() => loadListingsByStatus(
+        'inactive',
+        testUserUid,
+        FirebaseTest.testUserApp.database()))
+      .then((results) => {
+        expect(results.length).to.equal(2);
+        const resultTitles = [results[0].val().title, results[1].val().title];
+        expect(resultTitles).contains('listing 1');
+        expect(resultTitles).contains('listing 2');
       })
       .then(done)
       .catch(done);
