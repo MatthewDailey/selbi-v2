@@ -6,6 +6,17 @@ schema and demonstrate how to properly query.
 We prefer a flat schema because Firebase loads the entire json hierarchy below the query. For
 example, /users will load all user data but /users/<uid> will only load that user's data.
 
+Authentication
+==============
+
+A user is not required to provide an identity until check out. This means they can both post a
+listing or browse without providing any information.
+
+See http://stackoverflow.com/questions/38165781/firebase-unexpectedly-persisting-anonymous-auth-available-with-onauthstatechang
+for info about how to do React Native anonymous log in.
+
+Also see the Firebase docs https://firebase.google.com/docs/auth/web/anonymous-auth
+
 
 Query Types
 ===========
