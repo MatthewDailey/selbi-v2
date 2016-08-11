@@ -1,0 +1,11 @@
+{
+  "inactive" : {
+    "listingOne" : true
+  },
+  "private" : {
+    "listingTwo" : true
+  },
+  "salePending" : {
+    "listingThree" : true
+  }
+}

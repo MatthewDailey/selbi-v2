@@ -90,8 +90,6 @@ Friends are modelled as a bi-directional link.
 - get list of people requesting to be friends with user
 
 /friends/$uid
-- get list of people who have accepted friends
-
 
 
 Listings States and where they'll be stored.
@@ -146,3 +144,8 @@ How a Purchase Works
 
 [seller doesn't acknowledge]
 5. Buyer contacts support and we handle it manually.
+
+Simpler Purchase Workflow
+=========================
+1. Buyer clicks buy, adds listing id to /purchasePending. This locks updates to /listing/<listing id> so price is fixed.
+...

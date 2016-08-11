@@ -4,6 +4,12 @@
         // objects mapping listing id to true.
         "userListings" : {
             "$uid" : {
+              // TODO Add limitation so that listing must exist to add to user listings.
+              ".write": "$uid === auth.uid && !newData.hasChild('salePending') && !newData.hasChild('sold')",
+
+                // Can only create userListings for oneself and for existant user.
+                ".validate" : "$uid == auth.uid && root.child('/users/' + $uid).exists()",
+
                 // Only owner can read and write.
                 "inactive": {
                     ".write": "$uid === auth.uid",
@@ -106,6 +112,10 @@
                   ".validate" : "newData.isBoolean()"
                 },
 
+                "buyerId " :{
+                    ".valdiate" :"..."
+                }
+
 	    		"name": {
                     ".validate": "newData.hasChildren(['first', 'last'])",
 
@@ -137,7 +147,8 @@
                     ".validate" : "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
                 },
 
-                "payments" : {
+                // TODO move this to its own node in the heirarchy
+                "payment" : {
                   ".validate" : "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
 
                   "$other": { ".validate": false },
@@ -160,6 +171,7 @@
                   }
                 },
 
+                // TODO move this to its own node in the heirarchy
                 "merchant" : {
                     ".validate" : "newData.hasChildren(['stripeVerified'])",
 

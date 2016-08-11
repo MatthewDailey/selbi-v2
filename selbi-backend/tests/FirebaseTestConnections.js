@@ -8,6 +8,14 @@ const minimalUserListingTwo = require('./resources/minimalUserListingTwo.json');
 
 const testUserListingOne = require('./resources/testUserListingOne.json');
 
+const partialUserListing = require('./resources/userListingsComplete.json');
+const completeUserListing = require('./resources/userListingsPartial.json');
+const soldUserListing = require('./resources/userListingsWithSoldAndSalePending.json');
+
+function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 class TestFirebaseConnections {
   constructor() {
     this.extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
@@ -41,23 +49,35 @@ class TestFirebaseConnections {
   }
 
   getMinimalUserData() {
-    return JSON.parse(JSON.stringify(minimalUserData));
+    return deepCopy(minimalUserData);
   }
 
   getTestUserData() {
-    return JSON.parse(JSON.stringify(testUserData));
+    return deepCopy(testUserData);
   }
 
   getTestUserListingOne() {
-    return JSON.parse(JSON.stringify(testUserListingOne));
+    return deepCopy(testUserListingOne);
   }
 
   getMinimalUserListingOne() {
-    return JSON.parse(JSON.stringify(minimalUserListingOne));
+    return deepCopy(minimalUserListingOne);
   }
 
   getMinimalUserListingTwo() {
-    return JSON.parse(JSON.stringify(minimalUserListingTwo));
+    return deepCopy(minimalUserListingTwo);
+  }
+
+  getUserListingPartial() {
+    return deepCopy(partialUserListing);
+  }
+
+  getUserListingComplete() {
+    return deepCopy(completeUserListing);
+  }
+
+  getUserListingSoldAndSalePending() {
+    return deepCopy(soldUserListing);
   }
 
   /*
