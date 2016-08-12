@@ -63,7 +63,7 @@ describe('Create Customer', () => {
       .database()
       .ref('createCustomer'))
       .then(() => {
-        done(new Error('Should not be able to store directly to /createCustomer'));
+        done(new Error('Should not be able to store'));
       })
       .catch((error) => {
         expect(error.code).to.equal('PERMISSION_DENIED');
@@ -83,5 +83,37 @@ describe('Create Customer', () => {
   it('cannot write to /createCustomer/tasks with bad data', (done) => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({ foo: 'bar' }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with different customerUid from auth.uid', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        stripePaymentSource: 'stripePaymentCcToken',
+        customerName: 'test user',
+        customerUid: 'not the user' }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with int customerUid', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        stripePaymentSource: 'stripePaymentCcToken',
+        customerName: 'test user',
+        customerUid: 1 }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with int customerName', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        stripePaymentSource: 'stripePaymentCcToken',
+        customerName: 1,
+        customerUid: testUserUid }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with int stripePaymentSource', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        stripePaymentSource: 1,
+        customerName: 'test user',
+        customerUid: testUserUid }), done);
   });
 });
