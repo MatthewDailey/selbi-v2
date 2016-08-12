@@ -1,5 +1,7 @@
 import initializeStripe from 'stripe';
 
+// Account is used to receive payments only, never charged.
+
 const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
 
 // Received by running clientCreateBankAccount. Should be passed from client.

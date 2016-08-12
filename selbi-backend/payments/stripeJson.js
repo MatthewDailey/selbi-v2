@@ -118,3 +118,30 @@ const ccToken = { id: 'tok_18hiwdLzdXFwKk7fdWfIsvrL',
   livemode: false,
   type: 'card',
   used: false };
+
+  const customer = { id: 'cus_8zikijIPjkYqjU',
+    object: 'customer',
+    account_balance: 0,
+    created: 1471022338,
+    currency: null,
+    default_source: 'card_18hiwdLzdXFwKk7fvyJbKND2',
+    delinquent: false,
+    description: 'Customer for matthew.thompson@example.com',
+    discount: null,
+    email: null,
+    livemode: false,
+    metadata: {},
+    shipping: null,
+    sources:
+    { object: 'list',
+      data: [ [Object] ],
+      has_more: false,
+      total_count: 1,
+      url: '/v1/customers/cus_8zikijIPjkYqjU/sources' },
+    subscriptions:
+    { object: 'list',
+      data: [],
+      has_more: false,
+      total_count: 0,
+      url: '/v1/customers/cus_8zikijIPjkYqjU/subscriptions' } };
+
