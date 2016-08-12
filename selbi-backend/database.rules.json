@@ -1,11 +1,17 @@
 {
 	"rules": {
+
+        "sample-queue" : {
+            ".read" : true,
+            ".write" : true
+        },
+
         // Mapping state to listing id for an individual user. All states take the form of
         // objects mapping listing id to true.
         "userListings" : {
             "$uid" : {
-              // TODO Add limitation so that listing must exist to add to user listings.
-              ".write": "$uid === auth.uid && !newData.hasChild('salePending') && !newData.hasChild('sold')",
+                // TODO Add limitation so that listing must exist to add to user listings.
+                ".write": "$uid === auth.uid && !newData.hasChild('salePending') && !newData.hasChild('sold')",
 
                 // Can only create userListings for oneself and for existant user.
                 ".validate" : "$uid == auth.uid && root.child('/users/' + $uid).exists()",
