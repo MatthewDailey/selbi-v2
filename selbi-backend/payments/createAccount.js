@@ -6,6 +6,7 @@ const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
 // Note that each of these can only be used once.
 const bankToken = 'ba_18hihQLzdXFwKk7fSpjRi2LJ';
 const piiToken = 'pii_18hipLLzdXFwKk7f9BjtVwqV';
+const creditCardToken = 'tok_18hiwdLzdXFwKk7fdWfIsvrL';
 
 stripe.accounts.create({
   managed: true,
