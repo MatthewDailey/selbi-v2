@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Queue from 'firebase-queue';
-import FirebaseTest from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid } from './FirebaseTestConnections';
 
 function testSafeWorker(worker, done) {
   return (data, progress, resolve, reject) => {
@@ -25,13 +25,7 @@ describe('Create Customer', () => {
       .then(done);
   });
 
-  it('can create queue and handle work', function (done) {
-    this.timeout(10000);
-
-    const testData = {
-      foo: 'bar',
-    };
-
+  function writeToQueueAndExpectHandled(firebaseUserApp, testData, done) {
     new Queue(
       FirebaseTest.serviceAccountApp.database().ref('/createCustomer'),
       testSafeWorker(
@@ -40,12 +34,27 @@ describe('Create Customer', () => {
         },
         done));
 
-    FirebaseTest
-      .serviceAccountApp
+    firebaseUserApp
       .database()
       .ref('/createCustomer/tasks')
       .child('testData')
       .set(testData);
+  }
+
+  it('can create queue and handle work as service worker', (done) => {
+    const testData = {
+      foo: 'bar',
+    };
+    writeToQueueAndExpectHandled(FirebaseTest.serviceAccountApp, testData, done);
+  });
+
+  it('can create queue and handle work as  worker', (done) => {
+    const testData = {
+      stripePaymentSource: 'stripePaymentCcToken',
+      customerName: 'test user',
+      customerUid: testUserUid,
+    };
+    writeToQueueAndExpectHandled(FirebaseTest.testUserApp, testData, done);
   });
 
   function writeAndExpectFailure(firebaseActionOnCreateCustomerRef, done) {
@@ -62,7 +71,17 @@ describe('Create Customer', () => {
       });
   }
 
-  it('cannot write directly to /createCustomer', (done) => {
+  it('cannot write directly to /createCustomer as user', (done) => {
     writeAndExpectFailure((createCustomerRef) => createCustomerRef.push({ foo: 'bar' }), done);
+  });
+
+  it('cannot write to /createCustomer/specs as user', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('specs').push({ foo: 'bar' }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with bad data', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({ foo: 'bar' }), done);
   });
 });
