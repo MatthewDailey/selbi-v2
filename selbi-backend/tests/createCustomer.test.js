@@ -32,7 +32,7 @@ describe('Create Customer', () => {
       foo: 'bar',
     };
 
-    const queue = new Queue(
+    new Queue(
       FirebaseTest.serviceAccountApp.database().ref('/createCustomer'),
       testSafeWorker(
         (data) => {
