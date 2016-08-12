@@ -48,14 +48,11 @@ describe('Create Customer', () => {
       .set(testData);
   });
 
-  it('cannot write directly to /createCustomer', (done) => {
-    FirebaseTest
+  function writeAndExpectFailure(firebaseActionOnCreateCustomerRef, done) {
+    firebaseActionOnCreateCustomerRef(FirebaseTest
       .testUserApp
       .database()
-      .ref('createCustomer')
-      .push({
-        foo: 'bar',
-      })
+      .ref('createCustomer'))
       .then(() => {
         done(new Error('Should not be able to store directly to /createCustomer'));
       })
@@ -63,5 +60,9 @@ describe('Create Customer', () => {
         expect(error.code).to.equal('PERMISSION_DENIED');
         done();
       });
+  }
+
+  it('cannot write directly to /createCustomer', (done) => {
+    writeAndExpectFailure((createCustomerRef) => createCustomerRef.push({ foo: 'bar' }), done);
   });
 });
