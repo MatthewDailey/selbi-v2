@@ -47,4 +47,21 @@ describe('Create Customer', () => {
       .child('testData')
       .set(testData);
   });
+
+  it('cannot write directly to /createCustomer', (done) => {
+    FirebaseTest
+      .testUserApp
+      .database()
+      .ref('createCustomer')
+      .push({
+        foo: 'bar',
+      })
+      .then(() => {
+        done(new Error('Should not be able to store directly to /createCustomer'));
+      })
+      .catch((error) => {
+        expect(error.code).to.equal('PERMISSION_DENIED');
+        done();
+      });
+  });
 });

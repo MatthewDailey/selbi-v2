@@ -1,9 +1,86 @@
 {
 	"rules": {
-
         "createCustomer" : {
-            ".read" : true,
-            ".write" : true
+          "tasks": {
+            // Auth'd users can write, only service account can read.
+            ".read": false,
+            ".write": "auth.uid != null",
+            ".indexOn": "_state",
+            "$taskId": {
+              ".validate": "newData.hasChildren(['stripePaymentSource', 'customerName', 'customerUid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+              "_state": {
+                ".validate": "newData.isString()"
+              },
+              "_state_changed": {
+                ".validate": "newData.isNumber() && (newData.val() === now || data.val() === newData.val())"
+              },
+              "_owner": {
+                ".validate": "newData.isString()"
+              },
+              "_progress": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+              },
+              "_error_details": {
+                "error": {
+                  ".validate": "newData.isString()"
+                },
+                "error_stack": {
+                  ".validate": "newData.isString()"
+                },
+                "previous_state": {
+                  ".validate": "newData.isString()"
+                },
+                "original_task": {
+                  /* This space intentionally left blank, for malformed tasks */
+                },
+                "attempts": {
+                  ".validate": "newData.isNumber() && newData.val() > 0"
+                },
+                "$other": {
+                  ".validate": false
+                }
+              },
+              "_id": {
+                ".validate": "newData.isString()"
+              },
+              "stripePaymentSource" : {
+                ".validate" : "newData.isString()"
+              },
+              "customerName" : {
+                ".validate" : "newData.isString()"
+              },
+              "customerUid" : {
+                ".validate" : "newData.isString() && auth.uid == newData.val()"
+              },
+              "$other": { ".validate": false }
+            }
+          },
+          "specs" : {
+            // Only accessible from service account.
+            ".read": false,
+            ".write": false,
+            "$specId": {
+              ".validate": "newData.hasChild('in_progress_state')",
+              "start_state": {
+                ".validate": "newData.isString()"
+              },
+              "in_progress_state": {
+                ".validate": "newData.isString()"
+              },
+              "finished_state": {
+                ".validate": "newData.isString()"
+              },
+              "error_state": {
+                ".validate": "newData.isString()"
+              },
+              "timeout": {
+                ".validate": "newData.isNumber() && newData.val() > 0"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
         },
 
         // Mapping state to listing id for an individual user. All states take the form of
