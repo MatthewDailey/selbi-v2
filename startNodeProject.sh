@@ -19,4 +19,5 @@ echo "Creating tests dir and tests/.eslintrc..."
 echo "{\n\t\"env\": {\n\t\t\"mocha\": true\n\t}\n}" > tests/.eslintrc
 
 echo "Done installing node deps and eslint. To enable ESLint in Intellij go to 'Languages & Frameworks > JavaScript > Code Quality Tools > ESLint' and check enabled."
+echo "Do NOT enable 'Other Settings > ESLint'. This will only give you errors."
 
