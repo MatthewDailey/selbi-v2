@@ -1,5 +1,8 @@
 {
 	"rules": {
+
+
+
         "createCustomer" : {
           "tasks": {
             // Auth'd users can write, only service account can read.
@@ -7,7 +10,7 @@
             ".write": "auth.uid != null",
             ".indexOn": "_state",
             "$taskId": {
-              ".validate": "newData.hasChildren(['stripePaymentSource', 'customerName', 'customerUid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+              ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
               "_state": {
                 ".validate": "newData.isString()"
               },
@@ -43,13 +46,22 @@
               "_id": {
                 ".validate": "newData.isString()"
               },
-              "stripePaymentSource" : {
-                ".validate" : "newData.isString()"
+              // Stores exact data we can pass to Stripe Connect customers.create.
+              "payload" : {
+                ".validate" : "newData.hasChildren(['source', 'description', 'email'])",
+                // Token returned from Stripe Connect API
+                "source" : {
+                  ".validate" : "newData.isString()"
+                },
+                "email" : {
+                  // TODO Validate email.
+                  ".validate" : "newData.isString()"
+                },
+                "description" : {
+                  ".validate" : "newData.isString()"
+                }
               },
-              "customerName" : {
-                ".validate" : "newData.isString()"
-              },
-              "customerUid" : {
+              "uid" : {
                 ".validate" : "newData.isString() && auth.uid == newData.val()"
               },
               "$other": { ".validate": false }

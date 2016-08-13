@@ -50,9 +50,12 @@ describe('Create Customer', () => {
 
   it('can create queue and handle work as  worker', (done) => {
     const testData = {
-      stripePaymentSource: 'stripePaymentCcToken',
-      customerName: 'test user',
-      customerUid: testUserUid,
+      payload: {
+        source: 'stripePaymentCcToken',
+        description: 'test user',
+        email: 'matt@selbi.io',
+      },
+      uid: testUserUid,
     };
     writeToQueueAndExpectHandled(FirebaseTest.testUserApp, testData, done);
   });
@@ -85,35 +88,54 @@ describe('Create Customer', () => {
       (createCustomerRef) => createCustomerRef.child('tasks').push({ foo: 'bar' }), done);
   });
 
-  it('cannot write to /createCustomer/tasks with different customerUid from auth.uid', (done) => {
+  it('cannot write to /createCustomer/tasks with different uid from auth.uid', (done) => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({
-        stripePaymentSource: 'stripePaymentCcToken',
-        customerName: 'test user',
-        customerUid: 'not the user' }), done);
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        uid: 'not the user' }), done);
   });
 
-  it('cannot write to /createCustomer/tasks with int customerUid', (done) => {
+  it('cannot write to /createCustomer/tasks with int uid', (done) => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({
-        stripePaymentSource: 'stripePaymentCcToken',
-        customerName: 'test user',
-        customerUid: 1 }), done);
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        uid: 1 }), done);
   });
 
-  it('cannot write to /createCustomer/tasks with int customerName', (done) => {
+  it('cannot write to /createCustomer/tasks with int description', (done) => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({
-        stripePaymentSource: 'stripePaymentCcToken',
-        customerName: 1,
-        customerUid: testUserUid }), done);
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 1,
+          email: 'matt@selbi.io',
+        },
+        uid: testUserUid }), done);
   });
 
-  it('cannot write to /createCustomer/tasks with int stripePaymentSource', (done) => {
+  it('cannot write to /createCustomer/tasks with int source', (done) => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({
-        stripePaymentSource: 1,
-        customerName: 'test user',
-        customerUid: testUserUid }), done);
+        payload: {
+          source: 1,
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        uid: testUserUid }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with empty payload', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        payload: {},
+        uid: testUserUid }), done);
   });
 });
