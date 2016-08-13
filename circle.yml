@@ -23,8 +23,8 @@ deployment:
     branch: develop
     commands:
       - cd selbi-backend
-      - firebase deploy --project selbi-develop --token "$FIREBASE_TOKEN"
-      - firebase deploy --project selbi-staging --token "$FIREBASE_TOKEN"
+      - firebase deploy --project selbi-develop
+      - firebase deploy --project selbi-staging
       - cd ..
   production:
     branch: production
