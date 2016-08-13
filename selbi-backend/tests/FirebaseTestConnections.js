@@ -23,8 +23,8 @@ class TestFirebaseConnections {
     this.minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
 
     const basicServiceAccountConfig = {
-      serviceAccount: '../service-accounts/selbi-staging-service-account.json',
-      databaseURL: 'https://selbi-staging.firebaseio.com',
+      serviceAccount: '../service-accounts/selbi-develop-service-account.json',
+      databaseURL: 'https://selbi-develop.firebaseio.com',
     };
 
     const testUserConfig = deepCopy(basicServiceAccountConfig);
