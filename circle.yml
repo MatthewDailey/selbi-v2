@@ -7,33 +7,21 @@ dependencies:
     - npm install -g mocha
     - npm install -g firebase-tools
 
-    - cd selbi-backend && npm install
-    - cd ..
-    - cd selbi-stripe-worker && npm install
-    - cd ..
 
 test:
 
   override:
     - cd selbi-backend && npm test
-    - cd ..
     - cd selbi-stripe-worker && npm test
-    - cd ..
 
 deployment:
   develop:
     branch: develop
     commands:
-      - cd selbi-backend
-      - pwd
-      - ls
-      - firebase deploy --project selbi-develop
-      - firebase deploy --project selbi-staging
-      - cd ..
+      - cd selbi-backend && firebase deploy --project selbi-develop
+      - cd selbi-backend && firebase deploy --project selbi-staging --token "$FIREBASE_TOKEN"
   production:
     branch: production
     commands:
-      - cd selbi-backend
-      - firebase use selbi-production --token "$FIREBASE_TOKEN"
-      - firebase deploy --token "$FIREBASE_TOKEN"
-      - cd ..
+      - cd selbi-backend && firebase use selbi-production --token "$FIREBASE_TOKEN"
+
