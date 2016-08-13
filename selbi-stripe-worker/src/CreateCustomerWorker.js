@@ -1,11 +1,12 @@
 import Queue from 'firebase-queue';
 import firebase from 'firebase';
+import { serviceAccountJsonPath } from './ServiceAccountProvider';
 
 class CreateCustomerWorker {
 
   constructor() {
     const serviceAccountConfig = {
-      serviceAccount: '../firebase-service-accounts/service-account.json',
+      serviceAccount: serviceAccountJsonPath,
       databaseURL: 'https://selbi-staging.firebaseio.com',
     };
 
