@@ -23,5 +23,5 @@ deployment:
   production:
     branch: production
     commands:
-      - cd selbi-backend && firebase use selbi-production --token "$FIREBASE_TOKEN"
+      - cd selbi-backend && firebase deploy --project selbi-production
 
