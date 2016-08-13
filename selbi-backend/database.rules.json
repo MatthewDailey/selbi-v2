@@ -1,369 +1,506 @@
 {
-	"rules": {
-
-
-
-        "createCustomer" : {
-          "tasks": {
-            // Auth'd users can write, only service account can read.
-            ".read": false,
-            ".write": "auth.uid != null",
-            ".indexOn": "_state",
-            "$taskId": {
-              ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
-              "_state": {
-                ".validate": "newData.isString()"
-              },
-              "_state_changed": {
-                ".validate": "newData.isNumber() && (newData.val() === now || data.val() === newData.val())"
-              },
-              "_owner": {
-                ".validate": "newData.isString()"
-              },
-              "_progress": {
-                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
-              },
-              "_error_details": {
-                "error": {
-                  ".validate": "newData.isString()"
-                },
-                "error_stack": {
-                  ".validate": "newData.isString()"
-                },
-                "previous_state": {
-                  ".validate": "newData.isString()"
-                },
-                "original_task": {
-                  /* This space intentionally left blank, for malformed tasks */
-                },
-                "attempts": {
-                  ".validate": "newData.isNumber() && newData.val() > 0"
-                },
-                "$other": {
-                  ".validate": false
-                }
-              },
-              "_id": {
-                ".validate": "newData.isString()"
-              },
-              // Stores exact data we can pass to Stripe Connect customers.create.
-              "payload" : {
-                ".validate" : "newData.hasChildren(['source', 'description', 'email'])",
-                // Token returned from Stripe Connect API
-                "source" : {
-                  ".validate" : "newData.isString()"
-                },
-                "email" : {
-                  // TODO Validate email.
-                  ".validate" : "newData.isString()"
-                },
-                "description" : {
-                  ".validate" : "newData.isString()"
-                }
-              },
-              "uid" : {
-                ".validate" : "newData.isString() && auth.uid == newData.val()"
-              },
-              "$other": { ".validate": false }
-            }
+  "rules": {
+    "createAccount": {
+      "tasks": {
+        // Auth'd users can write, only service account can read.
+        ".read": false,
+        ".write": "auth.uid != null",
+        ".indexOn": "_state",
+        "$taskId": {
+          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          "_state": {
+            ".validate": "newData.isString()"
           },
-          "specs" : {
-            // Only accessible from service account.
-            ".read": false,
-            ".write": false,
-            "$specId": {
-              ".validate": "newData.hasChild('in_progress_state')",
-              "start_state": {
-                ".validate": "newData.isString()"
-              },
-              "in_progress_state": {
-                ".validate": "newData.isString()"
-              },
-              "finished_state": {
-                ".validate": "newData.isString()"
-              },
-              "error_state": {
-                ".validate": "newData.isString()"
-              },
-              "timeout": {
-                ".validate": "newData.isNumber() && newData.val() > 0"
-              },
-              "$other": {
-                ".validate": false
-              }
-            }
-          }
-        },
-
-        // Mapping state to listing id for an individual user. All states take the form of
-        // objects mapping listing id to true.
-        "userListings" : {
-            "$uid" : {
-                // TODO Add limitation so that listing must exist to add to user listings.
-                ".write": "$uid === auth.uid && !newData.hasChild('salePending') && !newData.hasChild('sold')",
-
-                // Can only create userListings for oneself and for existant user.
-                ".validate" : "$uid == auth.uid && root.child('/users/' + $uid).exists()",
-
-                // Only owner can read and write.
-                "inactive": {
-                    ".write": "$uid === auth.uid",
-                    ".read": "$uid === auth.uid",
-                    "$listingId" : {
-                        ".validate" : "newData.isBoolean()"
-                    }
-                },
-                // Only owner can write. Owner and friends can read.
-                "private": {
-                    ".write": "$uid === auth.uid",
-                    ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists()",
-                    "$listingId" : {
-                      ".validate" : "newData.isBoolean()"
-                    }
-                },
-                // Owner can write, anyone can read.
-                "public": {
-                    ".write": "$uid === auth.uid",
-                    ".read": true,
-                    "$listingId" : {
-                      ".validate" : "newData.isBoolean()"
-                    }
-                },
-                // Only owner read. No one (except service account) can edit.
-                "sold": {
-                    ".write" : false,
-                    ".read": "$uid === auth.uid",
-                    "$listingId" : {
-                      ".validate" : "newData.isBoolean()"
-                    }
-                },
-                // Only owner read. No one (except service account) can edit.
-                "salePending": {
-                    ".write" : false,
-                    ".read": "$uid === auth.uid",
-                    "$listingId" : {
-                      ".validate" : "newData.isBoolean()"
-                    }
-                },
-                "$other": { ".validate": false }
-            }
-        },
-
-        // All data about individual listings.
-        "listings" : {
-            // No read permissions at /listings so listings cannot be iterated over.
-            "$listingId" : {
-                // TODO Limit write to owner and read to allowed readers via userListings.
-                ".write" : true,
-                ".read" : true,
-
-                "title" : {
-                    ".validate" : "newData.isString()"
-                },
-                "description" : {
-                    ".validate" : "newData.isString()"
-                },
-                "price" : {
-                    ".validate" : "newData.isNumber() && newData.val() > 0"
-                },
-                "sellerId" : {
-                    ".validate" : "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
-                },
-                "imageUrls" : {
-                    ".validate" : "newData.hasChildren()",
-                    "$arrayIndex" : {
-                        ".validate" : "newData.val().matches(/^http(s)?:/)"
-                    }
-                },
-                "status" : {
-                    ".validate" : "newData.isString() && (newData.val() == 'inactive' || newData.val() == 'private' || newData.val() == 'public' || newData.val() == 'sold' || newData.val() == 'salePending')"
-                },
-                "category" : {
-                    ".validate" : "newData.isString()"
-                },
-                "$other": { ".validate": false }
-            }
-        },
-
-        // Mapping of geo data to listing id.
-        "geolistings" : {
-          ".read": true,
-
-          "$listingId" : {
-            ".write": "root.child('/listings/' + $listingId + '/sellerId').val() == auth.uid",
-
-            ".validate" : "newData.hasChildren(['g', 'l'])",
-            "$other": { ".validate": false },
-
-            "g" : {
+          "_state_changed": {
+            ".validate": "newData.isNumber() && (newData.val() === now || data.val() === newData.val())"
+          },
+          "_owner": {
+            ".validate": "newData.isString()"
+          },
+          "_progress": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "_error_details": {
+            "error": {
               ".validate": "newData.isString()"
             },
-            "l" : {
-              ".validate": "newData.hasChildren(['0', '1'])",
-              "$other": { ".validate": false },
+            "error_stack": {
+              ".validate": "newData.isString()"
+            },
+            "previous_state": {
+              ".validate": "newData.isString()"
+            },
+            "original_task": {
+              /* This space intentionally left blank, for malformed tasks */
+            },
+            "attempts": {
+              ".validate": "newData.isNumber() && newData.val() > 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "_id": {
+            ".validate": "newData.isString()"
+          },
+          // Stores exactly the data we can modify and pass to Stripe.
+          "payload": {
+            ".validate" : "newData.hasChildren(['external_account', 'email', 'legal_entity', 'tos_acceptance'])",
 
-              "0": {
+            // Token returned to client from the Stripe Connect API in exchange for bank account.
+            "external_account": {
+              ".validate": "newData.isString()"
+            },
+            "email": {
+              ".validate": "newData.isString()"
+            },
+            "legal_entity": {
+              // Token returned to client from Stripe Connect API in exchange for SSN.
+              "personal_id_number": {
+                // Token
+                ".validate": "newData.isString()"
+              },
+              "first_name": {
+                ".validate": "newData.isString()"
+              },
+              "last_name": {
+                ".validate": "newData.isString()"
+              },
+              "dob": {
+                ".validate": "newData.hasChildren(['day', 'month', 'year'])",
+                "$other": {
+                  ".validate": false
+                },
+                "day": {
+                  ".validate": "newData.isNumber()"
+                },
+                "month": {
+                  ".validate": "newData.isNumber()"
+                },
+                "year": {
+                  ".validate": "newData.isNumber()"
+                }
+              },
+              "address": {
+                ".validate": "newData.hasChildren(['line1', 'city', 'state', 'postal_code'])",
+                "$other": {
+                  ".validate": false
+                },
+                "line1": {
+                  ".validate": "newData.isString()"
+                },
+                "line2": {
+                  ".validate": "newData.isString()"
+                },
+                "city": {
+                  ".validate": "newData.isString()"
+                },
+                "postal_code": {
+                  // Note we prefer camel case but this is to match the stripe API.
+                  ".validate": "newData.isString()"
+                },
+                "state": {
+                  ".validate": "newData.isString()"
+                }
+              }
+            },
+            "tos_acceptance": {
+              ".validate": "newData.hasChildren(['date', 'ip'])",
+              "date": {
                 ".validate": "newData.isNumber()"
               },
-              "1": {
-                ".validate": "newData.isNumber()"
+              "ip": {
+                ".validate": "newData.isString()"
               }
             }
+          },
+          "uid": {
+            ".validate": "newData.isString() && auth.uid == newData.val()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "specs": {
+        // Only accessible from service account.
+        ".read": false,
+        ".write": false,
+        "$specId": {
+          ".validate": "newData.hasChild('in_progress_state')",
+          "start_state": {
+            ".validate": "newData.isString()"
+          },
+          "in_progress_state": {
+            ".validate": "newData.isString()"
+          },
+          "finished_state": {
+            ".validate": "newData.isString()"
+          },
+          "error_state": {
+            ".validate": "newData.isString()"
+          },
+          "timeout": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "createCustomer": {
+      "tasks": {
+        // Auth'd users can write, only service account can read.
+        ".read": false,
+        ".write": "auth.uid != null",
+        ".indexOn": "_state",
+        "$taskId": {
+          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          "_state": {
+            ".validate": "newData.isString()"
+          },
+          "_state_changed": {
+            ".validate": "newData.isNumber() && (newData.val() === now || data.val() === newData.val())"
+          },
+          "_owner": {
+            ".validate": "newData.isString()"
+          },
+          "_progress": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "_error_details": {
+            "error": {
+              ".validate": "newData.isString()"
+            },
+            "error_stack": {
+              ".validate": "newData.isString()"
+            },
+            "previous_state": {
+              ".validate": "newData.isString()"
+            },
+            "original_task": {
+              /* This space intentionally left blank, for malformed tasks */
+            },
+            "attempts": {
+              ".validate": "newData.isNumber() && newData.val() > 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "_id": {
+            ".validate": "newData.isString()"
+          },
+          // Stores exact data we can pass to Stripe Connect customers.create.
+          "payload": {
+            ".validate": "newData.hasChildren(['source', 'description', 'email'])",
+            // Token returned from Stripe Connect API
+            "source": {
+              ".validate": "newData.isString()"
+            },
+            "email": {
+              // TODO Validate email.
+              ".validate": "newData.isString()"
+            },
+            "description": {
+              ".validate": "newData.isString()"
+            }
+          },
+          "uid": {
+            ".validate": "newData.isString() && auth.uid == newData.val()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "specs": {
+        // Only accessible from service account.
+        ".read": false,
+        ".write": false,
+        "$specId": {
+          ".validate": "newData.hasChild('in_progress_state')",
+          "start_state": {
+            ".validate": "newData.isString()"
+          },
+          "in_progress_state": {
+            ".validate": "newData.isString()"
+          },
+          "finished_state": {
+            ".validate": "newData.isString()"
+          },
+          "error_state": {
+            ".validate": "newData.isString()"
+          },
+          "timeout": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    // Mapping state to listing id for an individual user. All states take the form of
+    // objects mapping listing id to true.
+    "userListings": {
+      "$uid": {
+        // TODO Add limitation so that listing must exist to add to user listings.
+        ".write": "$uid === auth.uid && !newData.hasChild('salePending') && !newData.hasChild('sold')",
+        // Can only create userListings for oneself and for existant user.
+        ".validate": "$uid == auth.uid && root.child('/users/' + $uid).exists()",
+        // Only owner can read and write.
+        "inactive": {
+          ".write": "$uid === auth.uid",
+          ".read": "$uid === auth.uid",
+          "$listingId": {
+            ".validate": "newData.isBoolean()"
           }
         },
-
-        // All background data about a user.
-	    "users" : {
-            // No read permissions at /users so users cannot be iterated over.
-	    	"$uid" : {
-	    		".write": "$uid === auth.uid",
-                ".read": "$uid === auth.uid",
-
-                ".validate": "newData.hasChildren(['userAgreementAccepted'])",
-
-                "$other": { ".validate": false },
-
-                "userAgreementAccepted" : {
-                  ".validate" : "newData.isBoolean()"
-                },
-
-	    		"name": {
-                    ".validate": "newData.hasChildren(['first', 'last'])",
-
-                    "$other": { ".validate": false },
-
-                    "first": {
-                      ".validate" : "newData.isString()"
-                    },
-                    "last": {
-                      ".validate" : "newData.isString()"
-                    }
-	    		},
-
-                "profileImageUrl" : {
-                    ".validate" : "newData.isString() && newData.val().matches(/^http(s)?:/)"
-                },
-
-	    		// TODO: Validate email is valid as well.
-	    		"email": {
-	    			".validate" : "newData.isString()"
-	    		},
-
-                // YYYY-MM-DD
-                "dateOfBirth" : {
-                    ".validate": "newData.isString() && newData.val().matches(/^(19|20)[0-9][0-9][-\\/. ](0[1-9]|1[012])[-\\/. ](0[1-9]|[12][0-9]|3[01])$/)"
-                },
-
-                "phoneNumber" : {
-                    ".validate" : "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
-                },
-
-                // TODO move this to its own node in the heirarchy
-                "payment" : {
-                  ".validate" : "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
-
-                  "$other": { ".validate": false },
-
-                  "stripeCustomerId" : {
-                      ".validate" : "newData.isString()"
-                  },
-                  "stripeCardId" : {
-                      ".validate" : "newData.isString()"
-                  },
-                  "cardType" : {
-                      ".validate" : "newData.isString()"
-                  },
-                  "lastFour" : {
-                      ".validate" : "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-                  },
-                  // MM-YY
-                  "expirationDate" : {
-                      ".validate" : "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
-                  }
-                },
-
-                // TODO move this to its own node in the heirarchy
-                "merchant" : {
-                    ".validate" : "newData.hasChildren(['stripeVerified'])",
-
-                    "$other": { ".validate": false },
-
-                    "accountNumberLast4" : {
-                      ".validate" : "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-                    },
-                    "routingNumber" : {
-                      ".validate" : "newData.isNumber()"
-                    },
-                    "publicKey" : {
-                      ".validate" : "newData.isString()"
-                    },
-                    "privateKey" : {
-                      ".validate" : "newData.isString()"
-                    },
-                    "stripeBankId" : {
-                      ".validate" : "newData.isString()"
-                    },
-                    "stripeManagedAccountId" : {
-                      ".validate" : "newData.isString()"
-                    },
-                    "stripeVerified" : {
-                      ".validate" : "newData.isBoolean()"
-                    }
-                },
-
-                "locations" : {
-                    "$other": { ".validate": false },
-
-                    "shipTo" : {
-                        ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
-
-                        "$other": { ".validate": false },
-
-                        "address1" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "address2" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "city" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "state" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "zip" : {
-                          ".validate" : "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
-                        },
-                        "country" : {
-                          ".validate" : "newData.isString()"
-                        }
-                    },
-                    "sellingFrom" : {
-                        ".validate" : "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
-
-                        "$other": { ".validate": false },
-
-                        "address1" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "address2" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "city" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "state" : {
-                          ".validate" : "newData.isString()"
-                        },
-                        "zip" : {
-                          ".validate" : "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
-                        },
-                        "country" : {
-                          ".validate" : "newData.isString()"
-                        }
-                    }
-                }
-	    	}
-	    }
-  	}
+        // Only owner can write. Owner and friends can read.
+        "private": {
+          ".write": "$uid === auth.uid",
+          ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists()",
+          "$listingId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        // Owner can write, anyone can read.
+        "public": {
+          ".write": "$uid === auth.uid",
+          ".read": true,
+          "$listingId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        // Only owner read. No one (except service account) can edit.
+        "sold": {
+          ".write": false,
+          ".read": "$uid === auth.uid",
+          "$listingId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        // Only owner read. No one (except service account) can edit.
+        "salePending": {
+          ".write": false,
+          ".read": "$uid === auth.uid",
+          "$listingId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    // All data about individual listings.
+    "listings": {
+      // No read permissions at /listings so listings cannot be iterated over.
+      "$listingId": {
+        // TODO Limit write to owner and read to allowed readers via userListings.
+        ".write": true,
+        ".read": true,
+        "title": {
+          ".validate": "newData.isString()"
+        },
+        "description": {
+          ".validate": "newData.isString()"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "sellerId": {
+          ".validate": "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
+        },
+        "imageUrls": {
+          ".validate": "newData.hasChildren()",
+          "$arrayIndex": {
+            ".validate": "newData.val().matches(/^http(s)?:/)"
+          }
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() == 'inactive' || newData.val() == 'private' || newData.val() == 'public' || newData.val() == 'sold' || newData.val() == 'salePending')"
+        },
+        "category": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    // Mapping of geo data to listing id.
+    "geolistings": {
+      ".read": true,
+      "$listingId": {
+        ".write": "root.child('/listings/' + $listingId + '/sellerId').val() == auth.uid",
+        ".validate": "newData.hasChildren(['g', 'l'])",
+        "$other": {
+          ".validate": false
+        },
+        "g": {
+          ".validate": "newData.isString()"
+        },
+        "l": {
+          ".validate": "newData.hasChildren(['0', '1'])",
+          "$other": {
+            ".validate": false
+          },
+          "0": {
+            ".validate": "newData.isNumber()"
+          },
+          "1": {
+            ".validate": "newData.isNumber()"
+          }
+        }
+      }
+    },
+    // All background data about a user.
+    "users": {
+      // No read permissions at /users so users cannot be iterated over.
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['userAgreementAccepted'])",
+        "$other": {
+          ".validate": false
+        },
+        "userAgreementAccepted": {
+          ".validate": "newData.isBoolean()"
+        },
+        "name": {
+          ".validate": "newData.hasChildren(['first', 'last'])",
+          "$other": {
+            ".validate": false
+          },
+          "first": {
+            ".validate": "newData.isString()"
+          },
+          "last": {
+            ".validate": "newData.isString()"
+          }
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString() && newData.val().matches(/^http(s)?:/)"
+        },
+        // TODO: Validate email is valid as well.
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        // YYYY-MM-DD
+        "dateOfBirth": {
+          ".validate": "newData.isString() && newData.val().matches(/^(19|20)[0-9][0-9][-\\/. ](0[1-9]|1[012])[-\\/. ](0[1-9]|[12][0-9]|3[01])$/)"
+        },
+        "phoneNumber": {
+          ".validate": "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
+        },
+        // TODO move this to its own node in the heirarchy
+        "payment": {
+          ".validate": "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
+          "$other": {
+            ".validate": false
+          },
+          "stripeCustomerId": {
+            ".validate": "newData.isString()"
+          },
+          "stripeCardId": {
+            ".validate": "newData.isString()"
+          },
+          "cardType": {
+            ".validate": "newData.isString()"
+          },
+          "lastFour": {
+            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+          },
+          // MM-YY
+          "expirationDate": {
+            ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+          }
+        },
+        // TODO move this to its own node in the heirarchy
+        "merchant": {
+          ".validate": "newData.hasChildren(['stripeVerified'])",
+          "$other": {
+            ".validate": false
+          },
+          "accountNumberLast4": {
+            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+          },
+          "routingNumber": {
+            ".validate": "newData.isNumber()"
+          },
+          "publicKey": {
+            ".validate": "newData.isString()"
+          },
+          "privateKey": {
+            ".validate": "newData.isString()"
+          },
+          "stripeBankId": {
+            ".validate": "newData.isString()"
+          },
+          "stripeManagedAccountId": {
+            ".validate": "newData.isString()"
+          },
+          "stripeVerified": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        "locations": {
+          "$other": {
+            ".validate": false
+          },
+          "shipTo": {
+            ".validate": "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+            "$other": {
+              ".validate": false
+            },
+            "address1": {
+              ".validate": "newData.isString()"
+            },
+            "address2": {
+              ".validate": "newData.isString()"
+            },
+            "city": {
+              ".validate": "newData.isString()"
+            },
+            "state": {
+              ".validate": "newData.isString()"
+            },
+            "zip": {
+              ".validate": "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
+            },
+            "country": {
+              ".validate": "newData.isString()"
+            }
+          },
+          "sellingFrom": {
+            ".validate": "newData.hasChildren(['address1', 'address2', 'city', 'state', 'zip', 'country'])",
+            "$other": {
+              ".validate": false
+            },
+            "address1": {
+              ".validate": "newData.isString()"
+            },
+            "address2": {
+              ".validate": "newData.isString()"
+            },
+            "city": {
+              ".validate": "newData.isString()"
+            },
+            "state": {
+              ".validate": "newData.isString()"
+            },
+            "zip": {
+              ".validate": "newData.isNumber() && newData.val() > 9999 && newData.val() < 100000"
+            },
+            "country": {
+              ".validate": "newData.isString()"
+            }
+          }
+        }
+      }
+    }
+  }
 }

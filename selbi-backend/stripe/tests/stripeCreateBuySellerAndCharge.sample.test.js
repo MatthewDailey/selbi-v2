@@ -56,7 +56,7 @@ function createPaymentSource_deviceSide(cardNumber,
       Authorization: `Bearer ${process.env.STRIPE_PUBLIC}`,
     } })
     .then((res) => res.json())
-    .then(logJson('Credit Card Token Response'))
+    .then(logJson('Credit Card Token Response'));
 }
 
 /*
