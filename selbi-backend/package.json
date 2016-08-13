@@ -4,7 +4,7 @@
   "description": "Tests that verify the firebase db rules behave as expected for selbi-backend. Run against selbi-staging firebase project.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ."
+    "test": "mocha tests --compilers js:babel-core/register"
   },
   "author": "",
   "license": "ISC",
