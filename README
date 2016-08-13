@@ -7,15 +7,9 @@ This is a second implementation of Selbi based on firebase. This repo contains:
 
 Git Flow
 --------
-There are 2 branches:
-- staging 
-- production
+There are 2 permanant branches:
+- develop - Code staged for production.
+- master - Code running live.
 
-All commits should go to the `staging` branch and then be merged in to `production`. CircleCI (not yet implemented) will manage deploying the application.
-
-The services on the production branch are configured via `selbi-backend/.firebaserc` and `firebase-service-accounts/service-account.json` to talk to the selbi-production Firebase instance.
-
-In general, tests interact directly with Firebase and are configured to hit selbi-staging, regardless of the branch.
-
-Running `firebase deploy` from `selbi-backend` will deploy the firebase rules to the specified branch (thanks to .firebaserc). THis is due to 1 extra commit on the production branch which modifies `.firebaserc` and `firebase-service-accounts/service-account.json`.
+New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into master. No one should push directly to develop or master.
 
