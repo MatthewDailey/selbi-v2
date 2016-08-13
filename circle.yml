@@ -4,9 +4,10 @@ machine:
 
 dependencies:
   override:
-    - cd selbi-backend && npm install --dev
+    - npm install -g mocha
+    - cd selbi-backend && npm install
     - cd ..
-    - cd selbi-stripe-worker && npm install --dev
+    - cd selbi-stripe-worker && npm install
     - cd ..
 
 test:
