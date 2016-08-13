@@ -19,14 +19,13 @@ test:
     - cd ..
 
 deployment:
-
   develop:
     branch: develop
     commands:
       - cd selbi-backend
-      - firebase use selbi-staging --token "$FIREBASE_TOKEN"
-      - firebase deploy --token "$FIREBASE_TOKEN"
       - firebase use selbi-develop --token "$FIREBASE_TOKEN"
+      - firebase deploy --token "$FIREBASE_TOKEN"
+      - firebase use selbi-staging --token "$FIREBASE_TOKEN"
       - firebase deploy --token "$FIREBASE_TOKEN"
       - cd ..
   production:
