@@ -33,10 +33,11 @@ class TestFirebaseConnections {
     };
     this.testUserApp = firebase.initializeApp(testUserConfig, 'testUser');
 
-    const minimalUserConfig = deepCopy(basicServiceAccountConfig)
+    const minimalUserConfig = deepCopy(basicServiceAccountConfig);
     minimalUserConfig.databaseAuthVariableOverride = {
       uid: this.minimalUserUid,
     };
+    this.minimalUserApp = firebase.initializeApp(minimalUserConfig, 'minimalUser');
 
     this.serviceAccountApp = firebase.initializeApp(basicServiceAccountConfig, 'serviceUser');
   }
