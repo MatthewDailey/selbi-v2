@@ -9,8 +9,7 @@ describe('CreateCustomerWorker', () => {
 
   it('can bind to queue and shutdown', () => {
     const worker = new CreateCustomerWorker();
-    const mockQueue = {};
-    worker.bind(mockQueue);
+    worker.start();
     worker.shutdown();
   });
 });
