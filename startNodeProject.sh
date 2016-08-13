@@ -18,10 +18,16 @@ mkdir -p tests
 echo "Creating tests dir and tests/.eslintrc..."
 echo "{\n\t\"env\": {\n\t\t\"mocha\": true\n\t}\n}" > tests/.eslintrc
 
+# See http://jamesknelson.com/testing-in-es6-with-mocha-and-babel-6/ for details.
+echo "Create .babelrc..."
+echo "{\n\t\"presets\": [\"es2015\"]\n}" > .babelrc
+
 echo "Done installing node deps and eslint.\n\n"
 echo "Intellij Instruction:"
 echo "- ESLint: install ESLint plugin and go to 'Languages & Frameworks > JavaScript > Code Quality Tools > ESLint' and check enabled."
 echo "Do NOT enable 'Other Settings > ESLint'. This will only give you errors."
 echo ""
 echo "- ES6: Under 'Languages & Frameworks > Javascript' set the Javascript version to ECMAScript 6."  
+echo ""
+echo "- run configuration: For any run configurations you'll need to add '--compilers js:babel-core/register' to compile ES6"
 
