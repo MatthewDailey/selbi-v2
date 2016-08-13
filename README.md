@@ -32,4 +32,11 @@ New features are developed on a new branch titled `feature/<feature-name` which 
 
 Any code merged to develop will be deployed to staging automatically via CircleCI, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
 
+A common workflow for modifying the firebase schema will be:
+- Create a feature branch.
+- Login to firebase using `firebase login`
+- Do changes and iterate against the `selbi-develop` instance.
+- Push feature branch to github.
+- Merge the feature branch to `develop`. This will then deploy your changes to staging.
+
 
