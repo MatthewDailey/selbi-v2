@@ -6,4 +6,11 @@ describe('CreateCustomerWorker', () => {
     // noinspection Eslint
     expect(new CreateCustomerWorker()).to.not.be.null;
   });
+
+  it('can bind to queue and shutdown', () => {
+    const worker = new CreateCustomerWorker();
+    const mockQueue = {};
+    worker.bind(mockQueue);
+    worker.shutdown();
+  });
 });
