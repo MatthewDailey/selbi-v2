@@ -3,22 +3,31 @@ import firebase from 'firebase';
 import { serviceAccountJsonPath } from './ServiceAccountProvider';
 
 class CreateCustomerWorker {
-
-  constructor() {
+  /*
+   * Initializes the CreateCustomerWorker synchronously.
+   *
+   * @returns CreateCustomerWorker this.
+   */
+  start() {
     const serviceAccountConfig = {
       serviceAccount: serviceAccountJsonPath,
       databaseURL: 'https://selbi-staging.firebaseio.com',
     };
 
-    this.firebaseApp = firebase.initializeApp(serviceAccountConfig);
+    this.firebaseApp = firebase.initializeApp(serviceAccountConfig, 'create-customer');
+    return this;
   }
 
-  start() {
-
-  }
-
+  /*
+   * Shuts down the CreateCustomerWorker and releases all resources.
+   *
+   * @returns Promise which is fulfilled when shutdown is complete.
+   */
   shutdown() {
-
+    if (this.firebaseApp) {
+      return this.firebaseApp.delete();
+    }
+    return Promise.resolve();
   }
 }
 
