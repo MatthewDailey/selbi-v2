@@ -4,11 +4,15 @@ machine:
 
 dependencies:
   override:
-    - cd selbi-stripe-worker && npm install
+    - cd selbi-backend && npm install --dev
+    - cd ..
+    - cd selbi-stripe-worker && npm install --dev
     - cd ..
 
 test:
   override:
+    - cd selbi-backend && npm test
+    - cd ..
     - cd selbi-stripe-worker && npm test
     - cd ..
 

@@ -15,7 +15,9 @@
     "chai": "^3.5.0",
     "firebase": "^3.2.1",
     "firebase-queue": "^1.5.0",
-    "stripe": "^4.9.0",
+    "stripe": "^4.9.0"
+  },
+  "devDependencies": {
     "eslint": "^3.3.0",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-plugin-import": "^1.13.0",
