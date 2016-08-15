@@ -4,5 +4,5 @@ runtime: nodejs
 vm: true
 resources:
   cpu: .5
-  memory_gb: .6
+  memory_gb: .5
   disk_size_gb: 10
