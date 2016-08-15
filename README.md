@@ -8,7 +8,9 @@ This is a second implementation of Selbi based on Firebase. This repo contains:
 
 Testing
 -------
-All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g`.
+All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g
+
+To execute tests (and code in general), you'll need to include the ES6 compiler Babel. To do this add `--compilers js:babel-core/register` as an argument.
 
 Firebase and Google Cloud
 -------------------------
