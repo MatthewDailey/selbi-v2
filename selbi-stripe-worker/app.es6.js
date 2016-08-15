@@ -37,7 +37,7 @@ const app = express();
 app.get('/', (req, res) => {
   res.send({
     status: 'OK',
-    service: 'Web',
+    service: 'stripe-worker',
   });
 });
 app.listen(8080);
