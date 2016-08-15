@@ -15,9 +15,9 @@ Firebase and Google Cloud
 The Selbi backend is powered by Firebase. You should install `npm install firebase-tools -g` for easy CLI tools.
 
 There are 3 Selbi Firebase environments (and consequently Google Cloud environments):
-- selbi-develop - Unit tests run against this instance. Note multiple running unit tests may clobber each other. This is tech debt we'll need to pay off.
-- selbi-staging - A full instance of Selbi including backend services.
-- selbi-production - The production Selbi stack.
+- [selbi-develop](https://console.cloud.google.com/home/dashboard?project=selbi-develop) - Unit tests run against this instance. Note multiple running unit tests may clobber each other. This is tech debt we'll need to pay off.
+- [selbi-staging](https://console.cloud.google.com/home/dashboard?project=selbi-staging) - A full instance of Selbi including backend services.
+- [selbi-production](https://console.cloud.google.com/home/dashboard?project=selbi-production) - The production Selbi stack.
 
 The `service-accounts` directory contains service accounts which can be used to programmatically modify each of these
 Firebase / Google Cloud deployments. This is useful for integration testing and for continuous deployment.
