@@ -22,30 +22,24 @@ class TestFirebaseConnections {
     this.testUserUid = '3imZ3SbitbMUXL6Pt2FmVYCUtDo2';
     this.minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
 
-    const testUserConfig = {
-      serviceAccount: '../firebase-service-accounts/selbi-staging-schema-test-service-account.json',
-      databaseURL: 'https://selbi-staging.firebaseio.com',
-      databaseAuthVariableOverride: {
-        uid: this.testUserUid,
-      },
+    const basicServiceAccountConfig = {
+      serviceAccount: '../service-accounts/selbi-develop-service-account.json',
+      databaseURL: 'https://selbi-develop.firebaseio.com',
     };
 
+    const testUserConfig = deepCopy(basicServiceAccountConfig);
+    testUserConfig.databaseAuthVariableOverride = {
+      uid: this.testUserUid,
+    };
     this.testUserApp = firebase.initializeApp(testUserConfig, 'testUser');
 
-    const minimalUserConfig = {
-      serviceAccount: '../firebase-service-accounts/selbi-staging-schema-test-service-account.json',
-      databaseURL: 'https://selbi-staging.firebaseio.com',
-      databaseAuthVariableOverride: {
-        uid: this.minimalUserUid,
-      },
+    const minimalUserConfig = deepCopy(basicServiceAccountConfig);
+    minimalUserConfig.databaseAuthVariableOverride = {
+      uid: this.minimalUserUid,
     };
     this.minimalUserApp = firebase.initializeApp(minimalUserConfig, 'minimalUser');
 
-    const serviceAccountConfig = {
-      serviceAccount: '../firebase-service-accounts/selbi-staging-schema-test-service-account.json',
-      databaseURL: 'https://selbi-staging.firebaseio.com',
-    };
-    this.serviceAccountApp = firebase.initializeApp(serviceAccountConfig, 'serviceUser');
+    this.serviceAccountApp = firebase.initializeApp(basicServiceAccountConfig, 'serviceUser');
   }
 
   getMinimalUserData() {

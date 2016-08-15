@@ -1,0 +1,39 @@
+machine:
+  node:
+    version: 4.4.4
+
+dependencies:
+  override:
+    - npm install -g mocha
+    - npm install -g firebase-tools
+    - cd selbi-backend && npm install
+    - cd selbi-stripe-worker && npm install
+
+test:
+  override:
+    - cd selbi-backend && npm test
+    - cd selbi-stripe-worker && npm test
+
+deployment:
+  develop:
+    branch: develop
+    commands:
+      - cd selbi-backend && firebase deploy --project selbi-develop
+      - cd selbi-backend && firebase deploy --project selbi-staging
+      - echo $STAGING_GCLOUD_SECRET | base64 --decode > ${HOME}/gcloud-service-key.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+      - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-staging
+      - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
+      - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
+  production:
+    branch: production
+    commands:
+      - cd selbi-backend && firebase deploy --project selbi-production
+      - echo $PRODUCTION_GCLOUD_SECRET | base64 --decode > ${HOME}/gcloud-service-key.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+      - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+      - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-production
+      - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
+      - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
+
