@@ -18,19 +18,11 @@ const basicServiceAccountConfig = {
 
 const serviceAccountApp = firebase.initializeApp(basicServiceAccountConfig, 'serviceUser');
 
-let count = 0;
-
 function createListing() {
-  console.log('Creating...')
   serviceAccountApp
     .database()
     .ref('test')
-    .push({c: count})
-    .then(() => {
-      count = count + 1;
-      console.log(`created listing: ${count}`);
-      setTimeout(createListing, 1000);
-    })
+    .push({ c: 1 })
     .catch(console.log);
 }
 
