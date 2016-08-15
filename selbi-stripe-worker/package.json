@@ -1,6 +1,9 @@
 {
   "name": "selbi-stripe-worker",
   "version": "1.0.0",
+  "engines": {
+    "node": "4.4.4"
+  },
   "description": "Selbi worker which listens on Firebase queues to manage creating Stripe Connect Customers and Accounts.",
   "main": "app.js",
   "scripts": {

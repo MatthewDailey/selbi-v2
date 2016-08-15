@@ -1,0 +1,8 @@
+# cmaking the default serviec since app engine requires that
+service: stripe-worker
+runtime: nodejs
+vm: true
+resources:
+  cpu: .5
+  memory_gb: .6
+  disk_size_gb: 10

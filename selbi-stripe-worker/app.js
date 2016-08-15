@@ -1,4 +1,2 @@
-
-
-
-console.log("App can run.");
+require('babel-core/register');
+require('./app.es6');
