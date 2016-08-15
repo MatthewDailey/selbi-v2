@@ -5,9 +5,9 @@ var app = express();
 app.get('/', function (req, res) {
   res.send({
   	status: 'OK',
-  	service: 'Web'
+  	service: 'web'
   });
 });
 
-http.createServer(app).listen(8080);
+app.listen(8080);
 

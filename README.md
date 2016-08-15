@@ -22,6 +22,8 @@ There are 3 Selbi Firebase environments (and consequently Google Cloud environme
 The `service-accounts` directory contains service accounts which can be used to programmatically modify each of these
 Firebase / Google Cloud deployments. This is useful for integration testing and for continuous deployment.
 
+Note that Google app engine assumes any app deployed will serve an http endpoint on port 8080. If nothing is served at port 8080, then App Engine will assume something is wrong, delete the box and restart new one every 10 min resulting in 1 min of downtime. Therefore, even services such as stripe-worker depend on express and serve a basic status message.
+
 Deploying Microservices to Google App Engine
 --------------------------------------------
 The backend services and future web frontend are deployed as NodeJS applications running on Google App Engine.
