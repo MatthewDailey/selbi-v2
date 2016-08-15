@@ -40,13 +40,14 @@ Configuration docs:
 
 Git Flow
 --------
-There are 2 permanant branches:
-- develop - Code staged for production.
+There are 3 permanant branches which mirror our 3 Google Cloud environments:
+- develop - Place where new code gets merged.
+- staging - Fully live test environment.
 - production - Code running live.
 
-New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into production. No one should push directly to develop or production.
+New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into staging and then to production. No one should push directly to staging or production. In fact, we should generally not push to develop but rather to a feature branch.
 
-Any code merged to develop will be deployed to staging automatically via CircleCI, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
+CircleCI will run unit tests for any branch pushed to the repo which should take around 5 min to run per push. When merging to staging and production, CircleCI will deploy to staging and produciton automatically, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
 
 A common workflow for modifying the firebase schema will be:
 - Create a feature branch.
