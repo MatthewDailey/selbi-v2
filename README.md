@@ -22,6 +22,13 @@ There are 3 Selbi Firebase environments (and consequently Google Cloud environme
 The `service-accounts` directory contains service accounts which can be used to programmatically modify each of these
 Firebase / Google Cloud deployments. This is useful for integration testing and for continuous deployment.
 
+Deploying Microservices to Google App Engine
+--------------------------------------------
+The backend services and future web frontend are deployed as NodeJS applications running on Google App Engine.
+
+These are deployed via the [Google Cloud SDK](https://cloud.google.com/sdk/docs/quickstart-mac-os-x?authuser=0). The `gcloud app` tool is used for managing and deploying services. Try `gcloud app services list` to list all running services.
+
+
 Git Flow
 --------
 There are 2 permanant branches:
