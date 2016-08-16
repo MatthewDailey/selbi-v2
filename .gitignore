@@ -2,3 +2,5 @@ node_modules
 .idea
 *.sublime-workspace
 npm-debug.log
+lib
+*.swp
