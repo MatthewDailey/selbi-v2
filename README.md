@@ -12,6 +12,8 @@ All projects in this repo use mocha to test and it should be installed globally 
 
 To execute tests (and code in general), you'll need to include the ES6 compiler Babel. To do this add `--compilers js:babel-core/register` as an argument.
 
+You should be able to run all the tests in a project via `npm test`.
+
 Firebase and Google Cloud
 -------------------------
 The Selbi backend is powered by Firebase. You should install `npm install firebase-tools -g` for easy CLI tools.
