@@ -1,5 +1,16 @@
 {
   "rules": {
+
+    "stripeCustomer" : {
+      ".read" : false,
+      ".write" : false
+    },
+
+    "stripeAccount" : {
+      ".read" : false,
+      ".write" : false
+    },
+
     "createAccount": {
       "tasks": {
         // Auth'd users can write, only service account can read.
@@ -398,25 +409,25 @@
         },
         // TODO move this to its own node in the heirarchy
         "payment": {
-          ".validate": "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
+          ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata'])",
           "$other": {
             ".validate": false
           },
-          "stripeCustomerId": {
+          "stripeCustomerPointer": {
             ".validate": "newData.isString()"
           },
-          "stripeCardId": {
-            ".validate": "newData.isString()"
-          },
-          "cardType": {
-            ".validate": "newData.isString()"
-          },
-          "lastFour": {
-            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-          },
-          // MM-YY
-          "expirationDate": {
-            ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+          "metadata": {
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour'])",
+            "$other": {
+              ".validate": false
+            },
+            "lastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            // MM-YY
+            "expirationDate": {
+              ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+            }
           }
         },
         // TODO move this to its own node in the heirarchy

@@ -13,6 +13,10 @@ import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './Fireb
  *
  */
 
+function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 describe('/users', () => {
   function getCreateFakeUsersFunction(done) {
     return () => {
@@ -524,11 +528,11 @@ describe('/users', () => {
 
     describe('payments', () => {
       const paymentData = {
-        stripeCustomerId: 'fakeStripeCustomerId',
-        stripeCardId: 'fakeStipeCardId',
-        cardType: 'fakeCardType',
-        lastFour: 1234,
-        expirationDate: '01-19',
+        stripeCustomerPointer: 'fakeStripeCustomerId',
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
       };
 
       it('accepts valid payment data', (done) => {
@@ -539,73 +543,43 @@ describe('/users', () => {
           }, done);
       });
 
-      it('stripeCustomerId required', (done) => {
+      it('stripeCustomerPointer required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.stripeCustomerId;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.stripeCustomerPointer;
             // noinspection Eslint
-            data.payments = modifiedPayment;
-          }, done);
-      });
-
-      it('stripeCardId required', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.stripeCardId;
-            // noinspection Eslint
-            data.payments = modifiedPayment;
-          }, done);
-      });
-
-      it('cardType required', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.cardType;
-            // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('lastFour required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.lastFour;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.metadata.lastFour;
             // noinspection Eslint
-            data.payments = modifiedPayment;
-          }, done);
-      });
-
-      it('expirationDate required', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.expirationDate;
-            // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('expirationDate matches MM-YY', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            modifiedPayment.expirationDate = '13-19';
+            const modifiedPayment = deepCopy(paymentData);
+            modifiedPayment.metadata.expirationDate = '13-19';
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('accepts no extra data', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
+            const modifiedPayment = deepCopy(paymentData);
             modifiedPayment.extraData = 'randomExtra';
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
     });
