@@ -7,11 +7,16 @@ describe('service-accounts index', () => {
   });
 
   describe('fromEnvironment', () => {
-    it('fromEnvironment returns develop by default', () => {
+    it('returns develop by default', () => {
       expect(ServiceAccount.fromEnvironment().project_id).to.equal('selbi-develop');
     });
 
-    it('fromEnvironment returns prod for SELBI_ENVIRONMENT=production', () => {
+    it('returns staging for SELBI_ENVIRONMENT=staging', () => {
+      process.env.SELBI_ENVIRONMENT = 'staging';
+      expect(ServiceAccount.fromEnvironment().project_id).to.equal('selbi-staging');
+    });
+
+    it('returns prod for SELBI_ENVIRONMENT=production', () => {
       process.env.SELBI_ENVIRONMENT = 'production';
       expect(ServiceAccount.fromEnvironment().project_id).to.equal('selbi-production');
     });
