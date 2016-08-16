@@ -4,9 +4,9 @@ import ServiceAccount from '@selbi/service-accounts';
 
 class CreateCustomerWorker {
   /*
-   * Initializes the CreateCustomerWorker synchronously.
+   * Initializes the CreateCustomerQueueListener synchronously.
    *
-   * @returns CreateCustomerWorker this.
+   * @returns CreateCustomerQueueListener this.
    */
   start(queueEventHandler) {
     this.firebaseApp = firebase.initializeApp(
@@ -20,7 +20,7 @@ class CreateCustomerWorker {
   }
 
   /*
-   * Shuts down the CreateCustomerWorker and releases all resources.
+   * Shuts down the CreateCustomerQueueListener and releases all resources.
    *
    * @returns Promise which is fulfilled when shutdown is complete.
    */

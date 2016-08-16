@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import firebase from 'firebase';
 import ServiceAccount from '@selbi/service-accounts';
-import CreateCustomerWorker from '../src/CreateCustomerWorker';
+import CreateCustomerQueueListener from '../src/CreateCustomerQueueListener';
 
-const testUserUid = 'CreateCustomerWorker-TestUser';
+const testUserUid = 'CreateCustomerQueueListener-TestUser';
 
 const testCreateCustomerData = {
   payload: {
@@ -34,7 +34,7 @@ describe('CreateCustomerWorker', () => {
         .ref('/users')
         .child(testUserUid)
         .set({
-          message: 'This is a strawman. The CreateCustomerWorker test does not care about user ' +
+          message: 'This is a strawman. The CreateCustomerQueueListener test does not care about user ' +
           'data integrity.',
         }))
       .then(done)
@@ -49,8 +49,8 @@ describe('CreateCustomerWorker', () => {
   });
 
   it('can be created twice as long as shutdown', (done) => {
-    new CreateCustomerWorker().start(() => {}).shutdown()
-      .then(() => new CreateCustomerWorker().start(() => {}).shutdown())
+    new CreateCustomerQueueListener().start(() => {}).shutdown()
+      .then(() => new CreateCustomerQueueListener().start(() => {}).shutdown())
       .then(() => done())
       .catch(done);
   });
@@ -59,7 +59,7 @@ describe('CreateCustomerWorker', () => {
     this.timeout(5000);
 
     beforeEach(function () {
-      this.worker = new CreateCustomerWorker();
+      this.worker = new CreateCustomerQueueListener();
     });
 
     afterEach(function (done) {
