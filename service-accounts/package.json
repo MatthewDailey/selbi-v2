@@ -1,7 +1,7 @@
 {
   "name": "@selbi/service-accounts",
   "version": "1.0.0",
-  "description": "Google Cloud Service Accounts used to manage the various Selbi environments.",
+  "description": "Google Cloud Service Accounts used to manage the various Selbi environments. It is important that frontend projects NEVER depend on this. It should only be visible to Selbi managed servers.",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests --compilers js:babel-core/register"
