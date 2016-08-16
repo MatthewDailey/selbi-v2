@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon, { once } from 'sinon';
 import CreateCustomerWorker from '../src/CreateCustomerWorker';
 
 describe('CreateCustomerWorker', () => {
@@ -7,5 +8,15 @@ describe('CreateCustomerWorker', () => {
       .then(() => new CreateCustomerWorker().start(() => {}).shutdown())
       .then(() => done())
       .catch(done);
+  });
+
+  describe('queue listening', () => {
+    it('sinon test', () => {
+      const callback = sinon.spy();
+
+      callback();
+
+      expect(callback.called).to.be.true;
+    });
   });
 });
