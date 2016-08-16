@@ -1,5 +1,7 @@
 
-const developAccount = require('./selbi-develop-service-account.json');
+require('babel-core/register');
+
+const developAccount = require('./../selbi-develop-service-account.json');
 
 class ServiceAccountSupplier {
   fromEnvironment() {

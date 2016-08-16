@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import ServiceAccount from '../index';
+import ServiceAccount from '../src/index';
 
 describe('service-accounts index', () => {
   it('exports fromEnvironment', () => {
