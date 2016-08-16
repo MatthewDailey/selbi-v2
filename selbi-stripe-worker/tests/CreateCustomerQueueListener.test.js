@@ -34,8 +34,8 @@ describe('CreateCustomerWorker', () => {
         .ref('/users')
         .child(testUserUid)
         .set({
-          message: 'This is a strawman. The CreateCustomerQueueListener test does not care about user ' +
-          'data integrity.',
+          message: 'This is a strawman. The CreateCustomerQueueListener test does not care ' +
+          'about user data integrity.',
         }))
       .then(done)
       .catch(done);
