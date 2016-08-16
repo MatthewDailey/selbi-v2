@@ -6,6 +6,10 @@ describe('service-accounts index', () => {
     expect(ServiceAccount.fromEnvironment()).to.exist;
   });
 
+  it('exports firebaseConfigFromEnvironment', () => {
+    expect(ServiceAccount.firebaseConfigFromEnvironment()).to.exist;
+  });
+
   describe('fromEnvironment', () => {
     it('returns develop by default', () => {
       expect(ServiceAccount.fromEnvironment().project_id).to.equal('selbi-develop');

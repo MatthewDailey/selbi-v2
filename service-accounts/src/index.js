@@ -12,6 +12,10 @@ class ServiceAccountSupplier {
     }
     return developAccount;
   }
+
+  firebaseConfigFromEnvironment() {
+    return {};
+  }
 }
 
 module.exports = new ServiceAccountSupplier();
