@@ -10,9 +10,13 @@ describe('service-accounts index', () => {
     expect(ServiceAccount.firebaseConfigFromEnvironment()).to.exist;
   });
 
+  after(() => {
+    delete process.env.SELBI_ENVIRONMENT;
+  });
+
   describe('fromEnvironment', () => {
     it('returns develop by default', () => {
-      delete process.env.SELBI_ENVIRONMENT
+      delete process.env.SELBI_ENVIRONMENT;
       expect(ServiceAccount.fromEnvironment().project_id).to.equal('selbi-develop');
     });
 
