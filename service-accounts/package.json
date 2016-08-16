@@ -1,0 +1,16 @@
+{
+  "name": "@selbi/service-accounts",
+  "version": "1.0.0",
+  "description": "Google Cloud Service Accounts used to manage the various Selbi environments.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests --compilers js:babel-core/register"
+  },
+  "keywords": [
+    "google",
+    "cloud",
+    "service",
+    "account"
+  ],
+  "author": "mjd"
+}
