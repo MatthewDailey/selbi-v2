@@ -14,7 +14,22 @@ class ServiceAccountSupplier {
   }
 
   firebaseConfigFromEnvironment() {
-    return {};
+    if (process.env.SELBI_ENVIRONMENT === 'production') {
+      return {
+        serviceAccount: productionAccount,
+        databaseURL: 'https://selbi-production.firebaseio.com',
+      };
+    }
+    if (process.env.SELBI_ENVIRONMENT === 'staging') {
+      return {
+        serviceAccount: stagingAccount,
+        databaseURL: 'https://selbi-staging.firebaseio.com',
+      };
+    }
+    return {
+      serviceAccount: developAccount,
+      databaseURL: 'https://selbi-develop.firebaseio.com',
+    };
   }
 }
 
