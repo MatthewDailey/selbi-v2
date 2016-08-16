@@ -1,6 +1,6 @@
 import Queue from 'firebase-queue';
 import firebase from 'firebase';
-import { serviceAccountJsonPath } from './ServiceAccountProvider';
+import ServiceAccount from '@selbi/service-accounts';
 
 class CreateCustomerWorker {
   /*
@@ -8,13 +8,14 @@ class CreateCustomerWorker {
    *
    * @returns CreateCustomerWorker this.
    */
-  start() {
-    const serviceAccountConfig = {
-      serviceAccount: serviceAccountJsonPath,
-      databaseURL: 'https://selbi-staging.firebaseio.com',
-    };
+  start(queueEventHandler) {
+    this.firebaseApp = firebase.initializeApp(
+      ServiceAccount.firebaseConfigFromEnvironment(),
+      'create-customer');
 
-    this.firebaseApp = firebase.initializeApp(serviceAccountConfig, 'create-customer');
+    this.queue = new Queue(
+      this.firebaseApp.database().ref('/createCustomer'),
+      queueEventHandler);
     return this;
   }
 
@@ -24,10 +25,14 @@ class CreateCustomerWorker {
    * @returns Promise which is fulfilled when shutdown is complete.
    */
   shutdown() {
+    const allShutdownPromises = [];
     if (this.firebaseApp) {
-      return this.firebaseApp.delete();
+      allShutdownPromises.push(this.firebaseApp.delete());
     }
-    return Promise.resolve();
+    if (this.queue) {
+      allShutdownPromises.push(this.queue.shutdown());
+    }
+    return Promise.all(allShutdownPromises);
   }
 }
 
