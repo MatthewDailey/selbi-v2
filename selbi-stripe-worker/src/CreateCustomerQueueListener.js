@@ -1,6 +1,4 @@
 import Queue from 'firebase-queue';
-import firebase from 'firebase';
-import ServiceAccount from '@selbi/service-accounts';
 
 class CreateCustomerQueueListener {
   /*

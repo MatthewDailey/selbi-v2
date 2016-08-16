@@ -37,4 +37,4 @@ app.get('/', (req, res) => {
 });
 app.listen(8080);
 
-console.log('App can run.');
+console.log('stripe-worker has started.');
