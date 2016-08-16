@@ -2,19 +2,15 @@ import Queue from 'firebase-queue';
 import firebase from 'firebase';
 import ServiceAccount from '@selbi/service-accounts';
 
-class CreateCustomerWorker {
+class CreateCustomerQueueListener {
   /*
    * Initializes the CreateCustomerQueueListener synchronously.
    *
    * @returns CreateCustomerQueueListener this.
    */
-  start(queueEventHandler) {
-    this.firebaseApp = firebase.initializeApp(
-      ServiceAccount.firebaseConfigFromEnvironment(),
-      'create-customer');
-
+  start(firebaseDb, queueEventHandler) {
     this.queue = new Queue(
-      this.firebaseApp.database().ref('/createCustomer'),
+      firebaseDb.ref('/createCustomer'),
       queueEventHandler);
     return this;
   }
@@ -25,15 +21,8 @@ class CreateCustomerWorker {
    * @returns Promise which is fulfilled when shutdown is complete.
    */
   shutdown() {
-    const allShutdownPromises = [];
-    if (this.firebaseApp) {
-      allShutdownPromises.push(this.firebaseApp.delete());
-    }
-    if (this.queue) {
-      allShutdownPromises.push(this.queue.shutdown());
-    }
-    return Promise.all(allShutdownPromises);
+    return this.queue.shutdown();
   }
 }
 
-module.exports = CreateCustomerWorker;
+module.exports = CreateCustomerQueueListener;

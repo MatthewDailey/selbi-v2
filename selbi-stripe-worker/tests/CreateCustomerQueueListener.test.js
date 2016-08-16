@@ -15,21 +15,19 @@ const testCreateCustomerData = {
   uid: testUserUid,
 };
 
-describe('CreateCustomerWorker', () => {
-  let firebaseApp = null;
-
+describe('CreateCustomerQueueListener', () => {
   before(function (done) {
     this.timeout(5000);
 
-    firebaseApp = firebase.initializeApp(
+    this.firebaseApp = firebase.initializeApp(
       ServiceAccount.firebaseConfigFromEnvironment(),
       'test-driver');
 
-    firebaseApp
+    this.firebaseApp
       .database()
       .ref('/')
       .remove()
-      .then(() => firebaseApp
+      .then(() => this.firebaseApp
         .database()
         .ref('/users')
         .child(testUserUid)
@@ -41,16 +39,20 @@ describe('CreateCustomerWorker', () => {
       .catch(done);
   });
 
-  after((done) => {
-    firebaseApp
+  after(function (done) {
+    this.firebaseApp
       .delete()
       .then(done)
       .catch(done);
   });
 
-  it('can be created twice as long as shutdown', (done) => {
-    new CreateCustomerQueueListener().start(() => {}).shutdown()
-      .then(() => new CreateCustomerQueueListener().start(() => {}).shutdown())
+  it('can be created twice as long as shutdown', function (done) {
+    new CreateCustomerQueueListener()
+      .start(this.firebaseApp.database(), () => {})
+      .shutdown()
+      .then(() => new CreateCustomerQueueListener()
+        .start(this.firebaseApp.database(), () => {})
+        .shutdown())
       .then(() => done())
       .catch(done);
   });
@@ -72,7 +74,7 @@ describe('CreateCustomerWorker', () => {
     it('does not call queueHandler off the bat', function () {
       const queueHandler = sinon.spy();
 
-      this.worker.start(queueHandler);
+      this.worker.start(this.firebaseApp.database(), queueHandler);
 
       expect(queueHandler.called).to.be.false;
     });
@@ -84,9 +86,9 @@ describe('CreateCustomerWorker', () => {
           .then(done);
       });
 
-      this.worker.start(queueHandler);
+      this.worker.start(this.firebaseApp.database(), queueHandler);
 
-      firebaseApp
+      this.firebaseApp
         .database()
         .ref('/createCustomer/tasks')
         .push(testCreateCustomerData)

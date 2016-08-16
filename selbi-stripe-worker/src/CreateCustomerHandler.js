@@ -19,11 +19,19 @@ function validateData(data, reject) {
 /*
  * This class provides the Firebase-Queue listener which is used to create a Stripe Customer
  * based on the enqueued user data.
+ *
+ * This create customer handler creates a stripe customer and then stores the result of that
+ * data in Firebase at /customers/$uid
  */
 class CreateCustomerHandler {
-  handleCreateCustomer(data, progress, resolve, reject) {
+  constructor(firebaseDb, stripeCustomersApi) {
+    this.firebaseDb = firebaseDb;
+    this.stripeCustomersApi = stripeCustomersApi;
+  }
+
+  handleTask(data, progress, resolve, reject) {
     validateData(data, reject);
   }
 }
 
-module.exports = new CreateCustomerHandler();
+module.exports = CreateCustomerHandler;
