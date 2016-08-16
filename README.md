@@ -42,6 +42,15 @@ Useful commands:
 Configuration docs:
 - https://cloud.google.com/appengine/docs/python/config/appref
 
+Private NPM Packages
+--------------------
+
+Selbi makes use of private NPM packages to improve the modularity of our code base. To use these modules you will need to create an [NPM account](https://www.npmjs.com/) and join the Selbi team.
+
+You will then need to run `npm login` on your dev machine. This will generate a `~/.npmrc` file which contains an NPM token. You should add this token to you environment as an environment variable `NPM_TOKEN`. This will enable the Selbi projects which require private packages to properly authenitcate you. Read [this page](https://docs.npmjs.com/private-modules/intro) if you want more details.
+
+Read [this explanation](http://blog.npmjs.org/post/118393368555/deploying-with-npm-private-modules) on how to the continuous integration system works with private modules.
+
 Git Flow
 --------
 There are 3 permanant branches which mirror our 3 Google Cloud environments:
