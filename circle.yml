@@ -13,6 +13,10 @@ test:
   override:
     - cd selbi-backend && npm test
     - cd selbi-stripe-worker && npm test
+    - cd service-accounts && npm test
+
+# TODO: Consider how we deploy private node modules here. Manual publish from a machine is fine for now
+#  but at somepoint we'll want to do it in a CI environment. Perhaps this is a reason to move to seperate repos.
 
 deployment:
   staging:
