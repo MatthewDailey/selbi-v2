@@ -22,6 +22,8 @@ There are 3 Selbi Firebase environments (and consequently Google Cloud environme
 The `service-accounts` directory contains service accounts which can be used to programmatically modify each of these
 Firebase / Google Cloud deployments. This is useful for integration testing and for continuous deployment.
 
+Note that Google app engine assumes any app deployed will serve an http endpoint on port 8080. If nothing is served at port 8080, then App Engine will assume something is wrong, delete the box and restart new one every 10 min resulting in 1 min of downtime. Therefore, even services such as stripe-worker depend on express and serve a basic status message.
+
 Deploying Microservices to Google App Engine
 --------------------------------------------
 The backend services and future web frontend are deployed as NodeJS applications running on Google App Engine.
@@ -38,13 +40,14 @@ Configuration docs:
 
 Git Flow
 --------
-There are 2 permanant branches:
-- develop - Code staged for production.
+There are 3 permanant branches which mirror our 3 Google Cloud environments:
+- develop - Place where new code gets merged.
+- staging - Fully live test environment.
 - production - Code running live.
 
-New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into production. No one should push directly to develop or production.
+New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into staging and then to production. No one should push directly to staging or production. In fact, we should generally not push to develop but rather to a feature branch.
 
-Any code merged to develop will be deployed to staging automatically via CircleCI, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
+CircleCI will run unit tests for any branch pushed to the repo which should take around 5 min to run per push. When merging to staging and production, CircleCI will deploy to staging and produciton automatically, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
 
 A common workflow for modifying the firebase schema will be:
 - Create a feature branch.

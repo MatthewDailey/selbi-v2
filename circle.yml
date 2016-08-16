@@ -15,10 +15,9 @@ test:
     - cd selbi-stripe-worker && npm test
 
 deployment:
-  develop:
-    branch: develop
+  staging:
+    branch: staging
     commands:
-      - cd selbi-backend && firebase deploy --project selbi-develop
       - cd selbi-backend && firebase deploy --project selbi-staging
       - echo $STAGING_GCLOUD_SECRET | base64 --decode > ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
