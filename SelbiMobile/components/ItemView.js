@@ -7,7 +7,7 @@ const { Text, View, Image } = ReactNative;
 
 class ItemView extends Component {
   render() {
-    console.log(this.props.img.url)
+    console.log(this.props);
     return (
       <View>
         <Image
