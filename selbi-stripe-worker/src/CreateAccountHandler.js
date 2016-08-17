@@ -70,6 +70,10 @@ class CreateCustomerHandler {
     const firebaseDb = this.firebaseDb;
     const stripeAccountsApi = this.stripeAccountsApi;
     return (data, progress, resolveCreateAccountTask, rejectCreateAccountTask) => {
+      const userRef = () => firebaseDb
+        .ref('users')
+        .child(data.uid);
+
       const createStripeAccount = () => new Promise((resolve, reject) => {
         stripeAccountsApi.create(data.payload, (err, account) => {
           if (err) {
@@ -80,14 +84,35 @@ class CreateCustomerHandler {
         });
       });
 
+      const storeStripeAccountInFirebase = (accountData) => firebaseDb
+        .ref('/stripeAccount')
+        .push(accountData);
+
+      const updateUserMerchantInfo = (snapshot) => userRef()
+        .child('merchant')
+        .set({
+          stripeAccountPointer: snapshot.key,
+          status: 'OK',
+          metadata: data.metadata,
+        });
+
+      // TODO update user address.
+
       const updateUserMerchantStatusAndReject = (error) => {
         // TODO update user merchant.
         rejectCreateAccountTask(error);
-        return Promise.reject(error);
+        return userRef()
+          .child('merchant')
+          .set({
+            status: `ERROR creating account for user=${data.uid} error=${error}`,
+          })
+          .then(() => Promise.reject(error));
       };
-      // TODO
       return validateData(data)
         .then(createStripeAccount)
+        .then(storeStripeAccountInFirebase)
+        .then(updateUserMerchantInfo)
+        .then(resolveCreateAccountTask)
         .catch(updateUserMerchantStatusAndReject);
     };
   }

@@ -19,6 +19,8 @@ function validateData(data) {
     return Promise.reject('Missing metadata.lastFour.');
   } else if (!data.metadata.expirationDate) {
     return Promise.reject('Missing metadata.expirationDate');
+  } else if (!data.metadata.cardBrand) {
+    return Promise.reject('Missing metadata.cardBrand');
   }
   return Promise.resolve();
 }

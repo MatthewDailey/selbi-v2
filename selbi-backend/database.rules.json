@@ -18,7 +18,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
-          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          ".validate": "newData.hasChildren(['payload', 'uid', 'metadata']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"
           },
@@ -128,6 +128,21 @@
           "uid": {
             ".validate": "newData.isString() && auth.uid == newData.val()"
           },
+          "metadata" : {
+            ".validate": "newData.hasChildren(['accountNumberLastFour', 'routingNumber', 'bankName'])",
+            "$other": {
+              ".validate": false
+            },
+            "accountNumberLastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            "routingNumber": {
+              ".validate": "newData.isNumber()"
+            },
+            "bankName": {
+              ".validate": "newData.isString()"
+            }
+          },
           "$other": {
             ".validate": false
           }
@@ -225,7 +240,7 @@
             ".validate": "newData.isString() && auth.uid == newData.val()"
           },
           "metadata": {
-            ".validate": "newData.hasChildren(['expirationDate', 'lastFour'])",
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour', 'cardBrand'])",
             "$other": {
               ".validate": false
             },
@@ -235,6 +250,9 @@
             // MM-YY
             "expirationDate": {
               ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+            },
+            "cardBrand" : {
+              ".validate": "newData.isString()"
             }
           },
           "$other": {
@@ -436,9 +454,12 @@
             ".validate": "newData.isString()"
           },
           "metadata": {
-            ".validate": "newData.hasChildren(['expirationDate', 'lastFour'])",
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour', 'cardBrand'])",
             "$other": {
               ".validate": false
+            },
+            "cardBrand" : {
+              ".validate": "newData.isString()"
             },
             "lastFour": {
               ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
@@ -462,6 +483,10 @@
             ".validate": "newData.isString()"
           },
           "metadata" : {
+            ".validate": "newData.hasChildren(['accountNumberLastFour', 'routingNumber', 'bankName'])",
+            "$other": {
+              ".validate": false
+            },
             "accountNumberLastFour": {
               ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
             },

@@ -532,6 +532,7 @@ describe('/users', () => {
         stripeCustomerPointer: 'fakeStripeCustomerId',
         status: 'OK',
         metadata: {
+          cardBrand: 'Visa',
           lastFour: 1234,
           expirationDate: '01-19',
         },
@@ -560,6 +561,16 @@ describe('/users', () => {
           (data) => {
             const modifiedPayment = deepCopy(paymentData);
             delete modifiedPayment.status;
+            // noinspection Eslint
+            data.payment = modifiedPayment;
+          }, done);
+      });
+
+      it('cardBrand required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.metadata.cardBrand;
             // noinspection Eslint
             data.payment = modifiedPayment;
           }, done);
@@ -601,7 +612,7 @@ describe('/users', () => {
         stripeAccountPointer: 'fakeAccountPointer',
         status: 'OK',
         metadata: {
-          accountNumberLast4: 4444,
+          accountNumberLastFour: 4444,
           routingNumber: 325181028,
           bankName: 'WSECU',
         },

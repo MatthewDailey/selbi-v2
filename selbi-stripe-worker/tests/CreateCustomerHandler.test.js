@@ -13,6 +13,7 @@ const testCreateCustomerTask = {
   metadata: {
     lastFour: 1234,
     expirationDate: '01-19',
+    cardBrand: 'Visa',
   },
   uid: minimalUserUid,
 };
@@ -62,7 +63,7 @@ describe('CreateCustomerHandler', () => {
       const testData = deepCopy(testCreateCustomerTask);
       manipulateData(testData);
       new CreateCustomerHandler(stub())
-        .handleTask(testData, progress, resolve, reject)
+        .getTaskHandler()(testData, progress, resolve, reject)
         .then(() => {
           done(new Error('Should have failed data validation.'));
         })
@@ -129,11 +130,19 @@ describe('CreateCustomerHandler', () => {
         delete data.metadata.expirationDate;
       }, done);
     });
+
+    it('must have metadata.cardBrand', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.metadata.cardBrand;
+      }, done);
+    });
   });
 
   describe('stripe calls', () => {
     before(function (done) {
-      this.timeout(5000)
+      this.timeout(5000);
+
       FirebaseTest
         .dropDatabase()
         .then(() => FirebaseTest.createMinimalUser())
@@ -153,7 +162,7 @@ describe('CreateCustomerHandler', () => {
       new CreateCustomerHandler(
         FirebaseTest.serviceAccountApp.database(),
         stripeCustomersApiMock.api)
-        .handleTask(
+        .getTaskHandler()(
           deepCopy(testCreateCustomerTask),
           this.progress,
           this.resolve,
