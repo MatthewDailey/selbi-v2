@@ -10,26 +10,10 @@ import {
   StyleSheet,
   Text,
   View,
+  ListView,
 } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+import StatusBar from './components/StatusBar';
+import styles from './styles.js';
 
 class SelbiMobile extends Component {
   render() {
@@ -50,4 +34,30 @@ class SelbiMobile extends Component {
   }
 }
 
-AppRegistry.registerComponent('SelbiMobile', () => SelbiMobile);
+class ListMobile extends Component {
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    const longArray = []
+    for(let i = 0; i < 1000; i++) {
+      longArray.push(i);
+    }
+    this.state = {
+      dataSource: ds.cloneWithRows(longArray),
+    };
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar title="Selbi" />
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => <Text>{rowData}</Text>}
+        />
+      </View>
+    );
+  }
+}
+
+AppRegistry.registerComponent('SelbiMobile', () => ListMobile);
