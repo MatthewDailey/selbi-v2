@@ -449,11 +449,17 @@
             }
           }
         },
-        // TODO move this to its own node in the heirarchy
         "merchant": {
-          ".validate": "newData.hasChildren(['stripeVerified'])",
+          ".validate": "newData.hasChildren(['status'])",
           "$other": {
             ".validate": false
+          },
+          "status" : {
+            ".validate": "newData.isString()"
+          },
+          // Links to /stripeAccount/$stripeAccountPointer
+          "stripeAccountPointer" : {
+            ".validate": "newData.isString()"
           },
           "accountNumberLast4": {
             ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
@@ -461,20 +467,8 @@
           "routingNumber": {
             ".validate": "newData.isNumber()"
           },
-          "publicKey": {
+          "bankName": {
             ".validate": "newData.isString()"
-          },
-          "privateKey": {
-            ".validate": "newData.isString()"
-          },
-          "stripeBankId": {
-            ".validate": "newData.isString()"
-          },
-          "stripeManagedAccountId": {
-            ".validate": "newData.isString()"
-          },
-          "stripeVerified": {
-            ".validate": "newData.isBoolean()"
           }
         },
         "locations": {
