@@ -91,7 +91,7 @@ class CreateCustomerHandler {
       return userRef()
         .child('payment')
         .set({
-          status: 'TODO: Error Message',
+          status: `ERROR creating customer for user=${data.uid} error=${error}`,
         })
         .then(() => Promise.reject(error));
     }
