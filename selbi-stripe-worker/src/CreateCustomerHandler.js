@@ -87,13 +87,13 @@ class CreateCustomerHandler {
         .set(data.payload.email);
 
     function updateUserPaymentStatusAndReject(error) {
-      // userRef()
-      //   .child('payment')
-      //   .set({
-      //     status: 'TODO: Error Message',
-      //   });
       reject(error);
-      return Promise.reject(error);
+      return userRef()
+        .child('payment')
+        .set({
+          status: 'TODO: Error Message',
+        })
+        .then(() => Promise.reject(error));
     }
 
     return validateData(data)

@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
+import FirebaseTest, { minimalUserUid } from '@selbi/firebase-test-resource';
 import CreateCustomerHandler from '../src/CreateCustomerHandler';
 
 
@@ -13,7 +14,7 @@ const testCreateCustomerTask = {
     lastFour: 1234,
     expirationDate: '01-19',
   },
-  uid: 'testUserId',
+  uid: minimalUserUid,
 };
 
 function deepCopy(obj) {
@@ -131,19 +132,27 @@ describe('CreateCustomerHandler', () => {
   });
 
   describe('stripe calls', () => {
+    before(function (done) {
+      this.timeout(5000)
+      FirebaseTest
+        .dropDatabase()
+        .then(() => FirebaseTest.createMinimalUser())
+        .then(done)
+        .catch(done);
+    });
+
     beforeEach(function () {
       this.progress = spy();
       this.resolve = spy();
       this.reject = spy();
-      this.firebaseDb = stub({
-        ref: () => {},
-      });
     });
 
     it('calls stripe.customers.create', function (done) {
       const stripeCustomersApiMock = getSpyForStripeCustomersApi(null, { customer: 'data' });
 
-      new CreateCustomerHandler(this.firebaseDb, stripeCustomersApiMock.api)
+      new CreateCustomerHandler(
+        FirebaseTest.serviceAccountApp.database(),
+        stripeCustomersApiMock.api)
         .handleTask(
           deepCopy(testCreateCustomerTask),
           this.progress,
