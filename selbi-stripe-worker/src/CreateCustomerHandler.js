@@ -34,17 +34,17 @@ function validateData(data) {
  *
  * @returns Promise fulfilled with client data.
  */
-function createStripeCustomer(stripeCustomerApi, payload) {
-  return new Promise((resolve, reject) => {
-    stripeCustomerApi.create(payload, (err, customer) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(customer);
-      }
-    });
-  });
-}
+// function createStripeCustomer(stripeCustomerApi, payload) {
+//   return new Promise((resolve, reject) => {
+//     stripeCustomerApi.create(payload, (err, customer) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(customer);
+//       }
+//     });
+//   });
+// }
 
 /*
  * This class provides the Firebase-Queue listener which is used to create a Stripe Customer
@@ -65,16 +65,19 @@ class CreateCustomerHandler {
     this.stripeCustomerApi = stripeCustomerApi;
   }
 
-  handleTask(data, progress, resolve, reject) {
-    const userRef = () => this.firebaseDb
+  getTaskHandler() {
+    const firebaseDb = this.firebaseDb
+    const stripeAPI = this.stripeCustomerApi;
+    return (data, progress, resolve, reject) => {
+      const userRef = () => firebaseDb
         .ref('users')
         .child(data.uid);
 
-    const storeStripeCustomerInFirebase = (customerData) => this.firebaseDb
+      const storeStripeCustomerInFirebase = (customerData) => firebaseDb
         .ref('/stripeCustomer')
         .push(customerData);
 
-    const updateUserPaymentInfo = (snapshot) => userRef()
+      const updateUserPaymentInfo = (snapshot) => userRef()
         .child('payment')
         .set({
           stripeCustomerPointer: snapshot.key,
@@ -82,26 +85,38 @@ class CreateCustomerHandler {
           metadata: data.metadata,
         });
 
-    const updateUserEmail = () => userRef()
+      const updateUserEmail = () => userRef()
         .child('email')
         .set(data.payload.email);
 
-    function updateUserPaymentStatusAndReject(error) {
-      reject(error);
-      return userRef()
-        .child('payment')
-        .set({
-          status: `ERROR creating customer for user=${data.uid} error=${error}`,
-        })
-        .then(() => Promise.reject(error));
-    }
+      const createStripeCustomer = () => new Promise((resolveStripeCreate, rejectStripeCreate) => {
+        stripeAPI.create(data.payload, (err, customer) => {
+          if (err) {
+            rejectStripeCreate(err);
+          } else {
+            resolveStripeCreate(customer);
+          }
+        });
+      });
 
-    return validateData(data)
-      .then(() => createStripeCustomer(this.stripeCustomerApi, data.payload))
-      .then(storeStripeCustomerInFirebase)
-      .then(updateUserPaymentInfo)
-      .then(updateUserEmail)
-      .catch(updateUserPaymentStatusAndReject);
+      function updateUserPaymentStatusAndReject(error) {
+        reject(error);
+        return userRef()
+          .child('payment')
+          .set({
+            status: `ERROR creating customer for user=${data.uid} error=${error}`,
+          })
+          .then(() => Promise.reject(error));
+      }
+
+      return validateData(data)
+        .then(createStripeCustomer)
+        .then(storeStripeCustomerInFirebase)
+        .then(updateUserPaymentInfo)
+        .then(updateUserEmail)
+        .then(resolve)
+        .catch(updateUserPaymentStatusAndReject);
+    };
   }
 }
 

@@ -15,7 +15,7 @@ const firebaseDb = serviceAccountApp.database();
 const createCustomerHandler = new CreateCustomerHandler(firebaseDb, stripe.customers);
 const createCustomerQueueListener = new CreateCustomerQueueListener();
 
-createCustomerQueueListener.start(firebaseDb, createCustomerHandler.handleTask);
+createCustomerQueueListener.start(firebaseDb, createCustomerHandler.getTaskHandler());
 
 process.on('SIGINT', () => {
   console.log('Received SIGINT, starting graceful shutdown...');
@@ -24,7 +24,8 @@ process.on('SIGINT', () => {
     .shutdown()
     .then(() => serviceAccountApp.delete())
     .then(() => console.log('Graceful shutdown of firebase connections complete.'))
-    .then(() => process.exit(0));
+    .then(() => process.exit(0))
+    .catch(() => process.exit(0));
 });
 
 const app = express();
