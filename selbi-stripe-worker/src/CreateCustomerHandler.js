@@ -39,13 +39,18 @@ function createCustomer(stripeCustomerApi, payload) {
   });
 }
 
-
 /*
  * This class provides the Firebase-Queue listener which is used to create a Stripe Customer
  * based on the enqueued user data.
  *
- * This create customer handler creates a stripe customer and then stores the result of that
- * data in Firebase at /customers/$uid
+ * Steps:
+ * 1) Create Stripe Connect customer.
+ * 2) Store customer data in firebase to /stripeCustomer/$stripeCustomerId.
+ * 3) Link to customer data from user via /users/$uid/payment/stripeCustomerId.
+ * 4) Store payment metadata (such as cc last 4) in /users/$uid/payment/metadata.
+ *
+ * If there is a failure we write to /users/$uid/payment/status which the user will notify
+ *
  */
 class CreateCustomerHandler {
   constructor(firebaseDb, stripeCustomerApi) {
@@ -56,12 +61,46 @@ class CreateCustomerHandler {
   handleTask(data, progress, resolve, reject) {
     validateData(data, reject);
 
+    const userRef = this.firebaseDb
+      .ref('users')
+      .child(data.uid);
+
+    function storeStripeCustomerInFirebase(customerData) {
+      return this.firebaseDb
+        .ref('/stripeCustomer')
+        .push(customerData);
+    }
+
+    function updateUserPaymentInfo(snapshot) {
+      return userRef
+        .child('payment')
+        .set({
+          stripeCustomerPointer: snapshot.key,
+          status: 'OK',
+          metadata: data.metadata,
+        });
+    }
+
+    function updateUserEmail() {
+      return userRef
+        .child('email')
+        .set(data.payload.email);
+    }
+
+    function updateUserPaymentStatusAndReject(error) {
+      userRef
+        .child('payment')
+        .set({
+          status: 'TODO: Error Message',
+        });
+      reject(error);
+    }
+
     return createCustomer(this.stripeCustomerApi, data.payload)
-      .then((customerData) => {
-        console.log(customerData)
-        // update firebase db.
-      })
-      .catch((error) => reject(error));
+      .then(storeStripeCustomerInFirebase)
+      .then(updateUserPaymentInfo)
+      .then(updateUserEmail)
+      .catch(updateUserPaymentStatusAndReject);
   }
 }
 
