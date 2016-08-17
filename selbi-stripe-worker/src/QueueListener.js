@@ -1,6 +1,10 @@
 import Queue from 'firebase-queue';
 
-class CreateCustomerQueueListener {
+class QueueListener {
+  constructor(queueRefPath) {
+    this.queueRefPath = queueRefPath;
+  }
+
   /*
    * Initializes the CreateCustomerQueueListener synchronously.
    *
@@ -8,7 +12,7 @@ class CreateCustomerQueueListener {
    */
   start(firebaseDb, queueEventHandler) {
     this.queue = new Queue(
-      firebaseDb.ref('/createCustomer'),
+      firebaseDb.ref(this.queueRefPath),
       queueEventHandler);
     return this;
   }
@@ -23,4 +27,4 @@ class CreateCustomerQueueListener {
   }
 }
 
-module.exports = CreateCustomerQueueListener;
+module.exports = QueueListener;

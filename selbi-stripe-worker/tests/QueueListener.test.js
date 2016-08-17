@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import firebase from 'firebase';
 import ServiceAccount from '@selbi/service-accounts';
-import CreateCustomerQueueListener from '../src/CreateCustomerQueueListener';
+import QueueListener from '../src/QueueListener';
 
 const testUserUid = 'CreateCustomerQueueListener-TestUser';
 
@@ -47,10 +47,10 @@ describe('CreateCustomerQueueListener', () => {
   });
 
   it('can be created twice as long as shutdown', function (done) {
-    new CreateCustomerQueueListener()
+    new QueueListener('/createCustomer')
       .start(this.firebaseApp.database(), () => {})
       .shutdown()
-      .then(() => new CreateCustomerQueueListener()
+      .then(() => new QueueListener('/createCustomer')
         .start(this.firebaseApp.database(), () => {})
         .shutdown())
       .then(() => done())
@@ -61,7 +61,7 @@ describe('CreateCustomerQueueListener', () => {
     this.timeout(5000);
 
     beforeEach(function () {
-      this.worker = new CreateCustomerQueueListener();
+      this.worker = new QueueListener('/createCustomer');
     });
 
     afterEach(function (done) {

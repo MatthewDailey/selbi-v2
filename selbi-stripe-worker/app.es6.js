@@ -4,7 +4,7 @@ import initializeStripe from 'stripe';
 
 import ServiceAccount from '@selbi/service-accounts';
 import CreateCustomerHandler from './src/CreateCustomerHandler';
-import CreateCustomerQueueListener from './src/CreateCustomerQueueListener';
+import QueueListener from './src/QueueListener';
 
 const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
 
@@ -13,7 +13,7 @@ const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFr
 const firebaseDb = serviceAccountApp.database();
 
 const createCustomerHandler = new CreateCustomerHandler(firebaseDb, stripe.customers);
-const createCustomerQueueListener = new CreateCustomerQueueListener();
+const createCustomerQueueListener = new QueueListener('/createCustomer');
 
 createCustomerQueueListener.start(firebaseDb, createCustomerHandler.getTaskHandler());
 
