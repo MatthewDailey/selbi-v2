@@ -24,29 +24,6 @@ function validateData(data) {
 }
 
 /*
- * This method demonstrates how to create a Customer which can be used for repeated payments. It
- * is intended to be run server side.
- *
- * @param payload.source String token returned to the client device from Stripe when a payment
- * source was created.
- * @param payload.description String describing the customer.
- * @param payload.email String email of the customer.
- *
- * @returns Promise fulfilled with client data.
- */
-// function createStripeCustomer(stripeCustomerApi, payload) {
-//   return new Promise((resolve, reject) => {
-//     stripeCustomerApi.create(payload, (err, customer) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(customer);
-//       }
-//     });
-//   });
-// }
-
-/*
  * This class provides the Firebase-Queue listener which is used to create a Stripe Customer
  * based on the enqueued user data.
  *
@@ -60,18 +37,28 @@ function validateData(data) {
  *
  */
 class CreateCustomerHandler {
-  constructor(firebaseDatabase, stripeCustomerApi) {
+  constructor(firebaseDatabase, stripeCustomersApi) {
     this.firebaseDb = firebaseDatabase;
-    this.stripeCustomerApi = stripeCustomerApi;
+    this.stripeCustomersApi = stripeCustomersApi;
   }
 
   getTaskHandler() {
-    const firebaseDb = this.firebaseDb
-    const stripeAPI = this.stripeCustomerApi;
-    return (data, progress, resolve, reject) => {
+    const firebaseDb = this.firebaseDb;
+    const stripeCustomersApi = this.stripeCustomersApi;
+    return (data, progress, resolveCreateCustomerTask, rejectCreateCustomerTask) => {
       const userRef = () => firebaseDb
         .ref('users')
         .child(data.uid);
+
+      const createStripeCustomer = () => new Promise((resolve, reject) => {
+        stripeCustomersApi.create(data.payload, (err, customer) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(customer);
+          }
+        });
+      });
 
       const storeStripeCustomerInFirebase = (customerData) => firebaseDb
         .ref('/stripeCustomer')
@@ -89,18 +76,8 @@ class CreateCustomerHandler {
         .child('email')
         .set(data.payload.email);
 
-      const createStripeCustomer = () => new Promise((resolveStripeCreate, rejectStripeCreate) => {
-        stripeAPI.create(data.payload, (err, customer) => {
-          if (err) {
-            rejectStripeCreate(err);
-          } else {
-            resolveStripeCreate(customer);
-          }
-        });
-      });
-
       function updateUserPaymentStatusAndReject(error) {
-        reject(error);
+        rejectCreateCustomerTask(error);
         return userRef()
           .child('payment')
           .set({
@@ -114,7 +91,7 @@ class CreateCustomerHandler {
         .then(storeStripeCustomerInFirebase)
         .then(updateUserPaymentInfo)
         .then(updateUserEmail)
-        .then(resolve)
+        .then(resolveCreateCustomerTask)
         .catch(updateUserPaymentStatusAndReject);
     };
   }
