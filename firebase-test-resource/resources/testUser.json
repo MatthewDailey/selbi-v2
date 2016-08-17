@@ -26,17 +26,18 @@
     "status": "OK",
     "metadata": {
       "lastFour": 1234,
-      "expirationDate": "01-19"
+      "expirationDate": "01-19",
+      "cardBrand": "Visa"
     }
   },
   "merchant" : {
-    "accountNumberLast4" : 4444,
-    "routingNumber" : 325181028,
-    "publicKey" : "fakePublicKey",
-    "privateKey" : "fakePrivateKey",
-    "stripeBankId" : "fakeStripeBankId",
-    "stripeManagedAccountId" : "fakeManagedAccountId",
-    "stripeVerified" : true
+    "stripeAccountPointer": "fakeAccountPointer",
+    "status": "OK",
+    "metadata": {
+      "accountNumberLastFour": 4444,
+      "routingNumber": 325181028,
+      "bankName": "WSECU",
+    }
   },
   "dateOfBirth" : "1990-03-20",
   "email" : "test@selbi.io",
