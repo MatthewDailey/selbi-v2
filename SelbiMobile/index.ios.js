@@ -7,39 +7,20 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
   View,
   ListView,
 } from 'react-native';
 import StatusBar from './components/StatusBar';
+import ItemView from './components/ItemView';
 import styles from './styles.js';
 
-class SelbiMobile extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
-  }
-}
 
 class ListMobile extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     const longArray = []
-    for(let i = 0; i < 1000; i++) {
+    for(let i = 0; i < 10; i++) {
       longArray.push(i);
     }
     this.state = {
@@ -53,7 +34,16 @@ class ListMobile extends Component {
         <StatusBar title="Selbi" />
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(rowData) => <Text>{rowData}</Text>}
+          renderRow={() =>
+            <ItemView
+              title="Simple Title"
+              price="5.50"
+              img={{
+                url: 'https://firebasestorage.googleapis.com/v0/b/selbi-react-prototype.appspot.com/o/my_face.jpg?alt=media&token=07e8f1ea-caed-4b6a-b022-5b042020bf24',
+                width: 100,
+                height: 100,
+              }}
+            />}
         />
       </View>
     );
