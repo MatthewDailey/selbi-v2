@@ -36,6 +36,8 @@ function validateData(data) {
     return Promise.reject('Missing payload.tos_acceptance.date');
   } else if (!data.payload.tos_acceptance.ip) {
     return Promise.reject('Missing payload.tos_acceptance.ip');
+  } else if (!data.metadata) {
+    return Promise.reject('Missing metadata');
   } else if (!data.metadata.accountNumberLastFour) {
     return Promise.reject('Missing metadata.accountNumberLastFour');
   } else if (!data.metadata.routingNumber) {
@@ -96,10 +98,7 @@ class CreateCustomerHandler {
           metadata: data.metadata,
         });
 
-      // TODO update user address.
-
       const updateUserMerchantStatusAndReject = (error) => {
-        // TODO update user merchant.
         rejectCreateAccountTask(error);
         return userRef()
           .child('merchant')
