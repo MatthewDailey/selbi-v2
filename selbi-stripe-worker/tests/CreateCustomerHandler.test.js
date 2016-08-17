@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { spy } from 'sinon';
+import { spy, stub } from 'sinon';
 import CreateCustomerHandler from '../src/CreateCustomerHandler';
 
 const testCreateCustomerTask = {
@@ -60,7 +60,7 @@ describe('CreateCustomerHandler', () => {
     function attemptWithDataAndExpectValidationFailure(manipulateData, done) {
       const testData = deepCopy(testCreateCustomerTask);
       manipulateData(testData);
-      new CreateCustomerHandler(spy())
+      new CreateCustomerHandler(stub())
         .handleTask(testData, progress, resolve, reject)
         .then(() => {
           done(new Error('Should have failed data validation.'));
@@ -68,8 +68,8 @@ describe('CreateCustomerHandler', () => {
         .catch(() => {
           expect(reject.called).to.be.true;
           expect(resolve.called).to.be.false;
+          done();
         })
-        .then(done)
         .catch(done);
     }
 

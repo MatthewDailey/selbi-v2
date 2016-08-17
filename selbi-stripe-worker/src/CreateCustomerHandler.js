@@ -2,33 +2,25 @@
 /*
  * Validates the format of incoming Create Customer task.
  */
-function validateData(data, reject) {
+function validateData(data) {
   if (!data.uid) {
-    reject('Missing uid.');
-    return false;
+    return Promise.reject('Missing uid.');
   } else if (!data.payload) {
-    reject('Missing payload.');
-    return false;
+    return Promise.reject('Missing payload.');
   } else if (!data.payload.email) {
-    reject('Missing payload.email.');
-    return false;
+    return Promise.reject('Missing payload.email.');
   } else if (!data.payload.source) {
-    reject('Missing payload.source');
-    return false;
+    return Promise.reject('Missing payload.source');
   } else if (!data.payload.description) {
-    reject('Missing payload.description');
-    return false;
+    return Promise.reject('Missing payload.description');
   } else if (!data.metadata) {
-    reject('Missing metadata.');
-    return false;
+    return Promise.reject('Missing metadata.');
   } else if (!data.metadata.lastFour) {
-    reject('Missing metadata.lastFour.');
-    return false;
+    return Promise.reject('Missing metadata.lastFour.');
   } else if (!data.payload.expirationDate) {
-    reject('Missing metadata.expirationDate');
-    return false;
+    return Promise.reject('Missing metadata.expirationDate');
   }
-  return true;
+  return Promise.resolve();
 }
 
 /*
@@ -74,13 +66,11 @@ class CreateCustomerHandler {
   }
 
   handleTask(data, progress, resolve, reject) {
-    if (!validateData(data, reject)) {
-      return Promise.reject(new Error());
+    function userRef() {
+      return this.firebaseDb
+        .ref('users')
+        .child(data.uid);
     }
-
-    const userRef = this.firebaseDb
-      .ref('users')
-      .child(data.uid);
 
     function storeStripeCustomerInFirebase(customerData) {
       return this.firebaseDb
@@ -89,7 +79,7 @@ class CreateCustomerHandler {
     }
 
     function updateUserPaymentInfo(snapshot) {
-      return userRef
+      return userRef()
         .child('payment')
         .set({
           stripeCustomerPointer: snapshot.key,
@@ -99,21 +89,23 @@ class CreateCustomerHandler {
     }
 
     function updateUserEmail() {
-      return userRef
+      return userRef()
         .child('email')
         .set(data.payload.email);
     }
 
     function updateUserPaymentStatusAndReject(error) {
-      userRef
-        .child('payment')
-        .set({
-          status: 'TODO: Error Message',
-        });
+      // userRef()
+      //   .child('payment')
+      //   .set({
+      //     status: 'TODO: Error Message',
+      //   });
       reject(error);
+      return Promise.reject(error);
     }
 
-    return createCustomer(this.stripeCustomerApi, data.payload)
+    return validateData(data)
+      .then(() => createCustomer(this.stripeCustomerApi, data.payload))
       .then(storeStripeCustomerInFirebase)
       .then(updateUserPaymentInfo)
       .then(updateUserEmail)
