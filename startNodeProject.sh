@@ -16,7 +16,7 @@ echo "{\n\t\"extends\": \"airbnb\",\n\t\"env\": {\n\t\t\"node\": true\n\t}\n}" >
 
 echo "Create src dir..."
 mkdir -p src
-touch -p src/.gitkeep
+touch src/.gitkeep
 echo "Adding src to .npmignore..."
 echo "/src" > .npmignore
 echo "Make sure /lib and /node_modules are in your .gitignore!"
