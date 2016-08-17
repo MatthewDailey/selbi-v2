@@ -39,9 +39,9 @@ var styles = StyleSheet.create({
     flexDirection: 'row'
   },
   navbarTitle: {
-    color: '#444',
+    color: '#6699ff',
     fontSize: 16,
-    fontWeight: "500"
+    fontWeight: '700',
   },
   statusbar: {
     backgroundColor: '#fff',
