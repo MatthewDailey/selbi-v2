@@ -55,6 +55,10 @@ describe('Create Customer', () => {
         description: 'test user',
         email: 'matt@selbi.io',
       },
+      metadata: {
+        lastFour: 1234,
+        expirationDate: '01-19',
+      },
       uid: testUserUid,
     };
     writeToQueueAndExpectHandled(FirebaseTest.testUserApp, testData, done);
@@ -96,6 +100,10 @@ describe('Create Customer', () => {
           description: 'test user',
           email: 'matt@selbi.io',
         },
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
         uid: 'not the user' }), done);
   });
 
@@ -106,6 +114,10 @@ describe('Create Customer', () => {
           source: 'stripePaymentCcToken',
           description: 'test user',
           email: 'matt@selbi.io',
+        },
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
         },
         uid: 1 }), done);
   });
@@ -118,6 +130,10 @@ describe('Create Customer', () => {
           description: 1,
           email: 'matt@selbi.io',
         },
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
         uid: testUserUid }), done);
   });
 
@@ -129,6 +145,10 @@ describe('Create Customer', () => {
           description: 'test user',
           email: 'matt@selbi.io',
         },
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
         uid: testUserUid }), done);
   });
 
@@ -136,6 +156,52 @@ describe('Create Customer', () => {
     writeAndExpectFailure(
       (createCustomerRef) => createCustomerRef.child('tasks').push({
         payload: {},
+        metadata: {
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
+        uid: testUserUid }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks without metadata', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        metadata: {},
+        uid: testUserUid }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with string lastFour', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        metadata: {
+          lastFour: 'last 4',
+          expirationDate: '01-19',
+        },
+        uid: testUserUid }), done);
+  });
+
+  it('cannot write to /createCustomer/tasks with int expiration date', (done) => {
+    writeAndExpectFailure(
+      (createCustomerRef) => createCustomerRef.child('tasks').push({
+        payload: {
+          source: 'stripePaymentCcToken',
+          description: 'test user',
+          email: 'matt@selbi.io',
+        },
+        metadata: {
+          lastFour: 1234,
+          expirationDate: 1,
+        },
         uid: testUserUid }), done);
   });
 });

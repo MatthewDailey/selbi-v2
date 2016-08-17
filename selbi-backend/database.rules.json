@@ -167,7 +167,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
-          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          ".validate": "newData.hasChildren(['payload', 'uid', 'metadata']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"
           },
@@ -216,10 +216,26 @@
             },
             "description": {
               ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": false
             }
           },
           "uid": {
             ".validate": "newData.isString() && auth.uid == newData.val()"
+          },
+          "metadata": {
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour'])",
+            "$other": {
+              ".validate": false
+            },
+            "lastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            // MM-YY
+            "expirationDate": {
+              ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+            }
           },
           "$other": {
             ".validate": false
@@ -407,12 +423,12 @@
         "phoneNumber": {
           ".validate": "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
         },
-        // TODO move this to its own node in the heirarchy
         "payment": {
           ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata'])",
           "$other": {
             ".validate": false
           },
+          // Links to /stripeCustomer/$stripeCustomerPointer
           "stripeCustomerPointer": {
             ".validate": "newData.isString()"
           },
