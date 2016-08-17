@@ -17,7 +17,7 @@ function validateData(data) {
     return Promise.reject('Missing metadata.');
   } else if (!data.metadata.lastFour) {
     return Promise.reject('Missing metadata.lastFour.');
-  } else if (!data.payload.expirationDate) {
+  } else if (!data.metadata.expirationDate) {
     return Promise.reject('Missing metadata.expirationDate');
   }
   return Promise.resolve();
@@ -30,11 +30,11 @@ function validateData(data) {
  * @param payload.source String token returned to the client device from Stripe when a payment
  * source was created.
  * @param payload.description String describing the customer.
- * @param payload.email
+ * @param payload.email String email of the customer.
  *
  * @returns Promise fulfilled with client data.
  */
-function createCustomer(stripeCustomerApi, payload) {
+function createStripeCustomer(stripeCustomerApi, payload) {
   return new Promise((resolve, reject) => {
     stripeCustomerApi.create(payload, (err, customer) => {
       if (err) {
@@ -60,39 +60,31 @@ function createCustomer(stripeCustomerApi, payload) {
  *
  */
 class CreateCustomerHandler {
-  constructor(firebaseDb, stripeCustomerApi) {
-    this.firebaseDb = firebaseDb;
+  constructor(firebaseDatabase, stripeCustomerApi) {
+    this.firebaseDb = firebaseDatabase;
     this.stripeCustomerApi = stripeCustomerApi;
   }
 
   handleTask(data, progress, resolve, reject) {
-    function userRef() {
-      return this.firebaseDb
+    const userRef = () => this.firebaseDb
         .ref('users')
         .child(data.uid);
-    }
 
-    function storeStripeCustomerInFirebase(customerData) {
-      return this.firebaseDb
+    const storeStripeCustomerInFirebase = (customerData) => this.firebaseDb
         .ref('/stripeCustomer')
         .push(customerData);
-    }
 
-    function updateUserPaymentInfo(snapshot) {
-      return userRef()
+    const updateUserPaymentInfo = (snapshot) => userRef()
         .child('payment')
         .set({
           stripeCustomerPointer: snapshot.key,
           status: 'OK',
           metadata: data.metadata,
         });
-    }
 
-    function updateUserEmail() {
-      return userRef()
+    const updateUserEmail = () => userRef()
         .child('email')
         .set(data.payload.email);
-    }
 
     function updateUserPaymentStatusAndReject(error) {
       // userRef()
@@ -105,7 +97,7 @@ class CreateCustomerHandler {
     }
 
     return validateData(data)
-      .then(() => createCustomer(this.stripeCustomerApi, data.payload))
+      .then(() => createStripeCustomer(this.stripeCustomerApi, data.payload))
       .then(storeStripeCustomerInFirebase)
       .then(updateUserPaymentInfo)
       .then(updateUserEmail)

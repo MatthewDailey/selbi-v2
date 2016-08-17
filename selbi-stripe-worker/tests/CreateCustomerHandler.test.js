@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { spy, stub } from 'sinon';
 import CreateCustomerHandler from '../src/CreateCustomerHandler';
 
+
 const testCreateCustomerTask = {
   payload: {
     source: 'stripePaymentCcToken',
@@ -41,7 +42,6 @@ function getSpyForStripeCustomersApi(error, customer) {
     createSpy: spy(stripeCustomersApi, 'create'),
   };
 }
-
 
 describe('CreateCustomerHandler', () => {
   /* eslint-disable no-unused-expressions */
@@ -135,7 +135,9 @@ describe('CreateCustomerHandler', () => {
       this.progress = spy();
       this.resolve = spy();
       this.reject = spy();
-      this.firebaseDb = {};
+      this.firebaseDb = stub({
+        ref: () => {},
+      });
     });
 
     it('calls stripe.customers.create', function (done) {
