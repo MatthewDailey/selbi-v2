@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import GeoFire from 'geofire';
-import FirebaseTest, { testUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
 function createTestUserListingWithId(listindId) {
   return FirebaseTest

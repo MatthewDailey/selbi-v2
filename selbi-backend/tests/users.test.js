@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from
+  '@selbi/firebase-test-resource';
 
 /*
  * In this test we use 4 different users to probe the schema requirements and demonstrate how

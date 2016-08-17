@@ -1,9 +1,10 @@
 {
   "name": "@selbi/firebase-test-resource",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test resources which can be used for setting up tests which interact with a Firebase db.",
   "main": "lib/index.js",
   "scripts": {
+    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "mocha tests --compilers js:babel-core/register"
   },
   "author": "mjd",

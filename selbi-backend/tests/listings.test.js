@@ -1,20 +1,13 @@
 import { expect } from 'chai';
-import FirebaseTest, { minimalUserUid } from './FirebaseTestConnections';
+import FirebaseTest  from '@selbi/firebase-test-resource';
 
 describe('/listings', () => {
   before(function (done) {
     this.timeout(6000);
 
-    const createMinimalUser = () => FirebaseTest
-        .minimalUserApp
-        .database()
-        .ref('/users')
-        .child(minimalUserUid)
-        .set(FirebaseTest.getMinimalUserData());
-
     FirebaseTest
       .dropDatabase()
-      .then(createMinimalUser)
+      .then(() => FirebaseTest.createMinimalUser())
       .then(done)
       .catch(done);
   });

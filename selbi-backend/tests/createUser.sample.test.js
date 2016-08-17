@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FirebaseTest, { testUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
 /*
  * When a user authenticates we need to know if we have created that user in the db. This code
