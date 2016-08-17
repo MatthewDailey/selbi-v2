@@ -1,7 +1,4 @@
 
-/*
- * Validates the format of incoming Create Customer task.
- */
 function validateData(data) {
   if (!data.uid) {
     return Promise.reject('Missing uid.');
@@ -39,10 +36,12 @@ function validateData(data) {
     return Promise.reject('Missing payload.tos_acceptance.date');
   } else if (!data.payload.tos_acceptance.ip) {
     return Promise.reject('Missing payload.tos_acceptance.ip');
-  } else if (!data.metadata.lastFour) {
-    return Promise.reject('Missing metadata.lastFour.');
-  } else if (!data.metadata.expirationDate) {
-    return Promise.reject('Missing metadata.expirationDate');
+  } else if (!data.metadata.accountNumberLastFour) {
+    return Promise.reject('Missing metadata.accountNumberLastFour');
+  } else if (!data.metadata.routingNumber) {
+    return Promise.reject('Missing metadata.routingNumber');
+  } else if (!data.metadata.bankName) {
+    return Promise.reject('Missing metadata.bankName');
   }
   return Promise.resolve();
 }

@@ -461,14 +461,16 @@
           "stripeAccountPointer" : {
             ".validate": "newData.isString()"
           },
-          "accountNumberLast4": {
-            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-          },
-          "routingNumber": {
-            ".validate": "newData.isNumber()"
-          },
-          "bankName": {
-            ".validate": "newData.isString()"
+          "metadata" : {
+            "accountNumberLastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            "routingNumber": {
+              ".validate": "newData.isNumber()"
+            },
+            "bankName": {
+              ".validate": "newData.isString()"
+            }
           }
         },
         "locations": {

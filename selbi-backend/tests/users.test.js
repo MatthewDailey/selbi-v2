@@ -598,11 +598,13 @@ describe('/users', () => {
 
     describe('merchant', () => {
       const merchantData = {
-        accountNumberLast4: 4444,
-        routingNumber: 325181028,
         stripeAccountPointer: 'fakeAccountPointer',
         status: 'OK',
-        bankName: 'WSECU',
+        metadata: {
+          accountNumberLast4: 4444,
+          routingNumber: 325181028,
+          bankName: 'WSECU',
+        },
       };
 
       it('stores valid data', (done) => {
@@ -618,7 +620,7 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.merchant = {
-              status: 'OK'
+              status: 'ERROR: test error.'
             };
           }, done);
       });
@@ -637,7 +639,7 @@ describe('/users', () => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const merchantDataCopy = deepCopy(merchantData);
-            merchantDataCopy.accountNumberLast4 = 'a string';
+            merchantDataCopy.metadata.accountNumberLastFour = 'a string';
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -647,7 +649,7 @@ describe('/users', () => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const merchantDataCopy = deepCopy(merchantData);
-            merchantDataCopy.accountNumberLast4 = 123;
+            merchantDataCopy.metadata.accountNumberLastFour = 123;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -657,7 +659,7 @@ describe('/users', () => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const merchantDataCopy = deepCopy(merchantData);
-            merchantDataCopy.accountNumberLast4 = 12345;
+            merchantDataCopy.metadata.accountNumberLastFour = 12345;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -667,7 +669,7 @@ describe('/users', () => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const merchantDataCopy = deepCopy(merchantData);
-            merchantDataCopy.routingNumber = 'a string';
+            merchantDataCopy.metadata.routingNumber = 'a string';
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -677,7 +679,7 @@ describe('/users', () => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
             const merchantDataCopy = deepCopy(merchantData);
-            merchantDataCopy.bankName = 1;
+            merchantDataCopy.metadata.bankName = 1;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
