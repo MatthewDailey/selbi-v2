@@ -8,6 +8,10 @@ const testCreateCustomerTask = {
     description: 'test user',
     email: 'matt@selbi.io',
   },
+  metadata: {
+    lastFour: 1234,
+    expirationDate: '01-19',
+  },
   uid: 'testUserId',
 };
 
@@ -44,66 +48,85 @@ describe('CreateCustomerHandler', () => {
   /* This is necessary for the chai expect statements */
 
   describe('data validation', () => {
-    beforeEach(function () {
-      this.progress = spy();
-      this.resolve = spy();
-      this.reject = spy();
-      this.firebaseRoot = spy();
+    let progress = spy();
+    let resolve = spy();
+    let reject = spy();
+    beforeEach(() => {
+      progress = spy();
+      resolve = spy();
+      reject = spy();
     });
 
-    it('must have uid', function () {
-      const dataMinus = deepCopy(testCreateCustomerTask);
-      delete dataMinus.uid;
+    function attemptWithDataAndExpectValidationFailure(manipulateData, done) {
+      const testData = deepCopy(testCreateCustomerTask);
+      manipulateData(testData);
+      new CreateCustomerHandler(spy())
+        .handleTask(testData, progress, resolve, reject)
+        .then(() => {
+          done(new Error('Should have failed data validation.'));
+        })
+        .catch(() => {
+          expect(reject.called).to.be.true;
+          expect(resolve.called).to.be.false;
+        })
+        .then(done)
+        .catch(done);
+    }
 
-      new CreateCustomerHandler(this.firebaseRoot)
-        .handleTask(dataMinus, this.progress, this.resolve, this.reject);
-
-      expect(this.reject.called).to.be.true;
-      expect(this.resolve.called).to.be.false;
+    it('must have uid', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.uid;
+      }, done);
     });
 
-    it('must have payload', function () {
-      const dataMinus = deepCopy(testCreateCustomerTask);
-      delete dataMinus.payload;
-
-      new CreateCustomerHandler(this.firebaseRoot)
-        .handleTask(dataMinus, this.progress, this.resolve, this.reject);
-
-      expect(this.reject.called).to.be.true;
-      expect(this.resolve.called).to.be.false;
+    it('must have payload', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.payload;
+      }, done);
     });
 
-    it('must have payload.source', function () {
-      const dataMinus = deepCopy(testCreateCustomerTask);
-      delete dataMinus.payload.source;
-
-      new CreateCustomerHandler(this.firebaseRoot)
-        .handleTask(dataMinus, this.progress, this.resolve, this.reject);
-
-      expect(this.reject.called).to.be.true;
-      expect(this.resolve.called).to.be.false;
+    it('must have payload.source', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.payload.source;
+      }, done);
     });
 
-    it('must have payload.description', function () {
-      const dataMinus = deepCopy(testCreateCustomerTask);
-      delete dataMinus.payload.description;
-
-      new CreateCustomerHandler(this.firebaseRoot)
-        .handleTask(dataMinus, this.progress, this.resolve, this.reject);
-
-      expect(this.reject.called).to.be.true;
-      expect(this.resolve.called).to.be.false;
+    it('must have payload.description', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.payload.description;
+      }, done);
     });
 
-    it('must have payload.email', function () {
-      const dataMinus = deepCopy(testCreateCustomerTask);
-      delete dataMinus.payload.email;
+    it('must have payload.email', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.payload.email;
+      }, done);
+    });
 
-      new CreateCustomerHandler(this.firebaseRoot)
-        .handleTask(dataMinus, this.progress, this.resolve, this.reject);
+    it('must have metadata', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.metadata;
+      }, done);
+    });
 
-      expect(this.reject.called).to.be.true;
-      expect(this.resolve.called).to.be.false;
+    it('must have metadata.lastFour', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.metadata.lastFour;
+      }, done);
+    });
+
+    it('must have metadata.expirationDate', (done) => {
+      attemptWithDataAndExpectValidationFailure((data) => {
+        // noinspection Eslint
+        delete data.metadata.expirationDate;
+      }, done);
     });
   });
 

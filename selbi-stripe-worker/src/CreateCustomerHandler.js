@@ -5,15 +5,30 @@
 function validateData(data, reject) {
   if (!data.uid) {
     reject('Missing uid.');
+    return false;
   } else if (!data.payload) {
     reject('Missing payload.');
+    return false;
   } else if (!data.payload.email) {
     reject('Missing payload.email.');
+    return false;
   } else if (!data.payload.source) {
     reject('Missing payload.source');
+    return false;
   } else if (!data.payload.description) {
     reject('Missing payload.description');
+    return false;
+  } else if (!data.metadata) {
+    reject('Missing metadata.');
+    return false;
+  } else if (!data.metadata.lastFour) {
+    reject('Missing metadata.lastFour.');
+    return false;
+  } else if (!data.payload.expirationDate) {
+    reject('Missing metadata.expirationDate');
+    return false;
   }
+  return true;
 }
 
 /*
@@ -59,7 +74,9 @@ class CreateCustomerHandler {
   }
 
   handleTask(data, progress, resolve, reject) {
-    validateData(data, reject);
+    if (!validateData(data, reject)) {
+      return Promise.reject(new Error());
+    }
 
     const userRef = this.firebaseDb
       .ref('users')
