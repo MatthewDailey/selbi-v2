@@ -1,16 +1,16 @@
 import firebase from 'firebase';
 
-const testUserData = require('./resources/testUser.json');
-const minimalUserData = require('./resources/minimalUser.json');
+const testUserData = require('../resources/testUser.json');
+const minimalUserData = require('../resources/minimalUser.json');
 
-const minimalUserListingOne = require('./resources/minimalUserListingOne.json');
-const minimalUserListingTwo = require('./resources/minimalUserListingTwo.json');
+const minimalUserListingOne = require('../resources/minimalUserListingOne.json');
+const minimalUserListingTwo = require('../resources/minimalUserListingTwo.json');
 
-const testUserListingOne = require('./resources/testUserListingOne.json');
+const testUserListingOne = require('../resources/testUserListingOne.json');
 
-const partialUserListing = require('./resources/userListingsCompleteFromUser.json');
-const completeUserListing = require('./resources/userListingsPartial.json');
-const soldUserListing = require('./resources/userListingsComplete.json');
+const partialUserListing = require('../resources/userListingsCompleteFromUser.json');
+const completeUserListing = require('../resources/userListingsPartial.json');
+const soldUserListing = require('../resources/userListingsComplete.json');
 
 function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
@@ -85,6 +85,14 @@ class TestFirebaseConnections {
       .database()
       .ref('/')
       .remove();
+  }
+
+  createMinimalUser() {
+    return this.minimalUserApp
+      .database()
+      .ref('/users')
+      .child(this.minimalUserUid)
+      .set(this.getMinimalUserData());
   }
 }
 

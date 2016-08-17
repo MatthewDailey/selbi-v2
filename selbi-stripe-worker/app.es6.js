@@ -1,22 +1,37 @@
 import express from 'express';
 import firebase from 'firebase';
+import initializeStripe from 'stripe';
+
 import ServiceAccount from '@selbi/service-accounts';
+import CreateCustomerHandler from './src/CreateCustomerHandler';
+import CreateAccountHandler from './src/CreateAccountHandler';
+import QueueListener from './src/QueueListener';
+
+const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
 
 const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFromEnvironment(),
   'serviceUser');
+const firebaseDb = serviceAccountApp.database();
 
-function createListing() {
-  serviceAccountApp
-    .database()
-    .ref('test')
-    .push({ c: 1 })
-    .then(() => {
-      console.log('created test element.');
-    })
-    .catch(console.log);
-}
+const createCustomerHandler = new CreateCustomerHandler(firebaseDb, stripe.customers);
+const createCustomerQueueListener = new QueueListener('/createCustomer');
+createCustomerQueueListener.start(firebaseDb, createCustomerHandler.getTaskHandler());
 
-createListing();
+const createAccountHandler = new CreateAccountHandler(firebaseDb, stripe.accounts);
+const createAccountQueueListener = new QueueListener('/createAccount');
+createAccountQueueListener.start(firebaseDb, createAccountHandler.getTaskHandler());
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT, starting graceful shutdown...');
+
+  Promise.all([
+    createCustomerQueueListener.shutdown(),
+    createAccountQueueListener.shutdown()])
+    .then(() => serviceAccountApp.delete())
+    .then(() => console.log('Graceful shutdown of firebase connections complete.'))
+    .then(() => process.exit(0))
+    .catch(() => process.exit(0));
+});
 
 const app = express();
 
@@ -28,4 +43,4 @@ app.get('/', (req, res) => {
 });
 app.listen(8080);
 
-console.log('App can run.');
+console.log('stripe-worker has started.');

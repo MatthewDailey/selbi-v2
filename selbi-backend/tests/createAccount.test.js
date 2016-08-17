@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Queue from 'firebase-queue';
-import FirebaseTest, { testUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
 function testSafeWorker(worker, done) {
   return (data, progress, resolve, reject) => {
@@ -15,7 +15,9 @@ function testSafeWorker(worker, done) {
   };
 }
 
-describe('Create Account', () => {
+describe('Create Account', function() {
+  this.timeout(6000);
+
   beforeEach((done) => {
     FirebaseTest
       .serviceAccountApp
@@ -79,6 +81,11 @@ describe('Create Account', () => {
         },
       },
       uid: testUserUid,
+      metadata: {
+        accountNumberLastFour: 4444,
+        routingNumber: 325181028,
+        bankName: 'WSECU',
+      },
     };
     writeToQueueAndExpectHandled(FirebaseTest.testUserApp, testData, done);
   });
@@ -143,6 +150,11 @@ describe('Create Account', () => {
           },
         },
         uid: 'not a user',
+        metadata: {
+          accountNumberLastFour: 4444,
+          routingNumber: 325181028,
+          bankName: 'WSECU',
+        },
       }), done);
   });
 
@@ -185,9 +197,14 @@ describe('Create Account', () => {
         },
       },
       uid: testUserUid,
+      metadata: {
+        accountNumberLastFour: 4444,
+        routingNumber: 325181028,
+        bankName: 'WSECU',
+      },
     };
 
-    payloadModification(taskData.payload);
+    payloadModification(taskData);
 
     FirebaseTest
       .testUserApp
@@ -199,10 +216,10 @@ describe('Create Account', () => {
         done(new Error('Should not be able to store'));
       })
       .catch((error) => {
-        expect(error.code).to.equal('PERMISSION_DENIED');
+        expect(error.code).to. equal('PERMISSION_DENIED');
       })
       .then(() => {
-        payloadDeletion(taskData.payload);
+        payloadDeletion(taskData);
       })
       .then(() => FirebaseTest
         .testUserApp
@@ -220,148 +237,169 @@ describe('Create Account', () => {
   }
   it('cannot write to /createAccount/tasks with bad external_account', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.external_account = 1; },
-      (payload) => { delete payload.external_account; },
+      (data) => { data.payload.external_account = 1; },
+      (data) => { delete data.payload.external_account; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad email', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.email = 1; },
-      (payload) => { delete payload.email; },
+      (data) => { data.payload.email = 1; },
+      (data) => { delete data.payload.email; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad legal_entity', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.extra_prop = 'cool extra'; },
-      (payload) => { delete payload.legal_entity; },
+      (data) => { data.payload.legal_entity.extra_prop = 'cool extra'; },
+      (data) => { delete data.payload.legal_entity; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad tos_acceptance', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.tos_acceptance = 1; },
-      (payload) => { delete payload.tos_acceptance; },
+      (data) => { data.payload.tos_acceptance = 1; },
+      (data) => { delete data.payload.tos_acceptance; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad personal_id_number', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.personal_id_number = 1; },
-      (payload) => { delete payload.legal_entity.personal_id_number; },
+      (data) => { data.payload.legal_entity.personal_id_number = 1; },
+      (data) => { delete data.payload.legal_entity.personal_id_number; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad first_name', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.first_name = 1; },
-      (payload) => { delete payload.legal_entity.first_name; },
+      (data) => { data.payload.legal_entity.first_name = 1; },
+      (data) => { delete data.payload.legal_entity.first_name; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad last_name', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.last_name = 1; },
-      (payload) => { delete payload.legal_entity.last_name; },
+      (data) => { data.payload.legal_entity.last_name = 1; },
+      (data) => { delete data.payload.legal_entity.last_name; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad dob', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.dob.extra_prop = 'cool extra prop'; },
-      (payload) => { delete payload.legal_entity.dob; },
+      (data) => { data.payload.legal_entity.dob.extra_prop = 'cool extra prop'; },
+      (data) => { delete data.payload.legal_entity.dob; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad day of birth', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.dob.day = 'a day'; },
-      (payload) => { delete payload.legal_entity.dob.day; },
+      (data) => { data.payload.legal_entity.dob.day = 'a day'; },
+      (data) => { delete data.payload.legal_entity.dob.day; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad month of birth', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.dob.month = 'a month'; },
-      (payload) => { delete payload.legal_entity.dob.month; },
+      (data) => { data.payload.legal_entity.dob.month = 'a month'; },
+      (data) => { delete data.payload.legal_entity.dob.month; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad year of birth', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.dob.year = 'a year'; },
-      (payload) => { delete payload.legal_entity.dob.year; },
+      (data) => { data.payload.legal_entity.dob.year = 'a year'; },
+      (data) => { delete data.payload.legal_entity.dob.year; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad day of birth', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.dob.day = 'a day'; },
-      (payload) => { delete payload.legal_entity.dob.day; },
+      (data) => { data.payload.legal_entity.dob.day = 'a day'; },
+      (data) => { delete data.payload.legal_entity.dob.day; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad address', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.extra_prop = 'a prop'; },
-      (payload) => { delete payload.legal_entity.address; },
+      (data) => { data.payload.legal_entity.address.extra_prop = 'a prop'; },
+      (data) => { delete data.payload.legal_entity.address; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad line1', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.line1 = 1; },
-      (payload) => { delete payload.legal_entity.address.line1; },
+      (data) => { data.payload.legal_entity.address.line1 = 1; },
+      (data) => { delete data.payload.legal_entity.address.line1; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad line2', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.line2 = 1; },
-      (payload) => { /* Do nothing, fine to delete */ },
+      (data) => { data.payload.legal_entity.address.line2 = 1; },
+      (data) => { /* Do nothing, fine to delete */ },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad city', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.city = 1; },
-      (payload) => { delete payload.legal_entity.address.city; },
+      (data) => { data.payload.legal_entity.address.city = 1; },
+      (data) => { delete data.payload.legal_entity.address.city; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad state', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.state = 1; },
-      (payload) => { delete payload.legal_entity.address.state; },
+      (data) => { data.payload.legal_entity.address.state = 1; },
+      (data) => { delete data.payload.legal_entity.address.state; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad postal_code', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.legal_entity.address.postal_code = 1; },
-      (payload) => { delete payload.legal_entity.address.postal_code; },
+      (data) => { data.payload.legal_entity.address.postal_code = 1; },
+      (data) => { delete data.payload.legal_entity.address.postal_code; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad tos_acceptance', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.tos_acceptance.extra_prop = 1; },
-      (payload) => { delete payload.tos_acceptance; },
+      (data) => { data.payload.tos_acceptance.extra_prop = 1; },
+      (data) => { delete data.payload.tos_acceptance; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad tos_acceptance.ip', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.tos_acceptance.ip = 1; },
-      (payload) => { delete payload.tos_acceptance.ip; },
+      (data) => { data.payload.tos_acceptance.ip = 1; },
+      (data) => { delete data.payload.tos_acceptance.ip; },
       done);
   });
 
   it('cannot write to /createAccount/tasks with bad tos_acceptance.date', (done) => {
     testPayloadPropertyAsValueAndAbsentFails(
-      (payload) => { payload.tos_acceptance.date = "1"; },
-      (payload) => { delete payload.tos_acceptance.date; },
+      (data) => { data.payload.tos_acceptance.date = '1'; },
+      (data) => { delete data.payload.tos_acceptance.date; },
+      done);
+  });
+
+  it('cannot write to /createAccount/tasks with bad metadata.bankName', (done) => {
+    testPayloadPropertyAsValueAndAbsentFails(
+      (data) => { data.metadata.bankName = 1; },
+      (data) => { delete data.metadata.bankName; },
+      done);
+  });
+
+  it('cannot write to /createAccount/tasks with bad metadata.routingNumber', (done) => {
+    testPayloadPropertyAsValueAndAbsentFails(
+      (data) => { data.metadata.routingNumber = '1'; },
+      (data) => { delete data.metadata.routingNumber; },
+      done);
+  });
+
+  it('cannot write to /createAccount/tasks with bad metadata.accountNumberLastFour', (done) => {
+    testPayloadPropertyAsValueAndAbsentFails(
+      (data) => { data.metadata.accountNumberLastFour = '1'; },
+      (data) => { delete data.metadata.accountNumberLastFour; },
       done);
   });
 });

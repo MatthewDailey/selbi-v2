@@ -1,5 +1,16 @@
 {
   "rules": {
+
+    "stripeCustomer" : {
+      ".read" : false,
+      ".write" : false
+    },
+
+    "stripeAccount" : {
+      ".read" : false,
+      ".write" : false
+    },
+
     "createAccount": {
       "tasks": {
         // Auth'd users can write, only service account can read.
@@ -7,7 +18,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
-          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          ".validate": "newData.hasChildren(['payload', 'uid', 'metadata']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"
           },
@@ -117,6 +128,21 @@
           "uid": {
             ".validate": "newData.isString() && auth.uid == newData.val()"
           },
+          "metadata" : {
+            ".validate": "newData.hasChildren(['accountNumberLastFour', 'routingNumber', 'bankName'])",
+            "$other": {
+              ".validate": false
+            },
+            "accountNumberLastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            "routingNumber": {
+              ".validate": "newData.isNumber()"
+            },
+            "bankName": {
+              ".validate": "newData.isString()"
+            }
+          },
           "$other": {
             ".validate": false
           }
@@ -156,7 +182,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
-          ".validate": "newData.hasChildren(['payload', 'uid']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          ".validate": "newData.hasChildren(['payload', 'uid', 'metadata']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"
           },
@@ -205,10 +231,29 @@
             },
             "description": {
               ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": false
             }
           },
           "uid": {
             ".validate": "newData.isString() && auth.uid == newData.val()"
+          },
+          "metadata": {
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour', 'cardBrand'])",
+            "$other": {
+              ".validate": false
+            },
+            "lastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            // MM-YY
+            "expirationDate": {
+              ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+            },
+            "cardBrand" : {
+              ".validate": "newData.isString()"
+            }
           },
           "$other": {
             ".validate": false
@@ -396,55 +441,61 @@
         "phoneNumber": {
           ".validate": "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
         },
-        // TODO move this to its own node in the heirarchy
         "payment": {
-          ".validate": "newData.hasChildren(['stripeCustomerId', 'stripeCardId', 'cardType', 'lastFour', 'expirationDate'])",
+          ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata', 'status'])",
           "$other": {
             ".validate": false
           },
-          "stripeCustomerId": {
+          // Links to /stripeCustomer/$stripeCustomerPointer
+          "stripeCustomerPointer": {
             ".validate": "newData.isString()"
           },
-          "stripeCardId": {
+          "status": {
             ".validate": "newData.isString()"
           },
-          "cardType": {
-            ".validate": "newData.isString()"
-          },
-          "lastFour": {
-            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-          },
-          // MM-YY
-          "expirationDate": {
-            ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+          "metadata": {
+            ".validate": "newData.hasChildren(['expirationDate', 'lastFour', 'cardBrand'])",
+            "$other": {
+              ".validate": false
+            },
+            "cardBrand" : {
+              ".validate": "newData.isString()"
+            },
+            "lastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            // MM-YY
+            "expirationDate": {
+              ".validate": "newData.isString() && newData.val().matches(/^(0[1-9]|1[0-2])-[0-9][0-9]$/)"
+            }
           }
         },
-        // TODO move this to its own node in the heirarchy
         "merchant": {
-          ".validate": "newData.hasChildren(['stripeVerified'])",
+          ".validate": "newData.hasChildren(['status'])",
           "$other": {
             ".validate": false
           },
-          "accountNumberLast4": {
-            ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
-          },
-          "routingNumber": {
-            ".validate": "newData.isNumber()"
-          },
-          "publicKey": {
+          "status" : {
             ".validate": "newData.isString()"
           },
-          "privateKey": {
+          // Links to /stripeAccount/$stripeAccountPointer
+          "stripeAccountPointer" : {
             ".validate": "newData.isString()"
           },
-          "stripeBankId": {
-            ".validate": "newData.isString()"
-          },
-          "stripeManagedAccountId": {
-            ".validate": "newData.isString()"
-          },
-          "stripeVerified": {
-            ".validate": "newData.isBoolean()"
+          "metadata" : {
+            ".validate": "newData.hasChildren(['accountNumberLastFour', 'routingNumber', 'bankName'])",
+            "$other": {
+              ".validate": false
+            },
+            "accountNumberLastFour": {
+              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+            },
+            "routingNumber": {
+              ".validate": "newData.isNumber()"
+            },
+            "bankName": {
+              ".validate": "newData.isString()"
+            }
           }
         },
         "locations": {

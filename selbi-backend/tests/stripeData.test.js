@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FirebaseTest from './FirebaseTestConnections';
+import FirebaseTest from '@selbi/firebase-test-resource';
 
 // For the stripeCustomer and stripeAccount endpoints, we store data returned from the Stripe
 // Connect API. Users will have no access to this data so we don't care much about the schema, just
