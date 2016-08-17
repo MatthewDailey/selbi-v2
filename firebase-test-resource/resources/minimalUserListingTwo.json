@@ -1,0 +1,12 @@
+{
+  "title" : "Test LISTING TWO",
+  "description" : "test description",
+  "price" : 100.2,
+  "imageUrls" : [
+    "http://imgurl",
+    "https://imgurl"
+  ],
+  "sellerId" : "b7PJjQTFl8O2xRlYaohLD0AITb72",
+  "status" : "inactive",
+  "category" : "electronics"
+}

@@ -1,0 +1,8 @@
+{
+  "inactive" : {
+    "listingOne" : true
+  },
+  "private" : {
+    "listingTwo" : true
+  }
+}
