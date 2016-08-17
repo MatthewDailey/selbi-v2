@@ -1,0 +1,97 @@
+
+/*
+ * Validates the format of incoming Create Customer task.
+ */
+function validateData(data) {
+  if (!data.uid) {
+    return Promise.reject('Missing uid.');
+  } else if (!data.payload) {
+    return Promise.reject('Missing payload.');
+  } else if (!data.payload.external_account) {
+    return Promise.reject('Missing payload.external_account');
+  } else if (!data.payload.email) {
+    return Promise.reject('Missing payload.email');
+  } else if (!data.payload.legal_entity) {
+    return Promise.reject('Missing payload.legal_entity');
+  } else if (!data.payload.legal_entity.dob) {
+    return Promise.reject('Missing payload.legal_entity.dob');
+  } else if (!data.payload.legal_entity.dob.day) {
+    return Promise.reject('Missing payload.legal_entity.dob.day');
+  } else if (!data.payload.legal_entity.dob.month) {
+    return Promise.reject('Missing payload.legal_entity.dob.month');
+  } else if (!data.payload.legal_entity.dob.year) {
+    return Promise.reject('Missing payload.legal_entity.dob.year');
+  } else if (!data.payload.legal_entity.address) {
+    return Promise.reject('Missing payload.legal_entity.address');
+  } else if (!data.payload.legal_entity.address.line1) {
+    return Promise.reject('Missing payload.legal_entity.address.line1');
+  } else if (!data.payload.legal_entity.address.city) {
+    return Promise.reject('Missing payload.legal_entity.address.city');
+  } else if (!data.payload.legal_entity.address.postal_code) {
+    return Promise.reject('Missing payload.legal_entity.address.postal_code');
+  } else if (!data.payload.legal_entity.address.state) {
+    return Promise.reject('Missing payload.legal_entity.address.state');
+  } else if (!data.payload.legal_entity.personal_id_number) {
+    return Promise.reject('Missing payload.legal_entity.personal_id_number');
+  } else if (!data.payload.tos_acceptance) {
+    return Promise.reject('Missing payload.tos_acceptance');
+  } else if (!data.payload.tos_acceptance.date) {
+    return Promise.reject('Missing payload.tos_acceptance.date');
+  } else if (!data.payload.tos_acceptance.ip) {
+    return Promise.reject('Missing payload.tos_acceptance.ip');
+  } else if (!data.metadata.lastFour) {
+    return Promise.reject('Missing metadata.lastFour.');
+  } else if (!data.metadata.expirationDate) {
+    return Promise.reject('Missing metadata.expirationDate');
+  }
+  return Promise.resolve();
+}
+
+/*
+ * This class provides the Firebase-Queue listener which is used to create a Stripe Customer
+ * based on the enqueued user data.
+ *
+ * Steps:
+ * 1) Create Stripe Connect Account.
+ * 2) Store account data in firebase to /stripeAccount/$stripeAccountId.
+ * 3) Link to account data from user via /users/$uid/payment/stripeAccountId.
+ * 4) Store merchant metadata (such as bank name, routing number, lastFour, owner) in
+ * /users/$uid/payment/metadata.
+ *
+ * If there is a failure we write to /users/$uid/payment/status which the user will notify
+ *
+ */
+class CreateCustomerHandler {
+  constructor(firebaseDatabase, stripeAccountsApi) {
+    this.firebaseDb = firebaseDatabase;
+    this.stripeAccountsApi = stripeAccountsApi;
+  }
+
+  getTaskHandler() {
+    const firebaseDb = this.firebaseDb;
+    const stripeAccountsApi = this.stripeAccountsApi;
+    return (data, progress, resolveCreateAccountTask, rejectCreateAccountTask) => {
+      const createStripeAccount = () => new Promise((resolve, reject) => {
+        stripeAccountsApi.create(data.payload, (err, account) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(account);
+          }
+        });
+      });
+
+      const updateUserMerchantStatusAndReject = (error) => {
+        // TODO update user merchant.
+        rejectCreateAccountTask(error);
+        return Promise.reject(error);
+      };
+      // TODO
+      return validateData(data)
+        .then(createStripeAccount)
+        .catch(updateUserMerchantStatusAndReject);
+    };
+  }
+}
+
+module.exports = CreateCustomerHandler;
