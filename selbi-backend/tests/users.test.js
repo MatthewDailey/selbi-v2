@@ -526,9 +526,10 @@ describe('/users', () => {
       });
     });
 
-    describe('payments', () => {
+    describe('payment', () => {
       const paymentData = {
         stripeCustomerPointer: 'fakeStripeCustomerId',
+        status: 'OK',
         metadata: {
           lastFour: 1234,
           expirationDate: '01-19',
@@ -548,6 +549,16 @@ describe('/users', () => {
           (data) => {
             const modifiedPayment = deepCopy(paymentData);
             delete modifiedPayment.stripeCustomerPointer;
+            // noinspection Eslint
+            data.payment = modifiedPayment;
+          }, done);
+      });
+
+      it('status required', (done) => {
+        setPropertyAndExpectPermissionDenied(
+          (data) => {
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.status;
             // noinspection Eslint
             data.payment = modifiedPayment;
           }, done);

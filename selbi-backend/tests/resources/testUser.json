@@ -23,6 +23,7 @@
   },
   "payment" : {
     "stripeCustomerPointer": "fakeStripeCustomerId",
+    "status": "OK",
     "metadata": {
       "lastFour": 1234,
       "expirationDate": "01-19"

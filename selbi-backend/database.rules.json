@@ -424,12 +424,15 @@
           ".validate": "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
         },
         "payment": {
-          ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata'])",
+          ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata', 'status'])",
           "$other": {
             ".validate": false
           },
           // Links to /stripeCustomer/$stripeCustomerPointer
           "stripeCustomerPointer": {
+            ".validate": "newData.isString()"
+          },
+          "status": {
             ".validate": "newData.isString()"
           },
           "metadata": {
