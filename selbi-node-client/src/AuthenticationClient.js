@@ -1,15 +1,33 @@
+import { getFirebase } from './FirebaseSupplier';
+
+const firebase = getFirebase();
+
 class AuthenticationClient {
-  constructor(firebaseSupplier) {
-    this.firebaseSupplier = firebaseSupplier;
+  signInAnonymously() {
+    return firebase
+      .auth()
+      .signInAnonymously();
   }
 
-  authenticatAnonymously() {
-
+  signOut() {
+    return firebase
+      .auth()
+      .signOut();
   }
 
   authenticateWithFacebookToken(facebookAccessToken) {
 
   }
+
+  onAuthStateChange(authStateObserver) {
+    return firebase
+      .auth()
+      .onAuthStateChanged(authStateObserver);
+  }
+
+  isLoggedIn() {
+    return firebase.auth().currentUser != null;
+  }
 }
 
-module.exports = AuthenticationClient;
+module.exports = new AuthenticationClient();
