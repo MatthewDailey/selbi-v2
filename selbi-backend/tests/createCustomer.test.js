@@ -58,6 +58,7 @@ describe('Create Customer', () => {
       metadata: {
         lastFour: 1234,
         expirationDate: '01-19',
+        cardBrand: 'Visa',
       },
       uid: testUserUid,
     };
