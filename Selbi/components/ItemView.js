@@ -8,12 +8,12 @@ export default function ItemView({ img, title, price }) {
   const { width } = Dimensions.get('window');
   const columnWidth = width / 2;
   const widthRatio = img.width / columnWidth;
-  const fitheight = img.height / widthRatio;
+  const fitHeight = img.height / widthRatio;
   return (
-    <View style={{ width: columnWidth }}>
+    <View style={{ width: columnWidth, height: fitHeight }}>
       <Image
         source={{ uri: img.url }}
-        style={{ height: fitheight }}
+        style={{ height: fitHeight }}
       >
         <Text
           style={{

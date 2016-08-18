@@ -50,6 +50,10 @@ class ListMobile extends Component {
       <View style={styles.container}>
         <StatusBar title="Selbi" />
         <ListView
+          contentContainerStyle={{
+            flexDirection: 'row',
+            flexWrap: 'wrap'
+          }}
           dataSource={this.state.dataSource}
           renderRow={(data) =>
             <ItemView {...data} />}
