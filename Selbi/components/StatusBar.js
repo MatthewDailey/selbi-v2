@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 
 import styles from '../styles';
 
-function StatusBar({ title }) {
+export default function StatusBar({ title }) {
   return (
     <View>
       <View style={styles.statusbar} />
@@ -17,5 +17,3 @@ function StatusBar({ title }) {
 StatusBar.propTypes = {
   title: React.PropTypes.string.isRequired,
 };
-
-module.exports = StatusBar;

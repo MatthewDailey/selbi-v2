@@ -1,48 +1,11 @@
 import React, { Component } from 'react';
-import {
-  AppRegistry,
-  Text,
-  View,
-  ListView,
-  Image,
-} from 'react-native';
+import { AppRegistry, View, ListView } from 'react-native';
 import firebase from 'firebase';
 
 import styles from './styles.js';
 
-import StatusBar from './components/StatusBar.js';
-
-const Dimensions = require('Dimensions');
-
-
-class ItemView extends Component {
-  render() {
-    const { height, width } = Dimensions.get('window');
-    console.log(width)
-    const widthRatio = this.props.img.width / width;
-    console.log(widthRatio)
-    const fitheight = this.props.img.height / widthRatio;
-    console.log(fitheight)
-    return (
-      <View>
-        <Image
-          source={{ uri: this.props.img.url }}
-          style={{ height: fitheight }}
-        >
-          <Text
-            style={{
-              color: 'white',
-              fontWeight: 'bold',
-              backgroundColor: 'transparent',
-            }}
-          >
-            {this.props.title} - ${this.props.price}
-          </Text>
-        </Image>
-      </View>
-    );
-  }
-}
+import StatusBar from './components/StatusBar';
+import ItemView from './components/ItemView';
 
 const config = {
   apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
