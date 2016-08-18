@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { AppRegistry, View, ListView } from 'react-native';
+import { AppRegistry, View, ListView, Navigator, Text, TouchableHighlight } from 'react-native';
 import firebase from 'firebase';
+import NavigationBar from 'react-native-navbar';
 
 import styles from './styles.js';
 
@@ -46,13 +47,25 @@ class ListMobile extends Component {
   }
 
   render() {
+    const leftButtonConfig = {
+      title: 'Menu',
+      handler: this.props.openDrawer,
+    };
+
+    const titleConfig = {
+      title: 'Selbi',
+    };
+
     return (
-      <View style={styles.container}>
-        <StatusBar title="Selbi" />
+      <View style={{ flex: 1 }}>
+        <NavigationBar
+          title={titleConfig}
+          leftButton={leftButtonConfig}
+        />
         <ListView
           contentContainerStyle={{
             flexDirection: 'row',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
           }}
           dataSource={this.state.dataSource}
           renderRow={(data) =>
@@ -63,4 +76,57 @@ class ListMobile extends Component {
   }
 }
 
-AppRegistry.registerComponent('Selbi', () => ListMobile);
+ListMobile.contextTypes = { drawer: React.PropTypes.object };
+
+const SideMenu = require('react-native-side-menu');
+import Drawer from 'react-native-drawer';
+
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3},
+}
+
+function ControlPanel() {
+  return <Text>Hi!</Text>
+}
+
+class Application extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.openControlPanel.bind(this);
+    this.closeControlPanel.bind(this);
+  }
+
+  closeControlPanel() {
+    this.drawer.close();
+  }
+
+  openControlPanel() {
+    console.log(this.drawer)
+    this.drawer.open();
+  }
+
+  render() {
+    return (
+      <Drawer
+        ref={c => this.drawer = c}
+        type="overlay"
+        content={<ControlPanel />}
+        tapToClose={true}
+        openDrawerOffset={0.2} // 20% gap on the right side of drawer
+        panCloseMask={0.2}
+        closedDrawerOffset={-3}
+        styles={drawerStyles}
+        tweenHandler={(ratio) => ({
+          main: { opacity:(2-ratio)/2 }
+        })}
+      >
+        <ListMobile openDrawer={this.openControlPanel} />
+      </Drawer>
+    );
+  }
+}
+
+
+AppRegistry.registerComponent('Selbi', () => Application);
