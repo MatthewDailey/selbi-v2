@@ -6,10 +6,11 @@ import Dimensions from 'Dimensions';
 
 export default function ItemView({ img, title, price }) {
   const { width } = Dimensions.get('window');
-  const widthRatio = img.width / width;
+  const columnWidth = width / 2;
+  const widthRatio = img.width / columnWidth;
   const fitheight = img.height / widthRatio;
   return (
-    <View>
+    <View style={{ width: columnWidth }}>
       <Image
         source={{ uri: img.url }}
         style={{ height: fitheight }}
