@@ -10,6 +10,8 @@ import firebase from 'firebase';
 
 import styles from './styles.js';
 
+import StatusBar from './components/StatusBar.js';
+
 const Dimensions = require('Dimensions');
 
 
@@ -41,21 +43,6 @@ class ItemView extends Component {
     );
   }
 }
-
-function StatusBar({ title }) {
-  return (
-    <View>
-      <View style={styles.statusbar} />
-      <View style={styles.navbar}>
-        <Text style={styles.navbarTitle}>{title}</Text>
-      </View>
-    </View>
-  );
-}
-
-StatusBar.propTypes = {
-  title: React.PropTypes.string.isRequired,
-};
 
 const config = {
   apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
