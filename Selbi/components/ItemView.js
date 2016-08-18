@@ -6,23 +6,31 @@ import Dimensions from 'Dimensions';
 
 export default function ItemView({ img, title, price }) {
   const { width } = Dimensions.get('window');
-  const columnWidth = width / 2;
+  const itemMargin = 2;
+  const columnWidth = (width / 2) - (itemMargin * 2);
   const widthRatio = img.width / columnWidth;
   const fitHeight = img.height / widthRatio;
   return (
-    <View style={{ width: columnWidth, height: fitHeight }}>
+    <View
+      style={{
+        width: columnWidth,
+        height: fitHeight,
+        margin: itemMargin,
+      }}
+    >
       <Image
         source={{ uri: img.url }}
-        style={{ height: fitHeight }}
+        style={{ height: fitHeight, borderRadius: 3 }}
       >
         <Text
           style={{
+            margin: 5,
             color: 'white',
             fontWeight: 'bold',
             backgroundColor: 'transparent',
           }}
         >
-          {title} - ${price}
+          ${price}
         </Text>
       </Image>
     </View>
