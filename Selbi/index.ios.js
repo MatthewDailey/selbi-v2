@@ -42,18 +42,20 @@ class ItemView extends Component {
   }
 }
 
-class StatusBar extends Component {
-  render() {
-    return (
-      <View>
-        <View style={styles.statusbar} />
-        <View style={styles.navbar}>
-          <Text style={styles.navbarTitle}>{this.props.title}</Text>
-        </View>
+function StatusBar({ title }) {
+  return (
+    <View>
+      <View style={styles.statusbar} />
+      <View style={styles.navbar}>
+        <Text style={styles.navbarTitle}>{title}</Text>
       </View>
-    );
-  }
+    </View>
+  );
 }
+
+StatusBar.propTypes = {
+  title: React.PropTypes.string.isRequired,
+};
 
 const config = {
   apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
