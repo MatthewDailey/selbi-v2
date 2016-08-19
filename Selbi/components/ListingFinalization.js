@@ -5,7 +5,6 @@ import firebase from 'firebase';
 const style = {
   backgroundColor: 'white',
   flex: 1,
-  justifyContent: 'center',
   alignItems: 'center',
 };
 
@@ -13,7 +12,6 @@ const style = {
 class InputView extends Component {
   constructor(props) {
     super(props);
-    console.log(props)
     this.state = { text: props.listingStore[props.dataToStore] };
   }
 
