@@ -11,6 +11,7 @@ import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithM
 const listingStore = {
   price: '',
   title: '',
+  img: {},
 };
 
 const localListingRoutes = [

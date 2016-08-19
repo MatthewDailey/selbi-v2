@@ -35,7 +35,9 @@ export class SimpleCamera extends Component {
     const takePicture = () => {
       this.camera.capture()
         .then((data) => {
-          this.props.listingStore.imgPath = data.path;
+          this.props.title = '';
+          this.props.price = '';
+          this.props.listingStore.img.url = data.path;
           this.props.openNext();
         })
         .catch(err => console.error(err));
@@ -67,7 +69,7 @@ export class SimpleImageView extends Component {
     return (
       <Image
         style={styles.preview}
-        source={{ uri: this.props.listingStore.imgPath }}
+        source={{ uri: this.props.listingStore.img.url }}
       />
     );
   }
