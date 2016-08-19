@@ -48,18 +48,24 @@ class ListMobile extends Component {
   }
 
   render() {
-    const leftButtonConfig = {
+    const menuButtonConfig = {
       title: 'Menu',
       handler: this.props.openDrawer,
     };
 
-    const titleConfig = {
-      title: 'Selbi',
-    };
+    const backButtonConfig = (navigator) => { return {
+      title: '< Back',
+      handler: () => navigator.pop()
+    }};
 
     const routes = [
-      { title: 'Listings Near You', index: 0 },
-      { title: 'Create Listing', showSimple: true, index: 1 }
+      { title: 'Listings Near You',
+        nextLabel: 'Sell',
+        index: 0 },
+      { title: 'Create Listing',
+        nextLabel: 'Post',
+        showSimple: true,
+        index: 1 }
     ];
 
     return (
@@ -71,12 +77,9 @@ class ListMobile extends Component {
               <View>
                 <NavigationBar
                   title={{title: route.title}}
-                  leftButton={{
-                    title: '< Back',
-                    handler: () => navigator.pop()
-                  }}
+                  leftButton={backButtonConfig(navigator)}
                   rightButton={{
-                    title: 'Post',
+                    title: route.nextLabel,
                     handler: () => alert('no where to go.'),
                   }}
                 />
@@ -90,9 +93,9 @@ class ListMobile extends Component {
             <View style={{flex: 1}}>
               <NavigationBar
                 title={{title: route.title}}
-                leftButton={leftButtonConfig}
+                leftButton={menuButtonConfig}
                 rightButton={{
-                  title: 'Sell',
+                  title: route.nextLabel,
                   handler: () => navigator.push(routes[1]),
                 }}
               />
