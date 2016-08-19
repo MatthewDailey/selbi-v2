@@ -31,9 +31,15 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
       handler: () => navigator.popToTop()
     }};
 
-    const nextButtonConfig = (navigator, title, nextRoute) => { return {
+    const nextRoute = (routeIndex) => this.props.routes[routeIndex + 1];
+
+    const getOpenNextFunc = (navigator, routeIndex) => {
+        return () => navigator.push(nextRoute(routeIndex));
+    }
+
+    const nextButtonConfig = (navigator, title, routeIndex) => { return {
       title: title,
-      handler: () => navigator.push(nextRoute)
+      handler: getOpenNextFunc(navigator, routeIndex)
     }};
 
     const getLeftButton = (navigator, routeIndex) => {
@@ -46,10 +52,10 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
     const getRightButton = (navigator, routeIndex) => {
       if (this.props.routes.length == 1) {
         return { title: '' }
-      } else if (this.props.routes[routeIndex + 1]) {
+      } else if (nextRoute(routeIndex)) {
         return nextButtonConfig(navigator,
           this.props.routes[routeIndex].nextLabel,
-          this.props.routes[routeIndex + 1])
+          routeIndex)
       }
       return doneButtonConfig(navigator);
     };
@@ -77,7 +83,7 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
                   leftButton={ getLeftButton(navigator, route.index) }
                   rightButton={ getRightButton(navigator, route.index) }
                 />
-                {route.renderContent()}
+                {route.renderContent(getOpenNextFunc(navigator, route.index))}
               </View>
             );
           }}

@@ -13,7 +13,7 @@ const localListingRoutes = [
     index: 0 },
   { title: 'Create Listing (1/3)',
     nextLabel: '',
-    renderContent: () => <SimpleCamera />,
+    renderContent: (openNext) => <SimpleCamera openNext={openNext}/>,
     index: 1 },
   { title: 'Create Listing (2/3)',
     renderContent: () => <SimpleImageView />,

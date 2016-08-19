@@ -37,6 +37,7 @@ export class SimpleCamera extends Component {
       this.camera.capture()
         .then((data) => {
           imageStore.imgPath = data.path;
+          this.props.openNext();
         })
         .catch(err => console.error(err));
     };
