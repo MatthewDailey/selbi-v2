@@ -76,7 +76,7 @@ class ListMobile extends Component {
                     handler: () => navigator.pop()
                   }}
                   rightButton={{
-                    title: 'oh... hello.',
+                    title: 'Post',
                     handler: () => alert('no where to go.'),
                   }}
                 />

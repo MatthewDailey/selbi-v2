@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import {
   Dimensions,
   StyleSheet,
+  Image,
   Text,
   View,
 } from 'react-native';
+import firebase from 'firebase';
 import Camera from 'react-native-camera';
 
 console.log(Camera)
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height - 44,
     width: Dimensions.get('window').width,
   },
   capture: {
@@ -31,13 +33,37 @@ const styles = StyleSheet.create({
 });
 
 export default class BadInstagramCloneApp extends Component {
+  constructor(props) {
+    super(props);
+
+    // this.state = {
+    //   imgPath: 'assets-library://asset/asset.JPG?id=CF850DF7-8A2C-492C-8972-24DBCB902D4B&ext=JPG',
+    // };
+  }
+
+
   takePicture() {
     this.camera.capture()
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data)
+        this.setState({
+          imgPath: data.path,
+        });
+        console.log(this.state);
+      })
       .catch(err => console.error(err));
   }
 
   render() {
+    console.log(this.state);
+    if (this.state && this.state.imgPath) {
+      return (
+          <Image
+            style={styles.preview}
+            source={{ uri: this.state.imgPath }}
+          />
+      );
+    }
     return (
       <View style={styles.container}>
         <Camera
