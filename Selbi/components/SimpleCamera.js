@@ -6,10 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import firebase from 'firebase';
 import Camera from 'react-native-camera';
-
-console.log(Camera)
 
 const styles = StyleSheet.create({
   container: {
@@ -32,36 +29,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class BadInstagramCloneApp extends Component {
-  constructor(props) {
-    super(props);
-
-    // this.state = {
-    //   imgPath: 'assets-library://asset/asset.JPG?id=CF850DF7-8A2C-492C-8972-24DBCB902D4B&ext=JPG',
-    // };
-  }
-
-
-  takePicture() {
-    this.camera.capture()
-      .then((data) => {
-        console.log(data)
-        this.setState({
-          imgPath: data.path,
-        });
-        console.log(this.state);
-      })
-      .catch(err => console.error(err));
-  }
-
+export default class SimpleCamera extends Component {
   render() {
-    console.log(this.state);
+    const takePicture = () => {
+      this.camera.capture()
+        .then((data) => {
+          this.setState({
+            imgPath: data.path,
+          });
+        })
+        .catch(err => console.error(err));
+    };
+
     if (this.state && this.state.imgPath) {
       return (
-          <Image
-            style={styles.preview}
-            source={{ uri: this.state.imgPath }}
-          />
+        <Image
+          style={styles.preview}
+          source={{ uri: this.state.imgPath }}
+        />
       );
     }
     return (
@@ -73,7 +58,12 @@ export default class BadInstagramCloneApp extends Component {
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
         >
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
+          <Text
+            style={styles.capture}
+            onPress={takePicture}
+          >
+            [CAPTURE]
+          </Text>
         </Camera>
       </View>
     );
