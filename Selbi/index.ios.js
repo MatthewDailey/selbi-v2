@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { AppRegistry, View, ScrollView, ListView, Navigator, Text, TouchableHighlight } from 'react-native';
-import NavigationBar from 'react-native-navbar';
+import React, { Component } from 'react'
+import { AppRegistry, View, ScrollView, ListView, Navigator, Text, TouchableHighlight } from 'react-native'
+import NavigationBar from 'react-native-navbar'
 
-import Camera from './components/Camera';
+import Camera from './components/Camera'
 import ListingsView from './components/ListingsView'
+import Menu from './components/Menu'
 
 class ListMobile extends Component {
   render() {
@@ -66,21 +67,9 @@ import Drawer from 'react-native-drawer';
 const drawerStyles = {
   drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 0},
   main: {paddingLeft: 0},
-}
+};
 
-function ControlPanel() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Text>Menu</Text>
-    </View>
-  );
-}
+
 
 class Application extends React.Component {
   // noinspection Eslint - This syntax is necessary to properly bind the method.
@@ -94,7 +83,7 @@ class Application extends React.Component {
         ref={(c) => {
           this.drawer = c;
         }}
-        content={<ControlPanel />}
+        content={<Menu />}
         tapToClose
         styles={drawerStyles}
         openDrawerOffset={0.2}
