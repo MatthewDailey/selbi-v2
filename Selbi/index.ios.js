@@ -1,16 +1,28 @@
 import React, { Component } from 'react'
 import { AppRegistry, View, ScrollView, ListView, Navigator, Text, TouchableHighlight } from 'react-native'
 import NavigationBar from 'react-native-navbar'
+import Drawer from 'react-native-drawer';
 
 import Camera from './components/Camera'
 import ListingsView from './components/ListingsView'
 import Menu from './components/Menu'
 
-class ListMobile extends Component {
+
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 0},
+  main: {paddingLeft: 0},
+};
+
+class RightExpandingNavWithMenuDrawer extends React.Component {
+  // noinspection Eslint - This syntax is necessary to properly bind the method.
+  openMenu = () => {
+    this.drawer.open()
+  };
+
   render() {
     const menuButtonConfig = () => { return {
       title: 'Menu',
-      handler: this.props.openDrawer,
+      handler: this.openMenu,
     }};
 
     const backButtonConfig = (navigator) => { return {
@@ -23,61 +35,27 @@ class ListMobile extends Component {
       handler: () => navigator.popToTop()
     }};
 
-    const routes = [
-      { title: 'Listings Near You',
-        left: menuButtonConfig,
-        right: (navigator) => { return {
-          title: 'Sell',
-          handler: () => navigator.push(routes[1]),
-        }},
-        renderContent: () => <ListingsView />,
-        index: 0 },
-      { title: 'Create Listing',
-        left: backButtonConfig,
-        right: doneButtonConfig,
-        renderContent: () => <Camera/>,
-        showSimple: true,
-        index: 1 }
-    ];
+    const nextButtonConfig = (navigator, title, nextRoute) => { return {
+      title: title,
+      handler: () => navigator.push(nextRoute)
+    }};
 
-    return (
-      <Navigator
-        initialRoute={routes[0]}
-        renderScene={(route, navigator) => {
-          return (
-            // Note this flex:1 style. Super fucking important to make sure listview can scroll.
-            // Without it, the view will just bounce back. Who the fuck knows why.
-            <View style={{flex: 1}}>
-              <NavigationBar
-                title={{title: route.title}}
-                leftButton={route.left(navigator)}
-                rightButton={route.right(navigator)}
-              />
-              {route.renderContent()}
-            </View>
-          );
-        }}
-      />
-    );
-  }
-}
+    const getLeftButton = (navigator, routeIndex) => {
+      if (routeIndex == 0) {
+        return menuButtonConfig(navigator);
+      }
+      return backButtonConfig(navigator);
+    };
 
-import Drawer from 'react-native-drawer';
+    const getRightButton = (navigator, routeIndex) => {
+      if (this.props.routes[routeIndex + 1]) {
+        return nextButtonConfig(navigator,
+          this.props.routes[routeIndex].nextLabel,
+          this.props.routes[routeIndex + 1])
+      }
+      return doneButtonConfig(navigator);
+    };
 
-const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 0},
-  main: {paddingLeft: 0},
-};
-
-
-
-class Application extends React.Component {
-  // noinspection Eslint - This syntax is necessary to properly bind the method.
-  openControlPanel = () => {
-    this.drawer.open()
-  };
-
-  render() {
     return (
       <Drawer
         ref={(c) => {
@@ -89,10 +67,40 @@ class Application extends React.Component {
         openDrawerOffset={0.2}
         panOpenMask={0.1}
       >
-        <ListMobile openDrawer={this.openControlPanel} />
+        <Navigator
+          initialRoute={this.props.routes[0]}
+          renderScene={(route, navigator) => {
+            return (
+              // Note this flex:1 style. Super fucking important to make sure listview can scroll.
+              // Without it, the view will just bounce back. Who the fuck knows why.
+              <View style={{flex: 1}}>
+                <NavigationBar
+                  title={{title: route.title}}
+                  leftButton={ getLeftButton(navigator, route.index) }
+                  rightButton={ getRightButton(navigator, route.index) }
+                />
+                {route.renderContent()}
+              </View>
+            );
+          }}
+        />
       </Drawer>
     );
   }
+}
+
+const localListingRoutes = [
+  { title: 'Listings Near You',
+    nextLabel: 'Sell',
+    renderContent: () => <ListingsView />,
+    index: 0 },
+  { title: 'Create Listing',
+    renderContent: () => <Camera/>,
+    index: 1 }
+];
+
+function Application() {
+  return <RightExpandingNavWithMenuDrawer routes={localListingRoutes} />
 }
 
 
