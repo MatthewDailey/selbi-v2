@@ -68,6 +68,11 @@ export class SimpleImageView extends Component {
   render() {
     return (
       <Image
+        onLayout={(event) => {
+          const {width, height} = event.nativeEvent.layout;
+          this.props.listingStore.img.width = width;
+          this.props.listingStore.img.height = height;
+        }}
         style={styles.preview}
         source={{ uri: this.props.listingStore.img.url }}
       />
