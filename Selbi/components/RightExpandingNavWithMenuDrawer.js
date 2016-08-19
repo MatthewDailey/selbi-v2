@@ -44,7 +44,9 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
     };
 
     const getRightButton = (navigator, routeIndex) => {
-      if (this.props.routes[routeIndex + 1]) {
+      if (this.props.routes.length == 1) {
+        return { title:'' }
+      } else if (this.props.routes[routeIndex + 1]) {
         return nextButtonConfig(navigator,
           this.props.routes[routeIndex].nextLabel,
           this.props.routes[routeIndex + 1])
