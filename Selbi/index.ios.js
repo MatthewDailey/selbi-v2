@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, View, ListView, Navigator, Text, TouchableHighlight } from 'react-native';
+import { AppRegistry, View, ScrollView, ListView, Navigator, Text, TouchableHighlight } from 'react-native';
 import firebase from 'firebase';
 import NavigationBar from 'react-native-navbar';
 
@@ -62,51 +62,51 @@ class ListMobile extends Component {
     ];
 
     return (
-      <View style={{ flex: 1 }}>
-        <Navigator
-          initialRoute={routes[0]}
-          renderScene={(route, navigator) => {
-            if (route.showSimple) {
-              return (
-                <View>
-                  <NavigationBar
-                    title={{title: route.title}}
-                    leftButton={{
-                      title: '< Back',
-                      handler: () => navigator.pop()
-                    }}
-                    rightButton={{
-                      title: 'oh... hello.',
-                      handler: () => alert('no where to go.'),
-                    }}
-                  />
-                  <Text>Hi simple</Text>
-                </View>
-              );
-            }
+      <Navigator
+        initialRoute={routes[0]}
+        renderScene={(route, navigator) => {
+          if (route.showSimple) {
             return (
               <View>
                 <NavigationBar
                   title={{title: route.title}}
-                  leftButton={leftButtonConfig}
+                  leftButton={{
+                    title: '< Back',
+                    handler: () => navigator.pop()
+                  }}
                   rightButton={{
-                    title: 'Sell Something',
-                    handler: () => navigator.push(routes[1]),
+                    title: 'oh... hello.',
+                    handler: () => alert('no where to go.'),
                   }}
                 />
-                <ListView
-                  contentContainerStyle={{
-                    flexDirection: 'row',
-                      flexWrap: 'wrap',
-                  }}
-                  dataSource={this.state.dataSource}
-                  renderRow={(data) => <ItemView {...data} />}
-                />
+                <Text>Hi simple</Text>
               </View>
             );
-          }}
-        />
-      </View>
+          }
+          return (
+            // Note this flex:1 style. Super fucking important to make sure listview can scroll.
+            // Without it, the view will just bounce back. Who the fuck knows why.
+            <View style={{flex: 1}}>
+              <NavigationBar
+                title={{title: route.title}}
+                leftButton={leftButtonConfig}
+                rightButton={{
+                  title: 'Sell Something',
+                  handler: () => navigator.push(routes[1]),
+                }}
+              />
+              <ListView
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                    flexWrap: 'wrap',
+                }}
+                dataSource={this.state.dataSource}
+                renderRow={(data) => <ItemView {...data} />}
+              />
+            </View>
+          );
+        }}
+      />
     );
   }
 }
