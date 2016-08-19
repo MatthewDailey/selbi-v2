@@ -1,63 +1,9 @@
 import React, { Component } from 'react';
 import { AppRegistry, View, ScrollView, ListView, Navigator, Text, TouchableHighlight } from 'react-native';
-import firebase from 'firebase';
 import NavigationBar from 'react-native-navbar';
 
-import styles from './styles.js';
-
-import StatusBar from './components/StatusBar';
-import ItemView from './components/ItemView';
 import Camera from './components/Camera';
-
-const config = {
-  apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
-  authDomain: 'selbi-react-prototype.firebaseapp.com',
-  databaseURL: 'https://selbi-react-prototype.firebaseio.com',
-  storageBucket: 'selbi-react-prototype.appspot.com',
-};
-firebase.initializeApp(config);
-
-class ListingsView extends Component {
-  constructor(props) {
-    super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds,
-    };
-
-    const updateListingsView = (listings) => {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(listings),
-      });
-    };
-
-    firebase
-      .auth()
-      .signInAnonymously()
-      .then(() => firebase
-        .database()
-        .ref('listings')
-        .once('value'))
-      .then((snapshot) => {
-        updateListingsView(snapshot.val())
-        console.log(snapshot.val());
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  render() {
-    return <ListView
-      contentContainerStyle={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-      }}
-      dataSource={this.state.dataSource}
-      renderRow={(data) => <ItemView {...data} />}
-    />
-  }
-}
+import ListingsView from './components/ListingsView'
 
 class ListMobile extends Component {
   render() {
@@ -71,6 +17,11 @@ class ListMobile extends Component {
       handler: () => navigator.pop()
     }};
 
+    const doneButtonConfig = (navigator) => { return {
+      title: 'Done',
+      handler: () => navigator.popToTop()
+    }};
+
     const routes = [
       { title: 'Listings Near You',
         left: menuButtonConfig,
@@ -82,10 +33,7 @@ class ListMobile extends Component {
         index: 0 },
       { title: 'Create Listing',
         left: backButtonConfig,
-        right: (navigator) => { return {
-          title: 'Done',
-          handler: () => navigator.popToTop()
-        }},
+        right: doneButtonConfig,
         renderContent: () => <Camera/>,
         showSimple: true,
         index: 1 }
