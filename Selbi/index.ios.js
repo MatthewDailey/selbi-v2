@@ -7,6 +7,7 @@ import styles from './styles.js';
 
 import StatusBar from './components/StatusBar';
 import ItemView from './components/ItemView';
+import Camera from './components/Camera';
 
 const config = {
   apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
@@ -79,7 +80,7 @@ class ListMobile extends Component {
                     handler: () => alert('no where to go.'),
                   }}
                 />
-                <Text>Hi simple</Text>
+                <Camera />
               </View>
             );
           }
@@ -91,7 +92,7 @@ class ListMobile extends Component {
                 title={{title: route.title}}
                 leftButton={leftButtonConfig}
                 rightButton={{
-                  title: 'Sell Something',
+                  title: 'Sell',
                   handler: () => navigator.push(routes[1]),
                 }}
               />
