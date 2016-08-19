@@ -82,45 +82,41 @@ const SideMenu = require('react-native-side-menu');
 import Drawer from 'react-native-drawer';
 
 const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
-  main: {paddingLeft: 3},
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 0},
+  main: {paddingLeft: 0},
 }
 
 function ControlPanel() {
-  return <Text>Hi!</Text>
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Text>Menu</Text>
+    </View>
+  );
 }
 
 class Application extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.openControlPanel.bind(this);
-    this.closeControlPanel.bind(this);
-  }
-
-  closeControlPanel() {
-    this.drawer.close();
-  }
-
-  openControlPanel() {
-    console.log(this.drawer)
-    this.drawer.open();
-  }
+  // noinspection Eslint - This syntax is necessary to properly bind the method.
+  openControlPanel = () => {
+    this.drawer.open()
+  };
 
   render() {
     return (
       <Drawer
-        ref={c => this.drawer = c}
-        type="overlay"
+        ref={(c) => {
+          this.drawer = c;
+        }}
         content={<ControlPanel />}
-        tapToClose={true}
-        openDrawerOffset={0.2} // 20% gap on the right side of drawer
-        panCloseMask={0.2}
-        closedDrawerOffset={-3}
+        tapToClose
         styles={drawerStyles}
-        tweenHandler={(ratio) => ({
-          main: { opacity:(2-ratio)/2 }
-        })}
+        openDrawerOffset={0.2}
+        panOpenMask={0.1}
       >
         <ListMobile openDrawer={this.openControlPanel} />
       </Drawer>
