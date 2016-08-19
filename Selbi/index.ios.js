@@ -61,7 +61,7 @@ class RightExpandingNavWithMenuDrawer extends React.Component {
         ref={(c) => {
           this.drawer = c;
         }}
-        content={<Menu />}
+        content={this.props.menu}
         tapToClose
         styles={drawerStyles}
         openDrawerOffset={0.2}
@@ -95,12 +95,12 @@ const localListingRoutes = [
     renderContent: () => <ListingsView />,
     index: 0 },
   { title: 'Create Listing',
-    renderContent: () => <Camera/>,
+    renderContent: () => <Camera />,
     index: 1 }
 ];
 
 function Application() {
-  return <RightExpandingNavWithMenuDrawer routes={localListingRoutes} />
+  return <RightExpandingNavWithMenuDrawer routes={localListingRoutes} menu={<Menu />} />
 }
 
 
