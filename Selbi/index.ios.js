@@ -3,33 +3,40 @@ import { AppRegistry } from 'react-native';
 
 import { SimpleCamera, SimpleImageView } from './components/SimpleCamera';
 import ListingsView from './components/ListingsView';
-import { EnterTitleView, EnterPriceView, AcknowledgePostView } from './components/ListingFinalization';
+import { EnterTitleView, EnterPriceView, AcknowledgePostView }
+  from './components/ListingFinalization';
 import Menu from './components/Menu';
 import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithMenuDrawer';
 
+const listingStore = {
+  price: '',
+  title: '',
+};
+
 const localListingRoutes = [
-  // { title: 'Listings Near You',
-  //   nextLabel: 'Sell',
-  //   renderContent: () => <ListingsView />,
-  //   index: 0 },
-  // { title: 'Create Listing (1/3)',
-  //   nextLabel: '',
-  //   renderContent: (openNext) => <SimpleCamera openNext={openNext}/>,
-  //   index: 1 },
-  // { title: 'Create Listing (2/3)',
-  //   renderContent: () => <SimpleImageView />,
-  //   index: 2 },
+  { title: 'Listings Near You',
+    nextLabel: 'Sell',
+    renderContent: () => <ListingsView />,
+    index: 0 },
+  { title: 'Create Listing (1/4)',
+    nextLabel: '',
+    renderContent: (openNext) => <SimpleCamera openNext={openNext} listingStore={listingStore} />,
+    index: 1 },
+  { title: 'Create Listing (2/4)',
+    nextLabel: 'Accept',
+    renderContent: () => <SimpleImageView listingStore={listingStore} />,
+    index: 2 },
   { title: 'Create Listing (3/4)',
     nextLabel: 'Next',
-    renderContent: () => <EnterTitleView />,
-    index: 0 },
+    renderContent: () => <EnterTitleView listingStore={listingStore} />,
+    index: 3 },
   { title: 'Create Listing (4/4)',
     nextLabel: 'Post',
-    renderContent: () => <EnterPriceView />,
-    index: 1 },
+    renderContent: () => <EnterPriceView listingStore={listingStore} />,
+    index: 4 },
   { title: 'Listing Complete!',
-    renderContent: () => <AcknowledgePostView />,
-    index: 2 },
+    renderContent: () => <AcknowledgePostView listingStore={listingStore} />,
+    index: 5 },
 ];
 
 function Application() {

@@ -8,16 +8,12 @@ const style = {
   alignItems: 'center',
 };
 
-const listingStore = {
-  price: '',
-  title: ''
-};
-
 
 class InputView extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: listingStore[props.dataToStore] };
+    console.log(props)
+    this.state = { text: props.listingStore[props.dataToStore] };
   }
 
   render() {
@@ -28,8 +24,8 @@ class InputView extends Component {
           style={{ height: 40, margin:20, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={(text) => {
             this.setState({ text });
-            listingStore[this.props.dataToStore] = text;
-            console.log(listingStore);
+            this.props.listingStore[this.props.dataToStore] = text;
+            console.log(this.props.listingStore);
           }}
           value={this.state.text}
         />
@@ -39,12 +35,12 @@ class InputView extends Component {
 };
 
 
-export function EnterTitleView() {
-  return <InputView inputTitle={'What are you selling?'} dataToStore={'title'} />;
+export function EnterTitleView(props) {
+  return <InputView {...props} inputTitle={'What are you selling?'} dataToStore={'title'} />;
 }
 
-export function EnterPriceView() {
-  return <InputView inputTitle={'How much does it cost?'} dataToStore={'price'} />;
+export function EnterPriceView(props) {
+  return <InputView {...props} inputTitle={'How much does it cost?'} dataToStore={'price'} />;
 }
 
 export class AcknowledgePostView extends Component {

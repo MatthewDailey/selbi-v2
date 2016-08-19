@@ -29,14 +29,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const imageStore = {};
 
 export class SimpleCamera extends Component {
   render() {
     const takePicture = () => {
       this.camera.capture()
         .then((data) => {
-          imageStore.imgPath = data.path;
+          this.props.listingStore.imgPath = data.path;
           this.props.openNext();
         })
         .catch(err => console.error(err));
@@ -68,7 +67,7 @@ export class SimpleImageView extends Component {
     return (
       <Image
         style={styles.preview}
-        source={{ uri: imageStore.imgPath }}
+        source={{ uri: this.props.listingStore.imgPath }}
       />
     );
   }
