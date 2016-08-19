@@ -74,18 +74,18 @@ class ListMobile extends Component {
     const routes = [
       { title: 'Listings Near You',
         left: menuButtonConfig,
-        right:  {
-          label: 'Sell',
-          getHandler: (navigator) => () => navigator.push(routes[1]),
-        },
+        right: (navigator) => { return {
+          title: 'Sell',
+          handler: () => navigator.push(routes[1]),
+        }},
         renderContent: () => <ListingsView />,
         index: 0 },
       { title: 'Create Listing',
         left: backButtonConfig,
-        right:  {
-          label: 'Done',
-          getHandler: (navigator) => () => navigator.popToTop()
-        },
+        right: (navigator) => { return {
+          title: 'Done',
+          handler: () => navigator.popToTop()
+        }},
         renderContent: () => <Camera/>,
         showSimple: true,
         index: 1 }
@@ -102,12 +102,9 @@ class ListMobile extends Component {
               <NavigationBar
                 title={{title: route.title}}
                 leftButton={route.left(navigator)}
-                rightButton={{
-                  title: route.right.label,
-                  handler: route.right.getHandler(navigator),
-                }}
+                rightButton={route.right(navigator)}
               />
-              {route.renderContent(navigator)}
+              {route.renderContent()}
             </View>
           );
         }}
