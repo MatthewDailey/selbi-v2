@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 
-import SimpleCamera from './components/SimpleCamera';
+import { SimpleCamera, SimpleImageView } from './components/SimpleCamera';
 import ListingsView from './components/ListingsView';
 import Menu from './components/Menu';
 import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithMenuDrawer';
@@ -11,9 +11,13 @@ const localListingRoutes = [
     nextLabel: 'Sell',
     renderContent: () => <ListingsView />,
     index: 0 },
-  { title: 'Create Listing',
+  { title: 'Create Listing (1/3)',
+    nextLabel: '',
     renderContent: () => <SimpleCamera />,
     index: 1 },
+  { title: 'Create Listing (2/3)',
+    renderContent: () => <SimpleImageView />,
+    index: 2 },
 ];
 
 function Application() {

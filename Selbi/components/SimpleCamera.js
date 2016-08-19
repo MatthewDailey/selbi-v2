@@ -29,26 +29,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class SimpleCamera extends Component {
+const imageStore = {};
+
+export class SimpleCamera extends Component {
   render() {
     const takePicture = () => {
       this.camera.capture()
         .then((data) => {
-          this.setState({
-            imgPath: data.path,
-          });
+          imageStore.imgPath = data.path;
         })
         .catch(err => console.error(err));
     };
 
-    if (this.state && this.state.imgPath) {
-      return (
-        <Image
-          style={styles.preview}
-          source={{ uri: this.state.imgPath }}
-        />
-      );
-    }
     return (
       <View style={styles.container}>
         <Camera
@@ -66,6 +58,17 @@ export default class SimpleCamera extends Component {
           </Text>
         </Camera>
       </View>
+    );
+  }
+}
+
+export class SimpleImageView extends Component {
+  render() {
+    return (
+      <Image
+        style={styles.preview}
+        source={{ uri: imageStore.imgPath }}
+      />
     );
   }
 }
