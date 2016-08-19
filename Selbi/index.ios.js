@@ -17,7 +17,7 @@ const config = {
 };
 firebase.initializeApp(config);
 
-class ListMobile extends Component {
+class ListingsView extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -48,10 +48,23 @@ class ListMobile extends Component {
   }
 
   render() {
-    const menuButtonConfig = {
+    return <ListView
+      contentContainerStyle={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }}
+      dataSource={this.state.dataSource}
+      renderRow={(data) => <ItemView {...data} />}
+    />
+  }
+}
+
+class ListMobile extends Component {
+  render() {
+    const menuButtonConfig = () => { return {
       title: 'Menu',
       handler: this.props.openDrawer,
-    };
+    }};
 
     const backButtonConfig = (navigator) => { return {
       title: '< Back',
@@ -60,10 +73,20 @@ class ListMobile extends Component {
 
     const routes = [
       { title: 'Listings Near You',
-        nextLabel: 'Sell',
+        left: menuButtonConfig,
+        right:  {
+          label: 'Sell',
+          getHandler: (navigator) => () => navigator.push(routes[1]),
+        },
+        renderContent: () => <ListingsView />,
         index: 0 },
       { title: 'Create Listing',
-        nextLabel: 'Post',
+        left: backButtonConfig,
+        right:  {
+          label: 'Done',
+          getHandler: (navigator) => () => navigator.popToTop()
+        },
+        renderContent: () => <Camera/>,
         showSimple: true,
         index: 1 }
     ];
@@ -72,41 +95,19 @@ class ListMobile extends Component {
       <Navigator
         initialRoute={routes[0]}
         renderScene={(route, navigator) => {
-          if (route.showSimple) {
-            return (
-              <View>
-                <NavigationBar
-                  title={{title: route.title}}
-                  leftButton={backButtonConfig(navigator)}
-                  rightButton={{
-                    title: route.nextLabel,
-                    handler: () => alert('no where to go.'),
-                  }}
-                />
-                <Camera />
-              </View>
-            );
-          }
           return (
             // Note this flex:1 style. Super fucking important to make sure listview can scroll.
             // Without it, the view will just bounce back. Who the fuck knows why.
             <View style={{flex: 1}}>
               <NavigationBar
                 title={{title: route.title}}
-                leftButton={menuButtonConfig}
+                leftButton={route.left(navigator)}
                 rightButton={{
-                  title: route.nextLabel,
-                  handler: () => navigator.push(routes[1]),
+                  title: route.right.label,
+                  handler: route.right.getHandler(navigator),
                 }}
               />
-              <ListView
-                contentContainerStyle={{
-                  flexDirection: 'row',
-                    flexWrap: 'wrap',
-                }}
-                dataSource={this.state.dataSource}
-                renderRow={(data) => <ItemView {...data} />}
-              />
+              {route.renderContent(navigator)}
             </View>
           );
         }}
