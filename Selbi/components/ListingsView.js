@@ -34,11 +34,19 @@ export default class ListingsView extends Component {
         .ref('listings')
         .once('value'))
       .then((snapshot) => {
-        updateListingsView(snapshot.val())
+        updateListingsView(snapshot.val());
         console.log(snapshot.val());
       })
       .catch((error) => {
         console.log(error);
+      });
+
+    firebase
+      .database()
+      .ref('listings')
+      .on('value', (snapshot) => {
+        updateListingsView(snapshot.val());
+        console.log(snapshot.val());
       });
   }
 

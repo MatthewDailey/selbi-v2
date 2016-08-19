@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
+import firebase from 'firebase';
 
 const style = {
   backgroundColor: 'white',
@@ -44,10 +45,20 @@ export function EnterPriceView(props) {
 }
 
 export class AcknowledgePostView extends Component {
+  componentDidMount() {
+    firebase
+      .database()
+      .ref('listings')
+      .push(this.props.listingStore)
+      .then((snapshot) => console.log(snapshot.val()))
+      .catch(console.log);
+  }
+
   render() {
     return (
       <View style={style}>
-        <Text>Acknowledge post.</Text>
+        <Text>Successfully posted {this.props.listingStore.title}.</Text>
+        <Text>Get ready to get paid!</Text>
       </View>
     );
   }
