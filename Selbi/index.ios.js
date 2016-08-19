@@ -56,29 +56,61 @@ class ListMobile extends Component {
       title: 'Selbi',
     };
 
+    const routes = [
+      { title: 'Listings Near You', index: 0 },
+      { title: 'Create Listing', showSimple: true, index: 1 }
+    ];
+
     return (
       <View style={{ flex: 1 }}>
-        <NavigationBar
-          title={titleConfig}
-          leftButton={leftButtonConfig}
-        />
-        <ListView
-          contentContainerStyle={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
+        <Navigator
+          initialRoute={routes[0]}
+          renderScene={(route, navigator) => {
+            if (route.showSimple) {
+              return (
+                <View>
+                  <NavigationBar
+                    title={{title: route.title}}
+                    leftButton={{
+                      title: '< Back',
+                      handler: () => navigator.pop()
+                    }}
+                    rightButton={{
+                      title: 'oh... hello.',
+                      handler: () => alert('no where to go.'),
+                    }}
+                  />
+                  <Text>Hi simple</Text>
+                </View>
+              );
+            }
+            return (
+              <View>
+                <NavigationBar
+                  title={{title: route.title}}
+                  leftButton={leftButtonConfig}
+                  rightButton={{
+                    title: 'Sell Something',
+                    handler: () => navigator.push(routes[1]),
+                  }}
+                />
+                <ListView
+                  contentContainerStyle={{
+                    flexDirection: 'row',
+                      flexWrap: 'wrap',
+                  }}
+                  dataSource={this.state.dataSource}
+                  renderRow={(data) => <ItemView {...data} />}
+                />
+              </View>
+            );
           }}
-          dataSource={this.state.dataSource}
-          renderRow={(data) =>
-            <ItemView {...data} />}
         />
       </View>
     );
   }
 }
 
-ListMobile.contextTypes = { drawer: React.PropTypes.object };
-
-const SideMenu = require('react-native-side-menu');
 import Drawer from 'react-native-drawer';
 
 const drawerStyles = {
