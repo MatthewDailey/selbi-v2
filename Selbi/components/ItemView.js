@@ -19,7 +19,7 @@ export default function ItemView({ img, title, price }) {
       }}
     >
       <Image
-        source={{ uri: img.url }}
+        source={{ uri: `data:image/png;base64,${img.base64}` }}
         style={{ height: fitHeight, borderRadius: 3 }}
       >
         <Text

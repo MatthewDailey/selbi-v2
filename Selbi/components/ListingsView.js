@@ -31,10 +31,12 @@ export default class ListingsView extends Component {
       .database()
       .ref('listings')
       .on('value', (snapshot) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
-        });
-        console.log(snapshot.val());
+        if (snapshot.exists()) {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
+          });
+          console.log(snapshot.val());
+        }
       });
   }
 
@@ -54,10 +56,12 @@ export default class ListingsView extends Component {
         .ref('listings')
         .once('value'))
       .then((snapshot) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
-        });
-        console.log(snapshot.val());
+        if (snapshot.exists()) {
+          this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
+          });
+          console.log(snapshot.val());
+        }
       });
   }
 
