@@ -39,7 +39,7 @@ export default function ItemView({ img, title, price }) {
 
 ItemView.propTypes = {
   title: React.PropTypes.string.isRequired,
-  price: React.PropTypes.number.isRequired,
+  price: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   img: React.PropTypes.shape({
     url: React.PropTypes.string.isRequired,
     width: React.PropTypes.number.isRequired,

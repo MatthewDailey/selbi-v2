@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView } from 'react-native';
+import { ListView, RefreshControl } from 'react-native';
 import firebase from 'firebase';
 
 import ItemView from './ItemView';
@@ -18,25 +18,11 @@ export default class ListingsView extends Component {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       dataSource: ds,
+      refreshing: false,
     };
+    this.fetchData.bind(this);
 
-    const updateListingsView = (listings) => {
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(listings),
-      });
-    };
-
-    firebase
-      .auth()
-      .signInAnonymously()
-      .then(() => firebase
-        .database()
-        .ref('listings')
-        .once('value'))
-      .then((snapshot) => {
-        updateListingsView(snapshot.val());
-        console.log(snapshot.val());
-      })
+    this.fetchData()
       .catch((error) => {
         console.log(error);
       });
@@ -45,7 +31,32 @@ export default class ListingsView extends Component {
       .database()
       .ref('listings')
       .on('value', (snapshot) => {
-        updateListingsView(snapshot.val());
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
+        });
+        console.log(snapshot.val());
+      });
+  }
+
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.fetchData().then(() => {
+      this.setState({ refreshing: false });
+    });
+  }
+
+  fetchData() {
+    return firebase
+      .auth()
+      .signInAnonymously()
+      .then(() => firebase
+        .database()
+        .ref('listings')
+        .once('value'))
+      .then((snapshot) => {
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(snapshot.val()),
+        });
         console.log(snapshot.val());
       });
   }
@@ -53,6 +64,12 @@ export default class ListingsView extends Component {
   render() {
     return (
       <ListView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+          />
+        }
         contentContainerStyle={{
           flexDirection: 'row',
           flexWrap: 'wrap',

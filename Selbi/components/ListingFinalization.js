@@ -20,11 +20,11 @@ class InputView extends Component {
       <View style={style}>
         <Text>{this.props.inputTitle}</Text>
         <TextInput
+          autoFocus
           style={{ height: 40, margin:20, borderColor: 'gray', borderWidth: 1 }}
           onChangeText={(text) => {
             this.setState({ text });
             this.props.listingStore[this.props.dataToStore] = text;
-            console.log(this.props.listingStore);
           }}
           value={this.state.text}
         />
@@ -48,7 +48,11 @@ export class AcknowledgePostView extends Component {
       .database()
       .ref('listings')
       .push(this.props.listingStore)
-      .then((snapshot) => console.log(snapshot.val()))
+      .then((snapshot) => {
+        console.log(snapshot.val());
+        this.props.listingStore.title = '';
+        this.props.listingStore.price = '';
+      })
       .catch(console.log);
   }
 
