@@ -46,26 +46,24 @@ export function EnterPriceView(props) {
 
 export class AcknowledgePostView extends Component {
   componentDidMount() {
-    ReadImageData.readImage(this.props.listingStore.img.url, (imageBase64) => {
-      // firebase
-      //   .storage()
-      //   .ref('testFile')
-      //   .put(imageBase64)
-      //   .then(console.log)
-      this.props.listingStore.img.base64 = imageBase64;
-      firebase
-        .database()
-        .ref('listings')
-        .push(this.props.listingStore)
-        .then((snapshot) => {
-          console.log(snapshot.val());
-          this.props.listingstore.title = '';
-          this.props.listingstore.price = '';
-
-        })
-        .catch(console.log);
-      console.log(imageBase64);
-    });
+    ReadImageData.readImage(this.props.listingStore.img.url)
+      .then((imageBase64) => {
+        // firebase
+        //   .storage()
+        //   .ref('testFile')
+        //   .put(imageBase64)
+        //   .then(console.log)
+        this.props.listingStore.img.base64 = imageBase64;
+        return firebase
+          .database()
+          .ref('listings')
+          .push(this.props.listingStore)
+          .then(() => {
+            this.props.listingStore.title = '';
+            this.props.listingStore.price = '';
+          });
+      })
+      .catch(console.log);
   }
 
   render() {
