@@ -70,3 +70,16 @@ A common workflow for modifying the firebase schema will be:
 - Merge the feature branch to `develop`. This will then deploy your changes to staging.
 
 
+ESLint
+------
+This project makes use of ESLint to improve code quality. The advised set up is Intellij Ultimate
+Edition with the ESLint plugin. There are several script in the root which will help you get
+set up.
+
+- `initNodeProject.sh` - This is useful if you are creating a new node package that other Selbi
+projects will depend on. Calls the other two scripts.
+- `installTestES6Deps.sh` - This will install mocha and various ES6 dependencies into an existing
+node project. It's recommended to also install these deps globally for an easier life (eg intellij
+will be able to find mocha and ESLint in your global npm rather than in each project so set up is
+slightly easier).
+- `printIntellijSetupInstructions.sh` - Tells you how to set up intellij for ES6.
