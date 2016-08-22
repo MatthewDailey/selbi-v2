@@ -4,3 +4,4 @@ node_modules
 npm-debug.log
 lib
 *.swp
+.DS_Store
