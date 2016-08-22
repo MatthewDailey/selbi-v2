@@ -1,16 +1,51 @@
 
 # react-native-image-reader
 
+This package provides a native module for reading iOS images as base64. 
+
+
 ## Getting started
+To install and use with a React Native project:
 
 `$ npm install react-native-image-reader --save`
 
-### Mostly automatic installation
+`$ rnpm link`
 
-`$ react-native link react-native-image-reader`
 
-### Manual installation
+## Usage 
 
+The module can be imported directly like a normal node package. 
+
+The module exports 1 method `readImage()` which takes a local image asset url and returns a `Promise` which is fulfilled with the base64 representation of that image.
+
+```javascript
+import ImageReader from '@selbi/react-native-image-reader';
+
+
+RNImageReader
+    .readImage(localImageAssetUri)
+    .then((imageBase64) => {
+         // TODO: Your image handling logic.
+     })
+    .catch((error) => {
+         // TODO: Your error handling logic.
+     });
+```
+ 
+
+## Tricky implementation notes:
+
+This module was instantiated using [react-native-create-library](https://github.com/frostney/react-native-create-library) to instantiate the project. The `windows` and `android` directories were deleted.
+
+To properly `#import "RCTBridgeModule.h"` it was necessary to modify the Build Setting's header search paths. This is necssary so that once `rnpm link` adds the module to the React Native Project it can properly import the library files it needs. If you need to do this again, in XCode go to `Build Settings > Search Paths > Header Search Paths` and double click to edit. Then add the path: `$(SRCROOT)/../../../react-native/React/Base`.
+
+Note that it is also necessary to implement the module as a header `<module name>.h` file as well as an implementation file `<module name>.m`.
+
+
+
+## Manual installation
+
+You should not need these instructions but they're here in case you want more info about what `rnpm link` will do once you install the package with node. 
 
 #### iOS
 
@@ -18,36 +53,4 @@
 2. Go to `node_modules` ➜ `react-native-image-reader` and add `RNImageReader.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNImageReader.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
-
-#### Android
-
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `import com.reactlibrary.RNImageReaderPackage;` to the imports at the top of the file
-  - Add `new RNImageReaderPackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':react-native-image-reader'
-  	project(':react-native-image-reader').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-image-reader/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':react-native-image-reader')
-  	```
-
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNImageReader.sln` in `node_modules/react-native-image-reader/windows/RNImageReader.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using Cl.Json.RNImageReader;` to the usings at the top of the file
-  - Add `new RNImageReaderPackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
-
-## Usage
-```javascript
-import RNImageReader from 'react-native-image-reader';
-
-// TODO: What do with the module?
-RNImageReader;
-```
-  
+ 
