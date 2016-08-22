@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Image } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import firebase from 'firebase';
-
-const ReadImageData = require('NativeModules').ReadImageData;
+import ImageReader from '@selbi/react-native-image-reader';
 
 const style = {
   backgroundColor: 'white',
@@ -46,13 +45,9 @@ export function EnterPriceView(props) {
 
 export class AcknowledgePostView extends Component {
   componentDidMount() {
-    ReadImageData.readImage(this.props.listingStore.img.url)
+    ImageReader
+      .readImage(this.props.listingStore.img.url)
       .then((imageBase64) => {
-        // firebase
-        //   .storage()
-        //   .ref('testFile')
-        //   .put(imageBase64)
-        //   .then(console.log)
         this.props.listingStore.img.base64 = imageBase64;
         return firebase
           .database()
