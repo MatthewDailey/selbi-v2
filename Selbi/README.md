@@ -15,6 +15,12 @@ To install deps:
 - `npm i --save-dev react-addons-test-utils`
 - `npm i --save-dev react-dom`
 
+Styling
+-------
+For styling we use Material Design cus it's hella fresh.
+
+- [react-native-material-kit](https://github.com/xinthink/react-native-material-kit)
+
 
 Useful links
 ------------

@@ -44,7 +44,7 @@ const localListingRoutes = [
 
 const testRoutes = [
   {
-    title: 'Login',
+    title: 'Log In',
     nextLabel: 'Submit',
     renderContent: () => <LoginOrRegisterScene />,
     index: 0,

@@ -10,7 +10,6 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary,
     flexDirection: 'column',
-    alignItems: 'center',
   },
   textLabel: {
     color: colors.dark,
