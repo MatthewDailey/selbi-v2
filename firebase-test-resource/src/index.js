@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { expect } from 'chai';
 
 const testUserData = require('../resources/testUser.json');
 const minimalUserData = require('../resources/minimalUser.json');
@@ -97,3 +98,18 @@ class TestFirebaseConnections {
 }
 
 module.exports = new TestFirebaseConnections();
+
+module.exports.deepCopy = deepCopy;
+
+module.exports.expectUnableToStore = function(firebaseStorePromise) {
+  return firebaseStorePromise
+    .then(() => {
+      throw new Error('Should not be able to store.');
+    })
+    .catch((error) => {
+      if (!('code' in error) || error.code !== 'PERMISSION_DENIED') {
+        throw error;
+      }
+    });
+};
+

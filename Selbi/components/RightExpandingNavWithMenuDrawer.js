@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, ListView, Navigator, Text, TouchableHighlight } from 'react-native'
 
+import colors from '../colors';
+
 import NavigationBar from 'react-native-navbar'
 import Drawer from 'react-native-drawer';
 
@@ -35,7 +37,7 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
 
     const getOpenNextFunc = (navigator, routeIndex) => {
         return () => navigator.push(nextRoute(routeIndex));
-    }
+    };
 
     const nextButtonConfig = (navigator, title, routeIndex) => { return {
       title: title,
@@ -67,7 +69,6 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
         }}
         content={this.props.menu}
         tapToClose
-        styles={drawerStyles}
         openDrawerOffset={0.2}
         panOpenMask={0.1}
       >
@@ -77,11 +78,15 @@ export default class RightExpandingNavWithMenuDrawer extends React.Component {
             return (
               // Note this flex:1 style. Super fucking important to make sure listview can scroll.
               // Without it, the view will just bounce back. Who the fuck knows why.
-              <View style={{flex: 1}}>
+              <View style={{flex: 1, backgroundColor: colors.accent}}>
                 <NavigationBar
-                  title={{title: route.title}}
-                  leftButton={ getLeftButton(navigator, route.index) }
-                  rightButton={ getRightButton(navigator, route.index) }
+                  tintColor={ colors.primary }
+                  style={{ backgroundColor: colors.primary }}
+                  title={{title: route.title, tintColor: colors.dark}}
+                  leftButton={ Object.assign(getLeftButton(navigator, route.index),
+                    { tintColor: colors.secondary }) }
+                  rightButton={ Object.assign(getRightButton(navigator, route.index),
+                    { tintColor: colors.secondary })  }
                 />
                 {route.renderContent(getOpenNextFunc(navigator, route.index))}
               </View>

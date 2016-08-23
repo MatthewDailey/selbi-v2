@@ -11,6 +11,29 @@
       ".write" : false
     },
 
+    "images": {
+      ".read": "auth.uid != null",
+      "$imageId" : {
+        ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
+        ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
+        "$other" : {
+          ".validate": false
+        },
+        "owner": {
+          ".validate": "newData.val() === auth.uid && newData.isString()"
+        },
+        "base64": {
+          ".validate": "newData.isString()"
+        },
+        "height": {
+          ".validate": "newData.isNumber()"
+        },
+        "width": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+
     "createAccount": {
       "tasks": {
         // Auth'd users can write, only service account can read.
@@ -345,8 +368,8 @@
       // No read permissions at /listings so listings cannot be iterated over.
       "$listingId": {
         // TODO Limit write to owner and read to allowed readers via userListings.
-        ".write": true,
-        ".read": true,
+        ".write": "auth.uid != null && (!data.exists() || data.child('sellerId').val() === auth.uid)",
+        ".read": "auth.uid != null",
         "title": {
           ".validate": "newData.isString()"
         },
@@ -359,10 +382,22 @@
         "sellerId": {
           ".validate": "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
         },
-        "imageUrls": {
+        "images": {
           ".validate": "newData.hasChildren()",
-          "$arrayIndex": {
-            ".validate": "newData.val().matches(/^http(s)?:/)"
+          "$key": {
+            ".validate": "newData.hasChildren(['imageId', 'height', 'width'])",
+            "$other" : {
+              ".validate": false
+            },
+            "imageId" : {
+              ".validate": "newData.isString()"
+            },
+            "height" : {
+              ".validate": "newData.isNumber()"
+            },
+            "width" : {
+              ".validate": "newData.isNumber()"
+            }
           }
         },
         "status": {
