@@ -4,28 +4,6 @@ const constants = {
   actionColor: '#24CE84'
 };
 
-// Both palletes from lolcolors.com
-const palletteOne = {
-  vividRead: '#E71D36',
-  teal: '#2EC4B6',
-  lightTeal: '#EFFFE9',
-  darkBlue: '#011627',
-};
-
-const palletteTwo = {
-  lightGreen: '#67D5B5',
-  pink: '#EE7785',
-  purple: '#C89EC4',
-  lightBlue: '#84B1ED',
-};
-
-const palleteThree = {
-  vividBlue: '#45d9fd',
-  offWhite: '#f4f4f4',
-  vividRed: '#ee2560',
-  darkBlue: '#08182b',
-}
-
 
 var styles = StyleSheet.create({
   container: {
