@@ -382,10 +382,13 @@
         "sellerId": {
           ".validate": "newData.val() == auth.uid && root.child('/users/' + newData.val()).exists()"
         },
-        "imageUrls": {
+        "images": {
           ".validate": "newData.hasChildren()",
-          "$arrayIndex": {
-            ".validate": "newData.val().matches(/^http(s)?:/)"
+          "$key": {
+            ".validate": true
+//            "imageId" : {},
+//            "height" : {},
+//            "width" : {}
           }
         },
         "status": {

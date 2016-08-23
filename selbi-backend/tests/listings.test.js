@@ -146,10 +146,34 @@ describe('/listings', () => {
     });
   });
 
-  describe('imageUrls', () => {
-    it('Must be list', (done) => {
+  describe('images', () => {
+    it('can create with valid data', (done) => {
       const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.imageUrls = 1;
+      modifiedMinimalUserListing.images = {
+        key1: {
+          imageId: 'fake-image-id',
+          height: 20,
+          width: 20,
+        },
+        key2: {
+          imageId: 'second-image-id',
+          height: 30,
+          width: 30,
+        },
+      };
+      console.log(modifiedMinimalUserListing)
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('listings')
+        .push(modifiedMinimalUserListing)
+        .then(() => done())
+        .catch(done);
+    });
+
+    it('Must be object', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.images = 1;
       storeListingAsMinimalUserAndExpectFailure(
         modifiedMinimalUserListing,
         'ImageUrls cannot be int',
