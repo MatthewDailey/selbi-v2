@@ -1,4 +1,4 @@
-import FirebaseTest, { minimalUserUid, deepCopy } from
+import FirebaseTest, { minimalUserUid, deepCopy, expectUnableToStore } from
   '@selbi/firebase-test-resource';
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
@@ -48,18 +48,14 @@ describe('/images tests', () => {
     it('requires owner', (done) => {
       delete modifiedTestData.owner;
 
-      FirebaseTest
-        .minimalUserApp
-        .database()
-        .ref('images')
-        .push(modifiedTestData)
-        .then(() => {
-          done(new Error('Should not be able to store.'));
-        })
-        .catch((error) => {
-          expect(error.code).to.equal('PERMISSION_DENIED');
-          done();
-        });
+      expectUnableToStore(
+        FirebaseTest
+          .minimalUserApp
+          .database()
+          .ref('images')
+          .push(modifiedTestData))
+        .then(done)
+        .catch(done);
     });
   });
 });
