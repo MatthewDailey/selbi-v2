@@ -83,6 +83,23 @@ describe('/images tests', () => {
         modifiedTestData.owner = testUserUid;
         storeModifiedDataAndExpectFailure(done);
       });
+
+      it('can only update if owner', (done) => {
+        FirebaseTest
+          .minimalUserApp
+          .database()
+          .ref('images')
+          .push(modifiedTestData)
+          .then((newDataRef) => expectUnableToStore(
+              FirebaseTest
+                .testUserApp
+                .database()
+                .ref('images')
+                .child(newDataRef.key)
+                .update({ height: 1 })))
+          .then(done)
+          .catch(done);
+      });
     });
 
     describe('types', () => {

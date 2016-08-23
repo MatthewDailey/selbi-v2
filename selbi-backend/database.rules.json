@@ -13,8 +13,8 @@
 
     "images": {
       ".read": "auth.uid != null",
-      ".write": "auth.uid != null",
       "$imageId" : {
+        ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
         "owner": {
           ".validate": "newData.val() === auth.uid && newData.isString()"
