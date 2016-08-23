@@ -15,7 +15,7 @@
       ".read": true,
       ".write": true,
       "$imageId" : {
-        ".validate": "newData.hasChildren(['owner'])"
+        ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])"
       }
     },
 

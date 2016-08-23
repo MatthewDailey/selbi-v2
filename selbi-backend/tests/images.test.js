@@ -38,16 +38,14 @@ describe('/images tests', () => {
       .catch(done);
   });
 
-  describe('must have all properties', () => {
+  describe('invalid data formats', () => {
     let modifiedTestData = null;
 
     beforeEach(() => {
       modifiedTestData = deepCopy(testImageData);
     });
 
-    it('requires owner', (done) => {
-      delete modifiedTestData.owner;
-
+    function storeModifiedDataAndExpectFailure(done) {
       expectUnableToStore(
         FirebaseTest
           .minimalUserApp
@@ -56,6 +54,28 @@ describe('/images tests', () => {
           .push(modifiedTestData))
         .then(done)
         .catch(done);
+    }
+
+    describe('must have all properties', () => {
+      it('requires owner', (done) => {
+        delete modifiedTestData.owner;
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('requires height', (done) => {
+        delete modifiedTestData.height;
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('requires width', (done) => {
+        delete modifiedTestData.width;
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('requires base64', (done) => {
+        delete modifiedTestData.base64;
+        storeModifiedDataAndExpectFailure(done);
+      });
     });
   });
 });
