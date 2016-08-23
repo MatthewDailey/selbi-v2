@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FirebaseTest  from '@selbi/firebase-test-resource';
+import FirebaseTest, { expectUnableToStore }  from '@selbi/firebase-test-resource';
 
 describe('/listings', () => {
   before(function (done) {
@@ -59,6 +59,25 @@ describe('/listings', () => {
     Promise.all([promiseStoreFirstListing, promiseStoreSecondListing])
       .then(verifyThatBothListingsAreStored)
       .catch(done);
+  });
+
+  it('cannot update another users listing', (done) => {
+    const testListingId = 'modifyAnotherUsersListing';
+    FirebaseTest
+      .minimalUserApp
+      .database()
+      .ref('listings')
+      .child(testListingId)
+      .set(FirebaseTest.getMinimalUserListingOne())
+      .then(() => expectUnableToStore(
+        FirebaseTest
+          .testUserApp
+          .database()
+          .ref('listings')
+          .child(testListingId)
+          .update({ price: 0.1 })))
+    .then(done)
+    .catch(done);
   });
 
   it('cannot have any extra properties', (done) => {

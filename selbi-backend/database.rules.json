@@ -368,8 +368,8 @@
       // No read permissions at /listings so listings cannot be iterated over.
       "$listingId": {
         // TODO Limit write to owner and read to allowed readers via userListings.
-        ".write": true,
-        ".read": true,
+        ".write": "auth.uid != null && (!data.exists() || data.child('sellerId').val() === auth.uid)",
+        ".read": "auth.uid != null",
         "title": {
           ".validate": "newData.isString()"
         },
