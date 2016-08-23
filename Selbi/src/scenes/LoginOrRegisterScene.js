@@ -1,12 +1,24 @@
-import React, { Component, View } from 'react';
+import React, { Component } from 'react';
+import { View, Text, TextInput } from 'react-native';
 import styles from '../../styles';
 
-export default class LoginOrRegisterScene extends Component {
-  render() {
-    return <View style={styles.container} />;
-  }
-}
+export default function LoginOrRegisterScene() {
+  return (
+    <View style={styles.fullScreenContainer}>
+      <Text style={styles.textLabel}>Email</Text>
+      <TextInput
+        style={styles.textInput}
+      />
+      <Text style={styles.textLabel}>Password</Text>
+      <TextInput
+        secureTextEntry
+        style={styles.textInput}
+      />
 
-LoginOrRegisterScene.propTypes = {
-  // TODO
-};
+    </View>
+  );
+}
+//
+// LoginOrRegisterScene.propTypes = {
+//   // TODO
+// };

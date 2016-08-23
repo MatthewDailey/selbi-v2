@@ -8,6 +8,8 @@ import { EnterTitleView, EnterPriceView, AcknowledgePostView }
 import Menu from './components/Menu';
 import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithMenuDrawer';
 
+import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
+
 const listingStore = {
   price: '',
   title: '',
@@ -40,9 +42,17 @@ const localListingRoutes = [
     index: 5 },
 ];
 
-function Application() {
-  return <RightExpandingNavWithMenuDrawer routes={localListingRoutes} menu={<Menu />} />;
-}
+const testRoutes = [
+  {
+    title: 'Login',
+    nextLabel: 'Submit',
+    renderContent: () => <LoginOrRegisterScene />,
+    index: 0,
+  },
+];
 
+function Application() {
+  return <RightExpandingNavWithMenuDrawer routes={testRoutes} menu={<Menu />} />;
+}
 
 AppRegistry.registerComponent('Selbi', () => Application);
