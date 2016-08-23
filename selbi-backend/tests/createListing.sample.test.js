@@ -258,7 +258,11 @@ describe('Listing Samples', () => {
     return createListing(title,
       'desc',
       4.5,
-      ['http://img'],
+      [{
+        imageId: 'first-image-id',
+        height: 20,
+        width: 30,
+      }],
       'category',
       testUserUid,
       FirebaseTest.testUserApp.database());
