@@ -385,10 +385,13 @@
         "images": {
           ".validate": "newData.hasChildren()",
           "$key": {
-            ".validate": true
-//            "imageId" : {},
-//            "height" : {},
-//            "width" : {}
+            ".validate": "newData.hasChildren(['imageId', 'height', 'width'])",
+            "$other" : {
+              ".validate": false
+            },
+            "imageId" : {},
+            "height" : {},
+            "width" : {}
           }
         },
         "status": {

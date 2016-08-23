@@ -149,19 +149,18 @@ describe('/listings', () => {
   describe('images', () => {
     it('can create with valid data', (done) => {
       const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.images = {
-        key1: {
+      modifiedMinimalUserListing.images = [
+        {
           imageId: 'fake-image-id',
           height: 20,
           width: 20,
         },
-        key2: {
+        {
           imageId: 'second-image-id',
           height: 30,
           width: 30,
         },
-      };
-      console.log(modifiedMinimalUserListing)
+      ];
       FirebaseTest
         .minimalUserApp
         .database()
@@ -180,13 +179,24 @@ describe('/listings', () => {
         done);
     });
 
-    it('List must contain urls', (done) => {
-      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.imageUrls = ['normal string'];
-      storeListingAsMinimalUserAndExpectFailure(
-        modifiedMinimalUserListing,
-        'ImageUrls content must be urls',
-        done);
+    describe('images types', () => {
+      it('images must be objects', (done) => {
+        const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+        modifiedMinimalUserListing.images = ['normal string'];
+        storeListingAsMinimalUserAndExpectFailure(
+          modifiedMinimalUserListing,
+          'ImageUrls content must be urls',
+          done);
+      });
+
+      it('can have no extra propertoes', (done) => {
+        const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+        modifiedMinimalUserListing.images[0].extraProp = 'extra';
+        storeListingAsMinimalUserAndExpectFailure(
+          modifiedMinimalUserListing,
+          'Can have no extra properties',
+          done);
+      });
     });
   });
 
