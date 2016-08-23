@@ -56,6 +56,11 @@ describe('/images tests', () => {
         .catch(done);
     }
 
+    it('can have no extra properties', (done) => {
+      modifiedTestData.extraProp = 'cool!';
+      storeModifiedDataAndExpectFailure(done);
+    });
+
     describe('must have all properties', () => {
       it('requires owner', (done) => {
         delete modifiedTestData.owner;
@@ -114,12 +119,12 @@ describe('/images tests', () => {
       });
 
       it('height is int', (done) => {
-        modifiedTestData.height = "a string";
+        modifiedTestData.height = 'a string';
         storeModifiedDataAndExpectFailure(done);
       });
 
       it('width is int', (done) => {
-        modifiedTestData.width = "a string";
+        modifiedTestData.width = 'a string';
         storeModifiedDataAndExpectFailure(done);
       });
     });

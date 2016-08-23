@@ -16,6 +16,9 @@
       "$imageId" : {
         ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
+        "$other" : {
+          ".validate": false
+        },
         "owner": {
           ".validate": "newData.val() === auth.uid && newData.isString()"
         },
