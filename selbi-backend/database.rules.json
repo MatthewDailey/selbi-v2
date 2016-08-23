@@ -11,6 +11,11 @@
       ".write" : false
     },
 
+    "images": {
+      ".read": true,
+      ".write": true
+    },
+
     "createAccount": {
       "tasks": {
         // Auth'd users can write, only service account can read.
