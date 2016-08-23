@@ -12,10 +12,13 @@
     },
 
     "images": {
-      ".read": true,
-      ".write": true,
+      ".read": "auth.uid != null",
+      ".write": "auth.uid != null",
       "$imageId" : {
-        ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])"
+        ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
+        "owner": {
+          ".validate": "newData.val() === auth.uid"
+        }
       }
     },
 

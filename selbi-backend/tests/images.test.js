@@ -1,4 +1,4 @@
-import FirebaseTest, { minimalUserUid, deepCopy, expectUnableToStore } from
+import FirebaseTest, { minimalUserUid, testUserUid, deepCopy, expectUnableToStore } from
   '@selbi/firebase-test-resource';
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
@@ -74,6 +74,13 @@ describe('/images tests', () => {
 
       it('requires base64', (done) => {
         delete modifiedTestData.base64;
+        storeModifiedDataAndExpectFailure(done);
+      });
+    });
+
+    describe('user authentication', () => {
+      it('must write as owner', (done) => {
+        modifiedTestData.owner = testUserUid;
         storeModifiedDataAndExpectFailure(done);
       });
     });

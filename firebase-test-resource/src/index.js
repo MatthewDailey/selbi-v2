@@ -107,7 +107,9 @@ module.exports.expectUnableToStore = function(firebaseStorePromise) {
       throw new Error('Should not be able to store.');
     })
     .catch((error) => {
-      expect(error.code).to.equal('PERMISSION_DENIED');
+      if (!('code' in error) || error.code !== 'PERMISSION_DENIED') {
+        throw error;
+      }
     });
 };
 
