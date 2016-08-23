@@ -179,7 +179,7 @@ describe('/listings', () => {
         done);
     });
 
-    describe('images types', () => {
+    describe('property validation', () => {
       it('images must be objects', (done) => {
         const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
         modifiedMinimalUserListing.images = ['normal string'];
@@ -189,7 +189,7 @@ describe('/listings', () => {
           done);
       });
 
-      it('can have no extra propertoes', (done) => {
+      it('can have no extra properties', (done) => {
         const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
         modifiedMinimalUserListing.images[0].extraProp = 'extra';
         storeListingAsMinimalUserAndExpectFailure(
@@ -197,6 +197,64 @@ describe('/listings', () => {
           'Can have no extra properties',
           done);
       });
+
+      describe('required', () => {
+        it('imageId', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].imageId;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('height', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].height;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('width', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].width;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+      });
+
+      describe('type', () => {
+        it('imageId is string', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].imageId = 1;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('height is number', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].height = 'a string';
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('width is number', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].width = 'a string';
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+      })
     });
   });
 

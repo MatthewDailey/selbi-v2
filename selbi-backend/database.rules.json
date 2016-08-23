@@ -389,9 +389,15 @@
             "$other" : {
               ".validate": false
             },
-            "imageId" : {},
-            "height" : {},
-            "width" : {}
+            "imageId" : {
+              ".validate": "newData.isString()"
+            },
+            "height" : {
+              ".validate": "newData.isNumber()"
+            },
+            "width" : {
+              ".validate": "newData.isNumber()"
+            }
           }
         },
         "status": {
