@@ -94,6 +94,8 @@ class TestFirebaseConnections {
       .child(this.minimalUserUid)
       .set(this.getMinimalUserData());
   }
+
 }
 
 module.exports = new TestFirebaseConnections();
+module.exports.deepCopy = deepCopy;

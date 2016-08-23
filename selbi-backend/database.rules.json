@@ -13,7 +13,10 @@
 
     "images": {
       ".read": true,
-      ".write": true
+      ".write": true,
+      "$imageId" : {
+        ".validate": "newData.hasChildren(['owner'])"
+      }
     },
 
     "createAccount": {
