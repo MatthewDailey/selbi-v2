@@ -84,6 +84,28 @@ describe('/images tests', () => {
         storeModifiedDataAndExpectFailure(done);
       });
     });
+
+    describe('types', () => {
+      it('owner is string', (done) => {
+        modifiedTestData.owner = 1;
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('base64 is string', (done) => {
+        modifiedTestData.base64 = 1;
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('height is int', (done) => {
+        modifiedTestData.height = "a string";
+        storeModifiedDataAndExpectFailure(done);
+      });
+
+      it('width is int', (done) => {
+        modifiedTestData.width = "a string";
+        storeModifiedDataAndExpectFailure(done);
+      });
+    });
   });
 });
 

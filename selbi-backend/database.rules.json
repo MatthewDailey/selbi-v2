@@ -17,7 +17,16 @@
       "$imageId" : {
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
         "owner": {
-          ".validate": "newData.val() === auth.uid"
+          ".validate": "newData.val() === auth.uid && newData.isString()"
+        },
+        "base64": {
+          ".validate": "newData.isString()"
+        },
+        "height": {
+          ".validate": "newData.isNumber()"
+        },
+        "width": {
+          ".validate": "newData.isNumber()"
         }
       }
     },
