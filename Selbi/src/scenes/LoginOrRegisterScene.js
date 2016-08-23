@@ -1,9 +1,9 @@
 import React, { Component, View } from 'react';
+import styles from '../../styles';
 
 export default class LoginOrRegisterScene extends Component {
   render() {
-    // TODO
-    return <View />;
+    return <View style={styles.container} />;
   }
 }
 
