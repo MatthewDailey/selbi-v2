@@ -9,6 +9,7 @@ import Menu from './components/Menu';
 import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithMenuDrawer';
 
 import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
+import ListingScene from './src/scenes/ListingsScene';
 
 const listingStore = {
   price: '',
@@ -46,7 +47,7 @@ const testRoutes = [
   {
     title: 'Log In',
     nextLabel: 'Submit',
-    renderContent: () => <LoginOrRegisterScene />,
+    renderContent: () => <ListingScene />,
     index: 0,
   },
 ];

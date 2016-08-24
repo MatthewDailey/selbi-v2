@@ -23,7 +23,7 @@ const paletteThree = {
 };
 
 export default Object.assign(
-  paletteOne,
+  paletteThree,
   {
     white: '#ffffff',
     black: '#000',
