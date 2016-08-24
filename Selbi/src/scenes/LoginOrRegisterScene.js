@@ -1,50 +1,51 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { MKButton, MKTextField } from 'react-native-material-kit';
+import { View } from 'react-native';
+import { mdl, MKButton, setTheme } from 'react-native-material-kit';
 
 import styles from '../../styles';
 import colors from '../../colors';
+
+setTheme({
+  primaryColor: colors.primaryColor,
+});
+
+const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
+  .withPassword(true)
+  .withPlaceholder('Password')
+  .withHighlightColor(colors.white)
+  .withStyle({
+    height: 48,  // have to do it on iOS
+    marginTop: 10,
+  })
+  .withOnTextChange((e) => console.log('TextChange', e))
+  .build();
+
+const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
+  .withPlaceholder('Email')
+  .withHighlightColor(colors.white)
+  .withStyle({
+    height: 48,  // have to do it on iOS
+    marginTop: 10,
+  })
+  .withOnTextChange((e) => console.log('TextChange', e))
+  .build();
+
+const SubmitButton = MKButton.coloredFlatButton()
+  .withText('Submit')
+  .withOnPress(() => {
+    console.log("Hi, it's a colored button!");
+  })
+  .build();
 
 export default function LoginOrRegisterScene() {
   return (
     <View style={styles.fullScreenContainer}>
       <View style={{ margin: 16 }}>
-        <MKTextField
-          tintColor={colors.white}
-          highlightColor={colors.secondary}
-          placeholder="Email"
-          floatingLabelEnabled
-        />
-        <View style={{ marginTop: 16 }}>
-          <MKTextField
-            tintColor={colors.white}
-            highlightColor={colors.secondary}
-            placeholder="Password"
-            secureTextEntry
-            floatingLabelEnabled
-          />
+        <EmailInput />
+        <PasswordInput />
+        <View style={{ margin: 16 }}>
+          <SubmitButton />
         </View>
-        <MKButton
-          borderRadius={2}
-          style={{ marginTop: 16 }}
-          ripple
-          rippleColor={`${colors.secondary}aa`}
-          backgroundColor={colors.white}
-          shadowRadius={2}
-          shadowOffset={{ width: 0, height: 3 }}
-          shadowOpacity={0.7}
-          shadowColor={colors.dark}
-          onPress={() => {
-            console.log('hi, raised button!');
-          }}
-        >
-          <Text
-            pointerEvents="none"
-            style={{ color: colors.primary, textAlign: 'center', fontWeight: 'bold', margin: 5 }}
-          >
-            Submit
-          </Text>
-        </MKButton>
       </View>
     </View>
   );
