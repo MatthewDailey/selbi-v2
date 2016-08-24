@@ -13,9 +13,9 @@ const drawerStyles = {
 
 
 export default class RightExpandingNavWithMenuDrawer extends React.Component {
-  openMenu = () => {
-    this.drawer.open()
-  };
+  openMenu() {
+    this.drawer.open();
+  }
 
   render() {
     const menuButtonConfig = () => { return {

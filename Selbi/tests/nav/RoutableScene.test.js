@@ -4,9 +4,9 @@ import chai, { expect } from 'chai';
 import { spy, mock } from 'sinon';
 import dirtyChai from 'dirty-chai';
 
-chai.use(dirtyChai);
-
 import RoutableScene from '../../src/nav/RoutableScene';
+
+chai.use(dirtyChai);
 
 class DummyRoutableScene extends RoutableScene {
   renderWithNavBar() {
@@ -91,8 +91,6 @@ describe('<RoutableScene />', () => {
       expect(navBar.props.rightButton).to.exist();
       expect(navBar.props.rightButton.title).to.equal(routeLinks.home.title);
       expect(navBar.props.rightButton.handler.name).to.equal('bound goHome');
-      console.log(wrapper.get(0));
-      console.log(navBar.props.rightButton.handler);
     });
 
     it('will disable with routeLinks but without rightIs', () => {
@@ -142,14 +140,23 @@ describe('<RoutableScene />', () => {
       resetTo: () => {},
     };
 
-    const navigatorMock = mock(navigatorApi);
+    let navigatorMock = mock(navigatorApi);
 
     beforeEach(() => {
+      navigatorMock = mock(navigatorApi);
+    });
+
+    afterEach(() => {
       navigatorMock.restore();
     });
 
     it('will call openMenu on goMenu', () => {
       const openMenuSpy = spy();
+
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('popToRoute').never();
+      navigatorMock.expects('popToTop').never();
       const scene = new RoutableScene({
         openMenu: openMenuSpy,
         leftIs: 'menu',
@@ -158,16 +165,109 @@ describe('<RoutableScene />', () => {
       scene.goMenu();
 
       expect(openMenuSpy.calledOnce).is.true();
+      navigatorMock.verify();
+    });
+
+    it('will call push on goNext', () => {
+      const nextRoute = {};
+      navigatorMock.expects('push').withArgs(nextRoute);
+
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('popToRoute').never();
+      navigatorMock.expects('popToTop').never();
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        navigator: navigatorApi,
+        routeLinks: {
+          next: {
+            getRoute: () => nextRoute,
+            title: 'next',
+          },
+        },
+      });
+      scene.goNext();
+      navigatorMock.verify();
     });
 
     it('will call navigator.pop on goBack', () => {
       navigatorMock.expects('pop');
+
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('push').never();
+      navigatorMock.expects('popToRoute').never();
+      navigatorMock.expects('popToTop').never();
       const scene = new RoutableScene({
         leftIs: 'back',
         navigator: navigatorApi,
         routeLinks: {},
       });
       scene.goBack();
+      navigatorMock.verify();
+    });
+
+    it('will call navigator.popToRoute on goBack with routeLinks', () => {
+      const backRoute = {};
+      navigatorMock.expects('popToRoute').withArgs(backRoute);
+
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('push').never();
+      navigatorMock.expects('popToTop').never();
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        navigator: navigatorApi,
+        routeLinks: {
+          back: {
+            getRoute: () => backRoute,
+            title: 'back',
+          },
+        },
+      });
+      scene.goBack();
+      navigatorMock.verify();
+    });
+
+    it('will call navigator.popToTop on goHome with no route', () => {
+      navigatorMock.expects('popToTop');
+
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('push').never();
+      navigatorMock.expects('popToRoute').never();
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        rightIs: 'home',
+        navigator: navigatorApi,
+        routeLinks: {
+          home: {
+            title: 'go home',
+          },
+        },
+      });
+      scene.goHome();
+      navigatorMock.verify();
+    });
+
+    it('will call navigator.resetTo on goHome with route', () => {
+      const homeRoute = {};
+      navigatorMock.expects('resetTo').withArgs(homeRoute);
+
+      navigatorMock.expects('popToTop').never();
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('push').never();
+      navigatorMock.expects('popToRoute').never();
+      const scene = new RoutableScene({
+        leftIs: 'menu',
+        navigator: navigatorApi,
+        routeLinks: {
+          home: {
+            title: 'home',
+            getRoute: () => homeRoute,
+          },
+        },
+      });
+      scene.goHome();
       navigatorMock.verify();
     });
   });

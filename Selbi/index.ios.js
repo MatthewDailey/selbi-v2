@@ -146,7 +146,7 @@ routeLinks[d.id] = {
     title: 'go to e',
     getRoute: () => e,
   },
-  prev: {
+  back: {
     getRoute: () => b,
   },
 };
