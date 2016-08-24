@@ -10,7 +10,7 @@ export default class RoutableScene extends Component {
     const leftButton = {
       tintColor: colors.secondary,
     };
-    if (this.props.leftIs === 'menu') {
+    if (this.props.leftIs === 'menu' && this.props.openMenu) {
       leftButton.title = 'Menu';
       leftButton.handler = this.props.openMenu;
       return leftButton;
@@ -83,7 +83,7 @@ export default class RoutableScene extends Component {
 
 RoutableScene.defaultProps = {
   routeLinks: {},
-  leftIs: 'back',
+  leftIs: undefined,
   rightIs: 'next',
 };
 
