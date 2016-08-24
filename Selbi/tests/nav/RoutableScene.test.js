@@ -270,5 +270,10 @@ describe('<RoutableScene />', () => {
       scene.goHome();
       navigatorMock.verify();
     });
+
+    it('will log name', () => {
+      const coolObject = {};
+      console.log(coolObject.name)
+    })
   });
 });

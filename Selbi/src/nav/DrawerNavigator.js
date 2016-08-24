@@ -5,7 +5,7 @@ import { View, ListView, Navigator, Text, TouchableHighlight } from 'react-nativ
 import Drawer from 'react-native-drawer';
 
 
-export default class NavBar extends React.Component {
+export default class DrawerNavigator extends React.Component {
   constructor(props) {
     super(props);
     this.openMenu = this.openMenu.bind(this);
@@ -33,7 +33,6 @@ export default class NavBar extends React.Component {
             this.props.routeLinks[route.id],
             this.openMenu)}
         />
-
       </Drawer>
     );
   }
