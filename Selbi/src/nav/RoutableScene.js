@@ -57,9 +57,12 @@ export default class RoutableScene extends Component {
 
   goHome() {
     if (this.props.routeLinks.home) {
-      this.props.navigator.resetTo(this.props.routeLinks.home.getRoute());
-    } else {
-      this.props.navigator.popToTop();
+      const homeRoute = this.props.routeLinks.home.getRoute();
+      if (homeRoute) {
+        this.props.navigator.resetTo(homeRoute);
+      } else {
+        this.props.navigator.popToTop();
+      }
     }
   }
 
