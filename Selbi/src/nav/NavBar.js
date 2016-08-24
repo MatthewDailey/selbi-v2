@@ -28,6 +28,7 @@ export default class NavBar extends React.Component {
             this.props.routeLinks[route.id],
             this.openMenu)}
         />
+
       </Drawer>
     );
   }

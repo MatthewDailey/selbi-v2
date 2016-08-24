@@ -4,8 +4,7 @@ import { mdl, MKButton, setTheme } from 'react-native-material-kit';
 
 import styles from '../../styles';
 import colors from '../../colors';
-
-import RoutableScene from './RoutableScene';
+import RoutableScene from '../nav/RoutableScene';
 
 setTheme({
   primaryColor: colors.primaryColor,

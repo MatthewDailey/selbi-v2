@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import { View, ListView, Navigator, Text, TouchableHighlight } from 'react-native'
+import { View } from 'react-native';
 
-import NavigationBar from 'react-native-navbar'
+import NavigationBar from '@selbi/react-native-navbar';
 
 import colors from '../../colors';
 
 export default class RoutableScene extends Component {
-  static defaultProps = {
-    routeLinks: {},
-    leftIs:'back',
-    rightIs:'next',
-  };
-
   getLeftButton() {
     const leftButton = {
       tintColor: colors.secondary,
@@ -33,11 +27,11 @@ export default class RoutableScene extends Component {
     const rightButton = {
       tintColor: colors.secondary,
     };
-    if (this.props.routeLinks.next && this.props.rightIs == 'next') {
+    if (this.props.routeLinks.next && this.props.rightIs === 'next') {
       rightButton.handler = () => this.goNext();
       rightButton.title = this.props.routeLinks.next.title;
       return rightButton;
-    } else if (this.props.routeLinks.home && this.props.rightIs == 'home') {
+    } else if (this.props.routeLinks.home && this.props.rightIs === 'home') {
       rightButton.handler = () => this.goHome();
       rightButton.title = this.props.routeLinks.home.title;
       return rightButton;
@@ -49,7 +43,7 @@ export default class RoutableScene extends Component {
 
   goNext() {
     if (this.props.routeLinks.next) {
-      this.props.navigator.push(this.props.routeLinks.next.getRoute(Math.random() >= 0.5));
+      this.props.navigator.push(this.props.routeLinks.next.getRoute());
     }
   }
 
@@ -73,11 +67,11 @@ export default class RoutableScene extends Component {
     return (
       // Note this flex:1 style. Super fucking important to make sure listview can scroll.
       // Without it, the view will just bounce back. Who the fuck knows why.
-      <View style={{flex: 1, backgroundColor: colors.accent}}>
+      <View style={{ flex: 1, backgroundColor: colors.accent }}>
         <NavigationBar
-          tintColor={ colors.primary }
+          tintColor={colors.primary}
           style={{ backgroundColor: colors.primary }}
-          title={{title: this.props.title, tintColor: colors.dark}}
+          title={{ title: this.props.title, tintColor: colors.dark }}
           leftButton={this.getLeftButton()}
           rightButton={this.getRightButton()}
         />
@@ -87,8 +81,17 @@ export default class RoutableScene extends Component {
   }
 }
 
+RoutableScene.defaultProps = {
+  routeLinks: {},
+  leftIs: 'back',
+  rightIs: 'next',
+};
+
 RoutableScene.propTypes = {
+  title: React.PropTypes.string,
   openMenu: React.PropTypes.func,
   navigator: React.PropTypes.object,
   routeLinks: React.PropTypes.object,
+  leftIs: React.PropTypes.oneOf(['back', 'menu']),
+  rightIs: React.PropTypes.oneOf(['next', 'home']),
 };
