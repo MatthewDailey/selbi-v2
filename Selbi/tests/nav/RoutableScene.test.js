@@ -88,5 +88,35 @@ describe('<RoutableScene />', () => {
       expect(navBar.props.rightButton).to.exist();
       expect(navBar.props.rightButton.title).to.equal(routeLinks.home.title);
     });
+
+    it('will disable with routeLinks but without rightIs', () => {
+      const routeLinks = {
+        home: {
+          route: { /* dummy route */ },
+          title: 'home dummy',
+        },
+        next: {
+          route: { /* dummy route */ },
+          title: 'next dummy',
+        },
+      };
+      const wrapper = shallow(<DummyRoutableScene routeLinks={routeLinks} />);
+      const navBar = wrapper.find('NavigationBar').get(0);
+      expect(navBar.props.rightButton).to.not.exist();
+    });
+
+    it('will disable with rightIs=home but no routeLinks', () => {
+      const wrapper = shallow(<DummyRoutableScene rightIs="home" />);
+      const navBar = wrapper.find('NavigationBar').get(0);
+
+      expect(navBar.props.leftButton).to.not.exist();
+    });
+
+    it('will disable with rightIs=next but no routeLinks', () => {
+      const wrapper = shallow(<DummyRoutableScene rightIs="next" />);
+      const navBar = wrapper.find('NavigationBar').get(0);
+
+      expect(navBar.props.leftButton).to.not.exist();
+    });
   });
 });

@@ -87,7 +87,7 @@ export default class RoutableScene extends Component {
 RoutableScene.defaultProps = {
   routeLinks: {},
   leftIs: undefined,
-  rightIs: 'next',
+  rightIs: undefined,
 };
 
 RoutableScene.propTypes = {
