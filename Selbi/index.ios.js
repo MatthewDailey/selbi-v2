@@ -62,6 +62,7 @@ const a = {
       openMenu={openMenu}
       title="A"
       leftIs="menu"
+      rightIs="next"
     />,
 }
 
@@ -73,6 +74,8 @@ const b = {
       routeLinks={routeLinks}
       openMenu={openMenu}
       title="B"
+      leftIs="back"
+      rightIs="next"
     />,
 }
 
@@ -84,6 +87,8 @@ const c = {
       routeLinks={routeLinks}
       openMenu={openMenu}
       title="C"
+      leftIs="back"
+      rightIs="next"
     />,
 }
 
@@ -95,6 +100,8 @@ const d = {
       routeLinks={routeLinks}
       openMenu={openMenu}
       title="d"
+      leftIs="back"
+      rightIs="next"
     />,
 }
 
@@ -106,6 +113,7 @@ const e = {
       routeLinks={routeLinks}
       openMenu={openMenu}
       title="e"
+      leftIs="back"
       rightIs="home"
     />,
 }

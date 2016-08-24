@@ -6,9 +6,14 @@ import Drawer from 'react-native-drawer';
 
 
 export default class NavBar extends React.Component {
-  openMenu = () => {
-    this.drawer.open()
-  };
+  constructor(props) {
+    super(props);
+    this.openMenu = this.openMenu.bind(this);
+  }
+
+  openMenu() {
+    this.drawer.open();
+  }
 
   render() {
     return (

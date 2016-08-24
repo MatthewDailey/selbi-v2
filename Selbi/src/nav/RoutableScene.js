@@ -6,17 +6,25 @@ import NavigationBar from '@selbi/react-native-navbar';
 import colors from '../../colors';
 
 export default class RoutableScene extends Component {
+  constructor(props) {
+    super(props);
+    this.goMenu = this.goMenu.bind(this)
+    this.goHome = this.goHome.bind(this);
+    this.goNext = this.goNext.bind(this);
+    this.goBack = this.goBack.bind(this);
+  }
+
   getLeftButton() {
     const leftButton = {
       tintColor: colors.secondary,
     };
     if (this.props.leftIs === 'menu' && this.props.openMenu) {
       leftButton.title = 'Menu';
-      leftButton.handler = this.props.openMenu;
+      leftButton.handler = this.goMenu;
       return leftButton;
     } else if (this.props.leftIs === 'back') {
       leftButton.title = '< Back';
-      leftButton.handler = () => this.goBack();
+      leftButton.handler = this.goBack;
       return leftButton;
     }
     // Return nothing. No left button.
@@ -27,18 +35,23 @@ export default class RoutableScene extends Component {
     const rightButton = {
       tintColor: colors.secondary,
     };
+
     if (this.props.routeLinks.next && this.props.rightIs === 'next') {
-      rightButton.handler = () => this.goNext();
+      rightButton.handler = this.goNext;
       rightButton.title = this.props.routeLinks.next.title;
       return rightButton;
     } else if (this.props.routeLinks.home && this.props.rightIs === 'home') {
-      rightButton.handler = () => this.goHome();
+      rightButton.handler = this.goHome;
       rightButton.title = this.props.routeLinks.home.title;
       return rightButton;
     }
 
     // Return nothing. No right button.
     return undefined;
+  }
+
+  goMenu() {
+    this.props.openMenu();
   }
 
   goNext() {
