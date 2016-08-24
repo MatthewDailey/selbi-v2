@@ -5,6 +5,8 @@ import { mdl, MKButton, setTheme } from 'react-native-material-kit';
 import styles from '../../styles';
 import colors from '../../colors';
 
+import RoutableScene from './RoutableScene';
+
 setTheme({
   primaryColor: colors.primaryColor,
 });
@@ -30,27 +32,28 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withOnTextChange((e) => console.log('TextChange', e))
   .build();
 
-const SubmitButton = MKButton.coloredFlatButton()
-  .withText('Submit')
-  .withOnPress(() => {
-    console.log("Hi, it's a colored button!");
-  })
-  .build();
+export default class LoginOrRegisterScene extends RoutableScene {
+  renderWithNavBar() {
+    const SubmitButton = MKButton.coloredFlatButton()
+      .withText('Submit')
+      .withOnPress(() => {
+        this.goNext();
+        console.log("Hi, it's a colored button!");
+      })
+      .build();
 
-export default function LoginOrRegisterScene() {
-  return (
-    <View style={styles.fullScreenContainer}>
-      <View style={{ margin: 16 }}>
-        <EmailInput />
-        <PasswordInput />
+    return (
+      <View style={styles.fullScreenContainer}>
         <View style={{ margin: 16 }}>
-          <SubmitButton />
+          <EmailInput />
+          <PasswordInput />
+          <View style={{ margin: 16 }}>
+            <SubmitButton />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  }
 }
-//
-// LoginOrRegisterScene.propTypes = {
-//   // TODO
-// };
+
+

@@ -10,6 +10,7 @@ import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithM
 
 import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
+import NavBar from './src/nav/NavBar';
 
 const listingStore = {
   price: '',
@@ -52,8 +53,112 @@ const testRoutes = [
   },
 ];
 
+const a = {
+  id: 'a',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <LoginOrRegisterScene
+      navigator={navigator}
+      routeLinks={routeLinks}
+      openMenu={openMenu}
+      title="A"
+      leftIs="menu"
+    />,
+}
+
+const b = {
+  id: 'b',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <LoginOrRegisterScene
+      navigator={navigator}
+      routeLinks={routeLinks}
+      openMenu={openMenu}
+      title="B"
+    />,
+}
+
+const c = {
+  id: 'c',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <LoginOrRegisterScene
+      navigator={navigator}
+      routeLinks={routeLinks}
+      openMenu={openMenu}
+      title="C"
+    />,
+}
+
+const d = {
+  id: 'd',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <LoginOrRegisterScene
+      navigator={navigator}
+      routeLinks={routeLinks}
+      openMenu={openMenu}
+      title="d"
+    />,
+}
+
+const e = {
+  id: 'e',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <LoginOrRegisterScene
+      navigator={navigator}
+      routeLinks={routeLinks}
+      openMenu={openMenu}
+      title="e"
+      rightIs="home"
+    />,
+}
+
+const routeLinks = {};
+
+routeLinks[a.id] = {
+  next: {
+    title: 'go to b',
+    getRoute: () => b,
+  },
+};
+
+routeLinks[b.id] = {
+  next: {
+    title: 'go to c',
+    getRoute: () => c,
+  },
+};
+
+routeLinks[c.id] = {
+  next: {
+    title: 'go to d or e',
+    getRoute: (shouldSkip) => shouldSkip ? e : d,
+  },
+};
+
+routeLinks[d.id] = {
+  next: {
+    title: 'go to e',
+    getRoute: () => e,
+  },
+  prev: {
+    getRoute: () => b,
+  },
+};
+
+routeLinks[e.id] = {
+  home: {
+    title: 'go home to a',
+    getRoute: () => a,
+  },
+};
+
+console.log("ROUTE LINKS");
+console.log(routeLinks);
+
+function NavApp() {
+  return <NavBar initialRoute={a} routeLinks={routeLinks} menu={<Menu />} />;
+}
+
 function Application() {
   return <RightExpandingNavWithMenuDrawer routes={testRoutes} menu={<Menu />} />;
 }
 
-AppRegistry.registerComponent('Selbi', () => Application);
+AppRegistry.registerComponent('Selbi', () => NavApp);
