@@ -273,7 +273,6 @@ describe('<RoutableScene />', () => {
 
     it('will log name', () => {
       const coolObject = {};
-      console.log(coolObject.name)
-    })
+    });
   });
 });
