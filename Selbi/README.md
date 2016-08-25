@@ -33,6 +33,8 @@ For styling we use Material Design cus it's hella fresh.
 
 - [react-native-material-kit](https://github.com/xinthink/react-native-material-kit)
 
+For icons we use [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons).
+
 
 Useful links
 ------------

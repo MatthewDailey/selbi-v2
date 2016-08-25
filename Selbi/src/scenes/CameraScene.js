@@ -3,15 +3,17 @@ import {
   Dimensions,
   StyleSheet,
   Image,
-  Text,
   View,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import {
-  MKProgress,
+  MKButton,
   MKSpinner,
+  setTheme,
 } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
+import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import {
   setNewListingImageLocalUri,
@@ -37,6 +39,10 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 40,
   },
+});
+
+setTheme({
+  primaryColor: colors.primaryColor,
 });
 
 const spinnerSize = 80;
@@ -87,6 +93,25 @@ export class SimpleCamera extends RoutableScene {
       return undefined;
     };
 
+    const getShutterButton = () => {
+      const ColoredRaisedButton = MKButton
+        .coloredFab()
+        .withOnPress(takePicture)
+        .build();
+
+      return (
+        <View
+          style={{
+            bottom: 50,
+          }}
+        >
+          <ColoredRaisedButton>
+            <Icon name="camera" size={20} color={colors.secondary} />
+          </ColoredRaisedButton>
+        </View>
+      );
+    };
+
     return (
       <View
         style={styles.container}
@@ -105,12 +130,8 @@ export class SimpleCamera extends RoutableScene {
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
         >
-          <Text
-            style={styles.capture}
-            onPress={takePicture}
-          >
-            [CAPTURE]
-          </Text>
+
+          {getShutterButton()}
         </Camera>
         {getSpinner()}
       </View>

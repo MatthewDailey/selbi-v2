@@ -31,7 +31,7 @@ const cameraScene = {
       leftIs="back"
       rightIs="next"
     />),
-}
+};
 
 const imageScene = {
   id: 'c',
