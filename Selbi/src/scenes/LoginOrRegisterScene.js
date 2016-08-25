@@ -1,6 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { mdl, MKButton, setTheme } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -44,6 +45,9 @@ export default class LoginOrRegisterScene extends RoutableScene {
     return (
       <View style={styles.fullScreenContainer}>
         <View style={{ margin: 16 }}>
+          <Icon.Button name="facebook" backgroundColor="#3b5998" onPress={this.loginWithFacebook}>
+            Sign in with Facebook
+          </Icon.Button>
           <EmailInput />
           <PasswordInput />
           <View style={{ margin: 16 }}>

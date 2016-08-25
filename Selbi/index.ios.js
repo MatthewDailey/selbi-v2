@@ -4,6 +4,7 @@ import { createStore } from 'redux';
 
 import Menu from './components/Menu';
 
+import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
@@ -16,7 +17,7 @@ const withProps = withNavigatorProps.bind(undefined, createStore(newListingReduc
 const listingScene = {
   id: 'a',
   renderContent: withProps(
-    <ListingScene
+    <LoginOrRegisterScene
       title="Listings"
       leftIs="menu"
       rightIs="next"
