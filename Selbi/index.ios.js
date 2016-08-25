@@ -10,7 +10,7 @@ import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithM
 
 import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
-import NavBar from './src/nav/DrawerNavigator';
+import DrawerNavigator from './src/nav/DrawerNavigator';
 
 const listingStore = {
   price: '',
