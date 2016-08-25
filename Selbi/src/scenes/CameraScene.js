@@ -7,6 +7,10 @@ import {
   View,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import {
+  MKProgress,
+  MKSpinner,
+} from 'react-native-material-kit';
 
 import RoutableScene from '../nav/RoutableScene';
 import {
@@ -34,6 +38,8 @@ const styles = StyleSheet.create({
     margin: 40,
   },
 });
+
+const spinnerSize = 80;
 
 
 export class SimpleCamera extends RoutableScene {
@@ -64,8 +70,34 @@ export class SimpleCamera extends RoutableScene {
         .catch(err => console.error(err));
     };
 
+    const getSpinner = () => {
+      if (this.state.capturing) {
+        return (
+          <MKSpinner
+            style={{
+              flex: 1,
+              top: 50,
+              left: (this.state.viewWidth - spinnerSize) / 2,
+              height: spinnerSize,
+              width: spinnerSize,
+              position: 'absolute',
+            }}
+          />);
+      }
+      return undefined;
+    };
+
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onLayout={(event) => {
+          const { width, height } = event.nativeEvent.layout;
+          this.setState({
+            viewWidth: width,
+            viewHeight: height,
+          });
+        }}
+      >
         <Camera
           ref={(cam) => {
             this.camera = cam;
@@ -80,6 +112,7 @@ export class SimpleCamera extends RoutableScene {
             [CAPTURE]
           </Text>
         </Camera>
+        {getSpinner()}
       </View>
     );
   }
