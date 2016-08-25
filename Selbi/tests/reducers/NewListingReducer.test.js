@@ -10,6 +10,7 @@ import newListingReducer, {
   setNewListingLocation,
   setNewListingImageBase64,
   setNewListingImageDimensions,
+  setNewListingImageLocalUri,
 } from '../../src/reducers/NewListingReducer';
 
 chai.use(dirtyChai);
@@ -59,7 +60,7 @@ describe('NewListingReducer', () => {
       .get('image').base64).to.equal(imageBase64);
   });
 
-  it('case set image base64 and dimensions', () => {
+  it('can set image base64 and dimensions', () => {
     const imageBase64 = 'fdsasfadsf';
     const height = 1;
     const width = 2;
@@ -72,6 +73,13 @@ describe('NewListingReducer', () => {
     expect(imageState.base64).to.equal(imageBase64);
     expect(imageState.height).to.equal(height);
     expect(imageState.width).to.equal(width);
+  });
+
+  it('can set image local uri', () => {
+    const imageUri = 'image uri';
+
+    expect(newListingReducer(initialState, setNewListingImageLocalUri(imageUri)).get('imageUri'))
+      .to.equal(imageUri);
   });
 
   describe('as store', () => {

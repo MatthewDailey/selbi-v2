@@ -36,6 +36,7 @@ const NL_SET_DESCRIPTION = 'new-listing-set-description';
 const NL_SET_LOCATION = 'new-listing-set-location';
 const NL_SET_IMAGE_BASE64 = 'new-listing-set-image-base64';
 const NL_SET_IMAGE_DIMENSIONS = 'new-listing-set-image-dimensions';
+const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
 
 const initialState = Immutable.Map({
   status: 'building',
@@ -71,6 +72,8 @@ export default function (futureListingState = initialState, action) {
           height: action.height,
           width: action.width,
         }));
+    case NL_SET_IMAGE_URI:
+      return futureListingState.set('imageUri', action.imageUri)
     default:
       return futureListingState;
   }
@@ -123,5 +126,12 @@ export function setNewListingImageDimensions(imageHeight, imageWidth) {
     type: NL_SET_IMAGE_DIMENSIONS,
     height: imageHeight,
     width: imageWidth,
+  };
+}
+
+export function setNewListingImageLocalUri(imageLocalUri) {
+  return {
+    type: NL_SET_IMAGE_URI,
+    imageUri: imageLocalUri,
   };
 }
