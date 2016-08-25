@@ -9,7 +9,10 @@ import {
 import Camera from 'react-native-camera';
 
 import RoutableScene from '../nav/RoutableScene';
-import { setNewListingImageLocalUri } from '../reducers/NewListingReducer';
+import {
+  setNewListingImageLocalUri,
+  setNewListingImageDimensions,
+} from '../reducers/NewListingReducer';
 
 const styles = StyleSheet.create({
   container: {
@@ -82,17 +85,16 @@ export class SimpleCamera extends RoutableScene {
   }
 }
 
-export class SimpleImageView extends Component {
-  render() {
+export class SimpleImageView extends RoutableScene {
+  renderWithNavBar() {
     return (
       <Image
         onLayout={(event) => {
-          const {width, height} = event.nativeEvent.layout;
-          this.props.listingStore.img.width = width;
-          this.props.listingStore.img.height = height;
+          const { width, height } = event.nativeEvent.layout;
+          this.props.store.dispatch(setNewListingImageDimensions(height, width));
         }}
         style={styles.preview}
-        source={{ uri: this.props.listingStore.img.url }}
+        source={{ uri: this.props.store.getState().get('imageUri')}}
       />
     );
   }

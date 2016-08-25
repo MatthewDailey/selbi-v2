@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import Menu from './components/Menu';
 
 import ListingScene from './src/scenes/ListingsScene';
-import { SimpleCamera } from './src/scenes/CameraScene';
+import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 
 import newListingReducer from './src/reducers/NewListingReducer';
@@ -15,10 +15,7 @@ const newListingStore = createStore(newListingReducer);
 const listingScene = {
   id: 'a',
   renderContent: (navigator, routeLinks, openMenu) =>
-    <ListingScene
-      navigator={navigator}
-      routeLinks={routeLinks}
-      openMenu={openMenu}
+    <ListingScene navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
       title="Listings"
       leftIs="menu"
       rightIs="next"
@@ -28,15 +25,24 @@ const listingScene = {
 const cameraScene = {
   id: 'b',
   renderContent: (navigator, routeLinks, openMenu) =>
-    <SimpleCamera
-      navigator={navigator}
-      routeLinks={routeLinks}
-      openMenu={openMenu}
+    <SimpleCamera navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
       store={newListingStore}
-      title="B"
+      title="Take a photo"
       leftIs="back"
+      rightIs="next"
     />,
 }
+
+const imageScene = {
+  id: 'c',
+  renderContent: (navigator, routeLinks, openMenu) =>
+    <SimpleImageView navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
+      store={newListingStore}
+      title="Approve photo"
+      leftIs="back"
+      rightIs="next"
+    />,
+};
 
 const routeLinks = {};
 
@@ -46,6 +52,13 @@ routeLinks[listingScene.id] = {
     getRoute: () => cameraScene,
   },
 };
+
+routeLinks[cameraScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => imageScene,
+  },
+}
 
 console.log(`Route Links::: ${routeLinks}`);
 
