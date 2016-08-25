@@ -21,6 +21,7 @@ import Immutable from 'immutable';
     price: 12,
     title: 'twelveTitle',
     description: 'long form desc',
+    image : base64Image1,
   };
 */
 
@@ -29,6 +30,7 @@ const NL_SET_PRICE = 'new-listing-set-price';
 const NL_SET_TITLE = 'new-listing-set-title';
 const NL_SET_DESCRIPTION = 'new-listing-set-description';
 const NL_SET_LOCATION = 'new-listing-set-location';
+const NL_SET_BASE64_IMAGE= 'new-listing-set-base64-image';
 
 const initialState = Immutable.Map({
   status: 'building',
@@ -53,6 +55,8 @@ export default function (futureListingState = initialState, action) {
       return futureListingState.set('description', action.description);
     case NL_SET_LOCATION:
       return futureListingState.set('location', action.location);
+    case NL_SET_BASE64_IMAGE:
+      return futureListingState.set('imageBase64', action.imageBase64);
     default:
       return futureListingState;
   }
@@ -93,4 +97,9 @@ export function setNewListingLocation(listingLocation) {
   };
 }
 
-
+export function setNewListingImageBase64(image) {
+  return {
+    type: NL_SET_BASE64_IMAGE,
+    imageBase64: image,
+  };
+}

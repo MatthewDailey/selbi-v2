@@ -7,7 +7,8 @@ import newListingReducer, {
   setNewListingTitle,
   setNewListingDescription,
   setNewListingLocation,
-} from '../../src/reducers/NewListingStoreReducer';
+  setNewListingImageBase64,
+} from '../../src/reducers/NewListingReducer';
 
 chai.use(dirtyChai);
 
@@ -49,5 +50,11 @@ describe('NewListingReducer', () => {
     };
     expect(newListingReducer(initialState, setNewListingLocation(testLocation)).get('location'))
       .to.equal(testLocation);
+  });
+
+  it('can set image', () => {
+    const imageBase64 = 'fdsasfadsf';
+    expect(newListingReducer(initialState, setNewListingImageBase64(imageBase64))
+      .get('imageBase64')).to.equal(imageBase64);
   });
 });
