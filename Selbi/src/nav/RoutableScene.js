@@ -144,7 +144,7 @@ export function withNavigatorProps(appStore, reactElement) {
     {
       navigator: navigatorProp,
       routeLinks: routeLinksProp,
-      oepnMenu: openMenuProp,
+      openMenu: openMenuProp,
       store: appStore,
     });
 }

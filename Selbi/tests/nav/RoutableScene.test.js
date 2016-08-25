@@ -4,7 +4,7 @@ import chai, { expect } from 'chai';
 import { spy, mock } from 'sinon';
 import dirtyChai from 'dirty-chai';
 
-import RoutableScene from '../../src/nav/RoutableScene';
+import RoutableScene, { withNavigatorProps } from '../../src/nav/RoutableScene';
 
 chai.use(dirtyChai);
 
@@ -22,6 +22,20 @@ describe('<RoutableScene />', () => {
   it('can render', () => {
     const wrapper = shallow(<DummyRoutableScene />);
     expect(wrapper.length).to.equal(1);
+  });
+
+  it('withNavigatorProps properly clones and injects nav props', () => {
+    const mockNavigator = {};
+    const mockRouteLinks = {};
+    const mockOpenMenu = {};
+    const mockStore = {};
+    const viewWithInjectedProps = withNavigatorProps(
+      mockStore, <View />)(mockNavigator, mockRouteLinks, mockOpenMenu);
+
+    expect(viewWithInjectedProps.props.navigator).to.equal(mockNavigator);
+    expect(viewWithInjectedProps.props.openMenu).to.equal(mockOpenMenu);
+    expect(viewWithInjectedProps.props.routeLinks).to.equal(mockRouteLinks);
+    expect(viewWithInjectedProps.props.store).to.equal(mockStore);
   });
 
   describe('left nav button', () => {
