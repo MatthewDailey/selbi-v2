@@ -7,41 +7,40 @@ import Menu from './components/Menu';
 import ListingScene from './src/scenes/ListingsScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
+import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 
-const newListingStore = createStore(newListingReducer);
+const withProps = withNavigatorProps.bind(undefined, createStore(newListingReducer));
 
 const listingScene = {
   id: 'a',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <ListingScene navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
+  renderContent: withProps(
+    <ListingScene
       title="Listings"
       leftIs="menu"
       rightIs="next"
-    />,
-}
+    />),
+};
 
 const cameraScene = {
   id: 'b',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <SimpleCamera navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
-      store={newListingStore}
+  renderContent: withProps(
+    <SimpleCamera
       title="Take a photo"
       leftIs="back"
       rightIs="next"
-    />,
+    />),
 }
 
 const imageScene = {
   id: 'c',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <SimpleImageView navigator={navigator} routeLinks={routeLinks} openMenu={openMenu}
-      store={newListingStore}
+  renderContent: withProps(
+    <SimpleImageView
       title="Approve photo"
       leftIs="back"
       rightIs="next"
-    />,
+    />),
 };
 
 const routeLinks = {};

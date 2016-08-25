@@ -1,10 +1,25 @@
-import React, { Component } from 'react';
+import React, { cloneElement, Component } from 'react';
 import { View } from 'react-native';
 
 import NavigationBar from '@selbi/react-native-navbar';
 
 import colors from '../../colors';
 
+/*
+ * RoutableScene is a convenience class to package the logic around having a menu bar with left and
+ * right buttons plus navigating between possible scenes.
+ *
+ * It provides various methods goMenu, goHome, goNext, goBack for subclasses to manually invoke.
+ *
+ * The class is intended to be wrapped in a DrawerNavigator which contains the initial route and
+ * routeLinks which determine where the route should transition to on a goBack, goNext or goHome.
+ *
+ * It also provides the ability to enable navbar navigation via left and right buttons by passing
+ * in props:
+ * - leftIs: either 'back' or 'menu' determines if the left button will go back or open the menu.
+ * - rightIs: either 'next' or 'home' determine if the left button will add the scene stack or
+ * clear it and go home.
+ */
 export default class RoutableScene extends Component {
   constructor(props) {
     super(props);
@@ -110,3 +125,26 @@ RoutableScene.propTypes = {
   leftIs: React.PropTypes.oneOf(['back', 'menu']),
   rightIs: React.PropTypes.oneOf(['next', 'home']),
 };
+
+/*
+ * Allows binding all navigator props to components which extend RoutableScene.
+ *
+ * This method is intended to be bound with the Redux store managing the state of the app.
+ *
+ * E.g:
+ * const store = createStore(...)
+ * const withProps = withNavigatorProps.bind(undefined, store);
+ *
+ * @returns Function from (navigator, routeLinks, openMenu) to react element for use as the
+ * route.renderContent method.
+ */
+export function withNavigatorProps(appStore, reactElement) {
+  return (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
+    reactElement,
+    {
+      navigator: navigatorProp,
+      routeLinks: routeLinksProp,
+      oepnMenu: openMenuProp,
+      store: appStore,
+    });
+}
