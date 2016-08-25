@@ -34,6 +34,8 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
 
 export default class LoginOrRegisterScene extends RoutableScene {
   renderWithNavBar() {
+    console.log(this.props.store.getState());
+
     const SubmitButton = MKButton.coloredFlatButton()
       .withText('Submit')
       .withOnPress(() => {
@@ -44,13 +46,13 @@ export default class LoginOrRegisterScene extends RoutableScene {
 
     return (
       <View style={styles.fullScreenContainer}>
-        <View style={{ margin: 16 }}>
+        <View style={styles.padded}>
           <Icon.Button name="facebook" backgroundColor="#3b5998" onPress={this.loginWithFacebook}>
             Sign in with Facebook
           </Icon.Button>
           <EmailInput />
           <PasswordInput />
-          <View style={{ margin: 16 }}>
+          <View style={styles.padded}>
             <SubmitButton />
           </View>
         </View>

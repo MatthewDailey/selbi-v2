@@ -12,4 +12,12 @@ export default StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: 'column',
   },
+  padded: {
+    margin: 16,
+  },
+  paddedContainer: {
+    flex: 1,
+    margin: 16,
+    backgroundColor: colors.secondary,
+  },
 });

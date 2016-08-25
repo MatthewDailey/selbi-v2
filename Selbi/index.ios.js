@@ -6,29 +6,73 @@ import Menu from './components/Menu';
 
 import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
+import InputScene from './src/scenes/InputScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 
-import newListingReducer from './src/reducers/NewListingReducer';
+import newListingReducer, { setNewListingPrice, setNewListingTitle }
+from './src/reducers/NewListingReducer';
 
 const withProps = withNavigatorProps.bind(undefined, createStore(newListingReducer));
 
 const listingScene = {
-  id: 'a',
+  id: 'listings-scene',
   renderContent: withProps(
-    <LoginOrRegisterScene
+    <ListingScene
       title="Listings"
       leftIs="menu"
       rightIs="next"
     />),
 };
 
+const loginScene = {
+  id: 'login-scene',
+  renderContent: withProps(
+    <LoginOrRegisterScene
+      title="Sign In"
+      leftIs="back"
+      rightIs="next"
+    />),
+};
+
+const priceScene = {
+  id: 'price-scene',
+  renderContent: withProps(
+    <InputScene
+      title="Create Listing (3/4)"
+      leftIs="back"
+      rightIs="next"
+      inputTitle="How much do you want to sell for?"
+      field="price"
+      placeholder="USD"
+      isNumeric
+      floatingLabel
+      recordInputAction={setNewListingPrice}
+    />
+  ),
+};
+
+const titleScene = {
+  id: 'title-scene',
+  renderContent: withProps(
+    <InputScene
+      title="Create Listing (4/4)"
+      leftIs="back"
+      rightIs="next"
+      inputTitle="What are you selling?"
+      field="title"
+      placeholder="Eg. 'Magic coffee table!'"
+      recordInputAction={setNewListingTitle}
+    />
+  ),
+};
+
 const cameraScene = {
   id: 'b',
   renderContent: withProps(
     <SimpleCamera
-      title="Take a photo"
+      title="Create Listing (1/4)"
       leftIs="back"
       rightIs="next"
     />),
@@ -38,7 +82,7 @@ const imageScene = {
   id: 'c',
   renderContent: withProps(
     <SimpleImageView
-      title="Approve photo"
+      title="Create Listing (2/4)"
       leftIs="back"
       rightIs="next"
     />),
@@ -48,15 +92,32 @@ const routeLinks = {};
 
 routeLinks[listingScene.id] = {
   next: {
-    title: 'Camera',
+    title: 'Sell',
     getRoute: () => cameraScene,
   },
 };
-
 routeLinks[cameraScene.id] = {
   next: {
     title: '',
     getRoute: () => imageScene,
+  },
+};
+routeLinks[imageScene.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => priceScene,
+  },
+};
+routeLinks[priceScene.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => titleScene,
+  },
+};
+routeLinks[titleScene.id] = {
+  next: {
+    title: 'Post',
+    getRoute: () => loginScene,
   },
 }
 

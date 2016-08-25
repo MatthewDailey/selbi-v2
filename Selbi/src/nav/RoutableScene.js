@@ -71,6 +71,9 @@ export default class RoutableScene extends Component {
 
   goNext() {
     if (this.props.routeLinks.next) {
+      if (this.onGoNext) {
+        this.onGoNext();
+      }
       this.props.navigator.push(this.props.routeLinks.next.getRoute());
     }
   }
