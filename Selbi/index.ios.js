@@ -1,16 +1,22 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 
-import { SimpleCamera, SimpleImageView } from './components/SimpleCamera';
+import { createStore } from 'redux';
+
+import { SimpleImageView } from './components/SimpleCamera';
 import ListingsView from './components/ListingsView';
 import { EnterTitleView, EnterPriceView, AcknowledgePostView }
   from './components/ListingFinalization';
 import Menu from './components/Menu';
 import RightExpandingNavWithMenuDrawer from './components/RightExpandingNavWithMenuDrawer';
 
-import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
+import { SimpleCamera } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
+
+import newListingReducer from './src/reducers/NewListingReducer';
+
+const newListingStore = createStore(newListingReducer);
 
 const listingStore = {
   price: '',
@@ -53,116 +59,47 @@ const testRoutes = [
   },
 ];
 
-const a = {
+const listingScene = {
   id: 'a',
   renderContent: (navigator, routeLinks, openMenu) =>
-    <LoginOrRegisterScene
+    <ListingScene
       navigator={navigator}
       routeLinks={routeLinks}
       openMenu={openMenu}
-      title="A"
+      title="Listings"
       leftIs="menu"
       rightIs="next"
     />,
 }
 
-const b = {
+const cameraScene = {
   id: 'b',
   renderContent: (navigator, routeLinks, openMenu) =>
-    <LoginOrRegisterScene
+    <SimpleCamera
       navigator={navigator}
       routeLinks={routeLinks}
       openMenu={openMenu}
+      store={newListingStore}
       title="B"
       leftIs="back"
-      rightIs="next"
-    />,
-}
-
-const c = {
-  id: 'c',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <LoginOrRegisterScene
-      navigator={navigator}
-      routeLinks={routeLinks}
-      openMenu={openMenu}
-      title="C"
-      leftIs="back"
-      rightIs="next"
-    />,
-}
-
-const d = {
-  id: 'd',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <LoginOrRegisterScene
-      navigator={navigator}
-      routeLinks={routeLinks}
-      openMenu={openMenu}
-      title="d"
-      leftIs="back"
-      rightIs="next"
-    />,
-}
-
-const e = {
-  id: 'e',
-  renderContent: (navigator, routeLinks, openMenu) =>
-    <LoginOrRegisterScene
-      navigator={navigator}
-      routeLinks={routeLinks}
-      openMenu={openMenu}
-      title="e"
-      leftIs="back"
-      rightIs="home"
     />,
 }
 
 const routeLinks = {};
 
-routeLinks[a.id] = {
+routeLinks[listingScene.id] = {
   next: {
-    title: 'go to b',
-    getRoute: () => b,
+    title: 'Camera',
+    getRoute: () => cameraScene,
   },
 };
 
-routeLinks[b.id] = {
-  next: {
-    title: 'go to c',
-    getRoute: () => c,
-  },
-};
-
-routeLinks[c.id] = {
-  next: {
-    title: 'go to d or e',
-    getRoute: (shouldSkip) => shouldSkip ? e : d,
-  },
-};
-
-routeLinks[d.id] = {
-  next: {
-    title: 'go to e',
-    getRoute: () => e,
-  },
-  back: {
-    getRoute: () => b,
-  },
-};
-
-routeLinks[e.id] = {
-  home: {
-    title: 'go home to a',
-    getRoute: () => a,
-  },
-};
 
 console.log("ROUTE LINKS");
 console.log(routeLinks);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={a} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 function Application() {
