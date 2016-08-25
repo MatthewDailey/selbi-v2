@@ -1,5 +1,6 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
+import { createStore } from 'redux';
 
 import newListingReducer, {
   setNewListingSeller,
@@ -8,10 +9,10 @@ import newListingReducer, {
   setNewListingDescription,
   setNewListingLocation,
   setNewListingImageBase64,
+  setNewListingImageDimensions,
 } from '../../src/reducers/NewListingReducer';
 
 chai.use(dirtyChai);
-
 
 describe('NewListingReducer', () => {
   const initialState = newListingReducer();
@@ -55,6 +56,34 @@ describe('NewListingReducer', () => {
   it('can set image', () => {
     const imageBase64 = 'fdsasfadsf';
     expect(newListingReducer(initialState, setNewListingImageBase64(imageBase64))
-      .get('imageBase64')).to.equal(imageBase64);
+      .get('image').base64).to.equal(imageBase64);
+  });
+
+  it('case set image base64 and dimensions', () => {
+    const imageBase64 = 'fdsasfadsf';
+    const height = 1;
+    const width = 2;
+    const hasBase64State = newListingReducer(initialState, setNewListingImageBase64(imageBase64));
+    expect(hasBase64State.get('image').base64).to.equal(imageBase64);
+
+    const hasDimsAndBase64State = newListingReducer(hasBase64State,
+      setNewListingImageDimensions(height, width));
+    const imageState = hasDimsAndBase64State.get('image');
+    expect(imageState.base64).to.equal(imageBase64);
+    expect(imageState.height).to.equal(height);
+    expect(imageState.width).to.equal(width);
+  });
+
+  describe('as store', () => {
+    it('can subscribe to store', (done) => {
+      const listingTitle = 'test title';
+      const newListingStore = createStore(newListingReducer);
+      const unsubscribe = newListingStore.subscribe(() => {
+        expect(newListingStore.getState().get('title')).to.equal(listingTitle);
+        unsubscribe();
+        done();
+      });
+      newListingStore.dispatch(setNewListingTitle(listingTitle));
+    });
   });
 });

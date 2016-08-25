@@ -21,7 +21,11 @@ import Immutable from 'immutable';
     price: 12,
     title: 'twelveTitle',
     description: 'long form desc',
-    image : base64Image1,
+    image : {
+      base64: base64Image1,
+      height: 12,
+      width: 12,
+    }
   };
 */
 
@@ -30,7 +34,8 @@ const NL_SET_PRICE = 'new-listing-set-price';
 const NL_SET_TITLE = 'new-listing-set-title';
 const NL_SET_DESCRIPTION = 'new-listing-set-description';
 const NL_SET_LOCATION = 'new-listing-set-location';
-const NL_SET_BASE64_IMAGE= 'new-listing-set-base64-image';
+const NL_SET_IMAGE_BASE64 = 'new-listing-set-image-base64';
+const NL_SET_IMAGE_DIMENSIONS = 'new-listing-set-image-dimensions';
 
 const initialState = Immutable.Map({
   status: 'building',
@@ -55,8 +60,17 @@ export default function (futureListingState = initialState, action) {
       return futureListingState.set('description', action.description);
     case NL_SET_LOCATION:
       return futureListingState.set('location', action.location);
-    case NL_SET_BASE64_IMAGE:
-      return futureListingState.set('imageBase64', action.imageBase64);
+    case NL_SET_IMAGE_BASE64:
+      return futureListingState.set('image', Object.assign({},
+        futureListingState.get('image'), {
+          base64: action.imageBase64,
+        }));
+    case NL_SET_IMAGE_DIMENSIONS:
+      return futureListingState.set('image', Object.assign({},
+        futureListingState.get('image'), {
+          height: action.height,
+          width: action.width,
+        }));
     default:
       return futureListingState;
   }
@@ -99,7 +113,15 @@ export function setNewListingLocation(listingLocation) {
 
 export function setNewListingImageBase64(image) {
   return {
-    type: NL_SET_BASE64_IMAGE,
+    type: NL_SET_IMAGE_BASE64,
     imageBase64: image,
+  };
+}
+
+export function setNewListingImageDimensions(imageHeight, imageWidth) {
+  return {
+    type: NL_SET_IMAGE_DIMENSIONS,
+    height: imageHeight,
+    width: imageWidth,
   };
 }
