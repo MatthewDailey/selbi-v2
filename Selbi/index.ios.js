@@ -13,7 +13,9 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
   from './src/reducers/NewListingReducer';
-import userReducer from './src/reducers/UserReducer';
+import userReducer, { setUserToken } from './src/reducers/UserReducer';
+
+import { registerWithEmail, signInWithEmail, getUser } from './src/firebase/FirebaseConnector';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
@@ -38,8 +40,16 @@ const loginScene = {
       title=""
       leftIs="back"
       rightIs="next"
+      registerWithEmail={registerWithEmail}
+      signInWithEmail={signInWithEmail}
+      setUserTokenAction={setUserToken}
     />),
 };
+
+const postLoginScene = {
+  id: 'post-login',
+  renderContent: withProps(<ListingScene />),
+}
 
 const priceScene = {
   id: 'price-scene',
@@ -124,12 +134,18 @@ routeLinks[titleScene.id] = {
     title: 'Post',
     getRoute: () => loginScene,
   },
-}
+};
+routeLinks[loginScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => postLoginScene,
+  },
+};
 
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={loginScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);

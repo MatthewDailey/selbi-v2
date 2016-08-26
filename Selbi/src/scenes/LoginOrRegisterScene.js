@@ -3,7 +3,6 @@ import { ScrollView, View, Text } from 'react-native';
 import { mdl, MKButton, setTheme } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import firebase from 'firebase';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -12,22 +11,6 @@ import RoutableScene from '../nav/RoutableScene';
 setTheme({
   primaryColor: colors.primaryColor,
 });
-
-const developConfig = {
-  apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
-  authDomain: 'selbi-develop.firebaseapp.com',
-  databaseURL: 'https://selbi-develop.firebaseio.com',
-  storageBucket: 'selbi-develop.appspot.com',
-};
-
-let firebaseApp = null;
-
-function getFirebase() {
-  if (!firebaseApp) {
-    firebaseApp = firebase.initializeApp(developConfig);
-  }
-  return firebaseApp;
-}
 
 const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withPassword(true)
@@ -48,75 +31,92 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   })
   .build();
 
+const GoogleButton = MKButton.button()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor(colors.white)
+  .build();
+
+const FacebookButton = MKButton.button()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor('#3b5998')
+  .build();
+
 export default class LoginOrRegisterScene extends RoutableScene {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      email: '',
-      password: '',
+      emailSignIn: '',
+      passwordSignIn: '',
+      emailRegister: '',
+      passwordRegister: '',
     };
+
+    this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
+    this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
   }
 
   registerUserWithEmailAndPassword() {
-    console.log('called register user')
-    const email = this.state.email;
-    const password = this.state.password;
-    console.log(`registering: ${email} & ${password}`)
-
-
-
-    getFirebase()
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => {
+    const email = this.state.emailRegister;
+    const password = this.state.passwordRegister;
+    this.props.registerWithEmail(email, password)
+      .then((user) => {
         console.log('returned from registering user');
-        getFirebase().auth().currentUser.getToken().then(console.log)
+        user.getToken()
+          .then((token) => this.props.store.dispatch(this.props.setUserTokenAction(token)));
+        this.goNext();
       })
       .catch(console.log);
   }
 
-  renderWithNavBar() {
-    console.log(this.props.store.getState());
+  signInWithEmailAndPassword() {
+    const email = this.state.emailSignIn;
+    const password = this.state.passwordSignIn;
+    this.props.signInWithEmail(email, password)
+      .then((user) => {
+        // store token
+        console.log('returned from registering user');
+      })
+      .catch((e) => console.log(e.code));
+  }
 
-    const getInnerView = (isRegister, scrollViewRef) => {
-      const registerOrSignIn = isRegister ? 'Register' : 'Sign in';
-      const SubmitButton = MKButton.coloredFlatButton()
-        .withText(registerOrSignIn)
-        .withOnPress(() => {
-          console.log(`Clicked ${registerOrSignIn}`);
-          console.log(this.props.store.getState())
-          this.registerUserWithEmailAndPassword();
-        })
-        .build();
+  getInnerView(registerOrSignInType, registerOrSignInMethod) {
+    const SubmitButton = MKButton
+      .coloredFlatButton()
+      .withText(registerOrSignInType)
+      .withOnPress(() => {
+        console.log(`Clicked ${registerOrSignInType}`);
+        console.log(this.props.store.getState());
+        console.log(this.state);
+        registerOrSignInMethod();
+      })
+      .build();
 
-      const FacebookButton = MKButton.button()
-        .withStyle({
-          borderRadius: 5,
-        })
-        .withBackgroundColor('#3b5998')
-        .build()
-      const GoogleButton = MKButton.button()
-        .withStyle({
-          borderRadius: 5,
-        })
-        .withBackgroundColor(colors.white)
-        .build()
+    const scrollRef = `scroll${registerOrSignInType}`;
 
-      const scrollToBottom = () => {
-        this[scrollViewRef].scrollTo({ x: 0, y: 150, animated: true });
-      };
+    const scrollToBottom = () => {
+      this[scrollRef].scrollTo({ x: 0, y: 150, animated: true });
+    };
 
-      return (
+    return (
+      <ScrollView
+        ref={(r) => this[scrollRef] = r}
+        style={styles.fullScreenContainer}
+        tabLabel={registerOrSignInType}
+      >
         <View style={styles.padded}>
           <FacebookButton >
             <Text style={{ color: colors.white }} >
-              <Icon name="facebook" size={16} />  {`${registerOrSignIn} with Facebook`}
+              <Icon name="facebook" size={16} />  {`${registerOrSignInType} with Facebook`}
             </Text>
           </FacebookButton>
           <View style={styles.halfPadded} />
           <GoogleButton>
             <Text style={{ color: 'grey' }}>
-              <Icon name="google" size={16} />  {`${registerOrSignIn} with Google`}
+              <Icon name="google" size={16} />  {`${registerOrSignInType} with Google`}
             </Text>
           </GoogleButton>
           <View style={styles.padded} />
@@ -132,16 +132,31 @@ export default class LoginOrRegisterScene extends RoutableScene {
               textAlign: 'center',
             }}
           >
-            {`${registerOrSignIn} with email and password.`}
+            {`${registerOrSignInType} with email and password.`}
           </Text>
-          <EmailInput onChangeText={(newText) => this.setState({email: newText})} onFocus={scrollToBottom} />
-          <PasswordInput onChangeText={(newText) => this.setState({password: newText})} />
+          <EmailInput
+            onChangeText={(newText) => {
+              const stateAdditions = {};
+              stateAdditions[`email${registerOrSignInType.replace(/ /g, '')}`] = newText;
+              this.setState(stateAdditions);
+            }}
+            onFocus={scrollToBottom}
+          />
+          <PasswordInput
+            onChangeText={(newText) => {
+              const stateAdditions = {};
+              stateAdditions[`password${registerOrSignInType.replace(/ /g, '')}`] = newText;
+              this.setState(stateAdditions);
+            }}
+          />
           <View style={styles.padded} />
           <SubmitButton />
         </View>
-      );
-    };
+      </ScrollView>
+    );
+  }
 
+  renderWithNavBar() {
     return (
       <ScrollableTabView
         tabBarBackgroundColor={colors.primary}
@@ -149,20 +164,8 @@ export default class LoginOrRegisterScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <ScrollView
-          ref={ (r) => this.signInScrollView = r }
-          style={styles.fullScreenContainer}
-          tabLabel="Sign In"
-        >
-          {getInnerView(false, 'signInScrollView')}
-        </ScrollView>
-        <ScrollView
-          ref={ (r) => this.registerScrollView = r }
-          style={styles.fullScreenContainer}
-          tabLabel="Register"
-        >
-          {getInnerView(true, 'registerScrollView')}
-        </ScrollView>
+        {this.getInnerView('Sign In', this.signInWithEmailAndPassword)}
+        {this.getInnerView('Register', this.registerUserWithEmailAndPassword)}
       </ScrollableTabView>
     );
   }
