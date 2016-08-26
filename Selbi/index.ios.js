@@ -48,7 +48,7 @@ const loginScene = {
 
 const postLoginScene = {
   id: 'post-login',
-  renderContent: withProps(<ListingScene />),
+  renderContent: withProps(<ListingScene title="User signed in."/>),
 }
 
 const priceScene = {

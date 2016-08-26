@@ -57,18 +57,20 @@ export default class LoginOrRegisterScene extends RoutableScene {
 
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
+    this.storeUserTokenAndGoNext = this.storeUserTokenAndGoNext.bind(this);
+  }
+
+  storeUserTokenAndGoNext(user) {
+    user.getToken()
+      .then((token) => this.props.store.dispatch(this.props.setUserTokenAction(token)));
+    this.goNext();
   }
 
   registerUserWithEmailAndPassword() {
     const email = this.state.emailRegister;
     const password = this.state.passwordRegister;
     this.props.registerWithEmail(email, password)
-      .then((user) => {
-        console.log('returned from registering user');
-        user.getToken()
-          .then((token) => this.props.store.dispatch(this.props.setUserTokenAction(token)));
-        this.goNext();
-      })
+      .then(this.storeUserTokenAndGoNext)
       .catch(console.log);
   }
 
@@ -76,10 +78,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
     const email = this.state.emailSignIn;
     const password = this.state.passwordSignIn;
     this.props.signInWithEmail(email, password)
-      .then((user) => {
-        // store token
-        console.log('returned from registering user');
-      })
+      .then(this.storeUserTokenAndGoNext)
       .catch((e) => console.log(e.code));
   }
 
