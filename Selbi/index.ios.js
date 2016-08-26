@@ -12,10 +12,12 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
-from './src/reducers/NewListingReducer';
+  from './src/reducers/NewListingReducer';
+import userReducer from './src/reducers/UserReducer';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
+    user: userReducer,
     newListing: newListingReducer,
   })));
 
