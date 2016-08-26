@@ -34,13 +34,21 @@ const NL_SET_PRICE = 'new-listing-set-price';
 const NL_SET_TITLE = 'new-listing-set-title';
 const NL_SET_DESCRIPTION = 'new-listing-set-description';
 const NL_SET_LOCATION = 'new-listing-set-location';
-const NL_SET_IMAGE_BASE64 = 'new-listing-set-image-base64';
 const NL_SET_IMAGE_DIMENSIONS = 'new-listing-set-image-dimensions';
 const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
 
-const initialState = Immutable.Map({
+class NewListing extends Immutable.Record({
   status: 'building',
-});
+  sellerUid: undefined,
+  price: undefined,
+  title: undefined,
+  description: undefined,
+  imageUri: undefined,
+  imageHeight: undefined,
+  imageWidth: undefined,
+  locationLat: undefined,
+  locationLon: undefined,
+}) {}
 
 function getActionType(action) {
   if (action) {
@@ -49,31 +57,23 @@ function getActionType(action) {
   return 'no-action';
 }
 
-export default function (futureListingState = initialState, action) {
+export default function (futureListingState = new NewListing(), action) {
   switch (getActionType(action)) {
     case NL_SET_SELLER_UID:
-      return futureListingState.set('sellerUid', action.sellerUid);
+      return futureListingState.merge({ sellerUid: action.sellerUid });
     case NL_SET_PRICE:
-      return futureListingState.set('price', action.price);
+      return futureListingState.merge({ price: action.price });
     case NL_SET_TITLE:
-      return futureListingState.set('title', action.title);
+      return futureListingState.merge({ title: action.title });
     case NL_SET_DESCRIPTION:
-      return futureListingState.set('description', action.description);
+      return futureListingState.merge({ description: action.description });
     case NL_SET_LOCATION:
-      return futureListingState.set('location', action.location);
-    case NL_SET_IMAGE_BASE64:
-      return futureListingState.set('image', Object.assign({},
-        futureListingState.get('image'), {
-          base64: action.imageBase64,
-        }));
+      return futureListingState.merge(
+        { locationLat: action.location.lat, locationLon: action.location.lon });
     case NL_SET_IMAGE_DIMENSIONS:
-      return futureListingState.set('image', Object.assign({},
-        futureListingState.get('image'), {
-          height: action.height,
-          width: action.width,
-        }));
+      return futureListingState.merge({ imageHeight: action.height, imageWidth: action.width });
     case NL_SET_IMAGE_URI:
-      return futureListingState.set('imageUri', action.imageUri)
+      return futureListingState.merge({ imageUri: action.imageUri });
     default:
       return futureListingState;
   }
@@ -111,13 +111,6 @@ export function setNewListingLocation(listingLocation) {
   return {
     type: NL_SET_LOCATION,
     location: listingLocation,
-  };
-}
-
-export function setNewListingImageBase64(image) {
-  return {
-    type: NL_SET_IMAGE_BASE64,
-    imageBase64: image,
   };
 }
 

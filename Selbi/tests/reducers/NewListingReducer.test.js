@@ -1,6 +1,7 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 import { createStore } from 'redux';
+import Immutable from 'immutable';
 
 import newListingReducer, {
   setNewListingSeller,
@@ -19,30 +20,30 @@ describe('NewListingReducer', () => {
   const initialState = newListingReducer();
 
   it('returns initial state', () => {
-    expect(initialState.get('status')).to.equal('building');
+    expect(initialState.status).to.equal('building');
   });
 
   it('can set seller uid', () => {
     const setSellerAction = setNewListingSeller('testUid');
-    expect(newListingReducer(initialState, setSellerAction).get('sellerUid')).to.equal('testUid');
+    expect(newListingReducer(initialState, setSellerAction).sellerUid).to.equal('testUid');
   });
 
   it('can set price', () => {
     const testPrice = 1;
-    expect(newListingReducer(initialState, setNewListingPrice(testPrice)).get('price'))
+    expect(newListingReducer(initialState, setNewListingPrice(testPrice)).price)
       .to.equal(testPrice);
   });
 
   it('can set title', () => {
     const testTitle = 'title test';
-    expect(newListingReducer(initialState, setNewListingTitle(testTitle)).get('title'))
+    expect(newListingReducer(initialState, setNewListingTitle(testTitle)).title)
       .to.equal(testTitle);
   });
 
   it('can set description', () => {
     const testDescription = 'title desc';
-    expect(newListingReducer(initialState, setNewListingDescription(testDescription))
-      .get('description')).to.equal(testDescription);
+    expect(newListingReducer(initialState, setNewListingDescription(testDescription)).description)
+      .to.equal(testDescription);
   });
 
   it('can set location', () => {
@@ -50,35 +51,26 @@ describe('NewListingReducer', () => {
       lat: 12,
       lon: 12,
     };
-    expect(newListingReducer(initialState, setNewListingLocation(testLocation)).get('location'))
-      .to.equal(testLocation);
+
+    const locationState = newListingReducer(initialState, setNewListingLocation(testLocation));
+    expect(locationState.locationLat).to.equal(testLocation.lat);
+    expect(locationState.locationLon).to.equal(testLocation.lon);
   });
 
-  it('can set image', () => {
-    const imageBase64 = 'fdsasfadsf';
-    expect(newListingReducer(initialState, setNewListingImageBase64(imageBase64))
-      .get('image').base64).to.equal(imageBase64);
-  });
-
-  it('can set image base64 and dimensions', () => {
-    const imageBase64 = 'fdsasfadsf';
+  it('can set image dimensions', () => {
     const height = 1;
     const width = 2;
-    const hasBase64State = newListingReducer(initialState, setNewListingImageBase64(imageBase64));
-    expect(hasBase64State.get('image').base64).to.equal(imageBase64);
 
-    const hasDimsAndBase64State = newListingReducer(hasBase64State,
+    const hasDimensionsState = newListingReducer(initialState,
       setNewListingImageDimensions(height, width));
-    const imageState = hasDimsAndBase64State.get('image');
-    expect(imageState.base64).to.equal(imageBase64);
-    expect(imageState.height).to.equal(height);
-    expect(imageState.width).to.equal(width);
+    expect(hasDimensionsState.imageHeight).to.equal(height);
+    expect(hasDimensionsState.imageWidth).to.equal(width);
   });
 
   it('can set image local uri', () => {
     const imageUri = 'image uri';
 
-    expect(newListingReducer(initialState, setNewListingImageLocalUri(imageUri)).get('imageUri'))
+    expect(newListingReducer(initialState, setNewListingImageLocalUri(imageUri)).imageUri)
       .to.equal(imageUri);
   });
 
@@ -87,11 +79,12 @@ describe('NewListingReducer', () => {
       const listingTitle = 'test title';
       const newListingStore = createStore(newListingReducer);
       const unsubscribe = newListingStore.subscribe(() => {
-        expect(newListingStore.getState().get('title')).to.equal(listingTitle);
+        expect(newListingStore.getState().title).to.equal(listingTitle);
         unsubscribe();
         done();
       });
       newListingStore.dispatch(setNewListingTitle(listingTitle));
     });
   });
+
 });
