@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { AsyncStorage } from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 
@@ -13,15 +13,27 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
   from './src/reducers/NewListingReducer';
-import userReducer, { setUserToken } from './src/reducers/UserReducer';
+import userReducer from './src/reducers/UserReducer';
 
 import { registerWithEmail, signInWithEmail, getUser } from './src/firebase/FirebaseConnector';
+import { initializeCredentials, storeCredentials } from './src/firebase/CredentialPersister';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
     user: userReducer,
     newListing: newListingReducer,
   })));
+
+initializeCredentials()
+  .then((credential) => {
+    if (credential) {
+      console.log(credential);
+      console.log(credential.email)
+      signInWithEmail(credential.email, credential.password)
+        .then(() => console.log('signed in with save creds'))
+        .catch(console.log);
+    }
+  });
 
 const listingScene = {
   id: 'listings-scene',
@@ -42,13 +54,18 @@ const loginScene = {
       rightIs="next"
       registerWithEmail={registerWithEmail}
       signInWithEmail={signInWithEmail}
-      setUserTokenAction={setUserToken}
+      storeCredential={storeCredentials}
     />),
 };
 
 const postLoginScene = {
   id: 'post-login',
-  renderContent: withProps(<ListingScene title="User signed in." />),
+  renderContent: withProps(
+    <ListingScene
+      title="User signed in."
+      leftIs="back"
+    />
+  ),
 }
 
 const priceScene = {
@@ -132,7 +149,12 @@ routeLinks[priceScene.id] = {
 routeLinks[titleScene.id] = {
   next: {
     title: 'Post',
-    getRoute: () => loginScene,
+    getRoute: () => {
+      if (getUser()) {
+        return postLoginScene;
+      }
+      return loginScene;
+    },
   },
 };
 routeLinks[loginScene.id] = {
@@ -141,11 +163,17 @@ routeLinks[loginScene.id] = {
     getRoute: () => postLoginScene,
   },
 };
+routeLinks[postLoginScene.id] = {
+  back: {
+    title: '',
+    getRoute: () => titleScene,
+  },
+};
 
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={loginScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);

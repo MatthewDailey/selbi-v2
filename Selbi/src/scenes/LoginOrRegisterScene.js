@@ -62,15 +62,16 @@ export default class LoginOrRegisterScene extends RoutableScene {
     this.storeUserTokenAndGoNext = this.storeUserTokenAndGoNext.bind(this);
   }
 
-  storeUserTokenAndGoNext(user) {
-    user.getToken()
-      .then((token) => this.props.store.dispatch(this.props.setUserTokenAction(token)));
+  storeUserTokenAndGoNext(userData) {
+    console.log(userData);
+    this.props.storeCredential(userData.credential);
     this.goNext();
   }
 
   registerUserWithEmailAndPassword() {
     const email = this.state.emailRegister;
     const password = this.state.passwordRegister;
+
     this.props.registerWithEmail(email, password)
       .then(this.storeUserTokenAndGoNext)
       .catch(console.log);

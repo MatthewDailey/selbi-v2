@@ -23,16 +23,29 @@ export default undefined;
  *
  * @returns Firebase Promise containing the User data.
  */
-export function registerWithEmail(email, password) {
+export function registerWithEmail(emailInput, passwordInput) {
   return getFirebase()
     .auth()
-    .createUserWithEmailAndPassword(email, password);
+    .createUserWithEmailAndPassword(emailInput, passwordInput)
+    .then((userResponse) => Promise.resolve({
+      user: userResponse,
+      credential: {
+        email: emailInput,
+        password: passwordInput,
+      },
+    }));
 }
 
 export function signInWithEmail(email, password) {
   return getFirebase()
     .auth()
     .signInWithEmailAndPassword(email, password);
+}
+
+export function signInWithCredentials(credentials) {
+  return getFirebase()
+    .auth()
+    .signInWithCredential(credentials);
 }
 
 export function getUser() {
