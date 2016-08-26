@@ -38,7 +38,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
   renderWithNavBar() {
     console.log(this.props.store.getState());
 
-    const getInnerView = (isRegister) => {
+    const getInnerView = (isRegister, scrollViewRef) => {
       const registerOrSignIn = isRegister ? 'Register' : 'Sign in';
       const SubmitButton = MKButton.coloredFlatButton()
         .withText(registerOrSignIn)
@@ -63,10 +63,9 @@ export default class LoginOrRegisterScene extends RoutableScene {
 
       const scrollToBottom = () => {
         console.log("focused email input");
-        this.scrollView.scrollTo({ x:0, y:150, animated:true });
+        this[scrollViewRef].scrollTo({ x: 0, y: 150, animated: true });
       };
 
-      console.log(MKButton.button())
       return (
         <View style={styles.padded}>
           <FacebookButton >
@@ -108,11 +107,15 @@ export default class LoginOrRegisterScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <ScrollView ref={(r) => this.scrollView = r} style={styles.fullScreenContainer} tabLabel="Sign In" >
-          {getInnerView(false)}
+        <ScrollView
+          ref={(r) => this.signInScrollView = r}
+          style={styles.fullScreenContainer}
+          tabLabel="Sign In"
+        >
+          {getInnerView(false, 'signInScrollView')}
         </ScrollView>
-        <ScrollView ref={(r) => this.scrollView = r} style={styles.fullScreenContainer} tabLabel="Register" >
-          {getInnerView(true)}
+        <ScrollView ref={(r) => this.registerScrollView = r} style={styles.fullScreenContainer} tabLabel="Register" >
+          {getInnerView(true, 'registerScrollView')}
         </ScrollView>
       </ScrollableTabView>
     );
