@@ -1,7 +1,6 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 import { createStore } from 'redux';
-import Immutable from 'immutable';
 
 import newListingReducer, {
   setNewListingSeller,
@@ -9,7 +8,6 @@ import newListingReducer, {
   setNewListingTitle,
   setNewListingDescription,
   setNewListingLocation,
-  setNewListingImageBase64,
   setNewListingImageDimensions,
   setNewListingImageLocalUri,
 } from '../../src/reducers/NewListingReducer';

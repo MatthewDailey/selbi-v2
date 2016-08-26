@@ -1,33 +1,5 @@
 import Immutable from 'immutable';
-
-/*
- * Data necessary to create a new listing:
- * - image base64 (to be converted to /image/$imageId refs from firebase.
- * - sellerId
- * - latlon
- * - price
- * - title
- * - description
- */
-
-/*
-  const exampleNewListing = {
-    status: 'building', // 'posting', 'posted'
-    sellerUid: 'userUid',
-    location: {
-      lat: 12,
-      lon: 12,
-    },
-    price: 12,
-    title: 'twelveTitle',
-    description: 'long form desc',
-    image : {
-      base64: base64Image1,
-      height: 12,
-      width: 12,
-    }
-  };
-*/
+import { getActionType } from './ActionUtils';
 
 const NL_SET_SELLER_UID = 'new-listing-set-seller-uid';
 const NL_SET_PRICE = 'new-listing-set-price';
@@ -50,12 +22,7 @@ class NewListing extends Immutable.Record({
   locationLon: undefined,
 }) {}
 
-function getActionType(action) {
-  if (action) {
-    return action.type;
-  }
-  return 'no-action';
-}
+
 
 export default function (futureListingState = new NewListing(), action) {
   switch (getActionType(action)) {
