@@ -6,7 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "@selbi/react-native-image-reader": "^1.0.4",
+    "@selbi/react-native-image-reader": "^1.0.7",
     "@selbi/react-native-navbar": "0.0.2",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",

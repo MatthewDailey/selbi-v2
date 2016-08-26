@@ -13,11 +13,8 @@ export default class InputView extends RoutableScene {
     this.state = { text: props.store.getState().get(props.field) };
   }
 
-  onGoNext() {
-    this.props.store.dispatch(this.props.recordInputAction(this.state.text));
-  }
-
   renderWithNavBar() {
+    console.log(`store:::: ${this.props.store.getState()}`)
     return (
       <View style={styles.container}>
         <View style={styles.padded}>
@@ -27,8 +24,11 @@ export default class InputView extends RoutableScene {
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
               style={{ height: 48 }}
-              onTextChange={(newText) => this.setState({ text: newText })}
-              text={this.state.text}
+              value={this.state.text}
+              onTextChange={(newText) => {
+                this.setState({ text: newText });
+                this.props.store.dispatch(this.props.recordInputAction(newText));
+              }}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
             />
           </View>

@@ -38,7 +38,7 @@ export default class RoutableScene extends Component {
       leftButton.handler = this.goMenu;
       return leftButton;
     } else if (this.props.leftIs === 'back') {
-      leftButton.title = '< Back';
+      leftButton.title = '<';
       leftButton.handler = this.goBack;
       return leftButton;
     }

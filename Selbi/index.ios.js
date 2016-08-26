@@ -40,7 +40,7 @@ const priceScene = {
   id: 'price-scene',
   renderContent: withProps(
     <InputScene
-      title="Create Listing (3/4)"
+      title="Create Listing (2/3)"
       leftIs="back"
       rightIs="next"
       inputTitle="How much do you want to sell for?"
@@ -57,7 +57,7 @@ const titleScene = {
   id: 'title-scene',
   renderContent: withProps(
     <InputScene
-      title="Create Listing (4/4)"
+      title="Create Listing (3/3)"
       leftIs="back"
       rightIs="next"
       inputTitle="What are you selling?"
@@ -72,7 +72,7 @@ const cameraScene = {
   id: 'b',
   renderContent: withProps(
     <SimpleCamera
-      title="Create Listing (1/4)"
+      title="Create Listing (1/3)"
       leftIs="back"
       rightIs="next"
     />),
@@ -82,7 +82,7 @@ const imageScene = {
   id: 'c',
   renderContent: withProps(
     <SimpleImageView
-      title="Create Listing (2/4)"
+      title=""
       leftIs="back"
       rightIs="next"
     />),
@@ -104,7 +104,7 @@ routeLinks[cameraScene.id] = {
 };
 routeLinks[imageScene.id] = {
   next: {
-    title: 'OK',
+    title: 'Accept Photo',
     getRoute: () => priceScene,
   },
 };
