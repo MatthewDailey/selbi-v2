@@ -7,6 +7,7 @@ import Menu from './components/Menu';
 import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
 import InputScene from './src/scenes/InputScene';
+import PublishScene from './src/scenes/PublishScene'
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
@@ -14,7 +15,7 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
   from './src/reducers/NewListingReducer';
 
-import { registerWithEmail, signInWithEmail, getUser } from './src/firebase/FirebaseConnector';
+import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage } from './src/firebase/FirebaseConnector';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
@@ -40,15 +41,18 @@ const loginScene = {
       rightIs="next"
       registerWithEmail={registerWithEmail}
       signInWithEmail={signInWithEmail}
+      createUser={createUser}
     />),
 };
 
 const postLoginScene = {
   id: 'post-login',
   renderContent: withProps(
-    <ListingScene
-      title="User signed in."
+    <PublishScene
+      title="Success!"
       leftIs="back"
+      createListing={createListing}
+      publishImage={publishImage}
     />
   ),
 }

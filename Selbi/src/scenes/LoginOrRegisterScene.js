@@ -66,7 +66,10 @@ export default class LoginOrRegisterScene extends RoutableScene {
     const password = this.state.passwordRegister;
 
     this.props.registerWithEmail(email, password)
-      .then(() => this.goNext())
+      .then((user) => {
+        this.props.createUser(user.uid);
+        this.goNext();
+      })
       .catch(console.log);
   }
 

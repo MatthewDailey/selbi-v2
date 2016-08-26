@@ -38,5 +38,68 @@ export function signInWithEmail(email, password) {
 export function getUser() {
   return getFirebase()
     .auth()
-    .currentUser;
+    .currentUser;u
+}
+
+export function createUser() {
+  return getFirebase()
+    .database()
+    .ref('/users')
+    .child(getUser().uid)
+    .set({
+      userAgreementAccepted: false,
+    });
+}
+
+export function publishImage(base64, heightInput, widthInput) {
+  const imageData = {
+    owner: getUser().uid,
+    base64: base64,
+    height: heightInput,
+    width: widthInput,
+  }
+
+  console.log(imageData);
+  return getFirebase()
+    .database()
+    .ref('images')
+    .push(imageData)
+    .then((snapshot) => Promise.resolve(snapshot.key));
+}
+
+export function createListing(titleInput,
+                       descriptionInput,
+                       priceInput,
+                       imagesInput,
+                       categoryInput) {
+  // TODO: Add validation of args for cleaner failures.
+  const uid = getUser().uid;
+
+  const listing = {
+    title: titleInput,
+    description: descriptionInput,
+    price: priceInput,
+    images: imagesInput,
+    category: categoryInput,
+    sellerId: uid,
+    status: 'inactive',
+  };
+
+  // Get an id for the new listing.
+  const newListingRef = getFirebase().database().ref('/listings').push();
+
+  const createUserListing = () => getFirebase()
+    .database()
+    .ref('/userListings')
+    .child(uid)
+    .child('inactive')
+    .child(newListingRef.key)
+    .set(true);
+
+  console.log(listing)
+
+  return newListingRef
+    .set(listing)
+    .then(createUserListing)
+    .then(() => Promise.resolve(newListingRef.key));
 }
