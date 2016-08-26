@@ -68,7 +68,8 @@ export class SimpleCamera extends RoutableScene {
       this.camera.capture()
         .then((data) => {
           console.log(`Capturing::: ${this.state.capturing}`);
-          console.log(`store::: ${this.props.store.getState()}`);
+          console.log('store::: ');
+          console.log(this.props.store.getState());
           this.props.store.dispatch(setNewListingImageLocalUri(data.path));
           this.toggleCapturing();
           this.goNext();
@@ -148,7 +149,7 @@ export class SimpleImageView extends RoutableScene {
           this.props.store.dispatch(setNewListingImageDimensions(height, width));
         }}
         style={styles.preview}
-        source={{ uri: this.props.store.getState().get('imageUri')}}
+        source={{ uri: this.props.store.getState().newListing.get('imageUri')}}
       />
     );
   }

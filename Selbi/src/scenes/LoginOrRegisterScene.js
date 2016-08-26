@@ -48,13 +48,14 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   })
   .build();
 
-const unsubscribeAuthListener = getFirebase()
-  .onAuthStateChange(() => {
-    console.log("Logged in!")
-    unsubscribeAuthListener();
-  });
-
 export default class LoginOrRegisterScene extends RoutableScene {
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+    };
+  }
 
   registerUserWithEmailAndPassword() {
     console.log('called register user')
@@ -83,6 +84,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
         .withText(registerOrSignIn)
         .withOnPress(() => {
           console.log(`Clicked ${registerOrSignIn}`);
+          console.log(this.props.store.getState())
           this.registerUserWithEmailAndPassword();
         })
         .build();

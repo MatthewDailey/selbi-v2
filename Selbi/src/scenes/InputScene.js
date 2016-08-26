@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
 
-import { mdl, MKButton, setTheme, MKTextField } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { MKTextField } from 'react-native-material-kit';
 
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
@@ -10,7 +9,7 @@ import RoutableScene from '../nav/RoutableScene';
 export default class InputView extends RoutableScene {
   constructor(props) {
     super(props);
-    this.state = { text: props.store.getState().get(props.field) };
+    this.state = { text: props.store.getState().newListing.get(props.field) };
   }
 
   renderWithNavBar() {
