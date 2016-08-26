@@ -6,6 +6,10 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C90854ED1D6FBDF4001DF443 /* RNImageReader.m in Sources */ = {isa = PBXBuildFile; fileRef = C90854EC1D6FBDF4001DF443 /* RNImageReader.m */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -21,6 +25,7 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNImageReader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNImageReader.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RNImageReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNImageReader.h; sourceTree = "<group>"; };
+		C90854EC1D6FBDF4001DF443 /* RNImageReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNImageReader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +50,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				C90854EC1D6FBDF4001DF443 /* RNImageReader.m */,
 				B3E7B5881CC2AC0600A0062D /* RNImageReader.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
@@ -106,6 +112,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C90854ED1D6FBDF4001DF443 /* RNImageReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
