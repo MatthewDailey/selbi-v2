@@ -69,11 +69,15 @@ export default class LoginOrRegisterScene extends RoutableScene {
       return (
         <View style={styles.padded}>
           <FacebookButton >
-            <Text style={{ color: colors.white }}><Icon name="facebook" size={16} />  {`${registerOrSignIn} with Facebook`}</Text>
+            <Text style={{ color: colors.white }} >
+              <Icon name="facebook" size={16} />  {`${registerOrSignIn} with Facebook`}
+            </Text>
           </FacebookButton>
           <View style={styles.halfPadded} />
           <GoogleButton>
-            <Text style={{ color: 'grey' }}><Icon name="google" size={16} />  {`${registerOrSignIn} with Google`}</Text>
+            <Text style={{ color: 'grey' }}>
+              <Icon name="google" size={16} />  {`${registerOrSignIn} with Google`}
+            </Text>
           </GoogleButton>
           <View style={styles.padded} />
           <View
@@ -108,13 +112,17 @@ export default class LoginOrRegisterScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <ScrollView
-          ref={(r) => this.signInScrollView = r}
+          ref={ (r) => this.signInScrollView = r }
           style={styles.fullScreenContainer}
           tabLabel="Sign In"
         >
           {getInnerView(false, 'signInScrollView')}
         </ScrollView>
-        <ScrollView ref={(r) => this.registerScrollView = r} style={styles.fullScreenContainer} tabLabel="Register" >
+        <ScrollView
+          ref={ (r) => this.registerScrollView = r }
+          style={styles.fullScreenContainer}
+          tabLabel="Register"
+        >
           {getInnerView(true, 'registerScrollView')}
         </ScrollView>
       </ScrollableTabView>
