@@ -11,7 +11,6 @@ const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
 
 class NewListing extends Immutable.Record({
   status: 'building',
-  sellerUid: undefined,
   price: undefined,
   title: undefined,
   description: undefined,
@@ -20,9 +19,7 @@ class NewListing extends Immutable.Record({
   imageWidth: undefined,
   locationLat: undefined,
   locationLon: undefined,
-}) {}
-
-
+}) {};
 
 export default function (futureListingState = new NewListing(), action) {
   switch (getActionType(action)) {

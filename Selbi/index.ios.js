@@ -1,4 +1,4 @@
-import React, { AsyncStorage } from 'react';
+import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 
@@ -13,27 +13,13 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
   from './src/reducers/NewListingReducer';
-import userReducer from './src/reducers/UserReducer';
 
 import { registerWithEmail, signInWithEmail, getUser } from './src/firebase/FirebaseConnector';
-import { initializeCredentials, storeCredentials } from './src/firebase/CredentialPersister';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
-    user: userReducer,
     newListing: newListingReducer,
   })));
-
-initializeCredentials()
-  .then((credential) => {
-    if (credential) {
-      console.log(credential);
-      console.log(credential.email)
-      signInWithEmail(credential.email, credential.password)
-        .then(() => console.log('signed in with save creds'))
-        .catch(console.log);
-    }
-  });
 
 const listingScene = {
   id: 'listings-scene',
@@ -54,7 +40,6 @@ const loginScene = {
       rightIs="next"
       registerWithEmail={registerWithEmail}
       signInWithEmail={signInWithEmail}
-      storeCredential={storeCredentials}
     />),
 };
 
