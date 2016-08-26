@@ -36,12 +36,14 @@ const GoogleButton = MKButton.button()
     borderRadius: 5,
   })
   .withBackgroundColor(colors.white)
+  .withOnPress(() => alert('Sorry, not yet supported.'))
   .build();
 
 const FacebookButton = MKButton.button()
   .withStyle({
     borderRadius: 5,
   })
+  .withOnPress(() => alert('Sorry, not yet supported.'))
   .withBackgroundColor('#3b5998')
   .build();
 
