@@ -15,6 +15,9 @@ export default StyleSheet.create({
   padded: {
     margin: 16,
   },
+  halfPadded: {
+    margin: 8,
+  },
   paddedContainer: {
     flex: 1,
     margin: 16,

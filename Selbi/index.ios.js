@@ -9,12 +9,13 @@ import ListingScene from './src/scenes/ListingsScene';
 import InputScene from './src/scenes/InputScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
-import { withNavigatorProps } from './src/nav/RoutableScene';
+import RoutableScene, { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
 from './src/reducers/NewListingReducer';
 
 const withProps = withNavigatorProps.bind(undefined, createStore(newListingReducer));
+
 
 const listingScene = {
   id: 'listings-scene',
@@ -30,7 +31,7 @@ const loginScene = {
   id: 'login-scene',
   renderContent: withProps(
     <LoginOrRegisterScene
-      title="Sign In"
+      title=""
       leftIs="back"
       rightIs="next"
     />),
@@ -124,7 +125,7 @@ routeLinks[titleScene.id] = {
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={loginScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);
