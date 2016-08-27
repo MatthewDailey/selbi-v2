@@ -19,7 +19,7 @@ class NewListing extends Immutable.Record({
   imageWidth: undefined,
   locationLat: undefined,
   locationLon: undefined,
-}) {};
+}) {}
 
 export default function (futureListingState = new NewListing(), action) {
   switch (getActionType(action)) {

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
 import { MKTextField } from 'react-native-material-kit';
 
@@ -13,7 +13,6 @@ export default class InputView extends RoutableScene {
   }
 
   renderWithNavBar() {
-    console.log(`store:::: ${this.props.store.getState()}`)
     return (
       <View style={styles.container}>
         <View style={styles.padded}>
@@ -35,13 +34,5 @@ export default class InputView extends RoutableScene {
       </View>
     );
   }
-};
-
-
-export function EnterTitleView(props) {
-  return <InputView {...props} inputTitle={'What are you selling?'} dataToStore={'title'} />;
 }
 
-export function EnterPriceView(props) {
-  return <InputView {...props} inputTitle={'How much does it cost?'} dataToStore={'price'} />;
-}
