@@ -15,7 +15,8 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 import newListingReducer, { setNewListingPrice, setNewListingTitle }
   from './src/reducers/NewListingReducer';
 
-import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage } from './src/firebase/FirebaseConnector';
+import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
+  from './src/firebase/FirebaseConnector';
 
 const withProps = withNavigatorProps.bind(undefined,
   createStore(combineReducers({
@@ -50,12 +51,12 @@ const postLoginScene = {
   renderContent: withProps(
     <PublishScene
       title="Success!"
-      leftIs="back"
+      rightIs="home"
       createListing={createListing}
       publishImage={publishImage}
     />
   ),
-}
+};
 
 const priceScene = {
   id: 'price-scene',
@@ -153,9 +154,8 @@ routeLinks[loginScene.id] = {
   },
 };
 routeLinks[postLoginScene.id] = {
-  back: {
-    title: '',
-    getRoute: () => titleScene,
+  home: {
+    title: 'Done',
   },
 };
 
