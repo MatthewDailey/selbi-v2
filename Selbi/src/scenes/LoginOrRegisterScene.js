@@ -70,7 +70,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
         this.props.createUser(user.uid);
         this.goNext();
       })
-      .catch(console.log);
+      .catch((error) => alert(error.message));
   }
 
   signInWithEmailAndPassword() {
@@ -79,7 +79,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
 
     this.props.signInWithEmail(email, password)
       .then(() => this.goNext())
-      .catch((e) => console.log(e.code));
+      .catch((error) => alert(error.message));
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
@@ -87,9 +87,6 @@ export default class LoginOrRegisterScene extends RoutableScene {
       .coloredFlatButton()
       .withText(registerOrSignInType)
       .withOnPress(() => {
-        console.log(`Clicked ${registerOrSignInType}`);
-        console.log(this.props.store.getState());
-        console.log(this.state);
         registerOrSignInMethod();
       })
       .build();

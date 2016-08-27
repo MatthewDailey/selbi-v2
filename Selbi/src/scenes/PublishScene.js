@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import ImageReader from '@selbi/react-native-image-reader';
 
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
-import ImageReader from '@selbi/react-native-image-reader';
 
 export default class PublishScene extends RoutableScene {
   componentDidMount() {
@@ -11,7 +11,9 @@ export default class PublishScene extends RoutableScene {
     console.log(newListing);
     ImageReader
       .readImage(newListing.imageUri)
-      .then((imageBase64) => this.props.publishImage(imageBase64[0], newListing.imageHeight,
+      .then((imageBase64) => this.props.publishImage(
+        imageBase64[0],
+        newListing.imageHeight,
         newListing.imageWidth))
       .then((imageKey) => this.props.createListing(
         'title',

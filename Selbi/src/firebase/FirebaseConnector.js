@@ -38,7 +38,7 @@ export function signInWithEmail(email, password) {
 export function getUser() {
   return getFirebase()
     .auth()
-    .currentUser;u
+    .currentUser;
 }
 
 export function createUser() {
