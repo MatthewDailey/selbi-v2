@@ -1,15 +1,22 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
 import { MKTextField } from 'react-native-material-kit';
 
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 
-export default class InputView extends RoutableScene {
+export default class InputScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = { text: props.store.getState().newListing.get(props.field) };
+  }
+
+  shouldGoNext() {
+    if (!this.state.text) {
+      alert('Input must not be empty.');
+      return false;
+    }
+    return true;
   }
 
   renderWithNavBar() {
