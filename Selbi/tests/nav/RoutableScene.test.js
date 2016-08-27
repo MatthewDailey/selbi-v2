@@ -53,7 +53,7 @@ describe('<RoutableScene />', () => {
       const navBar = wrapper.find('NavigationBar').get(0);
 
       expect(navBar.props.leftButton).to.exist();
-      expect(navBar.props.leftButton.title).to.equal('< Back');
+      expect(navBar.props.leftButton.title).to.equal('<');
       expect(navBar.props.leftButton.handler.name).to.equal('bound goBack');
     });
 
@@ -204,6 +204,28 @@ describe('<RoutableScene />', () => {
       navigatorMock.verify();
     });
 
+    it('wont call push on goNext if shouldGoNext returns false', () => {
+      const nextRoute = {};
+      navigatorMock.expects('push').never();
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('popToRoute').never();
+      navigatorMock.expects('popToTop').never();
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        navigator: navigatorApi,
+        routeLinks: {
+          next: {
+            getRoute: () => nextRoute,
+            title: 'next',
+          },
+        },
+      });
+      scene.shouldGoNext = () => false;
+      scene.goNext();
+      navigatorMock.verify();
+    });
+
     it('will call navigator.pop on goBack', () => {
       navigatorMock.expects('pop');
 
@@ -283,10 +305,6 @@ describe('<RoutableScene />', () => {
       });
       scene.goHome();
       navigatorMock.verify();
-    });
-
-    it('will log name', () => {
-      const coolObject = {};
     });
   });
 });
