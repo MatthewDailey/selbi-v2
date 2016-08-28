@@ -1,6 +1,5 @@
 import React from 'react-native';
 import { shallow } from 'enzyme';
-import { expect } from 'chai';
 
 import SignInOrRegisterScene from '../../src/scenes/SignInOrRegisterScene';
 
@@ -28,5 +27,17 @@ describe('<SignInOrRegisterScene />', () => {
     expect(wrapper.state(stateEmailRegister)).to.equal('');
     expect(wrapper.state(statePasswordSignIn)).to.equal('');
     expect(wrapper.state(statePasswordRegister)).to.equal('');
+  });
+
+  it('as default props', () => {
+    const wrapper = shallow(<SignInOrRegisterScene />);
+    expect(wrapper.instance().props).to.have.all.keys([
+      'routeLinks',
+      'leftIs',
+      'rightIs',
+    ]);
+    expect(wrapper.instance().props.routeLinks).to.be.empty();
+    expect(wrapper.instance().props.leftIs).to.equal(undefined);
+    expect(wrapper.instance().props.rightIs).to.equal(undefined);
   });
 });

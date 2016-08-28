@@ -2,6 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import register from 'babel-core/register';
 import Module from 'module';
+import chai, { expect } from 'chai';
+import dirtyChai from 'dirty-chai';
+chai.use(dirtyChai);
+
+global.expect = expect;
 
 const originalFindPath = Module._findPath;
 
@@ -52,3 +57,4 @@ config.ignore = (filename) => {
 register(config);
 // Setup globals / chai
 global.__DEV__ = true;
+
