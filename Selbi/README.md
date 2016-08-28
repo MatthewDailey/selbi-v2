@@ -15,6 +15,11 @@ To install deps:
 - `npm i --save-dev react-addons-test-utils`
 - `npm i --save-dev react-dom`
 
+In addition, to transpile React Native modules for test, it's important that you run `mocha` with
+the `--require tests/setup.js`. The `node_modules` to transpile are listed in `modulesToCompile`.
+
+This is cheifly necessary for the `react-native-material-kit` dependency.
+
 Redux
 -----
 To manage data in a complex application we use
