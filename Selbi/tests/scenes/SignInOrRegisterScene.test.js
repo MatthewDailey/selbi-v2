@@ -1,6 +1,6 @@
 import React from 'react-native';
 import { shallow } from 'enzyme';
-import { spy } from 'sinon';
+import { spy, mock } from 'sinon';
 
 import SignInOrRegisterScene from '../../src/scenes/SignInOrRegisterScene';
 
@@ -88,6 +88,46 @@ describe('<SignInOrRegisterScene />', () => {
         .instance()
         .getInnerView(testTabLabel, spy());
       expect(innerView.props.tabLabel).to.equal(testTabLabel);
+    });
+  });
+
+  describe('register and sign in', () => {
+    let signInOrRegisterWrapper;
+    let mockSignInWithEmail;
+    let mockRegisterWithEmail;
+
+    beforeEach(() => {
+      mockSignInWithEmail = spy(() => Promise.resolve());
+      mockRegisterWithEmail = spy(() => Promise.resolve());
+
+      signInOrRegisterWrapper = shallow(
+        <SignInOrRegisterScene
+          registerWithEmail={mockRegisterWithEmail}
+          signInWithEmail={mockSignInWithEmail}
+        />
+      );
+      signInOrRegisterWrapper.setState({
+        emailSignIn: 'email-signin',
+        emailRegister: 'email-register',
+        passwordSignIn: 'password-signin',
+        passwordRegister: 'password-register',
+      });
+    });
+
+    it('calls sign in with correct email and pw', () => {
+      signInOrRegisterWrapper.instance().signInWithEmailAndPassword();
+
+      expect(mockSignInWithEmail.calledWithExactly('email-signin', 'password-signin'))
+        .to.be.true();
+      expect(mockRegisterWithEmail.neverCalledWith()).to.be.true();
+    });
+
+    it('calls register with correct email and pw', () => {
+      signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword();
+
+      expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
+      expect(mockRegisterWithEmail.calledWithExactly('email-register', 'password-register'))
+        .to.be.true();
     });
   });
 });
