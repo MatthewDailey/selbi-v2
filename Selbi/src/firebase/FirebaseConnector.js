@@ -7,14 +7,8 @@ const developConfig = {
   storageBucket: 'selbi-develop.appspot.com',
 };
 
-let firebaseApp = null;
-
-function getFirebase() {
-  if (!firebaseApp) {
-    firebaseApp = firebase.initializeApp(developConfig);
-  }
-  return firebaseApp;
-}
+// Note that this also reloads user auth settings. Therefore, this must not be loaded lazily.
+const firebaseApp = firebase.initializeApp(developConfig);
 
 export default undefined;
 
@@ -24,25 +18,25 @@ export default undefined;
  * @returns Firebase Promise containing the User data.
  */
 export function registerWithEmail(emailInput, passwordInput) {
-  return getFirebase()
+  return firebaseApp
     .auth()
     .createUserWithEmailAndPassword(emailInput, passwordInput);
 }
 
 export function signInWithEmail(email, password) {
-  return getFirebase()
+  return firebaseApp
     .auth()
     .signInWithEmailAndPassword(email, password);
 }
 
 export function getUser() {
-  return getFirebase()
+  return firebaseApp
     .auth()
     .currentUser;
 }
 
 export function createUser() {
-  return getFirebase()
+  return firebaseApp
     .database()
     .ref('/users')
     .child(getUser().uid)
@@ -57,10 +51,9 @@ export function publishImage(base64, heightInput, widthInput) {
     base64: base64,
     height: heightInput,
     width: widthInput,
-  }
+  };
 
-  console.log(imageData);
-  return getFirebase()
+  return firebaseApp
     .database()
     .ref('images')
     .push(imageData)
@@ -68,10 +61,10 @@ export function publishImage(base64, heightInput, widthInput) {
 }
 
 export function createListing(titleInput,
-                       descriptionInput,
-                       priceInput,
-                       imagesInput,
-                       categoryInput) {
+                              descriptionInput,
+                              priceInput,
+                              imagesInput,
+                              categoryInput) {
   // TODO: Add validation of args for cleaner failures.
   const uid = getUser().uid;
 
@@ -86,17 +79,15 @@ export function createListing(titleInput,
   };
 
   // Get an id for the new listing.
-  const newListingRef = getFirebase().database().ref('/listings').push();
+  const newListingRef = firebaseApp.database().ref('/listings').push();
 
-  const createUserListing = () => getFirebase()
+  const createUserListing = () => firebaseApp
     .database()
     .ref('/userListings')
     .child(uid)
     .child('inactive')
     .child(newListingRef.key)
     .set(true);
-
-  console.log(listing)
 
   return newListingRef
     .set(listing)

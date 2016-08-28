@@ -43,8 +43,8 @@ const FacebookButton = MKButton.button()
   .withStyle({
     borderRadius: 5,
   })
-  .withOnPress(() => alert('Sorry, not yet supported.'))
   .withBackgroundColor('#3b5998')
+  .withOnPress(() => alert('Sorry, not yet supported.'))
   .build();
 
 export default class LoginOrRegisterScene extends RoutableScene {
@@ -92,7 +92,6 @@ export default class LoginOrRegisterScene extends RoutableScene {
       .build();
 
     const scrollRef = `scroll${registerOrSignInType}`;
-
     const scrollToBottom = () => {
       this[scrollRef].scrollTo({ x: 0, y: 150, animated: true });
     };
