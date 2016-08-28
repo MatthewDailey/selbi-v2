@@ -34,6 +34,8 @@ Module._findPath = (request, paths) => {
 // Ignore all node_modules except these
 const modulesToCompile = [
   'react-native-material-kit',
+  'react-native-vector-icons',
+  'react-native-scrollable-tab-view',
 ].map((moduleName) => new RegExp(`/node_modules/${moduleName}`));
 const rcPath = path.join(__dirname, '..', '.babelrc');
 const source = fs.readFileSync(rcPath).toString();
