@@ -1,5 +1,6 @@
 import React from 'react-native';
 import { shallow } from 'enzyme';
+import { spy } from 'sinon';
 
 import SignInOrRegisterScene from '../../src/scenes/SignInOrRegisterScene';
 
@@ -39,5 +40,20 @@ describe('<SignInOrRegisterScene />', () => {
     expect(wrapper.instance().props.routeLinks).to.be.empty();
     expect(wrapper.instance().props.leftIs).to.equal(undefined);
     expect(wrapper.instance().props.rightIs).to.equal(undefined);
+  });
+
+  describe('inner view', () => {
+    it('is ScrollView', () => {
+      const signInOrRegisterComponent = shallow(<SignInOrRegisterScene />).instance();
+      expect(signInOrRegisterComponent.getInnerView().type.displayName).to.equal('ScrollView');
+    });
+
+    it('has tab label from arg', () => {
+      const testTabLabel = 'Sign In';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+      expect(innerView.props.tabLabel).to.equal(testTabLabel);
+    });
   });
 });
