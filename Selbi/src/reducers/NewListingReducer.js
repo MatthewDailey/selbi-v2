@@ -13,7 +13,7 @@ class NewListing extends Immutable.Record({
   status: 'building',
   price: undefined,
   title: undefined,
-  description: undefined,
+  description: '',
   imageUri: undefined,
   imageHeight: undefined,
   imageWidth: undefined,

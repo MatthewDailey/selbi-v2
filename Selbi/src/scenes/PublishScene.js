@@ -8,7 +8,7 @@ import RoutableScene from '../nav/RoutableScene';
 export default class PublishScene extends RoutableScene {
   componentDidMount() {
     const newListing = this.props.store.getState().newListing;
-    console.log(newListing);
+
     ImageReader
       .readImage(newListing.imageUri)
       .then((imageBase64) => this.props.publishImage(
@@ -16,9 +16,9 @@ export default class PublishScene extends RoutableScene {
         newListing.imageHeight,
         newListing.imageWidth))
       .then((imageKey) => this.props.createListing(
-        'title',
-        'no desc yet',
-        1,
+        newListing.title,
+        '', // description
+        newListing.price,
         {
           image1: {
             imageId: imageKey,
@@ -26,7 +26,7 @@ export default class PublishScene extends RoutableScene {
             height: newListing.imageHeight,
           },
         },
-        'unknown category'
+        '' // category
       ))
       .then(console.log)
       .catch(console.log);
