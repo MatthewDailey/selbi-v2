@@ -43,9 +43,36 @@ describe('<SignInOrRegisterScene />', () => {
   });
 
   describe('outer view', () => {
+    beforeEach(() => {
+      spy(SignInOrRegisterScene.prototype, 'getInnerView');
+    });
+
+    afterEach(() => {
+      SignInOrRegisterScene.prototype.getInnerView.restore();
+    });
+
     it('has 2 children', () => {
       const signInOrRegisterWrapper = shallow(<SignInOrRegisterScene />);
       expect(signInOrRegisterWrapper.children()).to.have.lengthOf(2);
+    });
+
+    it('calls getInnerView twice to generate 2 children', () => {
+      shallow(<SignInOrRegisterScene />);
+      expect(SignInOrRegisterScene.prototype.getInnerView.calledTwice).to.be.true();
+    });
+
+    it('call getInnerView first for \'Sign In\'', () => {
+      shallow(<SignInOrRegisterScene />);
+      expect(SignInOrRegisterScene.prototype.getInnerView.firstCall
+        .calledWith('Sign In'))
+        .to.be.true();
+    });
+
+    it('call getInnerView second for \'Register\'', () => {
+      shallow(<SignInOrRegisterScene />);
+      expect(SignInOrRegisterScene.prototype.getInnerView.secondCall
+        .calledWith('Register'))
+        .to.be.true();
     });
   });
 
