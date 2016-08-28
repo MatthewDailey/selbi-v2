@@ -47,7 +47,7 @@ const FacebookButton = MKButton.button()
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
-export default class LoginOrRegisterScene extends RoutableScene {
+export default class SignInOrRegisterScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = {

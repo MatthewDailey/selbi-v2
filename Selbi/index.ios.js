@@ -4,10 +4,10 @@ import { createStore, combineReducers } from 'redux';
 
 import Menu from './components/Menu';
 
-import LoginOrRegisterScene from './src/scenes/LoginOrRegisterScene';
+import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
 import InputScene from './src/scenes/InputScene';
-import PublishScene from './src/scenes/PublishScene'
+import PublishScene from './src/scenes/PublishScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
@@ -36,7 +36,7 @@ const listingScene = {
 const loginScene = {
   id: 'login-scene',
   renderContent: withProps(
-    <LoginOrRegisterScene
+    <SignInOrRegisterScene
       title=""
       leftIs="back"
       rightIs="next"
@@ -71,7 +71,6 @@ const priceScene = {
       floatingLabel
       recordInputAction={setNewListingPrice}
       loadInitialInput={() => {
-        console.log(store.getState());
         const price = store.getState().newListing.get('price');
         if (price) {
           return price.toString();
