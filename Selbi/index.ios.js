@@ -18,10 +18,10 @@ import newListingReducer, { setNewListingPrice, setNewListingTitle }
 import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
   from './src/firebase/FirebaseConnector';
 
-const withProps = withNavigatorProps.bind(undefined,
-  createStore(combineReducers({
-    newListing: newListingReducer,
-  })));
+const store = createStore(combineReducers({
+  newListing: newListingReducer,
+}));
+const withProps = withNavigatorProps.bind(undefined, store);
 
 const listingScene = {
   id: 'listings-scene',
@@ -66,11 +66,18 @@ const priceScene = {
       leftIs="back"
       rightIs="next"
       inputTitle="How much do you want to sell for?"
-      field="price"
       placeholder="USD"
       isNumeric
       floatingLabel
       recordInputAction={setNewListingPrice}
+      loadInitialInput={() => {
+        console.log(store.getState());
+        const price = store.getState().newListing.get('price');
+        if (price) {
+          return price.toString();
+        }
+        return price;
+      }}
     />
   ),
 };
@@ -83,9 +90,9 @@ const titleScene = {
       leftIs="back"
       rightIs="next"
       inputTitle="What are you selling?"
-      field="title"
       placeholder="Eg. 'Magic coffee table!'"
       recordInputAction={setNewListingTitle}
+      loadInitialInput={() => store.getState().newListing.get('title')}
     />
   ),
 };

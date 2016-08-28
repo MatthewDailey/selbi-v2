@@ -8,7 +8,7 @@ import RoutableScene from '../nav/RoutableScene';
 export default class PublishScene extends RoutableScene {
   componentDidMount() {
     const newListing = this.props.store.getState().newListing;
-
+    console.log(newListing);
     ImageReader
       .readImage(newListing.imageUri)
       .then((imageBase64) => this.props.publishImage(
