@@ -42,6 +42,13 @@ describe('<SignInOrRegisterScene />', () => {
     expect(wrapper.instance().props.rightIs).to.equal(undefined);
   });
 
+  describe('outer view', () => {
+    it('has 2 children', () => {
+      const signInOrRegisterWrapper = shallow(<SignInOrRegisterScene />);
+      expect(signInOrRegisterWrapper.children()).to.have.lengthOf(2);
+    });
+  });
+
   describe('inner view', () => {
     it('is ScrollView', () => {
       const signInOrRegisterComponent = shallow(<SignInOrRegisterScene />).instance();
