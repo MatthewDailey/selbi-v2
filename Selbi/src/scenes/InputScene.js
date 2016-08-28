@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
 import styles from '../../styles';
@@ -15,13 +15,12 @@ export default class InputScene extends RoutableScene {
 
   shouldGoNext() {
     if (!this.state.text) {
-      alert('Input must not be empty.');
+      Alert.alert('Must not be empty.');
       return false;
     } else if (this.props.isNumeric && isNaN(this.getInputValue())) {
-      alert('Input must not be a number.');
+      Alert.alert('Must be a number.');
       return false;
     }
-    console.log(parseFloat(this.state.text));
     return true;
   }
 
@@ -34,8 +33,7 @@ export default class InputScene extends RoutableScene {
 
   onInputTextChange(newText) {
     this.setState({ text: newText },
-      () => this.props.store.dispatch(
-        this.props.recordInputAction(this.getInputValue()))
+      () => this.props.store.dispatch(this.props.recordInputAction(this.getInputValue()))
     );
   }
 
