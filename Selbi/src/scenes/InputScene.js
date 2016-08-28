@@ -9,6 +9,8 @@ export default class InputScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = { text: this.props.loadInitialInput() };
+
+    this.onInputTextChange = this.onInputTextChange.bind(this);
   }
 
   shouldGoNext() {
@@ -30,6 +32,13 @@ export default class InputScene extends RoutableScene {
     return this.state.text;
   }
 
+  onInputTextChange(newText) {
+    this.setState({ text: newText },
+      () => this.props.store.dispatch(
+        this.props.recordInputAction(this.getInputValue()))
+    );
+  }
+
   renderWithNavBar() {
     return (
       <View style={styles.container}>
@@ -41,12 +50,7 @@ export default class InputScene extends RoutableScene {
               placeholder={this.props.placeholder}
               style={{ height: 48 }}
               value={this.state.text}
-              onChangeText={(newText) => {
-                this.setState({ text: newText },
-                  () => this.props.store.dispatch(
-                    this.props.recordInputAction(this.getInputValue()))
-                );
-              }}
+              onTextChange={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
             />
           </View>
