@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 import { mdl, MKButton, setTheme } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -36,7 +36,7 @@ const GoogleButton = MKButton.button()
     borderRadius: 5,
   })
   .withBackgroundColor(colors.white)
-  .withOnPress(() => alert('Sorry, not yet supported.'))
+  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 const FacebookButton = MKButton.button()
@@ -44,7 +44,7 @@ const FacebookButton = MKButton.button()
     borderRadius: 5,
   })
   .withBackgroundColor('#3b5998')
-  .withOnPress(() => alert('Sorry, not yet supported.'))
+  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 export default class LoginOrRegisterScene extends RoutableScene {
@@ -70,7 +70,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
         this.props.createUser(user.uid);
         this.goNext();
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => Alert.alert(error.message));
   }
 
   signInWithEmailAndPassword() {
@@ -79,7 +79,7 @@ export default class LoginOrRegisterScene extends RoutableScene {
 
     this.props.signInWithEmail(email, password)
       .then(() => this.goNext())
-      .catch((error) => alert(error.message));
+      .catch((error) => Alert.alert(error.message));
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
