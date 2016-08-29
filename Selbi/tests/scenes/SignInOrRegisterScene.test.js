@@ -138,6 +138,26 @@ describe('<SignInOrRegisterScene />', () => {
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Password'))
         .to.be.true();
     });
+
+    it('has first name input for register', () => {
+      const testTabLabel = 'Register';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First Name'))
+        .to.be.true();
+    });
+
+    it('has last name input for register', () => {
+      const testTabLabel = 'Register';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last Name'))
+        .to.be.true();
+    });
   });
 
   describe('register and sign in', () => {
