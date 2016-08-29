@@ -23,6 +23,8 @@ class NewListing extends Immutable.Record({
 }) {}
 
 export default function (futureListingState = new NewListing(), action) {
+  console.log('-----------action------------')
+  console.log(action)
   switch (getActionType(action)) {
     case NL_SET_LISTING_ID:
       return futureListingState.merge({ listingId: action.listingId });
@@ -73,6 +75,7 @@ export function setNewListingDescription(listingDescription) {
 }
 
 export function setNewListingLocation(listingLocation) {
+  console.log(listingLocation)
   return {
     type: NL_SET_LOCATION,
     location: listingLocation,

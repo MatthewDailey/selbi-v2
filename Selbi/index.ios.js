@@ -12,7 +12,8 @@ import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 
-import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId }
+import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
+  setNewListingLocation }
   from './src/reducers/NewListingReducer';
 
 import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
@@ -55,6 +56,7 @@ const publishScene = {
       createListing={createListing}
       publishImage={publishImage}
       listingIdAction={setNewListingId}
+      publishListingLocation={setNewListingLocation}
     />
   ),
 };

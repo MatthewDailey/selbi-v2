@@ -83,6 +83,25 @@ export default class PublishScene extends RoutableScene {
     this.setState({ status: publishStatus.failure });
   }
 
+  getGeolocation() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.props.store.dispatch(this.props.publishListingLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          }));
+          resolve();
+        },
+        (error) => {
+          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
+          reject(error.message);
+        },
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    });
+  }
+
   getPublishedInactiveView() {
     return (
       <View style={styles.paddedContainer}>
@@ -104,9 +123,10 @@ export default class PublishScene extends RoutableScene {
           <Button
             onPress={
               () => this.setState({ status: publishStatus.publishing },
-                () => makeListingPublic(this.props.store.getState().newListing))
-                .then(() => this.setState({ status: publishStatus.publishedPublic }))
-                .catch(this.handleError)
+                () => this.getGeolocation()
+                  .then(() => makeListingPublic(this.props.store.getState().newListing))
+                  .then(() => this.setState({ status: publishStatus.publishedPublic }))
+                  .catch(this.handleError))
             }
           >
             <Text><Icon name="globe" size={16} />  Anyone</Text>
