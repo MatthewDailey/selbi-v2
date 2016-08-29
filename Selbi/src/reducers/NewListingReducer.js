@@ -2,7 +2,6 @@ import Immutable from 'immutable';
 import { getActionType } from './ActionUtils';
 
 const NL_SET_LISTING_ID = 'new-listing-set-id';
-const NL_SET_SELLER_UID = 'new-listing-set-seller-uid';
 const NL_SET_PRICE = 'new-listing-set-price';
 const NL_SET_TITLE = 'new-listing-set-title';
 const NL_SET_DESCRIPTION = 'new-listing-set-description';
@@ -13,7 +12,6 @@ const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
 class NewListing extends Immutable.Record({
   status: 'building',
   price: undefined,
-  sellerUid: undefined,
   title: undefined,
   listingId: undefined,
   description: '',
@@ -27,9 +25,7 @@ class NewListing extends Immutable.Record({
 export default function (futureListingState = new NewListing(), action) {
   switch (getActionType(action)) {
     case NL_SET_LISTING_ID:
-      return futureListingState.merge({ listingId: action.listingId })
-    case NL_SET_SELLER_UID:
-      return futureListingState.merge({ sellerUid: action.sellerUid });
+      return futureListingState.merge({ listingId: action.listingId });
     case NL_SET_PRICE:
       return futureListingState.merge({ price: action.price });
     case NL_SET_TITLE:
@@ -52,13 +48,6 @@ export function setNewListingId(id) {
   return {
     type: NL_SET_LISTING_ID,
     listingId: id,
-  };
-}
-
-export function setNewListingSeller(uid) {
-  return {
-    type: NL_SET_SELLER_UID,
-    sellerUid: uid,
   };
 }
 

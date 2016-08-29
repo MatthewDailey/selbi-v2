@@ -3,7 +3,6 @@ import dirtyChai from 'dirty-chai';
 import { createStore } from 'redux';
 
 import newListingReducer, {
-  setNewListingSeller,
   setNewListingPrice,
   setNewListingTitle,
   setNewListingDescription,
@@ -25,11 +24,6 @@ describe('NewListingReducer', () => {
   it('can set listing id', () => {
     const setListingIdAction = setNewListingId('testId');
     expect(newListingReducer(initialState, setListingIdAction).listingId).to.equal('testId');
-  });
-
-  it('can set seller uid', () => {
-    const setSellerAction = setNewListingSeller('testUid');
-    expect(newListingReducer(initialState, setSellerAction).sellerUid).to.equal('testUid');
   });
 
   it('can set price', () => {
