@@ -219,7 +219,7 @@ describe('<SignInOrRegisterScene />', () => {
           expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
           expect(mockRegisterWithEmail.calledWithExactly('email-register', 'password-register'))
             .to.be.true();
-          expect(mockCreateUser.calledWithExactly('testUid', 'first-name', 'last-name'))
+          expect(mockCreateUser.calledWithExactly('first-name', 'last-name'))
             .to.be.true();
           done();
         })

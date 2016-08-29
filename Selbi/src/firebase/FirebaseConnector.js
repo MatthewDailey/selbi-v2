@@ -35,12 +35,16 @@ export function getUser() {
     .currentUser;
 }
 
-export function createUser() {
+export function createUser(firstName, lastName) {
   return firebaseApp
     .database()
     .ref('/users')
     .child(getUser().uid)
     .set({
+      name: {
+        first: firstName,
+        last: lastName,
+      },
       userAgreementAccepted: false,
     });
 }
