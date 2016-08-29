@@ -37,7 +37,7 @@ function getPublishingView() {
 function getPublishedInactiveView() {
   return (
     <View style={styles.paddedContainer}>
-      <Text style={styles.friendlyText}>We've posted your listing but it cannot yet be seen.</Text>
+      <Text style={styles.friendlyText}>We've got your listing but it cannot yet be seen.</Text>
       <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
       <View style={styles.halfPadded}>
         <Button>
@@ -56,7 +56,12 @@ function getPublishedInactiveView() {
 function getPublishedView(visibleTo) {
   return (
     <View style={styles.paddedContainer}>
-      <Text style={styles.friendlyText}>{`Your listing is now visible to ${visibleTo}.`}</Text>
+      <Text style={styles.friendlyText}>
+        {`Your listing is visible and ready to sell to ${visibleTo}.`}
+      </Text>
+      <Text style={styles.friendlyText}>
+        <Icon name="smile-o" size={30} />
+      </Text>
       <Text style={styles.friendlyText}>
         To sell faster, we recommend adding more details.
       </Text>
@@ -65,6 +70,19 @@ function getPublishedView(visibleTo) {
           <Text>Add Details</Text>
         </Button>
       </View>
+    </View>
+  );
+}
+
+function getFailureView() {
+  return (
+    <View style={styles.paddedContainer}>
+      <Text style={styles.friendlyText}>
+        Unfortunately we've messed something up and you'll have to try making your listing again.
+      </Text>
+      <Text style={styles.friendlyText}>
+        <Icon name="frown-o" size={30} />
+      </Text>
     </View>
   );
 }
@@ -103,7 +121,7 @@ export default class PublishScene extends RoutableScene {
         return getPublishedView('anyone nearby');
       case publishStatus.failure:
       default:
-        return getPublishedView('anyone nearby');
+        return getFailureView();
     }
   }
 }
