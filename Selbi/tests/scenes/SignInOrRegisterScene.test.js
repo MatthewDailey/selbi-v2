@@ -89,6 +89,55 @@ describe('<SignInOrRegisterScene />', () => {
         .getInnerView(testTabLabel, spy());
       expect(innerView.props.tabLabel).to.equal(testTabLabel);
     });
+
+    function atleastOneChildMatches(reactComponent, predicate) {
+      return shallow(reactComponent)
+        .instance()
+        .props
+        .children
+        .map(predicate)
+        .reduce((previousValue, currentValue) => previousValue || currentValue);
+    }
+
+    it('has email input for sign in', () => {
+      const testTabLabel = 'Sign in';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Email'))
+        .to.be.true();
+    });
+
+    it('has password input for sign in', () => {
+      const testTabLabel = 'Sign in';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Password'))
+        .to.be.true();
+    });
+
+    it('has email input for register', () => {
+      const testTabLabel = 'Register';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Email'))
+        .to.be.true();
+    });
+
+    it('has password input for register', () => {
+      const testTabLabel = 'Register';
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(testTabLabel, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Password'))
+        .to.be.true();
+    });
   });
 
   describe('register and sign in', () => {

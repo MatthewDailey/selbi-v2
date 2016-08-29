@@ -99,54 +99,52 @@ export default class SignInOrRegisterScene extends RoutableScene {
     return (
       <ScrollView
         ref={(r) => this[scrollRef] = r}
-        style={styles.fullScreenContainer}
+        style={styles.paddedFullScreenContainer}
         tabLabel={registerOrSignInType}
       >
-        <View style={styles.padded}>
-          <FacebookButton >
-            <Text style={{ color: colors.white }} >
-              <Icon name="facebook" size={16} />  {`${registerOrSignInType} with Facebook`}
-            </Text>
-          </FacebookButton>
-          <View style={styles.halfPadded} />
-          <GoogleButton>
-            <Text style={{ color: 'grey' }}>
-              <Icon name="google" size={16} />  {`${registerOrSignInType} with Google`}
-            </Text>
-          </GoogleButton>
-          <View style={styles.padded} />
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: `${colors.secondary}64`,
-            }}
-          />
-          <View style={styles.padded} />
-          <Text
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            {`${registerOrSignInType} with email and password.`}
+        <FacebookButton >
+          <Text style={{ color: colors.white }} >
+            <Icon name="facebook" size={16} />  {`${registerOrSignInType} with Facebook`}
           </Text>
-          <EmailInput
-            onChangeText={(newText) => {
-              const stateAdditions = {};
-              stateAdditions[`email${registerOrSignInType.replace(/ /g, '')}`] = newText;
-              this.setState(stateAdditions);
-            }}
-            onFocus={scrollToBottom}
-          />
-          <PasswordInput
-            onChangeText={(newText) => {
-              const stateAdditions = {};
-              stateAdditions[`password${registerOrSignInType.replace(/ /g, '')}`] = newText;
-              this.setState(stateAdditions);
-            }}
-          />
-          <View style={styles.padded} />
-          <SubmitButton />
-        </View>
+        </FacebookButton>
+        <View style={styles.halfPadded} />
+        <GoogleButton>
+          <Text style={{ color: 'grey' }}>
+            <Icon name="google" size={16} />  {`${registerOrSignInType} with Google`}
+          </Text>
+        </GoogleButton>
+        <View style={styles.padded} />
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: `${colors.secondary}64`,
+          }}
+        />
+        <View style={styles.padded} />
+        <Text
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          {`${registerOrSignInType} with email and password.`}
+        </Text>
+        <EmailInput
+          onChangeText={(newText) => {
+            const stateAdditions = {};
+            stateAdditions[`email${registerOrSignInType.replace(/ /g, '')}`] = newText;
+            this.setState(stateAdditions);
+          }}
+          onFocus={scrollToBottom}
+        />
+        <PasswordInput
+          onChangeText={(newText) => {
+            const stateAdditions = {};
+            stateAdditions[`password${registerOrSignInType.replace(/ /g, '')}`] = newText;
+            this.setState(stateAdditions);
+          }}
+        />
+        <View style={styles.padded} />
+        <SubmitButton />
       </ScrollView>
     );
   }

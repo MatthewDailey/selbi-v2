@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors';
 
+const paddingSize = 16;
 
 export default StyleSheet.create({
   container: {
@@ -12,15 +13,21 @@ export default StyleSheet.create({
     backgroundColor: colors.primary,
     flexDirection: 'column',
   },
+  paddedFullScreenContainer: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    flexDirection: 'column',
+    padding: paddingSize,
+  },
   padded: {
-    margin: 16,
+    margin: paddingSize,
   },
   halfPadded: {
-    margin: 8,
+    margin: paddingSize / 2,
   },
   paddedContainer: {
     flex: 1,
-    margin: 16,
+    margin: paddingSize,
     backgroundColor: colors.secondary,
   },
 });

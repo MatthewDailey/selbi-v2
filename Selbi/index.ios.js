@@ -168,7 +168,7 @@ routeLinks[postLoginScene.id] = {
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={loginScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);
