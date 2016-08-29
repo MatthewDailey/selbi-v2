@@ -13,6 +13,7 @@ const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
 class NewListing extends Immutable.Record({
   status: 'building',
   price: undefined,
+  sellerUid: undefined,
   title: undefined,
   listingId: undefined,
   description: '',

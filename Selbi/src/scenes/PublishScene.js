@@ -118,7 +118,8 @@ export default class PublishScene extends RoutableScene {
 
   componentDidMount() {
     createNewListingFromStore(this.props.store.getState().newListing)
-      .then(() => {
+      .then((newListingId) => {
+        this.props.store.dispatch(this.props.listingIdAction(newListingId));
         this.setState({
           status: publishStatus.publishedInactive,
         });
