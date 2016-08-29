@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { MKSpinner } from 'react-native-material-kit';
+import { MKSpinner, MKButton } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 import styles from '../../styles';
+import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import { createNewListingFromStore } from '../firebase/FirebaseActions';
 
@@ -14,11 +17,38 @@ const publishStatus = {
   failure: 'failure',
 };
 
+const Button = MKButton.button()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor(colors.white)
+  .withOnPress(() => alert('Sorry, not yet supported.'))
+  .build();
+
 function getPublishingView() {
   return (
     <View style={styles.centerContainer}>
       <Text style={styles.padded}>Updating your listing...</Text>
       <MKSpinner />
+    </View>
+  );
+}
+
+function getPublishedInactiveView() {
+  return (
+    <View style={styles.paddedContainer}>
+      <Text style={styles.friendlyText}>We've posted your listing but it cannot yet be seen.</Text>
+      <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
+      <View style={styles.halfPadded}>
+        <Button>
+          <Text><Icon name="users" size={16} />  My Friends</Text>
+        </Button>
+      </View>
+      <View style={styles.halfPadded}>
+        <Button>
+          <Text><Icon name="globe" size={16} />  Anyone</Text>
+        </Button>
+      </View>
     </View>
   );
 }
@@ -39,21 +69,19 @@ export default class PublishScene extends RoutableScene {
         });
       })
       .catch(() => {
-        // this.setState({
-        //   status: publishStatus.failure,
-        // });
+        this.setState({
+          status: publishStatus.failure,
+        });
       });
   }
 
   renderWithNavBar() {
-    if (this.state.status === publishStatus.publishing) {
-      return getPublishingView();
-    }
-    return (
-      <View style={styles.container}>
-        <Text>Successfully posted.</Text>
-        <Text>Get ready to get paid!</Text>
-      </View>
-    );
+    switch(this.state.status) {
+      case publishStatus.publishing:
+        return getPublishingView();
+      case publishStatus.publishedInactive:
+      default:
+        return getPublishedInactiveView();
+    };
   }
 }

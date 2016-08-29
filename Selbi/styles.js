@@ -13,6 +13,12 @@ export default StyleSheet.create({
     backgroundColor: colors.secondary,
     alignItems: 'center',
   },
+  paddedCenterContainer: {
+    padding: paddingSize,
+    flex: 1,
+    backgroundColor: colors.secondary,
+    alignItems: 'center',
+  },
   fullScreenContainer: {
     flex: 1,
     backgroundColor: colors.primary,
@@ -32,7 +38,14 @@ export default StyleSheet.create({
   },
   paddedContainer: {
     flex: 1,
-    margin: paddingSize,
+    padding: paddingSize,
     backgroundColor: colors.secondary,
+  },
+
+  friendlyText: {
+    fontSize: 20,
+    fontWeight: '300',
+    textAlign: 'center',
+    padding: paddingSize / 2,
   },
 });
