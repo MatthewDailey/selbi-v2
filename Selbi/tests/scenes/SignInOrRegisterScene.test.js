@@ -2,7 +2,7 @@ import React from 'react-native';
 import { shallow } from 'enzyme';
 import { spy, mock } from 'sinon';
 
-import SignInOrRegisterScene from '../../src/scenes/SignInOrRegisterScene';
+import SignInOrRegisterScene, { TabTypes } from '../../src/scenes/SignInOrRegisterScene';
 
 describe('<SignInOrRegisterScene />', () => {
   const stateEmailSignIn = 'emailSignIn';
@@ -64,14 +64,14 @@ describe('<SignInOrRegisterScene />', () => {
     it('call getInnerView first for \'Sign In\'', () => {
       shallow(<SignInOrRegisterScene />);
       expect(SignInOrRegisterScene.prototype.getInnerView.firstCall
-        .calledWith('Sign In'))
+        .calledWith(TabTypes.signIn))
         .to.be.true();
     });
 
     it('call getInnerView second for \'Register\'', () => {
       shallow(<SignInOrRegisterScene />);
       expect(SignInOrRegisterScene.prototype.getInnerView.secondCall
-        .calledWith('Register'))
+        .calledWith(TabTypes.register))
         .to.be.true();
     });
   });
@@ -79,15 +79,15 @@ describe('<SignInOrRegisterScene />', () => {
   describe('inner view', () => {
     it('is ScrollView', () => {
       const signInOrRegisterComponent = shallow(<SignInOrRegisterScene />).instance();
-      expect(signInOrRegisterComponent.getInnerView().type.displayName).to.equal('ScrollView');
+      expect(signInOrRegisterComponent.getInnerView(TabTypes.signIn, spy()).type.displayName)
+        .to.equal('ScrollView');
     });
 
     it('has tab label from arg', () => {
-      const testTabLabel = 'Sign In';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
-      expect(innerView.props.tabLabel).to.equal(testTabLabel);
+        .getInnerView(TabTypes.signIn, spy());
+      expect(innerView.props.tabLabel).to.equal(TabTypes.signIn.asTitle);
     });
 
     function atleastOneChildMatches(reactComponent, predicate) {
@@ -100,60 +100,54 @@ describe('<SignInOrRegisterScene />', () => {
     }
 
     it('has email input for sign in', () => {
-      const testTabLabel = 'Sign in';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.signIn, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Email'))
         .to.be.true();
     });
 
     it('has password input for sign in', () => {
-      const testTabLabel = 'Sign in';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.signIn, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Password'))
         .to.be.true();
     });
 
     it('has email input for register', () => {
-      const testTabLabel = 'Register';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.register, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Email'))
         .to.be.true();
     });
 
     it('has password input for register', () => {
-      const testTabLabel = 'Register';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.register, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Password'))
         .to.be.true();
     });
 
     it('has first name input for register', () => {
-      const testTabLabel = 'Register';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.register, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First Name'))
         .to.be.true();
     });
 
     it('has last name input for register', () => {
-      const testTabLabel = 'Register';
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()
-        .getInnerView(testTabLabel, spy());
+        .getInnerView(TabTypes.register, spy());
 
       expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last Name'))
         .to.be.true();

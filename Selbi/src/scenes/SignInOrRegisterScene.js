@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
-import { mdl, MKButton, setTheme } from 'react-native-material-kit';
+import {ScrollView, View, Text, Alert} from 'react-native';
+import {mdl, MKButton, setTheme} from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
@@ -47,15 +47,41 @@ const FacebookButton = MKButton.button()
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
+// Visible for tests.
+export const TabTypes = {
+  signIn: {
+    asTitle: 'Sign In',
+    asSentence: 'Sign in',
+    stateAndRefPostfix: 'SignIn',
+  },
+  register: {
+    asTitle: 'Register',
+    asSentence: 'Register',
+    stateAndRefPostfix: 'Register',
+  },
+};
+
+function scrollViewRef(tabType) {
+  return `scroll${tabType.stateAndRefPostfix}`;
+}
+
+function passwordState(tabType) {
+  return `password${tabType.stateAndRefPostfix}`;
+}
+
+function emailState(tabType) {
+  return `email${tabType.stateAndRefPostfix}`;
+}
+
 export default class SignInOrRegisterScene extends RoutableScene {
   constructor(props) {
     super(props);
-    this.state = {
-      emailSignIn: '',
-      passwordSignIn: '',
-      emailRegister: '',
-      passwordRegister: '',
-    };
+    this.state = {};
+
+    Object.keys(TabTypes).forEach((typeKey) => {
+      this.state[emailState(TabTypes[typeKey])] = '';
+      this.state[passwordState(TabTypes[typeKey])] = '';
+    });
 
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
@@ -85,65 +111,65 @@ export default class SignInOrRegisterScene extends RoutableScene {
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
     const SubmitButton = MKButton
       .coloredFlatButton()
-      .withText(registerOrSignInType)
+      .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
         registerOrSignInMethod();
       })
       .build();
 
-    const scrollRef = `scroll${registerOrSignInType}`;
     const scrollToBottom = () => {
-      this[scrollRef].scrollTo({ x: 0, y: 150, animated: true });
+      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
     };
 
     return (
       <ScrollView
-        ref={(r) => this[scrollRef] = r}
+        ref={(r) => this[scrollViewRef(registerOrSignInType)] = r}
         style={styles.paddedFullScreenContainer}
-        tabLabel={registerOrSignInType}
+        tabLabel={registerOrSignInType.asTitle}
       >
         <FacebookButton >
-          <Text style={{ color: colors.white }} >
-            <Icon name="facebook" size={16} />  {`${registerOrSignInType} with Facebook`}
+          <Text style={{color: colors.white}}>
+            <Icon name="facebook" size={16}/> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
         </FacebookButton>
-        <View style={styles.halfPadded} />
+        <View style={styles.halfPadded}/>
         <GoogleButton>
-          <Text style={{ color: 'grey' }}>
-            <Icon name="google" size={16} />  {`${registerOrSignInType} with Google`}
+          <Text style={{color: 'grey'}}>
+            <Icon name="google" size={16}/> {`${registerOrSignInType.asSentence} with Google`}
           </Text>
         </GoogleButton>
-        <View style={styles.padded} />
+        <View style={styles.padded}/>
         <View
           style={{
             borderBottomWidth: 1,
             borderBottomColor: `${colors.secondary}64`,
           }}
         />
-        <View style={styles.padded} />
+        <View style={styles.padded}/>
         <Text
           style={{
             textAlign: 'center',
           }}
         >
-          {`${registerOrSignInType} with email and password.`}
+          {`${registerOrSignInType.asSentence} with email and password.`}
         </Text>
         <EmailInput
           onChangeText={(newText) => {
             const stateAdditions = {};
-            stateAdditions[`email${registerOrSignInType.replace(/ /g, '')}`] = newText;
+            stateAdditions[emailState(registerOrSignInType)] = newText;
             this.setState(stateAdditions);
+            console.log(this.state)
           }}
           onFocus={scrollToBottom}
         />
         <PasswordInput
           onChangeText={(newText) => {
             const stateAdditions = {};
-            stateAdditions[`password${registerOrSignInType.replace(/ /g, '')}`] = newText;
+            stateAdditions[passwordState(registerOrSignInType)] = newText;
             this.setState(stateAdditions);
           }}
         />
-        <View style={styles.padded} />
+        <View style={styles.padded}/>
         <SubmitButton />
       </ScrollView>
     );
@@ -157,11 +183,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        {this.getInnerView('Sign In', this.signInWithEmailAndPassword)}
-        {this.getInnerView('Register', this.registerUserWithEmailAndPassword)}
+        {this.getInnerView(TabTypes.signIn, this.signInWithEmailAndPassword)}
+        {this.getInnerView(TabTypes.register, this.registerUserWithEmailAndPassword)}
       </ScrollableTabView>
     );
   }
 }
-
 
