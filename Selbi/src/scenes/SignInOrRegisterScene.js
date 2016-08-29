@@ -94,7 +94,10 @@ function emailState(tabType) {
 export default class SignInOrRegisterScene extends RoutableScene {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      firstName: '',
+      lastName: '',
+    };
 
     Object.keys(TabTypes).forEach((typeKey) => {
       this.state[emailState(TabTypes[typeKey])] = '';

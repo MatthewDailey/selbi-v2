@@ -23,11 +23,15 @@ describe('<SignInOrRegisterScene />', () => {
       stateEmailRegister,
       statePasswordSignIn,
       statePasswordRegister,
+      'firstName',
+      'lastName',
     ]);
     expect(wrapper.state(stateEmailSignIn)).to.equal('');
     expect(wrapper.state(stateEmailRegister)).to.equal('');
     expect(wrapper.state(statePasswordSignIn)).to.equal('');
     expect(wrapper.state(statePasswordRegister)).to.equal('');
+    expect(wrapper.state('firstName')).to.equal('');
+    expect(wrapper.state('lastName')).to.equal('');
   });
 
   it('as default props', () => {
