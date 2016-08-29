@@ -116,15 +116,17 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
     if (!firstName || !lastName) {
       Alert.alert('First and last name must be filled out.')
-      return Promise.reject();
+      return Promise.resolve();
     }
 
     return this.props.registerWithEmail(email, password)
       .then(() => {
         this.goNext();
-        return this.props.createUser(this.state.firstName, this.state.lastName);
+        return this.props.createUser(firstName, lastName);
       })
-      .catch((error) => Alert.alert(error.message));
+      .catch((error) => {
+        Alert.alert(error.message);
+      });
   }
 
   signInWithEmailAndPassword() {
@@ -146,17 +148,36 @@ export default class SignInOrRegisterScene extends RoutableScene {
       })
       .build();
 
-    const scrollToBottom = () => {
+    const scrollToFirstName = () => {
       this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
+    };
+
+    const scrollToLastName = () => {
+      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 240, animated: true});
+    };
+
+    const scrollToEmail = () => {
+      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 300, animated: true});
+    };
+
+    const scrollToPassword = () => {
+      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 360, animated: true});
     };
 
     const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
       <FirstNameInput
         onTextChange={(newText) => this.setState({ firstName: newText })}
+        onFocus={scrollToFirstName}
+        onSubmitEditing={(event) => {
+          this.refs.LastNameInput.focus()
+        }}
       /> : <View />;
     const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
       <LastNameInput
+        ref="LastNameInput"
         onTextChange={(newText) => this.setState({ lastName: newText })}
+        onFocus={scrollToLastName}
+        onSubmitEditing={(event) => this.refs.EmailInput.focus()}
       /> : <View />;
 
     return (
@@ -194,21 +215,26 @@ export default class SignInOrRegisterScene extends RoutableScene {
         {firstNameInputIfNecessary}
         {lastNameInputIfNecessary}
         <EmailInput
+          ref="EmailInput"
           onChangeText={(newText) => {
             const stateAdditions = {};
             stateAdditions[emailState(registerOrSignInType)] = newText;
             this.setState(stateAdditions);
           }}
-          onFocus={scrollToBottom}
+          onFocus={scrollToEmail}
+          onSubmitEditing={() => this.refs.PasswordInput.focus()}
         />
         <PasswordInput
+          ref="PasswordInput"
           onChangeText={(newText) => {
             const stateAdditions = {};
             stateAdditions[passwordState(registerOrSignInType)] = newText;
             this.setState(stateAdditions);
           }}
+          onFocus={scrollToPassword}
+          onSubmitEditing={registerOrSignInMethod}
         />
-        <View style={styles.padded}/>
+        <View style={styles.padded} />
         <SubmitButton />
       </ScrollView>
     );

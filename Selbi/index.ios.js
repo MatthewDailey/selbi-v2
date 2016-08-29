@@ -37,7 +37,7 @@ const loginScene = {
   id: 'login-scene',
   renderContent: withProps(
     <SignInOrRegisterScene
-      title=""
+      title="Wait! One more thing."
       leftIs="back"
       rightIs="next"
       registerWithEmail={registerWithEmail}
