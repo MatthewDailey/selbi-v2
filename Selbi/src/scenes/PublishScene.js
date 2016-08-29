@@ -1,38 +1,54 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import ImageReader from '@selbi/react-native-image-reader';
+import { MKSpinner } from 'react-native-material-kit';
 
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
+import { createNewListingFromStore } from '../firebase/FirebaseActions';
+
+const publishStatus = {
+  publishing: 'publishing',
+  publishedInactive: 'publishedInactive',
+  publishedPrivate: 'publishedPrivate',
+  publishedPublic: 'publishedPublic',
+  failure: 'failure',
+};
+
+function getPublishingView() {
+  return (
+    <View style={styles.centerContainer}>
+      <Text style={styles.padded}>Updating your listing...</Text>
+      <MKSpinner />
+    </View>
+  );
+}
 
 export default class PublishScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: publishStatus.publishing,
+    };
+  }
+
   componentDidMount() {
-    const newListing = this.props.store.getState().newListing;
-    console.log(newListing);
-    ImageReader
-      .readImage(newListing.imageUri)
-      .then((imageBase64) => this.props.publishImage(
-        imageBase64[0],
-        newListing.imageHeight,
-        newListing.imageWidth))
-      .then((imageKey) => this.props.createListing(
-        newListing.title,
-        '', // description
-        newListing.price,
-        {
-          image1: {
-            imageId: imageKey,
-            width: newListing.imageWidth,
-            height: newListing.imageHeight,
-          },
-        },
-        '' // category
-      ))
-      .then(console.log)
-      .catch(console.log);
+    createNewListingFromStore(this.props.store.getState().newListing)
+      .then(() => {
+        this.setState({
+          status: publishStatus.publishedInactive,
+        });
+      })
+      .catch(() => {
+        // this.setState({
+        //   status: publishStatus.failure,
+        // });
+      });
   }
 
   renderWithNavBar() {
+    if (this.state.status === publishStatus.publishing) {
+      return getPublishingView();
+    }
     return (
       <View style={styles.container}>
         <Text>Successfully posted.</Text>

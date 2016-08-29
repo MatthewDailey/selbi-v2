@@ -46,11 +46,11 @@ const loginScene = {
     />),
 };
 
-const postLoginScene = {
+const publishScene = {
   id: 'post-login',
   renderContent: withProps(
     <PublishScene
-      title="Success!"
+      title=""
       rightIs="home"
       createListing={createListing}
       publishImage={publishImage}
@@ -147,7 +147,7 @@ routeLinks[titleScene.id] = {
     title: 'Post',
     getRoute: () => {
       if (getUser()) {
-        return postLoginScene;
+        return publishScene;
       }
       return loginScene;
     },
@@ -156,10 +156,10 @@ routeLinks[titleScene.id] = {
 routeLinks[loginScene.id] = {
   next: {
     title: '',
-    getRoute: () => postLoginScene,
+    getRoute: () => publishScene,
   },
 };
-routeLinks[postLoginScene.id] = {
+routeLinks[publishScene.id] = {
   home: {
     title: 'Done',
   },
@@ -168,7 +168,7 @@ routeLinks[postLoginScene.id] = {
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={loginScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={publishScene} routeLinks={routeLinks} menu={<Menu />} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);

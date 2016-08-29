@@ -8,6 +8,11 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.secondary,
   },
+  centerContainer: {
+    flex: 1,
+    backgroundColor: colors.secondary,
+    alignItems: 'center',
+  },
   fullScreenContainer: {
     flex: 1,
     backgroundColor: colors.primary,
