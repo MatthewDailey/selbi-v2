@@ -26,7 +26,7 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withPlaceholder('Email')
   .withHighlightColor(colors.white)
   .withStyle({
-    height: 48,  // have to do it on iOS
+    height: 48,  // have to do it on iOSfd
     marginTop: 10,
   })
   .build();
@@ -134,6 +134,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .coloredFlatButton()
       .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
+        console.log(this.state)
         registerOrSignInMethod();
       })
       .build();
@@ -143,9 +144,13 @@ export default class SignInOrRegisterScene extends RoutableScene {
     };
 
     const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <FirstNameInput /> : <View />;
+      <FirstNameInput
+        onTextChange={(newText) => this.setState({ firstName: newText })}
+      /> : <View />;
     const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <LastNameInput /> : <View />;
+      <LastNameInput
+        onTextChange={(newText) => this.setState({ lastName: newText })}
+      /> : <View />;
 
     return (
       <ScrollView
