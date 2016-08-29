@@ -1,5 +1,5 @@
 import ImageReader from '@selbi/react-native-image-reader';
-import FirebaseConnector from './FirebaseActions';
+import { publishImage, createListing, changeListingStatus } from './FirebaseConnector';
 
 export default undefined;
 
@@ -10,11 +10,11 @@ export function createNewListingFromStore(newListingData) {
 
   return ImageReader
     .readImage(newListingData.imageUri)
-    .then((imageBase64) => FirebaseConnector.publishImage(
+    .then((imageBase64) => publishImage(
       imageBase64[0],
       newListingData.imageHeight,
       newListingData.imageWidth))
-    .then((imageKey) => FirebaseConnector.createListing(
+    .then((imageKey) => createListing(
       newListingData.title,
       '', // description
       newListingData.price,
@@ -37,7 +37,7 @@ export function makeListingPublic(listingData) {
     return Promise.reject('Public listings require geolocation');
   }
 
-  return FirebaseConnector.changeListingStatus(
+  return changeListingStatus(
     'public',
     listingData.listingId,
     [listingData.locationLat, listingData.locationLon]);
@@ -48,7 +48,7 @@ export function makeListingPrivate(listingData) {
     return Promise.reject('Need a listing id to make the listing private.');
   }
 
-  return FirebaseConnector.changeListingStatus(
+  return changeListingStatus(
     'private',
     listingData.listingId);
 }

@@ -7,7 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
-import { createNewListingFromStore } from '../firebase/FirebaseActions';
+import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
+from '../firebase/FirebaseActions';
 
 const publishStatus = {
   publishing: 'publishing',
@@ -22,7 +23,6 @@ const Button = MKButton.button()
     borderRadius: 5,
   })
   .withBackgroundColor(colors.white)
-  .withOnPress(() => alert('Sorry, not yet supported.'))
   .build();
 
 function getPublishingView() {
@@ -30,25 +30,6 @@ function getPublishingView() {
     <View style={styles.centerContainer}>
       <Text style={styles.padded}>Updating your listing...</Text>
       <MKSpinner />
-    </View>
-  );
-}
-
-function getPublishedInactiveView() {
-  return (
-    <View style={styles.paddedContainer}>
-      <Text style={styles.friendlyText}>We've got your listing but it cannot yet be seen.</Text>
-      <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
-      <View style={styles.halfPadded}>
-        <Button>
-          <Text><Icon name="users" size={16} />  My Friends</Text>
-        </Button>
-      </View>
-      <View style={styles.halfPadded}>
-        <Button>
-          <Text><Icon name="globe" size={16} />  Anyone</Text>
-        </Button>
-      </View>
     </View>
   );
 }
@@ -93,6 +74,44 @@ export default class PublishScene extends RoutableScene {
     this.state = {
       status: publishStatus.publishing,
     };
+
+    this.handleError = this.handleError.bind(this);
+  }
+
+  handleError(error) {
+    console.log(error);
+    this.setState({ status: publishStatus.failure });
+  }
+
+  getPublishedInactiveView(listingData) {
+    return (
+      <View style={styles.paddedContainer}>
+        <Text style={styles.friendlyText}>We've got your listing but it cannot yet be seen.</Text>
+        <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
+        <View style={styles.halfPadded}>
+          <Button
+            onPress={() => {
+              makeListingPrivate(listingData)
+                .then(() => this.setState({ status: publishStatus.publishedPrivate }))
+                .catch(this.handleError);
+            }}
+          >
+            <Text><Icon name="users" size={16} />  My Friends</Text>
+          </Button>
+        </View>
+        <View style={styles.halfPadded}>
+          <Button
+            onPress={() => {
+              makeListingPublic(listingData)
+                .then(() => this.setState({ status: publishStatus.publishedPublic }))
+                .catch(this.handleError);
+            }}
+          >
+            <Text><Icon name="globe" size={16} />  Anyone</Text>
+          </Button>
+        </View>
+      </View>
+    );
   }
 
   componentDidMount() {
@@ -102,11 +121,7 @@ export default class PublishScene extends RoutableScene {
           status: publishStatus.publishedInactive,
         });
       })
-      .catch(() => {
-        this.setState({
-          status: publishStatus.failure,
-        });
-      });
+      .catch(this.handleError);
   }
 
   renderWithNavBar() {
@@ -114,7 +129,7 @@ export default class PublishScene extends RoutableScene {
       case publishStatus.publishing:
         return getPublishingView();
       case publishStatus.publishedInactive:
-        return getPublishedInactiveView();
+        return this.getPublishedInactiveView(this.props.store.getState().newListing);
       case publishStatus.publishedPrivate:
         return getPublishedView('your friends');
       case publishStatus.publishedPublic:
