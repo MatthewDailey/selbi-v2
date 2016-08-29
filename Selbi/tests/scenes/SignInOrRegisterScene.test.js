@@ -117,6 +117,24 @@ describe('<SignInOrRegisterScene />', () => {
         .to.be.true();
     });
 
+    it('no first name input for register', () => {
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(TabTypes.signIn, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First Name'))
+        .to.be.false();
+    });
+
+    it('no last name input for sign in', () => {
+      const innerView = shallow(<SignInOrRegisterScene />)
+        .instance()
+        .getInnerView(TabTypes.signIn, spy());
+
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last Name'))
+        .to.be.false();
+    });
+
     it('has email input for register', () => {
       const innerView = shallow(<SignInOrRegisterScene />)
         .instance()

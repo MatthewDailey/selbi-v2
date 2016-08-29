@@ -31,6 +31,24 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   })
   .build();
 
+const FirstNameInput = mdl.Textfield.textfieldWithFloatingLabel()
+  .withPlaceholder('First Name')
+  .withHighlightColor(colors.white)
+  .withStyle({
+    height: 48,  // have to do it on iOS
+    marginTop: 10,
+  })
+  .build();
+
+const LastNameInput = mdl.Textfield.textfieldWithFloatingLabel()
+  .withPlaceholder('Last Name')
+  .withHighlightColor(colors.white)
+  .withStyle({
+    height: 48,  // have to do it on iOS
+    marginTop: 10,
+  })
+  .build();
+
 const GoogleButton = MKButton.button()
   .withStyle({
     borderRadius: 5,
@@ -121,6 +139,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
       this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
     };
 
+    const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
+      <FirstNameInput /> : <View />;
+    const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
+      <LastNameInput /> : <View />;
+
     return (
       <ScrollView
         ref={(r) => this[scrollViewRef(registerOrSignInType)] = r}
@@ -129,23 +152,23 @@ export default class SignInOrRegisterScene extends RoutableScene {
       >
         <FacebookButton >
           <Text style={{color: colors.white}}>
-            <Icon name="facebook" size={16}/> {`${registerOrSignInType.asSentence} with Facebook`}
+            <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
         </FacebookButton>
-        <View style={styles.halfPadded}/>
+        <View style={styles.halfPadded} />
         <GoogleButton>
-          <Text style={{color: 'grey'}}>
-            <Icon name="google" size={16}/> {`${registerOrSignInType.asSentence} with Google`}
+          <Text style={{ color: 'grey' }}>
+            <Icon name="google" size={16} /> {`${registerOrSignInType.asSentence} with Google`}
           </Text>
         </GoogleButton>
-        <View style={styles.padded}/>
+        <View style={styles.padded} />
         <View
           style={{
             borderBottomWidth: 1,
             borderBottomColor: `${colors.secondary}64`,
           }}
         />
-        <View style={styles.padded}/>
+        <View style={styles.padded} />
         <Text
           style={{
             textAlign: 'center',
@@ -153,12 +176,13 @@ export default class SignInOrRegisterScene extends RoutableScene {
         >
           {`${registerOrSignInType.asSentence} with email and password.`}
         </Text>
+        {firstNameInputIfNecessary}
+        {lastNameInputIfNecessary}
         <EmailInput
           onChangeText={(newText) => {
             const stateAdditions = {};
             stateAdditions[emailState(registerOrSignInType)] = newText;
             this.setState(stateAdditions);
-            console.log(this.state)
           }}
           onFocus={scrollToBottom}
         />
