@@ -53,6 +53,22 @@ function getPublishedInactiveView() {
   );
 }
 
+function getPublishedView(visibleTo) {
+  return (
+    <View style={styles.paddedContainer}>
+      <Text style={styles.friendlyText}>{`Your listing is now visible to ${visibleTo}.`}</Text>
+      <Text style={styles.friendlyText}>
+        To sell faster, we recommend adding more details.
+      </Text>
+      <View style={styles.halfPadded}>
+        <Button>
+          <Text>Add Details</Text>
+        </Button>
+      </View>
+    </View>
+  );
+}
+
 export default class PublishScene extends RoutableScene {
   constructor(props) {
     super(props);
@@ -76,12 +92,18 @@ export default class PublishScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    switch(this.state.status) {
+    switch (this.state.status) {
       case publishStatus.publishing:
         return getPublishingView();
       case publishStatus.publishedInactive:
-      default:
         return getPublishedInactiveView();
-    };
+      case publishStatus.publishedPrivate:
+        return getPublishedView('your friends');
+      case publishStatus.publishedPublic:
+        return getPublishedView('anyone nearby');
+      case publishStatus.failure:
+      default:
+        return getPublishedView('anyone nearby');
+    }
   }
 }
