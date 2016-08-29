@@ -1,6 +1,6 @@
 import React from 'react';
-import {ScrollView, View, Text, Alert} from 'react-native';
-import {mdl, MKButton, setTheme} from 'react-native-material-kit';
+import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
+import { mdl, MKButton, setTheme} from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
@@ -29,6 +29,7 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
     height: 48,  // have to do it on iOSfd
     marginTop: 10,
   })
+  .withKeyboardType('email-address')
   .build();
 
 const FirstNameInput = mdl.Textfield.textfieldWithFloatingLabel()
@@ -168,16 +169,16 @@ export default class SignInOrRegisterScene extends RoutableScene {
       <FirstNameInput
         onTextChange={(newText) => this.setState({ firstName: newText })}
         onFocus={scrollToFirstName}
-        onSubmitEditing={(event) => {
-          this.refs.LastNameInput.focus()
-        }}
+        returnKeyType="next"
+        onSubmitEditing={() => this.refs.LastNameInput.focus()}
       /> : <View />;
     const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
       <LastNameInput
         ref="LastNameInput"
         onTextChange={(newText) => this.setState({ lastName: newText })}
         onFocus={scrollToLastName}
-        onSubmitEditing={(event) => this.refs.EmailInput.focus()}
+        returnKeyType="next"
+        onSubmitEditing={() => this.refs.EmailInput.focus()}
       /> : <View />;
 
     return (
@@ -222,6 +223,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
             this.setState(stateAdditions);
           }}
           onFocus={scrollToEmail}
+          returnKeyType="next"
           onSubmitEditing={() => this.refs.PasswordInput.focus()}
         />
         <PasswordInput
@@ -232,6 +234,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
             this.setState(stateAdditions);
           }}
           onFocus={scrollToPassword}
+          returnKeyType="done"
           onSubmitEditing={registerOrSignInMethod}
         />
         <View style={styles.padded} />
