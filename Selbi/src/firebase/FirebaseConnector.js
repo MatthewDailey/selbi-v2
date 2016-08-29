@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import GeoFire from 'geofire';
 
 const developConfig = {
   apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
@@ -97,4 +98,76 @@ export function createListing(titleInput,
     .set(listing)
     .then(createUserListing)
     .then(() => Promise.resolve(newListingRef.key));
+}
+
+/*
+ * This code snippet demonstrates how to change the status of a user's listing.
+ *
+ * This is useful when a user published a listing for any other local user to see or when they
+ * want to depublish a listing.
+ *
+ * Note that the performance of this could be by knowing the prior status of the listing. We have
+ * avoided fully parallelizing updating the /listings/$listingId/status because that should serve
+ * as the source of truth. By waiting, we know that if that update fails, none of the secondary
+ * indexes will be corrupted.
+ *
+ * @param {string} newStatus String new status for the listing.
+ * @param {string} listingId String id of the listing to make public.
+ * @param {FirebaseDatabase} firebaseDb We pass in the database in this sample test.
+ * @param {Array of [lat, lon]} latlon for the newly public object, pulled from app location or
+ * user input address.
+ *
+ * @returns DataSnapshot of the old listing prior to updating the status.
+ */
+export function changeListingStatus(newStatus, listingId, latlon) {
+  // Start by loading the existing snapshot and verifying it exists.
+  return firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Update status on /listing data.
+        return firebaseApp
+          .database()
+          .ref('listings')
+          .child(listingId)
+          .update({
+            status: newStatus,
+          })
+          .then(() => Promise.resolve(snapshot));
+      }
+      throw new Error('No such listing.');
+    })
+    .then((oldSnapshot) => {
+      const allUpdatePromises = [];
+
+      allUpdatePromises.push(firebaseApp
+        .database()
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child(oldSnapshot.val().status)
+        .child(listingId)
+        .remove());
+
+      allUpdatePromises.push(firebaseApp
+        .database()
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child(newStatus)
+        .child(listingId)
+        .set(true));
+
+      if (newStatus === 'public') {
+        allUpdatePromises.push(new GeoFire(firebaseApp.database().ref('/geolistings'))
+          .set(listingId, latlon));
+      } else {
+        allUpdatePromises.push(new GeoFire(firebaseApp.database().ref('/geolistings'))
+          .remove(listingId));
+      }
+
+      return Promise.all(allUpdatePromises)
+        .then(() => Promise.resolve(oldSnapshot));
+    });
 }

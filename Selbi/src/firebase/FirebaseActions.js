@@ -3,28 +3,52 @@ import FirebaseConnector from './FirebaseActions';
 
 export default undefined;
 
-export function createNewListingFromStore(newListing) {
-  if (!newListing.imageUri) {
+export function createNewListingFromStore(newListingData) {
+  if (!newListingData.imageUri) {
     return Promise.reject('Error loading image.');
   }
 
   return ImageReader
-    .readImage(newListing.imageUri)
+    .readImage(newListingData.imageUri)
     .then((imageBase64) => FirebaseConnector.publishImage(
       imageBase64[0],
-      newListing.imageHeight,
-      newListing.imageWidth))
+      newListingData.imageHeight,
+      newListingData.imageWidth))
     .then((imageKey) => FirebaseConnector.createListing(
-      newListing.title,
+      newListingData.title,
       '', // description
-      newListing.price,
+      newListingData.price,
       {
         image1: {
           imageId: imageKey,
-          width: newListing.imageWidth,
-          height: newListing.imageHeight,
+          width: newListingData.imageWidth,
+          height: newListingData.imageHeight,
         },
       },
       '' // category
     ));
+}
+
+export function makeListingPublic(listingData) {
+  if (!listingData.listingId) {
+    return Promise.reject('Need a listing id to make the listing public.');
+  }
+  if (!listingData.locationLat || !listingData.locationLon) {
+    return Promise.reject('Public listings require geolocation');
+  }
+
+  return FirebaseConnector.changeListingStatus(
+    'public',
+    listingData.listingId,
+    [listingData.locationLat, listingData.locationLon]);
+}
+
+export function makeListingPrivate(listingData) {
+  if (!listingData.listingId) {
+    return Promise.reject('Need a listing id to make the listing private.');
+  }
+
+  return FirebaseConnector.changeListingStatus(
+    'private',
+    listingData.listingId);
 }
