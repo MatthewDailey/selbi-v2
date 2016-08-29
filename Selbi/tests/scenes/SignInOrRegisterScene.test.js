@@ -225,5 +225,35 @@ describe('<SignInOrRegisterScene />', () => {
         })
         .catch(done);
     });
+
+    describe('only calls register if fields non-empty', () => {
+      it('with no first name', (done) => {
+        signInOrRegisterWrapper.setState({
+          firstName: '',
+        });
+        signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword()
+          .then(() => {
+            expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
+            expect(mockRegisterWithEmail.neverCalledWith()).to.be.true();
+            expect(mockCreateUser.neverCalledWith()).to.be.true();
+            done();
+          })
+          .catch(done);
+      });
+
+      it('with no first name', (done) => {
+        signInOrRegisterWrapper.setState({
+          lastName: '',
+        });
+        signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword()
+          .then(() => {
+            expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
+            expect(mockRegisterWithEmail.neverCalledWith()).to.be.true();
+            expect(mockCreateUser.neverCalledWith()).to.be.true();
+            done();
+          })
+          .catch(done);
+      });
+    });
   });
 });

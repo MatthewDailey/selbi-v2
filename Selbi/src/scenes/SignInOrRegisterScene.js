@@ -111,6 +111,13 @@ export default class SignInOrRegisterScene extends RoutableScene {
   registerUserWithEmailAndPassword() {
     const email = this.state.emailRegister;
     const password = this.state.passwordRegister;
+    const firstName = this.state.firstName;
+    const lastName = this.state.lastName;
+
+    if (!firstName || !lastName) {
+      Alert.alert('First and last name must be filled out.')
+      return Promise.reject();
+    }
 
     return this.props.registerWithEmail(email, password)
       .then(() => {
