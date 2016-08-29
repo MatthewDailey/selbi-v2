@@ -10,6 +10,7 @@ import newListingReducer, {
   setNewListingLocation,
   setNewListingImageDimensions,
   setNewListingImageLocalUri,
+  setNewListingId,
 } from '../../src/reducers/NewListingReducer';
 
 chai.use(dirtyChai);
@@ -19,6 +20,11 @@ describe('NewListingReducer', () => {
 
   it('returns initial state', () => {
     expect(initialState.status).to.equal('building');
+  });
+
+  it('can set listing id', () => {
+    const setListingIdAction = setNewListingId('testId');
+    expect(newListingReducer(initialState, setListingIdAction).listingId).to.equal('testId');
   });
 
   it('can set seller uid', () => {
