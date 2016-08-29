@@ -180,15 +180,18 @@ describe('<SignInOrRegisterScene />', () => {
     let signInOrRegisterWrapper;
     let mockSignInWithEmail;
     let mockRegisterWithEmail;
+    let mockCreateUser;
 
     beforeEach(() => {
       mockSignInWithEmail = spy(() => Promise.resolve());
-      mockRegisterWithEmail = spy(() => Promise.resolve());
+      mockRegisterWithEmail = spy(() => Promise.resolve({ uid: 'testUid' }));
+      mockCreateUser = spy(() => Promise.resolve());
 
       signInOrRegisterWrapper = shallow(
         <SignInOrRegisterScene
           registerWithEmail={mockRegisterWithEmail}
           signInWithEmail={mockSignInWithEmail}
+          createUser={mockCreateUser}
         />
       );
       signInOrRegisterWrapper.setState({
@@ -196,23 +199,31 @@ describe('<SignInOrRegisterScene />', () => {
         emailRegister: 'email-register',
         passwordSignIn: 'password-signin',
         passwordRegister: 'password-register',
+        firstName: 'first-name',
+        lastName: 'last-name',
       });
     });
 
     it('calls sign in with correct email and pw', () => {
       signInOrRegisterWrapper.instance().signInWithEmailAndPassword();
 
+
       expect(mockSignInWithEmail.calledWithExactly('email-signin', 'password-signin'))
         .to.be.true();
       expect(mockRegisterWithEmail.neverCalledWith()).to.be.true();
     });
 
-    it('calls register with correct email and pw', () => {
-      signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword();
-
-      expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
-      expect(mockRegisterWithEmail.calledWithExactly('email-register', 'password-register'))
-        .to.be.true();
+    it('calls register with correct email and pw and name', (done) => {
+      signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword()
+        .then(() => {
+          expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
+          expect(mockRegisterWithEmail.calledWithExactly('email-register', 'password-register'))
+            .to.be.true();
+          expect(mockCreateUser.calledWithExactly('testUid', 'first-name', 'last-name'))
+            .to.be.true();
+          done();
+        })
+        .catch(done);
     });
   });
 });

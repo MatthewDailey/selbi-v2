@@ -112,10 +112,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
     const email = this.state.emailRegister;
     const password = this.state.passwordRegister;
 
-    this.props.registerWithEmail(email, password)
+    return this.props.registerWithEmail(email, password)
       .then((user) => {
-        this.props.createUser(user.uid);
         this.goNext();
+        return this.props.createUser(user.uid, this.state.firstName, this.state.lastName);
       })
       .catch((error) => Alert.alert(error.message));
   }
@@ -124,7 +124,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
     const email = this.state.emailSignIn;
     const password = this.state.passwordSignIn;
 
-    this.props.signInWithEmail(email, password)
+    return this.props.signInWithEmail(email, password)
       .then(() => this.goNext())
       .catch((error) => Alert.alert(error.message));
   }
@@ -134,7 +134,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .coloredFlatButton()
       .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
-        console.log(this.state)
+        console.log(this.state);
         registerOrSignInMethod();
       })
       .build();
