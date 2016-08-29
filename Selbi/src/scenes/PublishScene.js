@@ -83,29 +83,31 @@ export default class PublishScene extends RoutableScene {
     this.setState({ status: publishStatus.failure });
   }
 
-  getPublishedInactiveView(listingData) {
+  getPublishedInactiveView() {
     return (
       <View style={styles.paddedContainer}>
         <Text style={styles.friendlyText}>We've got your listing but it cannot yet be seen.</Text>
         <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
         <View style={styles.halfPadded}>
           <Button
-            onPress={() => {
-              makeListingPrivate(listingData)
-                .then(() => this.setState({ status: publishStatus.publishedPrivate }))
-                .catch(this.handleError);
-            }}
+            onPress={
+              () => this.setState({ status: publishStatus.publishing },
+                () => makeListingPrivate(this.props.store.getState().newListing)
+                  .then(() => this.setState({ status: publishStatus.publishedPrivate }))
+                  .catch(this.handleError))
+            }
           >
             <Text><Icon name="users" size={16} />  My Friends</Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
           <Button
-            onPress={() => {
-              makeListingPublic(listingData)
+            onPress={
+              () => this.setState({ status: publishStatus.publishing },
+                () => makeListingPublic(this.props.store.getState().newListing))
                 .then(() => this.setState({ status: publishStatus.publishedPublic }))
-                .catch(this.handleError);
-            }}
+                .catch(this.handleError)
+            }
           >
             <Text><Icon name="globe" size={16} />  Anyone</Text>
           </Button>
@@ -129,7 +131,7 @@ export default class PublishScene extends RoutableScene {
       case publishStatus.publishing:
         return getPublishingView();
       case publishStatus.publishedInactive:
-        return this.getPublishedInactiveView(this.props.store.getState().newListing);
+        return this.getPublishedInactiveView();
       case publishStatus.publishedPrivate:
         return getPublishedView('your friends');
       case publishStatus.publishedPublic:
