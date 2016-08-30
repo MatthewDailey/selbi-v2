@@ -94,7 +94,12 @@ export default class RoutableScene extends Component {
       } else {
         this.props.navigator.popToTop();
       }
+      this.onGoHome();
     }
+  }
+
+  onGoHome() {
+    // Implemented by children.
   }
 
   render() {

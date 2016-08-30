@@ -102,6 +102,10 @@ export default class PublishScene extends RoutableScene {
     });
   }
 
+  onGoHome() {
+    this.props.clearNewListingData();
+  }
+
   getPublishedInactiveView() {
     return (
       <View style={styles.paddedContainer}>

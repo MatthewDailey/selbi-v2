@@ -13,7 +13,7 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
-  setNewListingLocation }
+  setNewListingLocation, clearNewListing }
   from './src/reducers/NewListingReducer';
 
 import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
@@ -57,6 +57,7 @@ const publishScene = {
       publishImage={publishImage}
       listingIdAction={setNewListingId}
       publishListingLocation={setNewListingLocation}
+      clearNewListingData={() => store.dispatch(clearNewListing())}
     />
   ),
 };

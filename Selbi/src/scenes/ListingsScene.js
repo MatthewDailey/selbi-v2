@@ -60,6 +60,7 @@ export default class ListingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ListView
+        enableEmptySections
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
