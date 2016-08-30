@@ -9,21 +9,49 @@ function notImplemented() {
   Alert.alert('Not yet supported.');
 }
 
-export default function Menu({navigator, closeMenu, localListingScene}) {
+export default function Menu({navigator, signOut, getUser, closeMenu,
+  localListingScene,
+  signInOrRegisterScene}) {
   const setSceneAndCloseMenu = (scene) => {
     navigator.resetTo(localListingScene);
     closeMenu();
   };
 
+  const signInOrRegister = () => {
+    navigator.push(signInOrRegisterScene);
+    closeMenu();
+  };
+
+  const getSignedInHeader = () =>
+    <View style={styles.paddedCenterContainerWhite}>
+      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{getUser().displayName}</Text>
+      <View style={styles.halfPadded} />
+      <TouchableHighlight onPress={signOut}>
+        <Text style={{ fontSize: 10 }}>Sign out</Text>
+      </TouchableHighlight>
+    </View>;
+
+  const getSignedOutHeader = () =>
+    <TouchableHighlight onPress={signInOrRegister}>
+      <View style={styles.paddedCenterContainerWhite}>
+
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Not signed in.</Text>
+        <View style={styles.halfPadded} />
+        <Text style={{ fontSize: 14 }}>Sign in or register.</Text>
+      </View>
+    </TouchableHighlight>
+
+  const getHeader = () => {
+    if (getUser()) {
+      return getSignedInHeader();
+    }
+    console.log(getUser())
+    return getSignedOutHeader();
+  };
+
   return (
     <View style={styles.padded}>
-      <View style={styles.paddedCenterContainerWhite}>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Matt Dailey</Text>
-        <View style={styles.halfPadded} />
-        <TouchableHighlight onPress={notImplemented}>
-          <Text style={{ fontSize: 10 }}>Sign out</Text>
-        </TouchableHighlight>
-      </View>
+      {getHeader()}
 
       <View
         style={{

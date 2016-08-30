@@ -15,7 +15,8 @@ import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListin
   setNewListingLocation, clearNewListing }
   from './src/reducers/NewListingReducer';
 
-import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
+import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
+  publishImage }
   from './src/firebase/FirebaseConnector';
 
 const store = createStore(combineReducers({
@@ -172,8 +173,21 @@ function renderMenu(navigator, closeMenu) {
   return (
     <Menu
       navigator={navigator}
+      signOut={signOut}
+      getUser={getUser}
       closeMenu={closeMenu}
       localListingScene={listingScene}
+      signInOrRegisterScene={{
+        id: 'menu-sign-scene',
+        renderContent: withProps(
+          <SignInOrRegisterScene
+            title=""
+            leftIs="back"
+            registerWithEmail={registerWithEmail}
+            signInWithEmail={signInWithEmail}
+            createUser={createUser}
+          />),
+      }}
     />
   );
 }
