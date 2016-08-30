@@ -78,6 +78,7 @@ export default class ListingsView extends Component {
           flexDirection: 'row',
           flexWrap: 'wrap',
         }}
+        removeClippedSubviews={false}
         dataSource={this.state.dataSource}
         renderRow={(data) => <ItemView {...data} />}
       />
