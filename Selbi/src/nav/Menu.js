@@ -9,7 +9,12 @@ function notImplemented() {
   Alert.alert('Not yet supported.');
 }
 
-export default function Menu() {
+export default function Menu({navigator, closeMenu, localListingScene}) {
+  const setSceneAndCloseMenu = (scene) => {
+    navigator.resetTo(localListingScene);
+    closeMenu();
+  };
+
   return (
     <View style={styles.padded}>
       <View style={styles.paddedCenterContainerWhite}>
@@ -28,7 +33,10 @@ export default function Menu() {
         }}
       />
 
-      <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+      <TouchableHighlight
+        onPress={() => setSceneAndCloseMenu(localListingScene)}
+        underlayColor={colors.secondary}
+      >
         <Text style={styles.menuText}><Icon name="map-marker" size={20} />  Local Listings</Text>
       </TouchableHighlight>
       <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>

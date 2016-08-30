@@ -168,6 +168,16 @@ routeLinks[publishScene.id] = {
   },
 };
 
+function renderMenu(navigator, closeMenu) {
+  return (
+    <Menu
+      navigator={navigator}
+      closeMenu={closeMenu}
+      localListingScene={listingScene}
+    />
+  );
+}
+
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
@@ -175,7 +185,7 @@ function NavApp() {
     <DrawerNavigator
       initialRoute={listingScene}
       routeLinks={routeLinks}
-      renderMenuWithNavigator={(navigator) => <Menu navigator={navigator} />}
+      renderMenuWithNavigator={renderMenu}
     />
   );
 }

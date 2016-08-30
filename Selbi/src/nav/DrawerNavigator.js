@@ -20,10 +20,15 @@ export default class DrawerNavigator extends React.Component {
   constructor(props) {
     super(props);
     this.openMenu = this.openMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
   }
 
   openMenu() {
     this.drawer.open();
+  }
+
+  closeMenu() {
+    this.drawer.close();
   }
 
   render() {
@@ -35,7 +40,7 @@ export default class DrawerNavigator extends React.Component {
             ref={(c) => {
               this.drawer = c;
             }}
-            content={this.props.renderMenuWithNavigator(navigator)}
+            content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
             tapToClose
             openDrawerOffset={0.2}
             panOpenMask={0.1}
