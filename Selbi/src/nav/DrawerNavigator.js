@@ -3,6 +3,8 @@ import { Navigator } from 'react-native';
 
 import Drawer from 'react-native-drawer';
 
+import Menu from './Menu';
+
 /*
  * DrawerNavigator manages a graph of scenes and transitions between scenes while providing a
  * convenience wrapper for a left-side drawer menu.
@@ -28,24 +30,23 @@ export default class DrawerNavigator extends React.Component {
 
   render() {
     return (
-      <Drawer
-        ref={(c) => {
-          this.drawer = c;
-        }}
-        content={this.props.menu}
-        tapToClose
-        openDrawerOffset={0.2}
-        panOpenMask={0.1}
-        open
-      >
-        <Navigator
-          initialRoute={this.props.initialRoute}
-          renderScene={(route, navigator) => route.renderContent(
-            navigator,
-            this.props.routeLinks[route.id],
-            this.openMenu)}
-        />
-      </Drawer>
+      <Navigator
+        initialRoute={this.props.initialRoute}
+        renderScene={(route, navigator) =>
+          <Drawer
+            ref={(c) => {
+              this.drawer = c;
+            }}
+            content={<Menu navigator={navigator} />}
+            tapToClose
+            openDrawerOffset={0.2}
+            panOpenMask={0.1}
+            open
+          >
+            {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
+          </Drawer>
+        }
+      />
     );
   }
 }

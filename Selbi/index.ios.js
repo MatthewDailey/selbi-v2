@@ -2,8 +2,6 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 
-import Menu from './src/scenes/Menu';
-
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
 import InputScene from './src/scenes/InputScene';
@@ -172,7 +170,7 @@ routeLinks[publishScene.id] = {
 console.log(`Route Links::: ${routeLinks}`);
 
 function NavApp() {
-  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} menu={<Menu />} />;
+  return <DrawerNavigator initialRoute={listingScene} routeLinks={routeLinks} />;
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);
