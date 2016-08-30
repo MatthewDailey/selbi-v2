@@ -36,18 +36,28 @@ export function getUser() {
     .currentUser;
 }
 
-export function createUser(firstName, lastName) {
+export function signOut() {
   return firebaseApp
-    .database()
-    .ref('/users')
-    .child(getUser().uid)
-    .set({
-      name: {
-        first: firstName,
-        last: lastName,
-      },
-      userAgreementAccepted: false,
-    });
+    .auth()
+    .signOut();
+}
+
+export function createUser(firstName, lastName) {
+  return getUser()
+    .updateProfile({
+      displayName: `${firstName} ${lastName}`,
+    })
+    .then(() => firebaseApp
+      .database()
+      .ref('/users')
+      .child(getUser().uid)
+      .set({
+        name: {
+          first: firstName,
+          last: lastName,
+        },
+        userAgreementAccepted: false,
+      }));
 }
 
 export function publishImage(base64, heightInput, widthInput) {
