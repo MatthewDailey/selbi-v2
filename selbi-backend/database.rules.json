@@ -414,6 +414,7 @@
     // Mapping of geo data to listing id.
     "geolistings": {
       ".read": true,
+      ".indexOn": "g",
       "$listingId": {
         ".write": "root.child('/listings/' + $listingId + '/sellerId').val() == auth.uid",
         ".validate": "newData.hasChildren(['g', 'l'])",
