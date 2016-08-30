@@ -36,6 +36,7 @@ export default class DrawerNavigator extends React.Component {
         tapToClose
         openDrawerOffset={0.2}
         panOpenMask={0.1}
+        open
       >
         <Navigator
           initialRoute={this.props.initialRoute}

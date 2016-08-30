@@ -2,7 +2,7 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 
-import Menu from './components/Menu';
+import Menu from './src/scenes/Menu';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
