@@ -171,3 +171,75 @@ export function changeListingStatus(newStatus, listingId, latlon) {
         .then(() => Promise.resolve(oldSnapshot));
     });
 }
+
+/*
+ * This code snippet shows how to load a single listing from the db once you have the listing's id.
+ *
+ * @param listingId String id of the listing to load.
+ *
+ * @returns Promise fulfilled with DataSnapshot of the listing if the listing exists.
+ */
+function loadListingData(listingId) {
+  return firebaseApp
+    .database()
+    .ref('/listings')
+    .child(listingId)
+    .once('value');
+}
+
+export function loadImage(imageId) {
+  return firebaseApp
+    .database()
+    .ref('/images')
+    .child(imageId)
+    .once('value');
+}
+
+/*
+ * This code snippet demonstrates how to load all public listings at a certain location.
+ *
+ * This is useful for the 'nearby-listings' view for listings within X km of the user. See
+ * https://github.com/firebase/geofire-js/blob/master/docs/reference.md for more info about GeoFire.
+ *
+ * Note that this will fail if ANY listing fails to load.
+ *
+ * @param latlon Array of [lat, lon], pulled from user device (either address or device location).
+ * @param radiusKm Number of km radius to search around latlon.
+ *
+ * @return Promise fulfilled with list of listing DataSnapshots.
+ */
+export function loadListingByLocation(latlon, radiusKm) {
+  const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
+
+  const geoQuery = geoListings.query({
+    center: latlon,
+    radius: radiusKm,
+  });
+
+  return new Promise((fulfill) => {
+    const listingsInArea = [];
+    const loadListingsPromises = [];
+
+    geoQuery.on('key_entered', (listingId) => {
+      // Once we know the listing id of a listing in the area, start loading the listing data.
+      loadListingsPromises.push(
+        loadListingData(listingId)
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              listingsInArea.push(snapshot);
+            }
+          }));
+    });
+
+    // Ready is called once all pre-existing data has been read.
+    geoQuery.on('ready', () => {
+      geoQuery.cancel();
+
+      // Now wait on loading the actual listing data.
+      Promise.all(loadListingsPromises)
+        .then(() => {
+          fulfill(listingsInArea);
+        });
+    });
+  });
+}

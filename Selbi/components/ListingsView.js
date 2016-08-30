@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ListView, RefreshControl } from 'react-native';
 import firebase from 'firebase';
 
-import ItemView from './ItemView';
+import ItemView from '../src/scenes/ItemView';
 
 const config = {
   apiKey: 'AIzaSyDRHkRtloZVfu-2CXADbyJ_QG3ECRtZacY',
