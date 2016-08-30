@@ -13,6 +13,13 @@ const firebaseApp = firebase.initializeApp(developConfig);
 
 export default undefined;
 
+
+export function getUser() {
+  return firebaseApp
+    .auth()
+    .currentUser;
+}
+
 /*
  * Attempts to create a new user based on email and password.
  *
@@ -24,16 +31,33 @@ export function registerWithEmail(emailInput, passwordInput) {
     .createUserWithEmailAndPassword(emailInput, passwordInput);
 }
 
+function insertUserInDatabase(firstName, lastName) {
+  return firebaseApp
+    .database()
+    .ref('/users')
+    .child(getUser().uid)
+    .set({
+      name: {
+        first: firstName,
+        last: lastName,
+      },
+      userAgreementAccepted: false,
+    });
+}
+
 export function signInWithEmail(email, password) {
   return firebaseApp
     .auth()
-    .signInWithEmailAndPassword(email, password);
-}
-
-export function getUser() {
-  return firebaseApp
-    .auth()
-    .currentUser;
+    .signInWithEmailAndPassword(email, password)
+    .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
+    .then((userSnapshot) => {
+      if (!userSnapshot.exists()) {
+        const currentUser = getUser();
+        const names = currentUser.displayName.split(' ');
+        return insertUserInDatabase(names[0], names[1]);
+      }
+      return Promise.resolve();
+    });
 }
 
 export function signOut() {
@@ -47,17 +71,7 @@ export function createUser(firstName, lastName) {
     .updateProfile({
       displayName: `${firstName} ${lastName}`,
     })
-    .then(() => firebaseApp
-      .database()
-      .ref('/users')
-      .child(getUser().uid)
-      .set({
-        name: {
-          first: firstName,
-          last: lastName,
-        },
-        userAgreementAccepted: false,
-      }));
+    .then(() => insertUserInDatabase(firstName, lastName));
 }
 
 export function publishImage(base64, heightInput, widthInput) {
