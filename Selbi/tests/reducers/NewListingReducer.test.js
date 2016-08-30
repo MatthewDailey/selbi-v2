@@ -10,6 +10,7 @@ import newListingReducer, {
   setNewListingImageDimensions,
   setNewListingImageLocalUri,
   setNewListingId,
+  clearNewListing,
 } from '../../src/reducers/NewListingReducer';
 
 chai.use(dirtyChai);
@@ -70,6 +71,14 @@ describe('NewListingReducer', () => {
 
     expect(newListingReducer(initialState, setNewListingImageLocalUri(imageUri)).imageUri)
       .to.equal(imageUri);
+  });
+
+  it('can clear data', () => {
+    const setListingIdAction = setNewListingId('testId');
+    const listingWithIdState = newListingReducer(initialState, setListingIdAction);
+    expect(listingWithIdState.listingId).to.equal('testId');
+
+    expect(newListingReducer(listingWithIdState, clearNewListing()).listingId).to.not.exist();
   });
 
   describe('as store', () => {
