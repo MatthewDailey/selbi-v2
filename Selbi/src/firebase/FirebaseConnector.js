@@ -13,6 +13,17 @@ const firebaseApp = firebase.initializeApp(developConfig);
 
 export default undefined;
 
+const authStateChangeListener = [];
+
+firebaseApp.auth().onAuthStateChanged((user) => {
+  console.log('auth state changed');
+  console.log(user);
+  authStateChangeListener.forEach((listener) => listener(user));
+});
+
+export function addAuthStateChangeListener(listener) {
+  authStateChangeListener.push(listener);
+}
 
 export function getUser() {
   return firebaseApp

@@ -16,7 +16,7 @@ import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListin
   from './src/reducers/NewListingReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
-  publishImage }
+  publishImage, addAuthStateChangeListener }
   from './src/firebase/FirebaseConnector';
 
 const store = createStore(combineReducers({
@@ -174,9 +174,9 @@ function renderMenu(navigator, closeMenu) {
     <Menu
       navigator={navigator}
       signOut={signOut}
-      getUser={getUser}
       closeMenu={closeMenu}
       localListingScene={listingScene}
+      addAuthStateChangeListener={addAuthStateChangeListener}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
         renderContent: withProps(
