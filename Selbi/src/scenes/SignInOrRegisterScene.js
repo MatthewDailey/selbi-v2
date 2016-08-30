@@ -158,11 +158,19 @@ export default class SignInOrRegisterScene extends RoutableScene {
     };
 
     const scrollToEmail = () => {
-      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 300, animated: true});
+      if (registerOrSignInType === TabTypes.register) {
+        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 300, animated: true});
+      } else {
+        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
+      }
     };
 
     const scrollToPassword = () => {
-      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 360, animated: true});
+      if (registerOrSignInType === TabTypes.register) {
+        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 360, animated: true});
+      } else {
+        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 240, animated: true});
+      }
     };
 
     const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
