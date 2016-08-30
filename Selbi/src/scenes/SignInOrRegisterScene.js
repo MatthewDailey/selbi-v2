@@ -122,7 +122,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
     return this.props.registerWithEmail(email, password)
       .then(() => {
-        this.goNext();
+        if (this.props.goHomeOnComplete) {
+          this.goHome();
+        } else {
+          this.goNext();
+        }
         return this.props.createUser(firstName, lastName);
       })
       .catch((error) => {
@@ -135,7 +139,13 @@ export default class SignInOrRegisterScene extends RoutableScene {
     const password = this.state.passwordSignIn;
 
     return this.props.signInWithEmail(email, password)
-      .then(() => this.goNext())
+      .then(() => {
+        if (this.props.goHomeOnComplete) {
+          this.goHome();
+        } else {
+          this.goNext();
+        }
+      })
       .catch((error) => Alert.alert(error.message));
   }
 

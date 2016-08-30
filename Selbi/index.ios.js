@@ -186,6 +186,7 @@ function renderMenu(navigator, closeMenu) {
             registerWithEmail={registerWithEmail}
             signInWithEmail={signInWithEmail}
             createUser={createUser}
+            goHomeOnComplete
           />),
       }}
     />
