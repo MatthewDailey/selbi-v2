@@ -8,24 +8,16 @@ export default class ItemView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      imageBase64: undefined,
+      imageData: undefined,
     };
 
-    const listingData = props.listing.val();
-    const image = listingData.images.image1;
-    props.loadImage(image.imageId)
-      .then((imageSnapshot) => {
-        this.setState({
-          imageBase64: imageSnapshot.val().base64,
-        });
-      });
   }
 
   getImageView(fitHeight, price) {
-    if (this.state.imageBase64) {
+    if (this.state.imageData) {
       return (
         <Image
-          source={{ uri: `data:image/png;base64,${this.state.imageBase64}` }}
+          source={{ uri: `data:image/png;base64,${this.state.imageData.val().base64}` }}
           style={{ height: fitHeight, borderRadius: 3 }}
         >
           <Text
@@ -56,8 +48,17 @@ export default class ItemView extends Component {
     const listingData = this.props.listing.val();
     const image = listingData.images.image1;
 
+    if (!this.state.imageData || this.state.imageData.key !== image.imageId) {
+      this.props.loadImage(image.imageId)
+        .then((imageSnapshot) => {
+          this.setState({
+            imageData: imageSnapshot,
+          });
+        });
+    }
+
     console.log(`Rendering listing : ${listingData.title} : ${this.props.listing.key} :`
-      + ` imgLoaded=${this.state.imageBase64 != undefined}`);
+      + ` hasImageData=${this.state.imageData != undefined}`);
 
     const widthRatio = image.width / columnWidth;
     const fitHeight = image.height / widthRatio;

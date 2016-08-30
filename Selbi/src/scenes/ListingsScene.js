@@ -49,6 +49,7 @@ export default class ListingsScene extends RoutableScene {
   }
 
   _onRefresh() {
+    console.log('called refresh listings');
     this.setState({ refreshing: true });
     this.fetchData()
       .then(() => {
