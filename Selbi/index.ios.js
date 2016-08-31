@@ -12,6 +12,7 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
+import CreditCardInputScene from './src/scenes/CreditCardInputScene';
 import ListingDetailScene from './src/scenes/ListingDetailScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
@@ -182,11 +183,11 @@ routeLinks[publishScene.id] = {
   },
 };
 
-const listingDetailRoute = {
-  id: 'test-listing-detail-route',
+const testScene = {
+  id: 'test-route',
   renderContent: withProps(
-    <ListingDetailScene
-      title="Book"
+    <CreditCardInputScene
+      title="Input Credit Card"
       leftIs="back"
     />),
 };
@@ -219,12 +220,10 @@ function renderMenu(navigator, closeMenu) {
   );
 }
 
-console.log(`Route Links::: ${routeLinks}`);
-
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={localListingScene}
+      initialRoute={testScene}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />
