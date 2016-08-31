@@ -57,8 +57,14 @@ export default StyleSheet.create({
     fontWeight: '300',
     padding: paddingSize / 2,
   },
-  friendlyText: {
+  friendlyTextLight: {
     color: colors.white,
+    fontSize: 20,
+    fontWeight: '300',
+    textAlign: 'center',
+    padding: paddingSize / 2,
+  },
+  friendlyText: {
     fontSize: 20,
     fontWeight: '300',
     textAlign: 'center',

@@ -26,7 +26,7 @@ export default function SpinnerOverlay({ isVisible, message }) {
           <MKSpinner />
           <Text
             color={colors.white}
-            style={styles.friendlyText}
+            style={styles.friendlyTextLight}
           >
             {message}
           </Text>
