@@ -12,7 +12,7 @@
     },
 
     "images": {
-      ".read": "auth.uid != null",
+      ".read": "true",
       "$imageId" : {
         ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
@@ -369,7 +369,7 @@
       "$listingId": {
         // TODO Limit write to owner and read to allowed readers via userListings.
         ".write": "auth.uid != null && (!data.exists() || data.child('sellerId').val() === auth.uid)",
-        ".read": "auth.uid != null",
+        ".read": "true",
         "title": {
           ".validate": "newData.isString()"
         },
