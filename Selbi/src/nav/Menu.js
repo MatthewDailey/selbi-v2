@@ -78,6 +78,9 @@ export default class Menu extends Component {
       return getSignedOutHeader();
     };
 
+    const signInMenuStyle = this.state.userDisplayName !== undefined ? {} :
+      {textDecorationLine: 'line-through'};
+
     return (
       <View style={styles.padded}>
         {getHeader()}
@@ -97,10 +100,14 @@ export default class Menu extends Component {
           <Text style={styles.menuText}><Icon name="map-marker" size={20}/> Local Listings</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="users" size={20}/> Friend's Listings</Text>
+          <Text style={styles.menuText}>
+            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friend's Listings</Text>
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="heart-o" size={20}/> Favorites</Text>
+          <Text style={styles.menuText}>
+            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Favorites</Text>
+          </Text>
         </TouchableHighlight>
 
         <View
@@ -114,10 +121,14 @@ export default class Menu extends Component {
         <TouchableHighlight
           onPress={() => setSceneAndCloseMenu(this.props.myListingScene)}
           underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="gift" size={20}/> My Listings</Text>
+          <Text style={styles.menuText}>
+            <Icon name="gift" size={20}/> <Text style={signInMenuStyle}>My Listings</Text>
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="commenting-o" size={20}/> Chats</Text>
+          <Text style={styles.menuText}>
+            <Icon name="commenting-o" size={20}/> <Text style={signInMenuStyle}>Chats</Text>
+          </Text>
         </TouchableHighlight>
 
         <View
@@ -129,10 +140,14 @@ export default class Menu extends Component {
         />
 
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="user" size={20}/> My Profile</Text>
+          <Text style={styles.menuText}>
+            <Icon name="user" size={20}/> <Text style={signInMenuStyle}>My Profile</Text>
+          </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}><Icon name="gear" size={20}/> Settings</Text>
+          <Text style={styles.menuText}>
+            <Icon name="gear" size={20}/> <Text style={signInMenuStyle}>Settings</Text>
+          </Text>
         </TouchableHighlight>
       </View>
     );
