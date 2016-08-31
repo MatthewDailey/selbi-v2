@@ -16,27 +16,30 @@ export default class Menu extends Component {
     this.state = {
       userDisplayName: undefined,
     };
+
+    this.updateStateFromUser = this.updateStateFromUser.bind(this);
+  }
+
+  updateStateFromUser(user) {
+    if (user) {
+      this.setState({
+        userDisplayName: user.displayName,
+      });
+    } else {
+      this.setState({
+        userDisplayName: undefined,
+      });
+    }
   }
 
   componentDidMount() {
-    this.props.addAuthStateChangeListener((user) => {
-      if (user) {
-        this.setState({
-          userDisplayName: user.displayName,
-        });
-      } else {
-        this.setState({
-          userDisplayName: undefined,
-        });
-      }
-    });
+    this.props.addAuthStateChangeListener(this.updateStateFromUser);
 
-    const currentUser = this.props.getUser();
-    if (currentUser) {
-      this.setState({
-        userDisplayName: currentUser.displayName,
-      });
-    }
+    this.updateStateFromUser(this.props.getUser());
+  }
+
+  componentWillUnmount() {
+    this.props.removeAuthStateChangeListener(this.updateStateFromUser);
   }
 
   render() {

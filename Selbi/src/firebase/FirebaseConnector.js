@@ -13,16 +13,19 @@ const firebaseApp = firebase.initializeApp(developConfig);
 
 export default undefined;
 
-const authStateChangeListener = [];
+const authStateChangeListeners = [];
 
 firebaseApp.auth().onAuthStateChanged((user) => {
-  console.log('auth state changed');
-  console.log(user);
-  authStateChangeListener.forEach((listener) => listener(user));
+  console.log(`auth state changed --- signed in = ${user !== undefined}`);
+  authStateChangeListeners.forEach((listener) => listener(user));
 });
 
 export function addAuthStateChangeListener(listener) {
-  authStateChangeListener.push(listener);
+  authStateChangeListeners.push(listener);
+}
+
+export function removeAuthStateChangeListener(listener) {
+  authStateChangeListeners.splice(authStateChangeListeners.indexOf(listener), 1);
 }
 
 export function getUser() {
