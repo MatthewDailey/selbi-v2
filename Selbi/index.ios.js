@@ -25,11 +25,11 @@ const store = createStore(combineReducers({
 }));
 const withProps = withNavigatorProps.bind(undefined, store);
 
-const listingScene = {
+const localListingScene = {
   id: 'listings-scene',
   renderContent: withProps(
     <ListingScene
-      title="Listings Near Me"
+      title="Near Me"
       leftIs="menu"
       rightIs="next"
     />),
@@ -133,7 +133,7 @@ const imageScene = {
 
 const routeLinks = {};
 
-routeLinks[listingScene.id] = {
+routeLinks[localListingScene.id] = {
   next: {
     title: 'Sell',
     getRoute: () => cameraScene,
@@ -186,7 +186,7 @@ function renderMenu(navigator, closeMenu) {
       navigator={navigator}
       signOut={signOut}
       closeMenu={closeMenu}
-      localListingScene={listingScene}
+      localListingScene={localListingScene}
       myListingScene={myListingsScene}
       addAuthStateChangeListener={addAuthStateChangeListener}
       signInOrRegisterScene={{
@@ -210,7 +210,7 @@ console.log(`Route Links::: ${routeLinks}`);
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={myListingsScene}
+      initialRoute={localListingScene}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />
