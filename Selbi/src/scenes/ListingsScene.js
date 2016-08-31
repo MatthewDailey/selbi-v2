@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ListView, RefreshControl } from 'react-native';
 
 import { loadListingByLocation, loadImage } from '../firebase/FirebaseConnector';
@@ -8,6 +8,12 @@ import ItemView from './ItemView';
 import styles from '../../styles';
 
 export default class ListingsScene extends RoutableScene {
+  renderWithNavBar() {
+    return <ListingsView {...this.props} />;
+  }
+}
+
+export class ListingsView extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -57,7 +63,7 @@ export default class ListingsScene extends RoutableScene {
       });
   }
 
-  renderWithNavBar() {
+  render() {
     return (
       <ListView
         enableEmptySections
