@@ -36,6 +36,10 @@ export default class CreditCardInputScene extends RoutableScene {
     };
   }
 
+  submitCreditCard() {
+    Alert.alert('Not yet implemented.');
+  }
+
   getForwardAndBackButtons(leftButtonName, onLeftButtonPress, rightButtonName, onRightButtonPress) {
     const leftButton = () => {
       if (leftButtonName) {
@@ -134,11 +138,11 @@ export default class CreditCardInputScene extends RoutableScene {
               onTextChange={(newNumber) => this.setState({ cvc: newNumber })}
               keyboardType={'numeric'}
               returnKeyType="done"
-              onSubmitEditing={submitCC}
+              onSubmitEditing={this.submitCreditCard}
             />
             {this.getForwardAndBackButtons(
               'Previous', () => this.setState({ focus: 'expiry' }),
-              'Done', submitCC)}
+              'Done', this.submitCreditCard)}
           </View>
         );
       case 'name':
@@ -184,7 +188,7 @@ export default class CreditCardInputScene extends RoutableScene {
           <View style={styles.padded} />
           {this.getTextInput()}
         </View>
-        <SpinnerOverlay isVisible message="One moment..."/>
+        <SpinnerOverlay message="One moment..." />
       </View>
     );
   }
