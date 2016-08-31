@@ -40,9 +40,6 @@ export default class ListingDetailScene extends RoutableScene {
 
     const { width } = Dimensions.get('window');
 
-    const widthRatio = imageData.width / width;
-    const fitHeight = imageData.height / widthRatio;
-
     return (
       <View style={{
         flex: 1,
@@ -53,8 +50,8 @@ export default class ListingDetailScene extends RoutableScene {
         <Image
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={{
+            flex: 1,
             width: width,
-            height: fitHeight,
           }}
         >
           <View style={{
