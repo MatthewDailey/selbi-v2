@@ -125,7 +125,6 @@ export default class CreditCardInputScene extends RoutableScene {
           </View>
         );
       case 'cvc':
-        const submitCC = () => Alert.alert('No yet implemented.');
         return (
           <View>
             <MKTextField

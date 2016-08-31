@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
   },
 });
 
+import SpinnerOverlay from './SpinnerOverlay';
+
 setTheme({
   primaryColor: colors.primaryColor,
 });
@@ -75,23 +77,6 @@ export class SimpleCamera extends RoutableScene {
           this.goNext();
         })
         .catch(err => console.error(err));
-    };
-
-    const getSpinner = () => {
-      if (this.state.capturing) {
-        return (
-          <MKSpinner
-            style={{
-              flex: 1,
-              top: 50,
-              left: (this.state.viewWidth - spinnerSize) / 2,
-              height: spinnerSize,
-              width: spinnerSize,
-              position: 'absolute',
-            }}
-          />);
-      }
-      return undefined;
     };
 
     const getShutterButton = () => {
@@ -134,7 +119,7 @@ export class SimpleCamera extends RoutableScene {
 
           {getShutterButton()}
         </Camera>
-        {getSpinner()}
+        <SpinnerOverlay isVisible={this.state.capturing} message="Capturing photo..." />
       </View>
     );
   }
