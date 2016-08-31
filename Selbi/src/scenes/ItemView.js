@@ -19,6 +19,7 @@ export default class ItemView extends Component {
       const openDetailView = () => {
         this.props.openSimpleScene(
           <ListingDetailScene
+            title={this.props.listing.val().title}
             imageData={this.state.imageData.val()}
             listingData={this.props.listing.val()}
           />
