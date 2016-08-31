@@ -278,3 +278,50 @@ export function loadListingByLocation(latlon, radiusKm) {
     });
   });
 }
+
+/*
+ * This code snippet shows how to load listings based on the status, for example, load all private
+ * listings for a given user.
+ *
+ * This is useful for loading listings of users a user is following by first loading the user's
+ * friends and then loading their public and private listings. It's also useful for loading a
+ * user's inventory of listings.
+ *
+ * Note that this will fail if ANY listing fails to load.
+ *
+ * @param status String status of listings to load. Must be inactive, public, private, sold,
+ * salePending.
+ *
+ * @returns Promise fulfilled with list of listings of a given status.
+ */
+export function loadListingsByStatus(status) {
+  if (!getUser()) {
+    return Promise.resolve([]);
+  }
+
+  return firebaseApp
+    .database()
+    .ref('/userListings')
+    .child(getUser().uid)
+    .child(status)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return Promise.resolve(snapshot.val());
+      }
+      return Promise.resolve({});
+    })
+    .then((listingsOfStatus) => {
+      const allListings = [];
+      Object.keys(listingsOfStatus)
+        .forEach((listingId) => {
+          allListings.push(
+            firebaseApp
+              .database()
+              .ref('/listings')
+              .child(listingId)
+              .once('value'));
+        });
+      return Promise.all(allListings);
+    });
+}

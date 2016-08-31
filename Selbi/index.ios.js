@@ -10,6 +10,7 @@ import PublishScene from './src/scenes/PublishScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
+import MyListingsScene from './src/scenes/MyListingsScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
   setNewListingLocation, clearNewListing }
@@ -28,10 +29,20 @@ const listingScene = {
   id: 'listings-scene',
   renderContent: withProps(
     <ListingScene
-      title="Listings"
+      title="Listings Near Me"
       leftIs="menu"
       rightIs="next"
     />),
+};
+
+const myListingsScene = {
+  id: 'my-listings-scene',
+  renderContent: withProps(
+    <MyListingsScene
+      title="My Listings"
+      leftIs="menu"
+    />
+  ),
 };
 
 const loginScene = {
@@ -176,6 +187,7 @@ function renderMenu(navigator, closeMenu) {
       signOut={signOut}
       closeMenu={closeMenu}
       localListingScene={listingScene}
+      myListingScene={myListingsScene}
       addAuthStateChangeListener={addAuthStateChangeListener}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
@@ -198,7 +210,7 @@ console.log(`Route Links::: ${routeLinks}`);
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={listingScene}
+      initialRoute={myListingsScene}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />

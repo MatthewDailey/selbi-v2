@@ -32,7 +32,7 @@ export default class Menu extends Component {
 
   render() {
     const setSceneAndCloseMenu = (scene) => {
-      this.props.navigator.resetTo(this.props.localListingScene);
+      this.props.navigator.resetTo(scene);
       this.props.closeMenu();
     };
 
@@ -45,15 +45,14 @@ export default class Menu extends Component {
       <View style={styles.paddedCenterContainerWhite}>
         <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.state.userDisplayName}</Text>
         <View style={styles.halfPadded}/>
-        <TouchableHighlight onPress={this.props.signOut}>
+        <TouchableHighlight onPress={this.props.signOut} underlayColor={colors.secondary}>
           <Text style={{fontSize: 10}}>Sign out</Text>
         </TouchableHighlight>
       </View>;
 
     const getSignedOutHeader = () =>
-      <TouchableHighlight onPress={signInOrRegister}>
+      <TouchableHighlight onPress={signInOrRegister} underlayColor={colors.secondary}>
         <View style={styles.paddedCenterContainerWhite}>
-
           <Text style={{fontWeight: 'bold', fontSize: 16 }}>Not signed in.</Text>
           <View style={styles.halfPadded}/>
           <Text style={{fontSize: 14}}>Sign in or register.</Text>
@@ -100,7 +99,9 @@ export default class Menu extends Component {
           }}
         />
 
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight
+          onPress={() => setSceneAndCloseMenu(this.props.myListingScene)}
+          underlayColor={colors.secondary}>
           <Text style={styles.menuText}><Icon name="gift" size={20}/> My Listings</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>

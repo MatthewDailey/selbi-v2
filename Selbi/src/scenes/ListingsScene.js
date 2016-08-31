@@ -8,22 +8,11 @@ import ItemView from './ItemView';
 import styles from '../../styles';
 
 export default class ListingsScene extends RoutableScene {
-  renderWithNavBar() {
-    return <ListingsView {...this.props} />;
-  }
-}
-
-export class ListingsView extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds,
-      refreshing: false,
-    };
 
-    this.fetchData();
-    this._onRefresh = this._onRefresh.bind(this);
+    this.getGeolocation = this.getGeolocation.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   getGeolocation() {
@@ -42,8 +31,29 @@ export class ListingsView extends Component {
   }
 
   fetchData() {
-    return this.getGeolocation()
-      .then((latlon) => loadListingByLocation(latlon, 20))
+    return this.getGeolocation().then((latlon) => loadListingByLocation(latlon, 20));
+  }
+
+  renderWithNavBar() {
+    return <ListingsComponent fetchData={this.fetchData} />;
+  }
+}
+
+export class ListingsComponent extends Component {
+  constructor(props) {
+    super(props);
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+    this.state = {
+      dataSource: ds,
+      refreshing: false,
+    };
+
+    this.loadData();
+    this._onRefresh = this._onRefresh.bind(this);
+  }
+
+  loadData() {
+    return this.props.fetchData()
       .then((listings) => {
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(listings),
@@ -57,7 +67,7 @@ export class ListingsView extends Component {
   _onRefresh() {
     console.log('called refresh listings');
     this.setState({ refreshing: true });
-    this.fetchData()
+    this.props.loadData()
       .then(() => {
         this.setState({ refreshing: false });
       });
