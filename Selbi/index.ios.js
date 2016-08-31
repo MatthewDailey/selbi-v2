@@ -12,6 +12,8 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
+import ListingDetailScene from './src/scenes/ListingDetailScene';
+
 import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
   setNewListingLocation, clearNewListing }
   from './src/reducers/NewListingReducer';
@@ -180,6 +182,16 @@ routeLinks[publishScene.id] = {
   },
 };
 
+const listingDetailRoute = {
+  id: 'test-listing-detail-route',
+  renderContent: withProps(
+    <ListingDetailScene
+      title="Book"
+      leftIs="back"
+    />),
+};
+
+
 function renderMenu(navigator, closeMenu) {
   return (
     <Menu
@@ -212,7 +224,7 @@ console.log(`Route Links::: ${routeLinks}`);
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={localListingScene}
+      initialRoute={listingDetailRoute}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />

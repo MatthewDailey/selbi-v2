@@ -10,7 +10,6 @@ export default class ItemView extends Component {
     this.state = {
       imageData: undefined,
     };
-
   }
 
   getImageView(fitHeight, price) {
