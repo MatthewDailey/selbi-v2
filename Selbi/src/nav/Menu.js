@@ -66,7 +66,10 @@ export default class Menu extends Component {
       <View style={styles.paddedCenterContainerWhite}>
         <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.state.userDisplayName}</Text>
         <View style={styles.halfPadded}/>
-        <TouchableHighlight onPress={this.props.signOut} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={() => {
+          this.props.signOut()
+          setSceneAndCloseMenu(this.props.localListingScene);
+        }} underlayColor={colors.secondary}>
           <Text style={{fontSize: 10}}>Sign out</Text>
         </TouchableHighlight>
       </View>;
