@@ -16,7 +16,9 @@ export default class Menu extends Component {
     this.state = {
       userDisplayName: undefined,
     };
+  }
 
+  componentDidMount() {
     this.props.addAuthStateChangeListener((user) => {
       if (user) {
         this.setState({
@@ -28,6 +30,13 @@ export default class Menu extends Component {
         });
       }
     });
+
+    const currentUser = this.props.getUser();
+    if (currentUser) {
+      this.setState({
+        userDisplayName: currentUser.displayName,
+      });
+    }
   }
 
   render() {

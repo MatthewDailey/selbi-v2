@@ -185,6 +185,7 @@ function renderMenu(navigator, closeMenu) {
     <Menu
       navigator={navigator}
       signOut={signOut}
+      getUser={getUser}
       closeMenu={closeMenu}
       localListingScene={localListingScene}
       myListingScene={myListingsScene}
