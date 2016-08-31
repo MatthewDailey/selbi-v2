@@ -44,12 +44,15 @@ export default class InputScene extends RoutableScene {
           <Text style={styles.padded}>{this.props.inputTitle}</Text>
           <View style={styles.padded}>
             <MKTextField
+              autoFocus
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
               style={{ height: 48 }}
               value={this.state.text}
               onTextChange={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
+              returnKeyType="done"
+              onSubmitEditing={this.goNext}
             />
           </View>
         </View>
