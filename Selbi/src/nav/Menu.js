@@ -43,6 +43,15 @@ export default class Menu extends Component {
   }
 
   render() {
+    const ifSignedIn = (sceneFunction) =>
+      (scene) => {
+        if (this.state.userDisplayName) {
+          sceneFunction(scene);
+        } else {
+          Alert.alert('You must sign in first.');
+        }
+      };
+
     const setSceneAndCloseMenu = (scene) => {
       this.props.navigator.resetTo(scene);
       this.props.closeMenu();
@@ -99,12 +108,12 @@ export default class Menu extends Component {
         >
           <Text style={styles.menuText}><Icon name="map-marker" size={20}/> Local Listings</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friend's Listings</Text>
           </Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Favorites</Text>
           </Text>
@@ -119,13 +128,13 @@ export default class Menu extends Component {
         />
 
         <TouchableHighlight
-          onPress={() => setSceneAndCloseMenu(this.props.myListingScene)}
+          onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.myListingScene)}
           underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="gift" size={20}/> <Text style={signInMenuStyle}>My Listings</Text>
           </Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="commenting-o" size={20}/> <Text style={signInMenuStyle}>Chats</Text>
           </Text>
@@ -139,12 +148,12 @@ export default class Menu extends Component {
           }}
         />
 
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="user" size={20}/> <Text style={signInMenuStyle}>My Profile</Text>
           </Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={notImplemented} underlayColor={colors.secondary}>
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
             <Icon name="gear" size={20}/> <Text style={signInMenuStyle}>Settings</Text>
           </Text>
