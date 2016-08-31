@@ -19,6 +19,11 @@ export default StyleSheet.create({
     backgroundColor: colors.secondary,
     alignItems: 'center',
   },
+  paddedCenterContainerClear: {
+    padding: paddingSize,
+    flex: 1,
+    alignItems: 'center',
+  },
   paddedCenterContainerWhite: {
     padding: paddingSize,
     flex: 1,
@@ -53,6 +58,7 @@ export default StyleSheet.create({
     padding: paddingSize / 2,
   },
   friendlyText: {
+    color: colors.white,
     fontSize: 20,
     fontWeight: '300',
     textAlign: 'center',

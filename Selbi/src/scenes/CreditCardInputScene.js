@@ -6,6 +6,7 @@ import CreditCard from 'react-native-credit-card';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
+import SpinnerOverlay from './SpinnerOverlay';
 
 const buttonViewStyle = {
   flex: 1,
@@ -183,6 +184,7 @@ export default class CreditCardInputScene extends RoutableScene {
           <View style={styles.padded} />
           {this.getTextInput()}
         </View>
+        <SpinnerOverlay isVisible message="One moment..."/>
       </View>
     );
   }
