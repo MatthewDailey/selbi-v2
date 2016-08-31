@@ -19,16 +19,28 @@ export default class MyListingsScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <View tabLabel="Inactive" style={styles.fullScreenContainer}>
-          <ListingsComponent fetchData={() => loadListingsByStatus('inactive')} />
+          <ListingsComponent
+            fetchData={() => loadListingsByStatus('inactive')}
+            openSimpleScene={this.openSimpleScene}
+          />
         </View>
         <View tabLabel="Public" style={styles.fullScreenContainer}>
-          <ListingsComponent fetchData={() => loadListingsByStatus('public')} />
+          <ListingsComponent
+            fetchData={() => loadListingsByStatus('public')}
+            openSimpleScene={this.openSimpleScene}
+          />
         </View>
         <View tabLabel="Private" style={styles.fullScreenContainer}>
-          <ListingsComponent fetchData={() => loadListingsByStatus('private')} />
+          <ListingsComponent
+            fetchData={() => loadListingsByStatus('private')}
+            openSimpleScene={this.openSimpleScene}
+          />
         </View>
         <View tabLabel="Sold" style={styles.fullScreenContainer}>
-          <ListingsComponent fetchData={() => loadListingsByStatus('sold')} />
+          <ListingsComponent
+            fetchData={() => loadListingsByStatus('sold')}
+            openSimpleScene={this.openSimpleScene}
+          />
         </View>
 
       </ScrollableTabView>

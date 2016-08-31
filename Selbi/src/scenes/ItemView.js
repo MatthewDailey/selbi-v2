@@ -20,10 +20,11 @@ export default class ItemView extends Component {
         this.props.openSimpleScene(
           <ListingDetailScene
             title={this.props.listing.val().title}
+            leftIs="back"
             imageData={this.state.imageData.val()}
             listingData={this.props.listing.val()}
           />
-        )
+        );
       };
 
       return (

@@ -38,21 +38,7 @@ export default class ListingsScene extends RoutableScene {
     return (
       <ListingsComponent
         fetchData={this.fetchData}
-        openSimpleScene={(scene) => {
-          console.log(scene)
-          this.props.navigator.push({
-            id: 'detail-scene',
-            renderContent: (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
-              scene,
-              {
-                leftIs: 'back',
-                navigator: navigatorProp,
-                routeLinks: routeLinksProp,
-                openMenu: openMenuProp,
-                store: this.props.store,
-              }),
-          });
-        }}
+        openSimpleScene={this.openSimpleScene}
       />
     );
   }

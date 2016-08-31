@@ -5,6 +5,30 @@ import NavigationBar from '@selbi/react-native-navbar';
 
 import colors from '../../colors';
 
+
+/*
+ * Allows binding all navigator props to components which extend RoutableScene.
+ *
+ * This method is intended to be bound with the Redux store managing the state of the app.
+ *
+ * E.g:
+ * const store = createStore(...)
+ * const withProps = withNavigatorProps.bind(undefined, store);
+ *
+ * @returns Function from (navigator, routeLinks, openMenu) to react element for use as the
+ * route.renderContent method.
+ */
+export function withNavigatorProps(appStore, reactElement) {
+  return (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
+    reactElement,
+    {
+      navigator: navigatorProp,
+      routeLinks: routeLinksProp,
+      openMenu: openMenuProp,
+      store: appStore,
+    });
+}
+
 /*
  * RoutableScene is a convenience class to package the logic around having a menu bar with left and
  * right buttons plus navigating between possible scenes.
@@ -27,6 +51,7 @@ export default class RoutableScene extends Component {
     this.goHome = this.goHome.bind(this);
     this.goNext = this.goNext.bind(this);
     this.goBack = this.goBack.bind(this);
+    this.openSimpleScene = this.openSimpleScene.bind(this);
   }
 
   getLeftButton() {
@@ -101,6 +126,13 @@ export default class RoutableScene extends Component {
     // Implemented by children.
   }
 
+  openSimpleScene(scene) {
+    this.props.navigator.push({
+      id: 'unconnected-scene',
+      renderContent: withNavigatorProps(this.props.store, scene),
+    });
+  }
+
   render() {
     return (
       // Note this flex:1 style. Super fucking important to make sure listview can scroll.
@@ -133,26 +165,3 @@ RoutableScene.propTypes = {
   leftIs: React.PropTypes.oneOf(['back', 'menu']),
   rightIs: React.PropTypes.oneOf(['next', 'home']),
 };
-
-/*
- * Allows binding all navigator props to components which extend RoutableScene.
- *
- * This method is intended to be bound with the Redux store managing the state of the app.
- *
- * E.g:
- * const store = createStore(...)
- * const withProps = withNavigatorProps.bind(undefined, store);
- *
- * @returns Function from (navigator, routeLinks, openMenu) to react element for use as the
- * route.renderContent method.
- */
-export function withNavigatorProps(appStore, reactElement) {
-  return (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
-    reactElement,
-    {
-      navigator: navigatorProp,
-      routeLinks: routeLinksProp,
-      openMenu: openMenuProp,
-      store: appStore,
-    });
-}
