@@ -35,10 +35,8 @@ const Button = MKButton.button()
 
 export default class ListingDetailScene extends RoutableScene {
   renderWithNavBar() {
-    const imageHieght = 524;
-    const imageWidth = 320;
-
-    const imageData = require('./testImage.json');
+    const imageData = this.props.imageData;
+    const listingData = this.props.listingData;
 
     const { width } = Dimensions.get('window');
 
@@ -48,8 +46,8 @@ export default class ListingDetailScene extends RoutableScene {
     return (
       <View style={{
         flex: 1,
-        alignItems:'center',
-        justifyContent:'center',
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: colors.dark,
       }}>
         <Image
@@ -69,7 +67,7 @@ export default class ListingDetailScene extends RoutableScene {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-              <Text style={fontStyle}>$124.30</Text>
+              <Text style={fontStyle}>{`$${listingData.price}`}</Text>
               <Text style={fontStyle}><Icon name="heart-o" size={30} color={colors.white} /></Text>
             </View>
             <View style={{

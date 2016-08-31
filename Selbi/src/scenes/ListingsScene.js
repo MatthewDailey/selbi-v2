@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, cloneElement } from 'react';
 import { ListView, RefreshControl } from 'react-native';
 
 import { loadListingByLocation, loadImage } from '../firebase/FirebaseConnector';
@@ -35,7 +35,26 @@ export default class ListingsScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    return <ListingsComponent fetchData={this.fetchData} />;
+    return (
+      <ListingsComponent
+        fetchData={this.fetchData}
+        openSimpleScene={(scene) => {
+          console.log(scene)
+          this.props.navigator.push({
+            id: 'detail-scene',
+            renderContent: (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
+              scene,
+              {
+                leftIs: 'back',
+                navigator: navigatorProp,
+                routeLinks: routeLinksProp,
+                openMenu: openMenuProp,
+                store: this.props.store,
+              }),
+          });
+        }}
+      />
+    );
   }
 }
 
@@ -89,7 +108,12 @@ export class ListingsComponent extends Component {
         }}
         style={styles.container}
         dataSource={this.state.dataSource}
-        renderRow={(data) => <ItemView listing={data} loadImage={loadImage} />}
+        renderRow={(data) =>
+          <ItemView
+            listing={data}
+            loadImage={loadImage}
+            openSimpleScene={this.props.openSimpleScene}
+          />}
       />
     );
   }

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, TouchableHighlight } from 'react-native';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
+
+import ListingDetailScene from './ListingDetailScene';
 
 export default class ItemView extends Component {
   constructor(props) {
@@ -14,22 +16,33 @@ export default class ItemView extends Component {
 
   getImageView(fitHeight, price) {
     if (this.state.imageData) {
+      const openDetailView = () => {
+        this.props.openSimpleScene(
+          <ListingDetailScene
+            imageData={this.state.imageData.val()}
+            listingData={this.props.listing.val()}
+          />
+        )
+      };
+
       return (
-        <Image
-          source={{ uri: `data:image/png;base64,${this.state.imageData.val().base64}` }}
-          style={{ height: fitHeight, borderRadius: 3 }}
-        >
-          <Text
-            style={{
-              margin: 5,
-              color: 'white',
-              fontWeight: 'bold',
-              backgroundColor: 'transparent',
-            }}
+        <TouchableHighlight onPress={openDetailView}>
+          <Image
+            source={{ uri: `data:image/png;base64,${this.state.imageData.val().base64}` }}
+            style={{ height: fitHeight, borderRadius: 3 }}
           >
-            {`$${price}`}
-          </Text>
-        </Image>
+            <Text
+              style={{
+                margin: 5,
+                color: 'white',
+                fontWeight: 'bold',
+                backgroundColor: 'transparent',
+              }}
+            >
+              {`$${price}`}
+            </Text>
+          </Image>
+        </TouchableHighlight>
       );
     }
     return (

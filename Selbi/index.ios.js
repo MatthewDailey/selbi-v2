@@ -224,7 +224,7 @@ console.log(`Route Links::: ${routeLinks}`);
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={listingDetailRoute}
+      initialRoute={localListingScene}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />
