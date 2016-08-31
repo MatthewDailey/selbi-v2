@@ -35,11 +35,13 @@ export default class CreditCardInputScene extends RoutableScene {
     };
   }
 
-  getForwardAndBackButtons(leftButtonName, rightButtonName) {
+  getForwardAndBackButtons(leftButtonName, onLeftButtonPress, rightButtonName, onRightButtonPress) {
     const leftButton = () => {
       if (leftButtonName) {
         return (
-          <Button>
+          <Button
+            onPress={onLeftButtonPress}
+          >
             <Text>{leftButtonName}</Text>
           </Button>
         );
@@ -52,7 +54,9 @@ export default class CreditCardInputScene extends RoutableScene {
         return <View />;
       }
       return (
-        <Button>
+        <Button
+          onPress={onRightButtonPress}
+        >
           <Text>{rightButtonName}</Text>
         </Button>
       );
@@ -75,7 +79,6 @@ export default class CreditCardInputScene extends RoutableScene {
   }
 
   getTextInput() {
-    console.log(this.state)
     switch (this.state.focus) {
       case 'number':
         return (
@@ -91,7 +94,9 @@ export default class CreditCardInputScene extends RoutableScene {
               returnKeyType="next"
               onSubmitEditing={() => this.setState({ focus: 'expiry' })}
             />
-            {this.getForwardAndBackButtons('Previous', 'Next')}
+            {this.getForwardAndBackButtons(
+              'Previous', () => this.setState({ focus: 'name' }),
+              'Next', () => this.setState({ focus: 'expiry' }))}
           </View>
         );
       case 'expiry':
@@ -109,10 +114,13 @@ export default class CreditCardInputScene extends RoutableScene {
               returnKeyType="next"
               onSubmitEditing={() => this.setState({ focus: 'cvc' })}
             />
-            {this.getForwardAndBackButtons('Previous', 'Next')}
+            {this.getForwardAndBackButtons(
+              'Previous', () => this.setState({ focus: 'number' }),
+              'Next', () => this.setState({ focus: 'cvc' }))}
           </View>
         );
       case 'cvc':
+        const submitCC = () => Alert.alert('No yet implemented.');
         return (
           <View>
             <MKTextField
@@ -125,9 +133,11 @@ export default class CreditCardInputScene extends RoutableScene {
               onTextChange={(newNumber) => this.setState({ cvc: newNumber })}
               keyboardType={'numeric'}
               returnKeyType="done"
-              onSubmitEditing={() => this.setState({ focus: 'number' })}
+              onSubmitEditing={submitCC}
             />
-            {this.getForwardAndBackButtons('Previous', 'Done')}
+            {this.getForwardAndBackButtons(
+              'Previous', () => this.setState({ focus: 'expiry' }),
+              'Done', submitCC)}
           </View>
         );
       case 'name':
@@ -145,7 +155,9 @@ export default class CreditCardInputScene extends RoutableScene {
               returnKeyType="next"
               onSubmitEditing={() => this.setState({ focus: 'number' })}
             />
-            {this.getForwardAndBackButtons(undefined, 'Next')}
+            {this.getForwardAndBackButtons(
+              undefined, undefined,
+              'Next', () => this.setState({ focus: 'number' }))}
           </View>
         );
     }
