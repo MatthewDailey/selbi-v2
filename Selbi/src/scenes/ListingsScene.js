@@ -67,7 +67,7 @@ export class ListingsComponent extends Component {
   _onRefresh() {
     console.log('called refresh listings');
     this.setState({ refreshing: true });
-    this.props.loadData()
+    this.loadData()
       .then(() => {
         this.setState({ refreshing: false });
       });
