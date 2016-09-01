@@ -4,16 +4,23 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from './SpinnerOverlay';
+import ChatScene from './ChatScene';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector'
 
 import styles from '../../styles';
 import colors from '../../colors';
 
-function ChatListItem({ chatData }) {
+function ChatListItem({ chatData, openChatScene }) {
   return (
     <TouchableHighlight
-      onPress={() => alert('pressed')}
+      onPress={() => openChatScene(
+        <ChatScene
+          title={chatData.title}
+          chatData={chatData}
+          leftIs="back"
+        />
+      )}
       underlayColor={`${colors.dark}64`}
       style={{
         padding: 16,
@@ -66,13 +73,13 @@ class ChatListComponent extends Component {
         }}
         style={styles.container}
         dataSource={this.state.dataSource}
-        renderRow={(data) => <ChatListItem chatData={data}/>}
+        renderRow={(data) => <ChatListItem chatData={data} openChatScene={this.props.openChatScene} />}
       />
     );
   }
 }
 
-export default class ChatScene extends RoutableScene {
+export default class ChatListScene extends RoutableScene {
   constructor(props) {
     super(props);
 
@@ -127,13 +134,17 @@ export default class ChatScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <View tabLabel="All" style={styles.container}>
-          <ChatListComponent refresh={this.loadChatData} chats={this.state.allChats} />
+          <ChatListComponent
+            refresh={this.loadChatData}
+            chats={this.state.allChats}
+            openChatScene={this.openSimpleScene}
+          />
         </View>
         <View tabLabel="Buying" style={styles.container}>
-          <ChatListComponent refresh={this.loadChatData} chats={this.state.buyingChats} />
+          <ChatListComponent refresh={this.loadChatData} chats={this.state.buyingChats} openChatScene={this.openSimpleScene}/>
         </View>
         <View tabLabel="Selling" style={styles.container}>
-          <ChatListComponent refresh={this.loadChatData} chats={this.state.sellingChats} />
+          <ChatListComponent refresh={this.loadChatData} chats={this.state.sellingChats} openChatScene={this.openSimpleScene}/>
         </View>
       </ScrollableTabView>
     );
