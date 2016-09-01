@@ -363,6 +363,12 @@
         }
       }
     },
+    "userPublicData": {
+      "$uid" : {
+        ".write": "auth.uid == $uid",
+        ".read": true
+      }
+    },
     // All data about individual listings.
     "listings": {
       // No read permissions at /listings so listings cannot be iterated over.
