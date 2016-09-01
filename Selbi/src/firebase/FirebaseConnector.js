@@ -45,18 +45,24 @@ export function registerWithEmail(emailInput, passwordInput) {
     .createUserWithEmailAndPassword(emailInput, passwordInput);
 }
 
-function insertUserInDatabase(firstName, lastName) {
-  return firebaseApp
+function insertUserInDatabase(userDisplayName) {
+  const promiseUserPublicData = firebaseApp
+    .database()
+    .ref('/userPublicData')
+    .child(getUser().uid)
+    .set({
+      displayName: userDisplayName,
+    });
+
+  const promiseUsers = firebaseApp
     .database()
     .ref('/users')
     .child(getUser().uid)
     .set({
-      name: {
-        first: firstName,
-        last: lastName,
-      },
       userAgreementAccepted: false,
     });
+
+  return Promise.all([promiseUsers, promiseUserPublicData]);
 }
 
 export function signInWithEmail(email, password) {
@@ -68,7 +74,7 @@ export function signInWithEmail(email, password) {
       if (!userSnapshot.exists()) {
         const currentUser = getUser();
         const names = currentUser.displayName.split(' ');
-        return insertUserInDatabase(names[0], names[1]);
+        return insertUserInDatabase(`${names[0]} ${names[1]}`);
       }
       return Promise.resolve();
     });
@@ -81,11 +87,12 @@ export function signOut() {
 }
 
 export function createUser(firstName, lastName) {
+  const userDisplayName = `${firstName} ${lastName}`;
   return getUser()
     .updateProfile({
-      displayName: `${firstName} ${lastName}`,
+      displayName: userDisplayName,
     })
-    .then(() => insertUserInDatabase(firstName, lastName));
+    .then(() => insertUserInDatabase(userDisplayName));
 }
 
 export function publishImage(base64, heightInput, widthInput) {

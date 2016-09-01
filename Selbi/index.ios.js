@@ -222,7 +222,7 @@ function renderMenu(navigator, closeMenu) {
 function NavApp() {
   return (
     <DrawerNavigator
-      initialRoute={testScene}
+      initialRoute={localListingScene}
       routeLinks={routeLinks}
       renderMenuWithNavigator={renderMenu}
     />
