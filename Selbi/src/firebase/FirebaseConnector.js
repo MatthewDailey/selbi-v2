@@ -240,6 +240,27 @@ export function loadImage(imageId) {
     .once('value');
 }
 
+export function createChatAsBuyer(listingId, sellerUid) {
+  const promiseSetSellerPointer = firebaseApp
+    .database()
+    .ref('chats')
+    .child(sellerUid)
+    .child('selling')
+    .child(listingId)
+    .child(getUser().uid)
+    .set(true);
+
+  const promiseSetBuyerPoiner = firebaseApp
+    .database()
+    .ref('chats')
+    .child(getUser().uid)
+    .child('buying')
+    .child(listingId)
+    .set(true);
+
+  return Promise.all([promiseSetBuyerPoiner, promiseSetSellerPointer]);
+}
+
 /*
  * This code snippet demonstrates how to load all public listings at a certain location.
  *

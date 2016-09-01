@@ -3,6 +3,8 @@ import { Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
+import { createChatAsBuyer } from '../firebase/FirebaseConnector';
+
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
@@ -36,7 +38,9 @@ const Button = MKButton.button()
 export default class ListingDetailScene extends RoutableScene {
   renderWithNavBar() {
     const imageData = this.props.imageData;
-    const listingData = this.props.listingData;
+    const listingData = this.props.listingData.val();
+
+    console.log(listingData)
 
     const { width } = Dimensions.get('window');
 
@@ -74,7 +78,11 @@ export default class ListingDetailScene extends RoutableScene {
               alignItems: 'flex-end',
             }}>
               <View style={buttonViewStyle}>
-                <Button>
+                <Button
+                  onPress={() => createChatAsBuyer(
+                    this.props.listingData.key,
+                    listingData.sellerId)}
+                >
                   <Text>MESSAGE</Text>
                 </Button>
               </View>

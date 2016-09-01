@@ -22,7 +22,7 @@ export default class ItemView extends Component {
             title={this.props.listing.val().title}
             leftIs="back"
             imageData={this.state.imageData.val()}
-            listingData={this.props.listing.val()}
+            listingData={this.props.listing}
           />
         );
       };
