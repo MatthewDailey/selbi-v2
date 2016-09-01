@@ -1,8 +1,4 @@
 {
-  "name" : {
-    "first" : "test",
-    "last" : "user"
-  },
   "locations" : {
     "sellingFrom": {
       "address1": "655 Natoma Street",
@@ -41,7 +37,6 @@
   },
   "dateOfBirth" : "1990-03-20",
   "email" : "test@selbi.io",
-  "profileImageUrl" : "http://fakeprofileimage.com/matt",
   "phoneNumber" : 1234567890,
   "userAgreementAccepted" : true
 }

@@ -363,22 +363,6 @@
         }
       }
     },
-    "userPublicData": {
-      "$uid" : {
-        ".write": "auth.uid == $uid",
-        ".read": true,
-        ".validate": "newData.hasChildren(['displayName'])",
-        "displayName": {
-          ".validate": "newData.isString()"
-        },
-        "profileImageUrl": {
-          ".validate": "newData.isString()"
-        },
-        "$other": {
-          ".validate": false
-        }
-      }
-    },
     // All data about individual listings.
     "listings": {
       // No read permissions at /listings so listings cannot be iterated over.
@@ -454,6 +438,22 @@
         }
       }
     },
+    "userPublicData": {
+      "$uid" : {
+        ".write": "auth.uid == $uid",
+        ".read": true,
+        ".validate": "newData.hasChildren(['displayName'])",
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
     // All background data about a user.
     "users": {
       // No read permissions at /users so users cannot be iterated over.
@@ -466,21 +466,6 @@
         },
         "userAgreementAccepted": {
           ".validate": "newData.isBoolean()"
-        },
-        "name": {
-          ".validate": "newData.hasChildren(['first', 'last'])",
-          "$other": {
-            ".validate": false
-          },
-          "first": {
-            ".validate": "newData.isString()"
-          },
-          "last": {
-            ".validate": "newData.isString()"
-          }
-        },
-        "profileImageUrl": {
-          ".validate": "newData.isString() && newData.val().matches(/^http(s)?:/)"
         },
         // TODO: Validate email is valid as well.
         "email": {

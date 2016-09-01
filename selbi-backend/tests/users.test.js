@@ -250,105 +250,12 @@ describe('/users', () => {
       });
     });
 
-    describe('name', () => {
-      function addNameToData(data) {
-        // noinspection Eslint
-        data.name = {
-          first: 'test',
-          last: 'user',
-        };
-      }
-
-      it('takes no extra parameters', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            addNameToData(data);
-            // noinspection Eslint
-            data.name.extra = "extraParam";
-          }, done);
-      });
-
-      describe('first', () => {
-        it('is required', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              delete data.name.first;
-            }, done);
-        });
-
-        it('is string', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              data.name.first = 1;
-            }, done);
-        });
-      });
-
-      describe('last', () => {
-        it('is required', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              delete data.name.last;
-            }, done);
-        });
-
-        it('is string', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              data.name.last = 1;
-            }, done);
-        });
-      });
-    });
-
     it('email is string', (done) => {
       setPropertyAndExpectPermissionDenied(
         (data) => {
           // noinspection Eslint
           data.email = 1;
         }, done);
-    });
-
-    describe('profileImageUrl', () => {
-      it('cannot be non-string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 1;
-          }, done);
-      });
-
-      it('cannot be non-url string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = "not a url";
-          }, done);
-      });
-
-      it('may begin with http://', (done) => {
-        setPropertyAndExpectSuccessfulStore(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 'http://cooldomain';
-          }, done);
-      });
-
-      it('may begin with https://', (done) => {
-        setPropertyAndExpectSuccessfulStore(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 'https://cooldomain';
-          }, done);
-      });
     });
 
     describe('dateOfBirth', () => {
