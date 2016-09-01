@@ -10,23 +10,21 @@ import { loadAllUserChats } from '../firebase/FirebaseConnector'
 import styles from '../../styles';
 import colors from '../../colors';
 
-class ChatListItem extends Component {
-  render() {
-    return (
-      <TouchableHighlight
-        onPress={() => alert('pressed')}
-        underlayColor={`${colors.dark}64`}
-        style={{
-          padding: 16,
-          flex: 1,
-          borderBottomWidth: 1,
-          borderColor: colors.dark,
-        }}
-      >
-          <Text style={styles.friendlyTextLeft}>{this.props.chatData.title}</Text>
-      </TouchableHighlight>
-    );
-  }
+function ChatListItem({ chatData }) {
+  return (
+    <TouchableHighlight
+      onPress={() => alert('pressed')}
+      underlayColor={`${colors.dark}64`}
+      style={{
+        padding: 16,
+        flex: 1,
+        borderBottomWidth: 1,
+        borderColor: colors.dark,
+      }}
+    >
+        <Text style={styles.friendlyTextLeft}>{chatData.title}</Text>
+    </TouchableHighlight>
+  );
 }
 
 class ChatListComponent extends Component {
