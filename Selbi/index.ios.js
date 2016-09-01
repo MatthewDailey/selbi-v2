@@ -12,7 +12,7 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
-import ChatScene from './src/scenes/ChatScene';
+import ChatListScene from './src/scenes/ChatListScene';
 
 import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
   setNewListingLocation, clearNewListing }
@@ -42,6 +42,16 @@ const myListingsScene = {
   renderContent: withProps(
     <MyListingsScene
       title="My Listings"
+      leftIs="menu"
+    />
+  ),
+};
+
+const chatListScene = {
+  id: 'chat-list-scene',
+  renderContent: withProps(
+    <ChatListScene
+      title="Chats"
       leftIs="menu"
     />
   ),
@@ -182,14 +192,14 @@ routeLinks[publishScene.id] = {
   },
 };
 
-const testScene = {
-  id: 'test-route',
-  renderContent: withProps(
-    <ChatScene
-      title="Chat"
-      leftIs="back"
-    />),
-};
+// const testScene = {
+//   id: 'test-route',
+//   renderContent: withProps(
+//     <ChatScene
+//       title="Chat"
+//       leftIs="back"
+//     />),
+// };
 
 
 function renderMenu(navigator, closeMenu) {
@@ -201,6 +211,7 @@ function renderMenu(navigator, closeMenu) {
       closeMenu={closeMenu}
       localListingScene={localListingScene}
       myListingScene={myListingsScene}
+      chatListScene={chatListScene}
       addAuthStateChangeListener={addAuthStateChangeListener}
       removeAuthStateChangeListener={removeAuthStateChangeListener}
       signInOrRegisterScene={{
