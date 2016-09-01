@@ -32,6 +32,27 @@
       }
     },
 
+    "chats": {
+      "$uid": {
+        "selling" : {
+          ".read" : "auth.uid === $uid",
+          "$listingId" : {
+            "$buyerUid" : {
+              ".write" : "auth.uid === $buyerUid",
+              ".validate" : "newData.isBoolean()"
+            }
+          }
+        },
+        "buying" : {
+          ".read" : "auth.uid === $uid",
+          "$listingId": {
+            ".write" : "auth.uid === $uid",
+            ".validate" : "newData.isBoolean()"
+          }
+        }
+      }
+    },
+
     "images": {
       ".read": true,
       "$imageId" : {
