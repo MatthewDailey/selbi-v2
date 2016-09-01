@@ -70,4 +70,9 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  friendlyTextLeft: {
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+  },
 });

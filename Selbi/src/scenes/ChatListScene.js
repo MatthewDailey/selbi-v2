@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ListView, RefreshControl } from 'react-native';
+import { View, Text, ListView, RefreshControl, TouchableHighlight } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
@@ -13,7 +13,18 @@ import colors from '../../colors';
 class ChatListItem extends Component {
   render() {
     return (
-      <Text>A chat</Text>
+      <TouchableHighlight
+        onPress={() => alert('pressed')}
+        underlayColor={`${colors.dark}64`}
+        style={{
+          padding: 16,
+          flex: 1,
+          borderBottomWidth: 1,
+          borderColor: colors.dark,
+        }}
+      >
+          <Text style={styles.friendlyTextLeft}>{this.props.chatData.title}</Text>
+      </TouchableHighlight>
     );
   }
 }
@@ -57,7 +68,7 @@ class ChatListComponent extends Component {
         }}
         style={styles.container}
         dataSource={this.state.dataSource}
-        renderRow={(data) => <ChatListItem />}
+        renderRow={(data) => <ChatListItem chatData={data}/>}
       />
     );
   }
