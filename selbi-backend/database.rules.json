@@ -11,8 +11,29 @@
       ".write" : false
     },
 
+    "messages": {
+      "$listingId" : {
+        "$buyerId" : {
+          ".read": "auth.uid === $buyerId || auth.uid === root.child('listings/' + $listingId + '/sellerId').val()",
+          "$messageId" : {
+            ".write" : "!data.exists() && (auth.uid === $buyerId || auth.uid === root.child('listings/' + $listingId + '/sellerId').val())",
+            ".validate" : "newData.hasChildren(['text', 'authorUid', 'createdAt'])",
+            "text": {
+              ".validate": "newData.isString()"
+            },
+            "authorUid": {
+              ".validate": "newData.isString() && newData.val() === auth.uid"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        }
+      }
+    },
+
     "images": {
-      ".read": "true",
+      ".read": true,
       "$imageId" : {
         ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
