@@ -274,10 +274,10 @@ function getListingTitle(listingId) {
         throw new Error('could not find listing');
       }
     })
-    .catch((error) => {
+    .catch(() => {
       return Promise.resolve({
-        title: 'No listing found for this chat.'
-      })
+        title: 'No listing found for this chat.',
+      });
     });
 }
 
@@ -285,7 +285,7 @@ function loadChatDetailsFromUserChats(userChatsData) {
   const chatPromises = [];
 
   if (userChatsData.exists()) {
-    console.log('user chats data:');
+    console.log(`user chats data as ${getUser().uid}`);
     console.log(userChatsData.val());
     const buyingData = userChatsData.val().buying;
     const sellingData = userChatsData.val().selling;
@@ -302,12 +302,13 @@ function loadChatDetailsFromUserChats(userChatsData) {
     }
 
     if (sellingData) {
+      console.log()
       Object.keys(sellingData).forEach((listingId) => {
-        Object.keys(sellingData[listingId]).forEach((buyerUid) =>
+        Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
           getListingTitle(listingId)
             .then((listingTitleData) =>
               Promise.resolve(
-                Object.assign(listingTitleData, { buyerUid: buyerUid, type: 'selling' })))
+                Object.assign(listingTitleData, { buyerUid: buyerUid, type: 'selling' }))))
         );
       });
     }
@@ -323,6 +324,44 @@ export function loadAllUserChats() {
     .child(getUser().uid)
     .once('value')
     .then(loadChatDetailsFromUserChats);
+}
+
+export function loadUserPublicData(uid) {
+  return firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .once('value');
+}
+
+/*
+ * chatData must have:
+ * - sellerUid
+ * - buyerUid
+ * - listingId
+ */
+export function loadMessages(listingId, buyerUid) {
+  return firebaseApp
+    .database()
+    .ref('messages')
+    .child(listingId)
+    .child(buyerUid)
+    .once('value');
+}
+
+export function sendMessage(listingId, buyerUid, messageText) {
+  console.log(`user: ${getUser().uid}`)
+  return firebaseApp
+    .database()
+    .ref('messages')
+    .child(listingId)
+    .child(buyerUid)
+    .push()
+    .set({
+      text: messageText,
+      authorUid: getUser().uid,
+      createdAt: new Date().getTime(),
+    });
 }
 
 /*

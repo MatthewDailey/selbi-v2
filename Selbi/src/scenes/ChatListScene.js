@@ -72,6 +72,7 @@ class ChatListComponent extends Component {
           flexWrap: 'wrap',
         }}
         style={styles.container}
+        removeClippedSubviews={false}
         dataSource={this.state.dataSource}
         renderRow={(data) => <ChatListItem chatData={data} openChatScene={this.props.openChatScene} />}
       />

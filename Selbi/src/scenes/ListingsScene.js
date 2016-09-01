@@ -82,6 +82,7 @@ export class ListingsComponent extends Component {
     return (
       <ListView
         enableEmptySections
+        removeClippedSubviews={false}
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
