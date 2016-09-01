@@ -60,5 +60,75 @@ describe('/userPublicData', () => {
       .then(done)
       .catch(done);
   });
+
+  it('requires display name', (done) => {
+    expectUnableToStore(
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('userPublicData')
+        .child(minimalUserUid)
+        .set({
+          profileImageUrl: sampleUserPublicData.profileImageUrl,
+        }))
+      .then(done)
+      .catch(done);
+  });
+
+  it('display name is string', (done) => {
+    expectUnableToStore(
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('userPublicData')
+        .child(minimalUserUid)
+        .set({
+          displayName: 1,
+        }))
+      .then(done)
+      .catch(done);
+  });
+
+  it('does not require image', (done) => {
+    FirebaseTest
+      .minimalUserApp
+      .database()
+      .ref('userPublicData')
+      .child(minimalUserUid)
+      .set({
+        displayName: sampleUserPublicData.displayName,
+      })
+      .then(done)
+      .catch(done);
+  });
+
+  it('profileImageUrl is string', (done) => {
+    expectUnableToStore(
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('userPublicData')
+        .child(minimalUserUid)
+        .set({
+          profileImageUrl: 1,
+        }))
+      .then(done)
+      .catch(done);
+  });
+
+  it('takes no extra params', (done) => {
+    expectUnableToStore(
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('userPublicData')
+        .child(minimalUserUid)
+        .set({
+          displayName: sampleUserPublicData.displayName,
+          extraParam: 'some random shit',
+        }))
+      .then(done)
+      .catch(done);
+  });
 });
 

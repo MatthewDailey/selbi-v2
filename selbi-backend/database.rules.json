@@ -366,7 +366,17 @@
     "userPublicData": {
       "$uid" : {
         ".write": "auth.uid == $uid",
-        ".read": true
+        ".read": true,
+        ".validate": "newData.hasChildren(['displayName'])",
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
     // All data about individual listings.
