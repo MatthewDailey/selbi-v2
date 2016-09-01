@@ -261,6 +261,69 @@ export function createChatAsBuyer(listingId, sellerUid) {
   return Promise.all([promiseSetBuyerPoiner, promiseSetSellerPointer]);
 }
 
+function getListingTitle(listingId) {
+  return loadListingData(listingId)
+    .then((listingSnapShot) => {
+      if (listingSnapShot.exists()) {
+        return Promise.resolve({
+          title: listingSnapShot.val().title,
+          listingId: listingId,
+        });
+      } else {
+        throw new Error('could not find listing');
+      }
+    })
+    .catch((error) => {
+      return Promise.resolve({
+        title: 'No listing found for this chat.'
+      })
+    });
+}
+
+function loadChatDetailsFromUserChats(userChatsData) {
+  const chatPromises = [];
+
+  if (userChatsData.exists()) {
+    console.log('user chats data:');
+    console.log(userChatsData.val());
+    const buyingData = userChatsData.val().buying;
+    const sellingData = userChatsData.val().selling;
+
+    if (buyingData) {
+      Object.keys(buyingData).forEach((listingId) => chatPromises.push(
+        getListingTitle(listingId)
+          .then((listingTitleData) =>
+            Promise.resolve(Object.assign(listingTitleData, {
+              buyerUid: getUser().uid,
+              type: 'buying',
+            })))
+      ));
+    }
+
+    if (sellingData) {
+      Object.keys(sellingData).forEach((listingId) => {
+        Object.keys(sellingData[listingId]).forEach((buyerUid) =>
+          getListingTitle(listingId)
+            .then((listingTitleData) =>
+              Promise.resolve(
+                Object.assign(listingTitleData, { buyerUid: buyerUid, type: 'selling' })))
+        );
+      });
+    }
+  }
+
+  return Promise.all(chatPromises);
+}
+
+export function loadAllUserChats() {
+  return firebaseApp
+    .database()
+    .ref('chats')
+    .child(getUser().uid)
+    .once('value')
+    .then(loadChatDetailsFromUserChats);
+}
+
 /*
  * This code snippet demonstrates how to load all public listings at a certain location.
  *
