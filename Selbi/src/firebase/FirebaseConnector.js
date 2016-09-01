@@ -268,6 +268,7 @@ function getListingTitle(listingId) {
         return Promise.resolve({
           title: listingSnapShot.val().title,
           listingId: listingId,
+          sellerUid: listingSnapShot.val().sellerId,
         });
       } else {
         throw new Error('could not find listing');
