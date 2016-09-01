@@ -29,7 +29,10 @@ function ChatListItem({ chatData, openChatScene }) {
         borderColor: colors.dark,
       }}
     >
+      <View>
+        <Text>{chatData.type}</Text>
         <Text style={styles.friendlyTextLeft}>{chatData.title}</Text>
+      </View>
     </TouchableHighlight>
   );
 }
@@ -67,14 +70,14 @@ class ChatListComponent extends Component {
             onRefresh={this.onRefresh}
           />
         }
-        contentContainerStyle={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-        }}
         style={styles.container}
         removeClippedSubviews={false}
         dataSource={this.state.dataSource}
-        renderRow={(data) => <ChatListItem chatData={data} openChatScene={this.props.openChatScene} />}
+        renderRow={(data) => (
+          <ChatListItem
+            chatData={data}
+            openChatScene={this.props.openChatScene}
+          />)}
       />
     );
   }
