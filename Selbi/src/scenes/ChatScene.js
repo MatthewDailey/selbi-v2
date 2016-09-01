@@ -71,6 +71,10 @@ export default class ChatScene extends RoutableScene {
       });
   }
   onSend(messages = []) {
+    console.log(this.props.chatData);
+    messages.forEach((message) =>
+      sendMessage(this.props.chatData.listingId, this.props.chatData.buyerUid, message.text));
+
     this.setState((previousState) => {
       return {
         messages: GiftedChat.append(previousState.messages, messages),
