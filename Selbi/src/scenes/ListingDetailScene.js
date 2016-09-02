@@ -3,7 +3,8 @@ import { Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-import { createChatAsBuyer } from '../firebase/FirebaseConnector';
+import { createChatAsBuyer, getUser } from '../firebase/FirebaseConnector';
+import ChatScene from './ChatScene';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -44,6 +45,28 @@ export default class ListingDetailScene extends RoutableScene {
 
     const { width } = Dimensions.get('window');
 
+    const openChat = () => {
+      if (listingData.sellerId === getUser().uid) {
+        Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
+      } else {
+        createChatAsBuyer(this.props.listingData.key, listingData.sellerId);
+        const chatData = {
+          title: listingData.title,
+          listingId: this.props.listingData.key,
+          sellerUid: listingData.sellerId,
+          buyerUid: getUser().uid,
+        };
+        console.log(chatData)
+        this.openSimpleScene(
+          <ChatScene
+            title={chatData.title}
+            chatData={chatData}
+            leftIs="back"
+          />
+        );
+      }
+    };
+
     return (
       <View style={{
         flex: 1,
@@ -79,9 +102,7 @@ export default class ListingDetailScene extends RoutableScene {
             }}>
               <View style={buttonViewStyle}>
                 <Button
-                  onPress={() => createChatAsBuyer(
-                    this.props.listingData.key,
-                    listingData.sellerId)}
+                  onPress={openChat}
                 >
                   <Text>MESSAGE</Text>
                 </Button>
