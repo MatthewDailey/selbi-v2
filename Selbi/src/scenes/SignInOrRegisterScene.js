@@ -142,6 +142,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .then(() => {
         if (this.props.goHomeOnComplete) {
           this.goHome();
+        } else if (this.props.goBackOnComplete) {
+          this.goBack();
         } else {
           this.goNext();
         }

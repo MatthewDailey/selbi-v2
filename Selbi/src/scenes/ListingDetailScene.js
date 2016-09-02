@@ -3,7 +3,8 @@ import { Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-import { createChatAsBuyer, getUser } from '../firebase/FirebaseConnector';
+import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser }
+  from '../firebase/FirebaseConnector';
 import ChatScene from './ChatScene';
 
 // noinspection Eslint - Dimensions provided by react-native env.
@@ -11,6 +12,7 @@ import Dimensions from 'Dimensions';
 
 import styles from '../../styles';
 import colors from '../../colors';
+import SignInOrRegisterScene from './SignInOrRegisterScene';
 import RoutableScene from '../nav/RoutableScene';
 
 const fontStyle = {
@@ -46,7 +48,18 @@ export default class ListingDetailScene extends RoutableScene {
     const { width } = Dimensions.get('window');
 
     const openChat = () => {
-      if (listingData.sellerId === getUser().uid) {
+      if (!getUser()) {
+        this.openSimpleScene(
+          <SignInOrRegisterScene
+            title="Please sign in to message."
+            leftIs="back"
+            registerWithEmail={registerWithEmail}
+            signInWithEmail={signInWithEmail}
+            createUser={createUser}
+            goBackOnComplete
+          />
+        );
+      } else if (listingData.sellerId === getUser().uid) {
         Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
       } else {
         createChatAsBuyer(this.props.listingData.key, listingData.sellerId);
