@@ -365,6 +365,26 @@ export function sendMessage(listingId, buyerUid, messageText) {
 }
 
 /*
+ * Listen for new messages for a specific chat.
+ *
+ * @returns unsubscribe function.
+ */
+export function subscribeToNewMessages(listingId, buyerUid, callback) {
+  firebaseApp
+    .database()
+    .ref('messages')
+    .child(listingId)
+    .child(buyerUid)
+    .on('child_added', callback);
+  return () => firebaseApp
+    .database()
+    .ref('messages')
+    .child(listingId)
+    .child(buyerUid)
+    .off('child_added', callback);
+}
+
+/*
  * This code snippet demonstrates how to load all public listings at a certain location.
  *
  * This is useful for the 'nearby-listings' view for listings within X km of the user. See

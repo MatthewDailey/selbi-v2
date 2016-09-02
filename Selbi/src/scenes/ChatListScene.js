@@ -6,7 +6,7 @@ import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from './SpinnerOverlay';
 import ChatScene from './ChatScene';
 
-import { loadAllUserChats } from '../firebase/FirebaseConnector'
+import { loadAllUserChats } from '../firebase/FirebaseConnector';
 
 import styles from '../../styles';
 import colors from '../../colors';

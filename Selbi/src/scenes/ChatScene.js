@@ -4,7 +4,8 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../nav/RoutableScene';
 
-import { loadUserPublicData, loadMessages, sendMessage, getUser} from '../firebase/FirebaseConnector';
+import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages }
+  from '../firebase/FirebaseConnector';
 
 import style from '../../styles';
 import colors from '../../colors';
@@ -69,18 +70,36 @@ export default class ChatScene extends RoutableScene {
             }
           });
       });
+
+    this.setState({
+      unsubscribeFunction: subscribeToNewMessages(
+        this.props.chatData.listingId,
+        this.props.chatData.buyerUid,
+        (newMessageSnapshot) => {
+          const newMessagee = this.convertDbMessageToUiMessage(
+            newMessageSnapshot.key, newMessageSnapshot.val());
+          this.setState((previousState) => {
+            return {
+              messages: GiftedChat.append(previousState.messages, [newMessagee]),
+            };
+          });
+        }
+      ),
+    });
   }
+
+  componentWillUnmount() {
+    if (this.state.unsubscribeFunction) {
+      this.state.unsubscribeFunction();
+    }
+  }
+
   onSend(messages = []) {
     console.log(this.props.chatData);
     messages.forEach((message) =>
       sendMessage(this.props.chatData.listingId, this.props.chatData.buyerUid, message.text));
-
-    this.setState((previousState) => {
-      return {
-        messages: GiftedChat.append(previousState.messages, messages),
-      };
-    });
   }
+
   renderWithNavBar() {
     return (
       <View
