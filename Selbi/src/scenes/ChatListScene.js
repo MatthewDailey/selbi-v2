@@ -145,10 +145,18 @@ export default class ChatListScene extends RoutableScene {
           />
         </View>
         <View tabLabel="Buying" style={styles.container}>
-          <ChatListComponent refresh={this.loadChatData} chats={this.state.buyingChats} openChatScene={this.openSimpleScene}/>
+          <ChatListComponent
+            refresh={this.loadChatData}
+            chats={this.state.buyingChats}
+            openChatScene={this.openSimpleScene}
+          />
         </View>
         <View tabLabel="Selling" style={styles.container}>
-          <ChatListComponent refresh={this.loadChatData} chats={this.state.sellingChats} openChatScene={this.openSimpleScene}/>
+          <ChatListComponent
+            refresh={this.loadChatData}
+            chats={this.state.sellingChats}
+            openChatScene={this.openSimpleScene}
+          />
         </View>
       </ScrollableTabView>
     );
