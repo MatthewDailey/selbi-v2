@@ -46,47 +46,9 @@ export default class RoutableScene extends Component {
     this.goBack = this.goBack.bind(this);
     this.openSimpleScene = this.openSimpleScene.bind(this);
   }
-  goMenu() {
-    this.props.openMenu();
-  }
-
-  shouldGoNext() {
-    return true;
-  }
-
-  goNext() {
-    if (this.shouldGoNext() && this.props.routeLinks.next) {
-      this.props.navigator.push(this.props.routeLinks.next.getRoute());
-    }
-  }
-
-  goBack() {
-    if (this.props.routeLinks.back) {
-      this.props.navigator.popToRoute(this.props.routeLinks.back.getRoute());
-    } else {
-      this.props.navigator.pop();
-    }
-  }
 
   onGoHome() {
     // Implemented by children.
-  }
-
-  goHome() {
-    if (this.props.routeLinks.home && this.props.routeLinks.home.getRoute) {
-      this.props.navigator.resetTo(this.props.routeLinks.home.getRoute());
-      this.onGoHome();
-    } else {
-      this.props.navigator.popToTop();
-      this.onGoHome();
-    }
-  }
-
-  openSimpleScene(scene) {
-    this.props.navigator.push({
-      id: 'unconnected-scene',
-      renderContent: withNavigatorProps(this.props.store, scene),
-    });
   }
 
   getLeftButton() {
@@ -123,6 +85,45 @@ export default class RoutableScene extends Component {
 
     // Return nothing. No right button.
     return undefined;
+  }
+
+  goMenu() {
+    this.props.openMenu();
+  }
+
+  shouldGoNext() {
+    return true;
+  }
+
+  goNext() {
+    if (this.shouldGoNext() && this.props.routeLinks.next) {
+      this.props.navigator.push(this.props.routeLinks.next.getRoute());
+    }
+  }
+
+  goBack() {
+    if (this.props.routeLinks.back) {
+      this.props.navigator.popToRoute(this.props.routeLinks.back.getRoute());
+    } else {
+      this.props.navigator.pop();
+    }
+  }
+
+  goHome() {
+    if (this.props.routeLinks.home && this.props.routeLinks.home.getRoute) {
+      this.props.navigator.resetTo(this.props.routeLinks.home.getRoute());
+      this.onGoHome();
+    } else {
+      this.props.navigator.popToTop();
+      this.onGoHome();
+    }
+  }
+
+  openSimpleScene(scene) {
+    this.props.navigator.push({
+      id: 'unconnected-scene',
+      renderContent: withNavigatorProps(scene),
+    });
   }
 
   render() {
