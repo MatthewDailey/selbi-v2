@@ -428,7 +428,7 @@ export function loadListingByLocation(latlon, radiusKm) {
       Promise.all(loadListingsPromises)
         .then(() => {
           fulfill(listingsInArea);
-        });
+        });[]
     });
   });
 }

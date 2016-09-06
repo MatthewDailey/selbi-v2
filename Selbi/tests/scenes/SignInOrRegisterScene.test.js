@@ -1,6 +1,6 @@
 import React from 'react-native';
 import { shallow } from 'enzyme';
-import { spy, mock } from 'sinon';
+import { spy } from 'sinon';
 
 import SignInOrRegisterScene, { TabTypes } from '../../src/scenes/SignInOrRegisterScene';
 
