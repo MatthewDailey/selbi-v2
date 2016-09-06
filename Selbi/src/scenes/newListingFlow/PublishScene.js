@@ -1,7 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
 import { MKSpinner, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { setNewListingId, setNewListingLocation, clearNewListing }
+  from '../../reducers/NewListingReducer';
 
 
 import styles from '../../../styles';
@@ -68,7 +72,7 @@ function getFailureView() {
   );
 }
 
-export default class PublishScene extends RoutableScene {
+class PublishScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = {
@@ -87,10 +91,10 @@ export default class PublishScene extends RoutableScene {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this.props.store.dispatch(this.props.publishListingLocation({
+          this.props.setNewListingLocation({
             lat: position.coords.latitude,
             lon: position.coords.longitude,
-          }));
+          });
           resolve();
         },
         (error) => {
@@ -115,7 +119,7 @@ export default class PublishScene extends RoutableScene {
           <Button
             onPress={
               () => this.setState({ status: publishStatus.publishing },
-                () => makeListingPrivate(this.props.store.getState().newListing)
+                () => makeListingPrivate(this.props.newListing)
                   .then(() => this.setState({ status: publishStatus.publishedPrivate }))
                   .catch(this.handleError))
             }
@@ -128,7 +132,7 @@ export default class PublishScene extends RoutableScene {
             onPress={
               () => this.setState({ status: publishStatus.publishing },
                 () => this.getGeolocation()
-                  .then(() => makeListingPublic(this.props.store.getState().newListing))
+                  .then(() => makeListingPublic(this.props.newListing))
                   .then(() => this.setState({ status: publishStatus.publishedPublic }))
                   .catch(this.handleError))
             }
@@ -141,9 +145,9 @@ export default class PublishScene extends RoutableScene {
   }
 
   componentDidMount() {
-    createNewListingFromStore(this.props.store.getState().newListing)
+    createNewListingFromStore(this.props.newListing)
       .then((newListingId) => {
-        this.props.store.dispatch(this.props.listingIdAction(newListingId));
+        this.props.setNewListingId(newListingId);
         this.setState({
           status: publishStatus.publishedInactive,
         });
@@ -167,3 +171,29 @@ export default class PublishScene extends RoutableScene {
     }
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    newListing: state.newListing,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setNewListingId: (id) => {
+      dispatch(setNewListingId(id));
+    },
+    setNewListingLocation: (location) => {
+      dispatch(setNewListingLocation(location));
+    },
+    clearNewListingData: clearNewListing,
+  };
+};
+
+const ContentAwarePublishScene = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PublishScene);
+
+export default ContentAwarePublishScene;

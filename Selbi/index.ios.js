@@ -6,19 +6,19 @@ import { Provider } from 'react-redux';
 import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
-import PublishScene from './src/scenes/newListingFlow/PublishScene';
+
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
+import PublishScene from './src/scenes/newListingFlow/PublishScene';
 import PriceInputScene from './src/scenes/newListingFlow/PriceInputScene';
 import TitleInputScene from './src/scenes/newListingFlow/TitleInputScene';
 
 import ChatListScene from './src/scenes/ChatListScene';
 
-import newListingReducer, { setNewListingId, setNewListingLocation, clearNewListing }
-  from './src/reducers/NewListingReducer';
+import newListingReducer from './src/reducers/NewListingReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
   publishImage, addAuthStateChangeListener, removeAuthStateChangeListener }
@@ -42,7 +42,7 @@ const newPriceInputScene = {
       floatingLabel
     />
   ),
-}
+};
 
 const localListingScene = {
   id: 'listings-scene',
@@ -89,22 +89,19 @@ const loginScene = {
 
 const publishScene = {
   id: 'post-login',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(undefined,
     <PublishScene
       title=""
       rightIs="home"
       createListing={createListing}
       publishImage={publishImage}
-      listingIdAction={setNewListingId}
-      publishListingLocation={setNewListingLocation}
-      clearNewListingData={() => store.dispatch(clearNewListing())}
     />
   ),
 };
 
 const newTitleScene = {
   id: 'new-title-scene',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(undefined,
     <TitleInputScene
       title="Create Listing (3/3)"
       leftIs="back"
@@ -155,12 +152,6 @@ routeLinks[imageScene.id] = {
     getRoute: () => newPriceInputScene,
   },
 };
-// routeLinks[priceScene.id] = {
-//   next: {
-//     title: 'OK',
-//     getRoute: () => titleScene,
-//   },
-// };
 routeLinks[newPriceInputScene.id] = {
   next: {
     title: 'OK',
