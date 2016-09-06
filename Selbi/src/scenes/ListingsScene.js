@@ -1,4 +1,4 @@
-import React, { Component, cloneElement } from 'react';
+import React, { Component } from 'react';
 import { ListView, RefreshControl } from 'react-native';
 
 import { loadListingByLocation, loadImage } from '../firebase/FirebaseConnector';

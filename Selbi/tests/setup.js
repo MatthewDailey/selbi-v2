@@ -4,6 +4,7 @@ import register from 'babel-core/register';
 import Module from 'module';
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
+const mock = require('mock-require');
 chai.use(dirtyChai);
 
 global.expect = expect;
@@ -59,3 +60,8 @@ register(config);
 // Setup globals / chai
 global.__DEV__ = true;
 
+mock('Dimensions', {
+  get() {
+    return { width: 100, height: 100 };
+  },
+});

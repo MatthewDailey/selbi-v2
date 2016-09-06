@@ -7,9 +7,6 @@ import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createU
   from '../firebase/FirebaseConnector';
 import ChatScene from './ChatScene';
 
-// noinspection Eslint - Dimensions provided by react-native env.
-import Dimensions from 'Dimensions';
-
 import styles from '../../styles';
 import colors from '../../colors';
 import SignInOrRegisterScene from './SignInOrRegisterScene';
@@ -44,8 +41,6 @@ export default class ListingDetailScene extends RoutableScene {
     const listingData = this.props.listingData.val();
 
     console.log(listingData)
-
-    const { width } = Dimensions.get('window');
 
     const openChat = () => {
       if (!getUser()) {
@@ -83,15 +78,12 @@ export default class ListingDetailScene extends RoutableScene {
     return (
       <View style={{
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: colors.dark,
       }}>
         <Image
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={{
             flex: 1,
-            width: width,
           }}
         >
           <View style={{
