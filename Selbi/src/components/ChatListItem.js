@@ -4,7 +4,7 @@ import { View, Text, TouchableHighlight } from 'react-native';
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default function ChatListItem({ chatData, openChatScene }) {
+export default function ChatListItem({ chatType, chatTitle, openChatScene }) {
   return (
     <TouchableHighlight
       onPress={openChatScene}
@@ -17,20 +17,15 @@ export default function ChatListItem({ chatData, openChatScene }) {
       }}
     >
       <View>
-        <Text>{chatData.type}</Text>
-        <Text style={styles.friendlyTextLeft}>{chatData.title}</Text>
+        <Text>{chatType}</Text>
+        <Text style={styles.friendlyTextLeft}>{chatTitle}</Text>
       </View>
     </TouchableHighlight>
   );
 }
 
 ChatListItem.propTypes = {
-  chatData: React.PropTypes.shape({
-    title: React.PropTypes.string.isRequired,
-    type: React.PropTypes.string.isRequired,
-    buyerUid: React.PropTypes.string.isRequired,
-    sellerUid: React.PropTypes.string.isRequired,
-    listingId: React.PropTypes.string.isRequired,
-  }).isRequired,
+  chatType: React.PropTypes.string.isRequired,
+  chatTitle: React.PropTypes.string.isRequired,
   openChatScene: React.PropTypes.func.isRequired,
 };

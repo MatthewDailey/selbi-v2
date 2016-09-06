@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ListView, RefreshControl, TouchableHighlight } from 'react-native';
+import { View, ListView, RefreshControl } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
@@ -52,7 +52,8 @@ class ChatListComponent extends Component {
         dataSource={this.state.dataSource}
         renderRow={(data) => (
           <ChatListItem
-            chatData={data}
+            chatTitle={data.title}
+            chatType={data.type}
             openChatScene={() => this.props.openChatScene(
               <ChatScene
                 title={data.title}

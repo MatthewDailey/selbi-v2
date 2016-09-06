@@ -4,22 +4,27 @@ import { spy } from 'sinon';
 
 import ChatListItem from '../../src/components/ChatListItem';
 
-const sampleChatData = {
-  title: 'sample listing',
-  type: 'buying',
-  buyerUid: 'my-uid',
-  sellerUid: 'someone-elses-uid',
-  listingId: 'cool listing',
-};
-
 describe('ChatListItem', () => {
+  let consoleErrorOutputStub;
+  beforeEach(() => {
+    // Proptype will log error on failure.
+    consoleErrorOutputStub = spy(console, 'error');
+  });
+
+  afterEach(() => {
+    console.error.restore();
+  });
+
   it('can shallow render', () => {
-    shallow(<ChatListItem chatData={sampleChatData} openChatScene={() => {}} />);
+    shallow(<ChatListItem chatTitle={'test title'} chatType={'buying'} openChatScene={() => {}} />);
+    expect(consoleErrorOutputStub.called, 'PropTypes error was logged, see logs for failure')
+      .to.be.false();
   });
 
   it('calls openChatScene on click', () => {
     const openChatSpy = spy();
-    const wrapper = shallow(<ChatListItem chatData={sampleChatData} openChatScene={openChatSpy} />);
+    const wrapper = shallow(
+      <ChatListItem chatTitle={'test title'} chatType={'buying'} openChatScene={openChatSpy} />);
 
     const outerTouchableHightlight = wrapper.get(0);
     outerTouchableHightlight.props.onPress();
