@@ -192,9 +192,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const ContentAwarePublishScene = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(PublishScene);
-
-export default ContentAwarePublishScene;

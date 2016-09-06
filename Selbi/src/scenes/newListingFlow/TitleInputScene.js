@@ -18,9 +18,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const PriceInputScene = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(InputScene);
-
-export default PriceInputScene;
