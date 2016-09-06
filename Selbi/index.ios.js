@@ -32,7 +32,7 @@ const store = createStore(combineReducers({
 
 const priceInputScene = {
   it: 'price-listing',
-  renderContent: withNavigatorProps(undefined,
+  renderContent: withNavigatorProps(
     <PriceInputScene
       title="Create Listing (2/3)"
       leftIs="back"
@@ -90,7 +90,7 @@ const loginScene = {
 
 const publishScene = {
   id: 'post-login',
-  renderContent: withNavigatorProps(undefined,
+  renderContent: withNavigatorProps(
     <PublishScene
       title=""
       rightIs="home"
@@ -102,7 +102,7 @@ const publishScene = {
 
 const titleScene = {
   id: 'title-scene',
-  renderContent: withNavigatorProps(undefined,
+  renderContent: withNavigatorProps(
     <TitleInputScene
       title="Create Listing (3/3)"
       leftIs="back"
@@ -125,7 +125,7 @@ const cameraScene = {
 
 const imageScene = {
   id: 'c',
-  renderContent: withNavigatorProps(undefined,
+  renderContent: withNavigatorProps(
     <ApproveImageScene
       title=""
       leftIs="back"
