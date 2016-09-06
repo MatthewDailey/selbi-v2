@@ -1,26 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  Dimensions,
   StyleSheet,
-  Image,
   View,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import {
   MKButton,
-  MKSpinner,
   setTheme,
 } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import colors from '../../colors';
-import RoutableScene from '../nav/RoutableScene';
+import colors from '../../../colors';
+import RoutableScene from '../../nav/RoutableScene';
 import {
   setNewListingImageLocalUri,
-  setNewListingImageDimensions,
-} from '../reducers/NewListingReducer';
+} from '../../reducers/NewListingReducer';
+import SpinnerOverlay from '../SpinnerOverlay';
 
-const styles = StyleSheet.create({
+import styles from '../../../styles';
+
+const localStyles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -28,8 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: Dimensions.get('window').height - 44,
-    width: Dimensions.get('window').width,
   },
   capture: {
     flex: 0,
@@ -41,13 +38,9 @@ const styles = StyleSheet.create({
   },
 });
 
-import SpinnerOverlay from './SpinnerOverlay';
-
 setTheme({
   primaryColor: colors.primaryColor,
 });
-
-const spinnerSize = 80;
 
 
 export class SimpleCamera extends RoutableScene {
@@ -69,9 +62,6 @@ export class SimpleCamera extends RoutableScene {
       this.toggleCapturing();
       this.camera.capture()
         .then((data) => {
-          console.log(`Capturing::: ${this.state.capturing}`);
-          console.log('store::: ');
-          console.log(this.props.store.getState());
           this.props.store.dispatch(setNewListingImageLocalUri(data.path));
           this.toggleCapturing();
           this.goNext();
@@ -100,7 +90,7 @@ export class SimpleCamera extends RoutableScene {
 
     return (
       <View
-        style={styles.container}
+        style={localStyles.container}
         onLayout={(event) => {
           const { width, height } = event.nativeEvent.layout;
           this.setState({
@@ -113,7 +103,7 @@ export class SimpleCamera extends RoutableScene {
           ref={(cam) => {
             this.camera = cam;
           }}
-          style={styles.preview}
+          style={localStyles.preview}
           aspect={Camera.constants.Aspect.fill}
         >
 
@@ -125,17 +115,3 @@ export class SimpleCamera extends RoutableScene {
   }
 }
 
-export class SimpleImageView extends RoutableScene {
-  renderWithNavBar() {
-    return (
-      <Image
-        onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          this.props.store.dispatch(setNewListingImageDimensions(height, width));
-        }}
-        style={styles.preview}
-        source={{ uri: this.props.store.getState().newListing.get('imageUri')}}
-      />
-    );
-  }
-}

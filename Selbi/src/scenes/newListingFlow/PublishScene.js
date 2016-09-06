@@ -145,6 +145,7 @@ class PublishScene extends RoutableScene {
   }
 
   componentDidMount() {
+    console.log(this.props.newListing)
     createNewListingFromStore(this.props.newListing)
       .then((newListingId) => {
         this.props.setNewListingId(newListingId);

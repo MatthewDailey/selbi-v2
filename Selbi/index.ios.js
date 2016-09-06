@@ -7,7 +7,7 @@ import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
 
-import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
+import { SimpleCamera, SimpleImageView } from './src/scenes/newListingFlow/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
@@ -15,6 +15,7 @@ import MyListingsScene from './src/scenes/MyListingsScene';
 import PublishScene from './src/scenes/newListingFlow/PublishScene';
 import PriceInputScene from './src/scenes/newListingFlow/PriceInputScene';
 import TitleInputScene from './src/scenes/newListingFlow/TitleInputScene';
+import ApproveImageScene from './src/scenes/newListingFlow/ApproveImageScene';
 
 import ChatListScene from './src/scenes/ChatListScene';
 
@@ -124,8 +125,8 @@ const cameraScene = {
 
 const imageScene = {
   id: 'c',
-  renderContent: withProps(
-    <SimpleImageView
+  renderContent: withNavigatorProps(undefined,
+    <ApproveImageScene
       title=""
       leftIs="back"
       rightIs="next"
