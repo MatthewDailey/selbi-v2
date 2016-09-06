@@ -28,14 +28,12 @@ describe('<RoutableScene />', () => {
     const mockNavigator = {};
     const mockRouteLinks = {};
     const mockOpenMenu = {};
-    const mockStore = {};
-    const viewWithInjectedProps = withNavigatorProps(
-      mockStore, <View />)(mockNavigator, mockRouteLinks, mockOpenMenu);
+    const viewWithInjectedProps = withNavigatorProps(<View />)(
+      mockNavigator, mockRouteLinks, mockOpenMenu);
 
     expect(viewWithInjectedProps.props.navigator).to.equal(mockNavigator);
     expect(viewWithInjectedProps.props.openMenu).to.equal(mockOpenMenu);
     expect(viewWithInjectedProps.props.routeLinks).to.equal(mockRouteLinks);
-    expect(viewWithInjectedProps.props.store).to.equal(mockStore);
   });
 
   describe('left nav button', () => {

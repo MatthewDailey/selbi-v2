@@ -9,23 +9,16 @@ import colors from '../../colors';
 /*
  * Allows binding all navigator props to components which extend RoutableScene.
  *
- * This method is intended to be bound with the Redux store managing the state of the app.
- *
- * E.g:
- * const store = createStore(...)
- * const withProps = withNavigatorProps.bind(undefined, store);
- *
  * @returns Function from (navigator, routeLinks, openMenu) to react element for use as the
  * route.renderContent method.
  */
-export function withNavigatorProps(appStore, reactElement) {
+export function withNavigatorProps(reactElement) {
   return (navigatorProp, routeLinksProp, openMenuProp) => cloneElement(
     reactElement,
     {
       navigator: navigatorProp,
       routeLinks: routeLinksProp,
       openMenu: openMenuProp,
-      store: appStore,
     });
 }
 

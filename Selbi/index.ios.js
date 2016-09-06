@@ -29,10 +29,9 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, cr
 const store = createStore(combineReducers({
   newListing: newListingReducer,
 }));
-const withProps = withNavigatorProps.bind(undefined, store);
 
-const newPriceInputScene = {
-  it: 'new-price-listing',
+const priceInputScene = {
+  it: 'price-listing',
   renderContent: withNavigatorProps(undefined,
     <PriceInputScene
       title="Create Listing (2/3)"
@@ -48,7 +47,7 @@ const newPriceInputScene = {
 
 const localListingScene = {
   id: 'listings-scene',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(
     <ListingScene
       title="Near Me"
       leftIs="menu"
@@ -58,7 +57,7 @@ const localListingScene = {
 
 const myListingsScene = {
   id: 'my-listings-scene',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(
     <MyListingsScene
       title="My Listings"
       leftIs="menu"
@@ -68,7 +67,7 @@ const myListingsScene = {
 
 const chatListScene = {
   id: 'chat-list-scene',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(
     <ChatListScene
       title="Chats"
       leftIs="menu"
@@ -78,7 +77,7 @@ const chatListScene = {
 
 const loginScene = {
   id: 'login-scene',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(
     <SignInOrRegisterScene
       title="Wait! One more thing."
       leftIs="back"
@@ -101,8 +100,8 @@ const publishScene = {
   ),
 };
 
-const newTitleScene = {
-  id: 'new-title-scene',
+const titleScene = {
+  id: 'title-scene',
   renderContent: withNavigatorProps(undefined,
     <TitleInputScene
       title="Create Listing (3/3)"
@@ -116,7 +115,7 @@ const newTitleScene = {
 
 const cameraScene = {
   id: 'b',
-  renderContent: withProps(
+  renderContent: withNavigatorProps(
     <SimpleCamera
       title="Create Listing (1/3)"
       leftIs="back"
@@ -151,16 +150,16 @@ routeLinks[cameraScene.id] = {
 routeLinks[imageScene.id] = {
   next: {
     title: 'Accept Photo',
-    getRoute: () => newPriceInputScene,
+    getRoute: () => priceInputScene,
   },
 };
-routeLinks[newPriceInputScene.id] = {
+routeLinks[priceInputScene.id] = {
   next: {
     title: 'OK',
-    getRoute: () => newTitleScene,
+    getRoute: () => titleScene,
   },
 };
-routeLinks[newTitleScene.id] = {
+routeLinks[titleScene.id] = {
   next: {
     title: 'Post',
     getRoute: () => {
@@ -197,7 +196,7 @@ function renderMenu(navigator, closeMenu) {
       removeAuthStateChangeListener={removeAuthStateChangeListener}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
-        renderContent: withProps(
+        renderContent: withNavigatorProps(
           <SignInOrRegisterScene
             title=""
             leftIs="back"
