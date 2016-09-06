@@ -2,6 +2,7 @@ import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
+import { setTheme } from 'react-native-material-kit';
 
 import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
@@ -25,6 +26,14 @@ import newListingReducer from './src/reducers/NewListingReducer';
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
   publishImage, addAuthStateChangeListener, removeAuthStateChangeListener }
   from './src/firebase/FirebaseConnector';
+
+import colors from './colors';
+
+// Used to set camera shutter button color.
+setTheme({
+  accentColor: colors.accent,
+  primaryColor: colors.primary,
+});
 
 const store = createStore(combineReducers({
   newListing: newListingReducer,

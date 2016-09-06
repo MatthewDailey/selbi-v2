@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View } from 'react-native';
 import Camera from 'react-native-camera';
-import { MKButton, setTheme } from 'react-native-material-kit';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import colors from '../../../colors';
@@ -11,11 +11,6 @@ import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
 import SpinnerOverlay from '../SpinnerOverlay';
 
 import styles from '../../../styles';
-
-// Used to set camera shutter button color.
-setTheme({
-  primaryColor: colors.accent,
-});
 
 class SimpleCamera extends RoutableScene {
   constructor(props) {
@@ -45,7 +40,7 @@ class SimpleCamera extends RoutableScene {
 
     const getShutterButton = () => {
       const ColoredRaisedButton = MKButton
-        .coloredFab()
+        .accentColoredFab()
         .withOnPress(takePicture)
         .build();
 

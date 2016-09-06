@@ -8,10 +8,6 @@ import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
-setTheme({
-  primaryColor: colors.primaryColor,
-});
-
 const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withPassword(true)
   .withPlaceholder('Password')
@@ -153,10 +149,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
     const SubmitButton = MKButton
-      .coloredFlatButton()
+      .flatButton()
       .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
-        console.log(this.state);
         registerOrSignInMethod();
       })
       .build();
