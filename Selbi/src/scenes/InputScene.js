@@ -8,33 +8,30 @@ import RoutableScene from '../nav/RoutableScene';
 export default class InputScene extends RoutableScene {
   constructor(props) {
     super(props);
-    this.state = { text: this.props.loadInitialInput() };
 
     this.onInputTextChange = this.onInputTextChange.bind(this);
   }
 
   shouldGoNext() {
-    if (!this.state.text) {
+    if (!this.props.inputValue) {
       Alert.alert('Must not be empty.');
       return false;
-    } else if (this.props.isNumeric && isNaN(this.getInputValue())) {
+    } else if (this.props.isNumeric && isNaN(this.getInputValue(this.props.inputValue))) {
       Alert.alert('Must be a number.');
       return false;
     }
     return true;
   }
 
-  getInputValue() {
+  getInputValue(newText) {
     if (this.props.isNumeric) {
-      return parseFloat(this.state.text);
+      return parseFloat(newText);
     }
-    return this.state.text;
+    return newText;
   }
 
   onInputTextChange(newText) {
-    this.setState({ text: newText },
-      () => this.props.store.dispatch(this.props.recordInputAction(this.getInputValue()))
-    );
+    this.props.recordInput(this.getInputValue(newText));
   }
 
   renderWithNavBar() {
@@ -48,7 +45,7 @@ export default class InputScene extends RoutableScene {
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
               style={{ height: 48 }}
-              value={this.state.text}
+              value={this.props.inputValue}
               onTextChange={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
               returnKeyType="done"

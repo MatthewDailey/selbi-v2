@@ -1,21 +1,23 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
 
 import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 import ListingScene from './src/scenes/ListingsScene';
-import InputScene from './src/scenes/InputScene';
-import PublishScene from './src/scenes/PublishScene';
+import PublishScene from './src/scenes/newListingFlow/PublishScene';
 import { SimpleCamera, SimpleImageView } from './src/scenes/CameraScene';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
+import PriceInputScene from './src/scenes/newListingFlow/PriceInputScene';
+import TitleInputScene from './src/scenes/newListingFlow/TitleInputScene';
+
 import ChatListScene from './src/scenes/ChatListScene';
 
-import newListingReducer, { setNewListingPrice, setNewListingTitle, setNewListingId,
-  setNewListingLocation, clearNewListing }
+import newListingReducer, { setNewListingId, setNewListingLocation, clearNewListing }
   from './src/reducers/NewListingReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
@@ -26,6 +28,21 @@ const store = createStore(combineReducers({
   newListing: newListingReducer,
 }));
 const withProps = withNavigatorProps.bind(undefined, store);
+
+const newPriceInputScene = {
+  it: 'new-price-listing',
+  renderContent: withNavigatorProps(undefined,
+    <PriceInputScene
+      title="Create Listing (2/3)"
+      leftIs="back"
+      rightIs="next"
+      inputTitle="How much do you want to sell for?"
+      placeholder="USD"
+      isNumeric
+      floatingLabel
+    />
+  ),
+}
 
 const localListingScene = {
   id: 'listings-scene',
@@ -85,40 +102,15 @@ const publishScene = {
   ),
 };
 
-const priceScene = {
-  id: 'price-scene',
+const newTitleScene = {
+  id: 'new-title-scene',
   renderContent: withProps(
-    <InputScene
-      title="Create Listing (2/3)"
-      leftIs="back"
-      rightIs="next"
-      inputTitle="How much do you want to sell for?"
-      placeholder="USD"
-      isNumeric
-      floatingLabel
-      recordInputAction={setNewListingPrice}
-      loadInitialInput={() => {
-        const price = store.getState().newListing.get('price');
-        if (price) {
-          return price.toString();
-        }
-        return price;
-      }}
-    />
-  ),
-};
-
-const titleScene = {
-  id: 'title-scene',
-  renderContent: withProps(
-    <InputScene
+    <TitleInputScene
       title="Create Listing (3/3)"
       leftIs="back"
       rightIs="next"
       inputTitle="What are you selling?"
       placeholder="Eg. 'Magic coffee table!'"
-      recordInputAction={setNewListingTitle}
-      loadInitialInput={() => store.getState().newListing.get('title')}
     />
   ),
 };
@@ -160,16 +152,22 @@ routeLinks[cameraScene.id] = {
 routeLinks[imageScene.id] = {
   next: {
     title: 'Accept Photo',
-    getRoute: () => priceScene,
+    getRoute: () => newPriceInputScene,
   },
 };
-routeLinks[priceScene.id] = {
+// routeLinks[priceScene.id] = {
+//   next: {
+//     title: 'OK',
+//     getRoute: () => titleScene,
+//   },
+// };
+routeLinks[newPriceInputScene.id] = {
   next: {
     title: 'OK',
-    getRoute: () => titleScene,
+    getRoute: () => newTitleScene,
   },
 };
-routeLinks[titleScene.id] = {
+routeLinks[newTitleScene.id] = {
   next: {
     title: 'Post',
     getRoute: () => {
@@ -191,16 +189,6 @@ routeLinks[publishScene.id] = {
     title: 'Done',
   },
 };
-
-// const testScene = {
-//   id: 'test-route',
-//   renderContent: withProps(
-//     <ChatScene
-//       title="Chat"
-//       leftIs="back"
-//     />),
-// };
-
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -232,11 +220,13 @@ function renderMenu(navigator, closeMenu) {
 
 function NavApp() {
   return (
-    <DrawerNavigator
-      initialRoute={localListingScene}
-      routeLinks={routeLinks}
-      renderMenuWithNavigator={renderMenu}
-    />
+    <Provider store={store}>
+      <DrawerNavigator
+        initialRoute={localListingScene}
+        routeLinks={routeLinks}
+        renderMenuWithNavigator={renderMenu}
+      />
+    </Provider>
   );
 }
 

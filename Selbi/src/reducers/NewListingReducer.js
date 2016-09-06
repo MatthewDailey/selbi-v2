@@ -78,7 +78,6 @@ export function setNewListingDescription(listingDescription) {
 }
 
 export function setNewListingLocation(listingLocation) {
-  console.log(listingLocation)
   return {
     type: NL_SET_LOCATION,
     location: listingLocation,

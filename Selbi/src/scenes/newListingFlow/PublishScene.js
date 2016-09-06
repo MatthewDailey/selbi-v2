@@ -4,11 +4,11 @@ import { MKSpinner, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-import styles from '../../styles';
-import colors from '../../colors';
-import RoutableScene from '../nav/RoutableScene';
+import styles from '../../../styles';
+import colors from '../../../colors';
+import RoutableScene from '../../nav/RoutableScene';
 import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
-from '../firebase/FirebaseActions';
+from '../../firebase/FirebaseActions';
 
 const publishStatus = {
   publishing: 'publishing',
