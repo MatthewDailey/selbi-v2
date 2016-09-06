@@ -7,7 +7,6 @@ import RoutableScene from '../nav/RoutableScene';
 import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages }
   from '../firebase/FirebaseConnector';
 
-import style from '../../styles';
 import colors from '../../colors';
 
 export default class ChatScene extends RoutableScene {
@@ -33,9 +32,6 @@ export default class ChatScene extends RoutableScene {
   }
 
   componentWillMount() {
-    // sendMessage(this.props.chatData.listingId, this.props.chatData.buyerUid, 'auto message')
-    //   .catch(console.log);
-    console.log("mounting chat scene")
     const promiseBuyerPublicData = loadUserPublicData(this.props.chatData.buyerUid);
     const promiseSellerPublicData = loadUserPublicData(this.props.chatData.sellerUid);
 

@@ -4,38 +4,14 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from './SpinnerOverlay';
-import ChatScene from './ChatScene';
+
+import ChatListItem from '../components/ChatListItem';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';
 
 import styles from '../../styles';
 import colors from '../../colors';
 
-function ChatListItem({ chatData, openChatScene }) {
-  return (
-    <TouchableHighlight
-      onPress={() => openChatScene(
-        <ChatScene
-          title={chatData.title}
-          chatData={chatData}
-          leftIs="back"
-        />
-      )}
-      underlayColor={`${colors.dark}64`}
-      style={{
-        padding: 16,
-        flex: 1,
-        borderBottomWidth: 1,
-        borderColor: colors.dark,
-      }}
-    >
-      <View>
-        <Text>{chatData.type}</Text>
-        <Text style={styles.friendlyTextLeft}>{chatData.title}</Text>
-      </View>
-    </TouchableHighlight>
-  );
-}
 
 class ChatListComponent extends Component {
   constructor(props) {
@@ -117,7 +93,8 @@ export default class ChatListScene extends RoutableScene {
           buyingChats: loadedBuyingChats,
           sellingChats: loadedSellingChats,
         }, () => console.log(this.state));
-      });
+      })
+      .catch(console.log);
   }
 
   renderWithNavBar() {
