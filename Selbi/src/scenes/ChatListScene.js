@@ -1,71 +1,17 @@
-import React, { Component } from 'react';
-import { View, ListView, RefreshControl } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from './SpinnerOverlay';
 
-import ChatListItem from '../components/ChatListItem';
 import ChatScene from '../scenes/ChatScene';
+import ChatListComponent from '../components/ChatListComponent';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';
 
 import styles from '../../styles';
 import colors from '../../colors';
-
-
-class ChatListComponent extends Component {
-  constructor(props) {
-    super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds.cloneWithRows(props.chats),
-      refreshing: false,
-    };
-    this.onRefresh = this.onRefresh.bind(this);
-  }
-
-  onRefresh() {
-    console.log('called refresh chats');
-    this.setState({ refreshing: true });
-    this.props.refresh()
-      .then(() => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(this.props.chats),
-          refreshing: false,
-        });
-      });
-  }
-
-  render() {
-    return (
-      <ListView
-        enableEmptySections
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />
-        }
-        style={styles.container}
-        removeClippedSubviews={false}
-        dataSource={this.state.dataSource}
-        renderRow={(data) => (
-          <ChatListItem
-            chatTitle={data.title}
-            chatType={data.type}
-            openChatScene={() => this.props.openChatScene(
-              <ChatScene
-                title={data.title}
-                chatData={data}
-                leftIs="back"
-              />
-            )}
-          />)}
-      />
-    );
-  }
-}
 
 export default class ChatListScene extends RoutableScene {
   constructor(props) {
@@ -86,15 +32,12 @@ export default class ChatListScene extends RoutableScene {
   }
 
   loadChatData() {
-    console.log('called load chat data');
     return loadAllUserChats()
       .then((allUserChats) => {
-        console.log(allUserChats)
         const loadedBuyingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'buying');
         const loadedSellingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'selling');
-        console.log(allUserChats)
         this.setState({
           loading: false,
           allChats: allUserChats,
@@ -103,6 +46,22 @@ export default class ChatListScene extends RoutableScene {
         }, () => console.log(this.state));
       })
       .catch(console.log);
+  }
+
+  getChatListComponentForChats(chats) {
+    return (
+      <ChatListComponent
+        refresh={this.loadChatData}
+        chats={chats}
+        openChatScene={(data) => this.openSimpleScene(
+          <ChatScene
+            title={data.title}
+            chatData={data}
+            leftIs="back"
+          />
+        )}
+      />
+    );
   }
 
   renderWithNavBar() {
@@ -114,7 +73,6 @@ export default class ChatListScene extends RoutableScene {
       );
     }
 
-    console.log('rendering chatlist scene')
     return (
       <ScrollableTabView
         tabBarBackgroundColor={colors.primary}
@@ -123,25 +81,13 @@ export default class ChatListScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <View tabLabel="All" style={styles.container}>
-          <ChatListComponent
-            refresh={this.loadChatData}
-            chats={this.state.allChats}
-            openChatScene={this.openSimpleScene}
-          />
+          {this.getChatListComponentForChats(this.state.allChats)}
         </View>
         <View tabLabel="Buying" style={styles.container}>
-          <ChatListComponent
-            refresh={this.loadChatData}
-            chats={this.state.buyingChats}
-            openChatScene={this.openSimpleScene}
-          />
+          {this.getChatListComponentForChats(this.state.buyingChats)}
         </View>
         <View tabLabel="Selling" style={styles.container}>
-          <ChatListComponent
-            refresh={this.loadChatData}
-            chats={this.state.sellingChats}
-            openChatScene={this.openSimpleScene}
-          />
+          {this.getChatListComponentForChats(this.state.sellingChats)}
         </View>
       </ScrollableTabView>
     );
