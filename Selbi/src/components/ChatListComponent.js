@@ -17,7 +17,6 @@ export default class ChatListComponent extends Component {
   }
 
   onRefresh() {
-    console.log('called refresh chats');
     this.setState({ refreshing: true });
     this.props.refresh()
       .then(() => {
@@ -51,3 +50,19 @@ export default class ChatListComponent extends Component {
     );
   }
 }
+
+ChatListComponent.propTypes = {
+  refresh: React.PropTypes.func.isRequired,
+  openChatScene: React.PropTypes.func.isRequired,
+  chats: React.PropTypes.arrayOf((propValue, key) => {
+    const chatData = propValue[key];
+    if (!chatData.buyerUid
+      || !chatData.sellerUid
+      || !chatData.listingId
+      || !chatData.title
+      || !chatData.type) {
+      return Error(`ChatData is missing a property ${JSON.stringify(chatData, undefined, 4)}`);
+    }
+    return undefined;
+  }),
+};

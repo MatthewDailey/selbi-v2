@@ -83,12 +83,6 @@ export default class ChatListScene extends RoutableScene {
         <View tabLabel="All" style={styles.container}>
           {this.getChatListComponentForChats(this.state.allChats)}
         </View>
-        <View tabLabel="Buying" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.buyingChats)}
-        </View>
-        <View tabLabel="Selling" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.sellingChats)}
-        </View>
       </ScrollableTabView>
     );
   }
