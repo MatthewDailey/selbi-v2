@@ -30,7 +30,6 @@ export default class ChatListComponent extends Component {
   render() {
     return (
       <ListView
-        enableEmptySections
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}

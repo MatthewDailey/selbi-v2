@@ -38,4 +38,34 @@ describe('<ChatListComponent />', () => {
     expect(consoleErrorOutputStub.called, 'PropTypes error was logged, see logs for failure')
       .to.be.false();
   });
+
+  it('is a ListView and removeClippedSubviews == false', () => {
+    const wrapper = shallow(
+      <ChatListComponent chats={testChats} refresh={spy()} openChatScene={spy()} />);
+
+    expect(wrapper.type().displayName).to.equal('ListView');
+
+    const listView = wrapper.get(0);
+    expect(listView.props.removeClippedSubviews).to.be.false();
+  });
+
+  it('renders a ChatListItem', () => {
+    const openChatSceneSpy = spy();
+
+    const wrapper = shallow(
+      <ChatListComponent chats={testChats} refresh={spy()} openChatScene={openChatSceneSpy} />);
+
+    expect(wrapper.type().displayName).to.equal('ListView');
+
+    const listView = wrapper.get(0);
+    const chatListItem = listView.props.renderRow(testChats[0]);
+
+    expect(chatListItem.type.name).to.equal('ChatListItem');
+
+    expect(chatListItem.props.chatTitle).to.equal(testChats[0].title);
+    expect(chatListItem.props.chatType).to.equal(testChats[0].type);
+
+    chatListItem.props.openChatScene();
+    expect(openChatSceneSpy.calledWithExactly(testChats[0])).to.be.true();
+  });
 });
