@@ -23,37 +23,17 @@ describe('<InputScene />', () => {
 
   it('can get input value', () => {
     const scene = new InputScene({ loadInitialInput: () => undefined });
-    expect(scene.getInputValue()).to.equal(undefined);
-  });
-
-  it('sets state based on input change', () => {
-    const setStateSpy = spy();
-    const scene = new InputScene({ loadInitialInput: () => undefined });
-    scene.setState = setStateSpy;
-
-    scene.onInputTextChange(testInputText);
-
-    expect(setStateSpy.calledWith({ text: testInputText }));
+    expect(scene.parseInputValue()).to.equal(undefined);
   });
 
   it('dispatches event based on input change', () => {
-    const action = { test: 'action' };
-    const recordInputActionSpy = stub().returns(action);
-    recordInputActionSpy.returnValue = action;
-
-    const storeApi = { dispatch: () => {} };
-    const mockStore = mock(storeApi);
-    mockStore.expects('dispatch').withArgs(action);
+    const recordInputSpy = spy();
 
     const scene = new InputScene({
-      loadInitialInput: () => undefined,
-      recordInputAction: recordInputActionSpy,
-      store: storeApi,
+      recordInput: recordInputSpy,
     });
-    scene.setState = (data, callback) => callback();
-
     scene.onInputTextChange(testInputText);
-    mockStore.verify();
+    expect(recordInputSpy.calledWithExactly(testInputText)).to.be.true();
   });
 
   it('wont go next if no text', () => {
@@ -66,7 +46,7 @@ describe('<InputScene />', () => {
 
   it('will go next if text', () => {
     const scene = new InputScene({
-      loadInitialInput: () => 'a string',
+      inputValue: 'a string',
     });
 
     expect(scene.shouldGoNext()).to.be.true();
@@ -74,7 +54,7 @@ describe('<InputScene />', () => {
 
   it('wont go next if numeric but no number', () => {
     const scene = new InputScene({
-      loadInitialInput: () => 'a string',
+      inputValue: 'a string',
       isNumeric: true,
     });
 
@@ -83,7 +63,8 @@ describe('<InputScene />', () => {
 
   it('will go next if numeric and input is a number', () => {
     const scene = new InputScene({
-      loadInitialInput: () => '1.1',
+      inputValue: '1.1',
+      isNumeric: true,
     });
 
     expect(scene.shouldGoNext()).to.be.true();

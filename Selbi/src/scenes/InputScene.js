@@ -16,14 +16,14 @@ export default class InputScene extends RoutableScene {
     if (!this.props.inputValue) {
       Alert.alert('Must not be empty.');
       return false;
-    } else if (this.props.isNumeric && isNaN(this.getInputValue(this.props.inputValue))) {
+    } else if (this.props.isNumeric && isNaN(this.parseInputValue(this.props.inputValue))) {
       Alert.alert('Must be a number.');
       return false;
     }
     return true;
   }
 
-  getInputValue(newText) {
+  parseInputValue(newText) {
     if (this.props.isNumeric) {
       return parseFloat(newText);
     }
@@ -31,7 +31,7 @@ export default class InputScene extends RoutableScene {
   }
 
   onInputTextChange(newText) {
-    this.props.recordInput(this.getInputValue(newText));
+    this.props.recordInput(this.parseInputValue(newText));
   }
 
   renderWithNavBar() {
