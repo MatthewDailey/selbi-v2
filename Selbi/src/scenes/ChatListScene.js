@@ -6,6 +6,7 @@ import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from './SpinnerOverlay';
 
 import ChatListItem from '../components/ChatListItem';
+import ChatScene from '../scenes/ChatScene';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';
 
@@ -52,7 +53,13 @@ class ChatListComponent extends Component {
         renderRow={(data) => (
           <ChatListItem
             chatData={data}
-            openChatScene={this.props.openChatScene}
+            openChatScene={() => this.props.openChatScene(
+              <ChatScene
+                title={data.title}
+                chatData={data}
+                leftIs="back"
+              />
+            )}
           />)}
       />
     );

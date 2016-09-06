@@ -1,21 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableHighlight } from 'react-native';
 
-import ChatScene from '../scenes/ChatScene';
-
 import styles from '../../styles';
 import colors from '../../colors';
 
 export default function ChatListItem({ chatData, openChatScene }) {
   return (
     <TouchableHighlight
-      onPress={() => openChatScene(
-        <ChatScene
-          title={chatData.title}
-          chatData={chatData}
-          leftIs="back"
-        />
-      )}
+      onPress={openChatScene}
       underlayColor={`${colors.dark}64`}
       style={{
         padding: 16,

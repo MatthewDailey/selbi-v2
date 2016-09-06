@@ -24,6 +24,6 @@ describe('ChatListItem', () => {
     const outerTouchableHightlight = wrapper.get(0);
     outerTouchableHightlight.props.onPress();
 
-    expect(openChatSpy.called).to.be.true();
+    expect(openChatSpy.calledWithExactly()).to.be.true();
   });
 });
