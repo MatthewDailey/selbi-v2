@@ -1,27 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View } from 'react-native';
+import { InteractionManager, View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import { listenToListingsByStatus } from '../firebase/FirebaseConnector';
 import RoutableScene from '../nav/RoutableScene';
 import ListingsComponent from '../components/ListingsListComponent';
-
-import { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic, setMyListingsSold }
-  from '../reducers/MyListingsReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
 
 class MyListingsScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+
+    this.state = { renderPlaceholderOnly: true };
+  }
+
   componentWillMount() {
-    listenToListingsByStatus('inactive', this.props.setInactiveListings);
-    listenToListingsByStatus('public', this.props.setPublicListings);
-    listenToListingsByStatus('private', this.props.setPrivateListings);
-    listenToListingsByStatus('sold', this.props.setSoldListings);
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        renderPlaceholderOnly: false,
+      });
+    });
   }
 
   renderWithNavBar() {
+    if (this.state.renderPlaceholderOnly) {
+      return (
+        <View style={styles.container} />
+      );
+    }
+
     return (
       <ScrollableTabView
         tabBarBackgroundColor={colors.primary}
@@ -59,7 +68,6 @@ class MyListingsScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.myListings)
   return {
     inactive: state.myListings.inactive,
     public: state.myListings.public,
@@ -68,25 +76,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setInactiveListings: (listings) => {
-      dispatch(setMyListingsInactive(listings));
-    },
-    setPublicListings: (listings) => {
-      console.log("called set public listings")
-      dispatch(setMyListingsPublic(listings));
-    },
-    setPrivateListings: (listings) => {
-      dispatch(setMyListingsPrivate(listings));
-    },
-    setSoldListings: (listings) => {
-      dispatch(setMyListingsSold(listings));
-    },
-  };
-};
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  undefined
 )(MyListingsScene);

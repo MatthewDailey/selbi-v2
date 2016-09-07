@@ -23,10 +23,12 @@ import ChatListScene from './src/scenes/ChatListScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
-import myListingsReducer from './src/reducers/MyListingsReducer';
+import myListingsReducer,
+{ setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic, setMyListingsSold, clearMyListings }
+  from './src/reducers/MyListingsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
-  publishImage, addAuthStateChangeListener, removeAuthStateChangeListener }
+  publishImage, addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
@@ -42,6 +44,23 @@ const store = createStore(combineReducers({
   localListings: localListingsReducer,
   myListings: myListingsReducer,
 }));
+
+// Listen for user listings and make sure to remove listener when
+const listenForUserListings = (user) => {
+  if (user) {
+    listenToListingsByStatus('inactive',
+      (listings) => store.dispatch(setMyListingsInactive(listings)));
+    listenToListingsByStatus('public',
+      (listings) => store.dispatch(setMyListingsPublic(listings)));
+    listenToListingsByStatus('private',
+      (listings) => store.dispatch(setMyListingsPrivate(listings)));
+    listenToListingsByStatus('sold',
+      (listings) => store.dispatch(setMyListingsSold(listings)));
+  } else {
+    store.dispatch(clearMyListings());
+  }
+};
+addAuthStateChangeListener(listenForUserListings);
 
 const priceInputScene = {
   it: 'price-listing',

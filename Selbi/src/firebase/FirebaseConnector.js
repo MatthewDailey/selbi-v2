@@ -482,16 +482,13 @@ export function loadListingsByStatus(status) {
 
 // Must be logged in first.
 export function listenToListingsByStatus(status, callback) {
-  console.log('called listen to listings by status');
   firebaseApp
     .database()
     .ref('/userListings')
     .child(getUser().uid)
     .child(status)
     .on('value', (snapshot) => {
-      console.log('called on value for ' + status);
       if (snapshot.exists()) {
-        console.log('snapshot exists');
         const allListings = [];
         Object.keys(snapshot.val())
           .forEach((listingId) => {
@@ -514,5 +511,5 @@ export function listenToListingsByStatus(status, callback) {
     .ref('/userListings')
     .child(getUser().uid)
     .child(status)
-    .off(callback);
+    .off('value', callback);
 }
