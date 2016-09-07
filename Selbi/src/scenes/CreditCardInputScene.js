@@ -6,7 +6,7 @@ import CreditCard from 'react-native-credit-card';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
-import SpinnerOverlay from './SpinnerOverlay';
+import SpinnerOverlay from '../components/SpinnerOverlay';
 
 const buttonViewStyle = {
   flex: 1,

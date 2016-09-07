@@ -3,7 +3,7 @@ import { View, ListView, RefreshControl } from 'react-native';
 import { loadImage } from '../firebase/FirebaseConnector';
 
 import ItemView from './ItemView';
-import SpinnerOverlay from '../scenes/SpinnerOverlay';
+import SpinnerOverlay from './SpinnerOverlay';
 import styles from '../../styles';
 
 export default class ListingsComponent extends Component {

@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
 import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
-import SpinnerOverlay from '../SpinnerOverlay';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import styles from '../../../styles';
 
