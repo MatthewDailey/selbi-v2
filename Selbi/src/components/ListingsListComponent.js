@@ -17,7 +17,6 @@ export default class ListingsComponent extends Component {
   }
 
   onRefresh() {
-    console.log('called refresh listings');
     this.setState({ refreshing: true });
     this.props.refresh()
       .then(() => {
@@ -26,16 +25,23 @@ export default class ListingsComponent extends Component {
   }
 
   render() {
-    return (
-      <ListView
-        enableEmptySections
-        removeClippedSubviews={false}
-        refreshControl={
+    const getRefreshControl = () => {
+      if (this.props.refresh) {
+        return (
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />
-        }
+        );
+      }
+      return undefined;
+    };
+
+    return (
+      <ListView
+        enableEmptySections
+        removeClippedSubviews={false}
+        refreshControl={getRefreshControl()}
         contentContainerStyle={{
           flexDirection: 'row',
           flexWrap: 'wrap',
@@ -53,3 +59,9 @@ export default class ListingsComponent extends Component {
     );
   }
 }
+
+ListingsComponent.propTypes = {
+  refresh: React.PropTypes.func,
+  listings: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  openSimpleScene: React.PropTypes.func,
+};
