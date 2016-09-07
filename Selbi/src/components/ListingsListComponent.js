@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { ListView, RefreshControl } from 'react-native';
+import { View, ListView, RefreshControl } from 'react-native';
 import { loadImage } from '../firebase/FirebaseConnector';
 
 import ItemView from '../scenes/ItemView';
+import SpinnerOverlay from '../scenes/SpinnerOverlay';
 import styles from '../../styles';
 
 export default class ListingsComponent extends Component {
@@ -37,6 +38,14 @@ export default class ListingsComponent extends Component {
       return undefined;
     };
 
+    if (!this.props.listings) {
+      return (
+        <View style={styles.container}>
+          <SpinnerOverlay isVisible message="" />
+        </View>
+      );
+    }
+
     return (
       <ListView
         enableEmptySections
@@ -62,6 +71,6 @@ export default class ListingsComponent extends Component {
 
 ListingsComponent.propTypes = {
   refresh: React.PropTypes.func,
-  listings: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  listings: React.PropTypes.arrayOf(React.PropTypes.object),
   openSimpleScene: React.PropTypes.func,
 };

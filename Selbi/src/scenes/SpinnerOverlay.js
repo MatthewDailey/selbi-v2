@@ -23,7 +23,7 @@ export default function SpinnerOverlay({ isVisible, message }) {
         }}
       >
         <View style={styles.paddedCenterContainerClear}>
-          <MKSpinner />
+          <MKSpinner strokeColor={colors.primary} />
           <Text
             color={colors.white}
             style={styles.friendlyTextLight}

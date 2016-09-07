@@ -52,9 +52,9 @@ export default class ItemView extends Component {
       );
     }
     return (
-      <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.accent }}>
+      <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }}>
         <View style={styles.paddedCenterContainerClear}>
-          <MKSpinner />
+          <MKSpinner strokeColor={colors.secondary} />
         </View>
       </View>
     );
