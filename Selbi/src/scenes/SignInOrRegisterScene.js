@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
-import { mdl, MKButton, setTheme} from 'react-native-material-kit';
+import { ScrollView, View, Text, Alert } from 'react-native';
+import { mdl, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
@@ -116,6 +116,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
       return Promise.resolve();
     }
 
+    // TODO we should not need to sign in after registering. This is a hacky way to work
+    // around the fact that updating user name can't be done until after the user is created
+    // but user updates don't trigger onAuthStateChanged events.
     return this.props.registerWithEmail(email, password)
       .then(() => {
         if (this.props.goHomeOnComplete) {
@@ -123,8 +126,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
         } else {
           this.goNext();
         }
-        return this.props.createUser(firstName, lastName);
       })
+      .then(() => this.props.createUser(firstName, lastName))
+      .then(() => this.props.signInWithEmail(email, password))
       .catch((error) => {
         Alert.alert(error.message);
       });

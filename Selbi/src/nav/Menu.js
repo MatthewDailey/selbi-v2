@@ -22,6 +22,7 @@ export default class Menu extends Component {
 
   updateStateFromUser(user) {
     if (user) {
+      console.log(user.displayName);
       this.setState({
         userDisplayName: user.displayName,
       });
@@ -90,8 +91,10 @@ export default class Menu extends Component {
       return getSignedOutHeader();
     };
 
-    const signInMenuStyle = this.state.userDisplayName !== undefined ? {} :
-      {textDecorationLine: 'line-through'};
+    const signInMenuStyle = this.state.userDisplayName ? {} :
+      { textDecorationLine: 'line-through' };
+
+      console.log(this.state);
 
     return (
       <View style={styles.padded}>
