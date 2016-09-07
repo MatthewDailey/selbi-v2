@@ -479,3 +479,40 @@ export function loadListingsByStatus(status) {
       return Promise.all(allListings);
     });
 }
+
+// Must be logged in first.
+export function listenToListingsByStatus(status, callback) {
+  console.log('called listen to listings by status');
+  firebaseApp
+    .database()
+    .ref('/userListings')
+    .child(getUser().uid)
+    .child(status)
+    .on('value', (snapshot) => {
+      console.log('called on value for ' + status);
+      if (snapshot.exists()) {
+        console.log('snapshot exists');
+        const allListings = [];
+        Object.keys(snapshot.val())
+          .forEach((listingId) => {
+            allListings.push(
+              firebaseApp
+                .database()
+                .ref('/listings')
+                .child(listingId)
+                .once('value'));
+          });
+        Promise
+          .all(allListings)
+          .then(callback);
+      } else {
+        callback([]);
+      }
+    });
+  return () => firebaseApp
+    .database()
+    .ref('/userListings')
+    .child(getUser().uid)
+    .child(status)
+    .off(callback);
+}

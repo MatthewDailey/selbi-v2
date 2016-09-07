@@ -78,9 +78,9 @@ export default class Menu extends Component {
     const getSignedOutHeader = () =>
       <TouchableHighlight onPress={signInOrRegister} underlayColor={colors.secondary}>
         <View style={styles.paddedCenterContainerWhite}>
-          <Text style={{fontWeight: 'bold', fontSize: 16 }}>Not signed in.</Text>
-          <View style={styles.halfPadded}/>
-          <Text style={{fontSize: 14}}>Sign in or register.</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Not signed in.</Text>
+          <View style={styles.halfPadded} />
+          <Text style={{ fontSize: 14 }}>Sign in or register.</Text>
         </View>
       </TouchableHighlight>
 
@@ -93,8 +93,6 @@ export default class Menu extends Component {
 
     const signInMenuStyle = this.state.userDisplayName ? {} :
       { textDecorationLine: 'line-through' };
-
-      console.log(this.state);
 
     return (
       <View style={styles.padded}>

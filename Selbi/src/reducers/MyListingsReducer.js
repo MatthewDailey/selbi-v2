@@ -16,16 +16,16 @@ export default function (myListingsState = myListingsInitialState, action) {
   const newListingState = Object.assign({}, myListingsState);
   switch (getActionType(action)) {
     case ML_SET_INACTIVE_LISTINGS:
-      newListingState.inactive = action.listings.splice();
+      newListingState.inactive = action.listings;
       return newListingState;
     case ML_SET_PUBLIC_LISTINGS:
-      newListingState.public = action.listings.splice();
+      newListingState.public = action.listings;
       return newListingState;
     case ML_SET_PRIVATE_LISTINGS:
-      newListingState.private = action.listings.splice();
+      newListingState.private = action.listings;
       return newListingState;
     case ML_SET_SOLD_LISTINGS:
-      newListingState.sold = action.listings.splice();
+      newListingState.sold = action.listings;
       return newListingState;
     default:
       return newListingState;
