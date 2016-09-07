@@ -6,7 +6,7 @@ import { setTheme } from 'react-native-material-kit';
 
 import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
-import ListingScene from './src/scenes/ListingsScene';
+import ListingScene from './src/scenes/LocalListingsScene';
 
 
 import DrawerNavigator from './src/nav/DrawerNavigator';
