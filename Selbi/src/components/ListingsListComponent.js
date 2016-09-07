@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, ListView, RefreshControl } from 'react-native';
 import { loadImage } from '../firebase/FirebaseConnector';
 
-import ItemView from '../scenes/ItemView';
+import ItemView from './ItemView';
 import SpinnerOverlay from '../scenes/SpinnerOverlay';
 import styles from '../../styles';
 

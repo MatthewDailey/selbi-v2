@@ -5,7 +5,7 @@ import { MKSpinner } from 'react-native-material-kit';
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
-import ListingDetailScene from './ListingDetailScene';
+import ListingDetailScene from '../scenes/ListingDetailScene';
 
 import styles from '../../styles';
 import colors from '../../colors';
