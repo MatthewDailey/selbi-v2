@@ -23,6 +23,7 @@ import ChatListScene from './src/scenes/ChatListScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
+import myListingsReducer from './src/reducers/MyListingsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
   publishImage, addAuthStateChangeListener, removeAuthStateChangeListener }
@@ -39,6 +40,7 @@ setTheme({
 const store = createStore(combineReducers({
   newListing: newListingReducer,
   localListings: localListingsReducer,
+  myListings: myListingsReducer,
 }));
 
 const priceInputScene = {
