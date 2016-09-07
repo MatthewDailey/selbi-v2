@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { InteractionManager, View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
 import styles from '../../styles';
@@ -10,6 +10,7 @@ export default class InputScene extends RoutableScene {
     super(props);
 
     this.onInputTextChange = this.onInputTextChange.bind(this);
+    this.state = { renderPlaceholderOnly: true };
   }
 
   shouldGoNext() {
@@ -34,7 +35,19 @@ export default class InputScene extends RoutableScene {
     this.props.recordInput(this.parseInputValue(newText));
   }
 
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ renderPlaceholderOnly: false });
+    });
+  }
+
   renderWithNavBar() {
+    if (this.state.renderPlaceholderOnly) {
+      return (
+        <View style={styles.container} />
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.padded}>

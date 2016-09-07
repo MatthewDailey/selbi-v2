@@ -11,7 +11,6 @@ import styles from '../../styles';
 import colors from '../../colors';
 import SignInOrRegisterScene from './SignInOrRegisterScene';
 import RoutableScene from '../nav/RoutableScene';
-import SpinnerOverlay from './SpinnerOverlay';
 
 const fontStyle = {
   margin: 10,
@@ -44,7 +43,6 @@ export default class ListingDetailScene extends RoutableScene {
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      console.log(this.name)
       this.setState({ renderPlaceholderOnly: false });
     });
   }
