@@ -49,19 +49,27 @@ export default class ListingDetailScene extends RoutableScene {
     });
   }
 
-  render() {
+  renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
       return (
-        <View style={styles.paddedCenterContainer}>
-          <SpinnerOverlay isVisible message="Loading listing..." />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: `${colors.dark}`,
+          }}
+        >
+          <View style={styles.paddedCenterContainerClear}>
+            <Text
+              color={colors.white}
+              style={styles.friendlyTextLight}
+            >
+              Loading listing...
+            </Text>
+          </View>
         </View>
       );
     }
 
-    return super.render();
-  }
-
-  renderWithNavBar() {
     const imageData = this.props.imageData;
     const listingData = this.props.listingData.val();
 
