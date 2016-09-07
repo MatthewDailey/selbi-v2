@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, ListView, RefreshControl } from 'react-native';
-import { loadImage } from '../firebase/FirebaseConnector';
 
 import ItemView from './ItemView';
 import SpinnerOverlay from './SpinnerOverlay';
@@ -61,7 +60,6 @@ export default class ListingsComponent extends Component {
         renderRow={(data) =>
           <ItemView
             listing={data}
-            loadImage={loadImage}
             openSimpleScene={this.props.openSimpleScene}
           />}
       />

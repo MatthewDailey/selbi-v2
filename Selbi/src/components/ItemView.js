@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Text, View, Image, TouchableHighlight } from 'react-native';
 import { MKSpinner } from 'react-native-material-kit';
+
+import { loadImage } from '../firebase/FirebaseConnector';
+import { storeImage } from '../reducers/ImagesReducer';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -10,22 +14,15 @@ import ListingDetailScene from '../scenes/ListingDetailScene';
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default class ItemView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      imageData: undefined,
-    };
-  }
-
-  getImageView(fitHeight, price) {
-    if (this.state.imageData) {
+class ItemView extends Component {
+  getImageView(fitHeight) {
+    if (this.props.imageData) {
       const openDetailView = () => {
         this.props.openSimpleScene(
           <ListingDetailScene
             title={this.props.listing.val().title}
             leftIs="back"
-            imageData={this.state.imageData.val()}
+            imageData={this.props.imageData}
             listingData={this.props.listing}
           />
         );
@@ -34,7 +31,7 @@ export default class ItemView extends Component {
       return (
         <TouchableHighlight onPress={openDetailView}>
           <Image
-            source={{ uri: `data:image/png;base64,${this.state.imageData.val().base64}` }}
+            source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
             style={{ height: fitHeight, borderRadius: 3 }}
           >
             <Text
@@ -45,7 +42,7 @@ export default class ItemView extends Component {
                 backgroundColor: 'transparent',
               }}
             >
-              {`$${price}`}
+              {`$${this.props.listing.val().price}`}
             </Text>
           </Image>
         </TouchableHighlight>
@@ -65,20 +62,17 @@ export default class ItemView extends Component {
     const itemMargin = 2;
     const columnWidth = (width / 2) - (itemMargin * 2);
 
-    const listingData = this.props.listing.val();
-    const image = listingData.images.image1;
+    const image = this.props.listing.val().images.image1;
 
-    if (!this.state.imageData || this.state.imageData.key !== image.imageId) {
-      this.props.loadImage(image.imageId)
+    if (!this.props.imageData || this.props.imageKey !== image.imageId) {
+      console.log('rendered but no image data');
+      console.log(this.props.imageKey)
+      loadImage(this.props.imageKey)
         .then((imageSnapshot) => {
-          this.setState({
-            imageData: imageSnapshot,
-          });
+          console.log('successfully loaded image');
+          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val());
         });
     }
-
-    console.log(`Rendering listing : ${listingData.title} : ${this.props.listing.key} :`
-      + ` hasImageData=${this.state.imageData != undefined}`);
 
     const widthRatio = image.width / columnWidth;
     const fitHeight = image.height / widthRatio;
@@ -91,11 +85,32 @@ export default class ItemView extends Component {
           margin: itemMargin,
         }}
       >
-        {this.getImageView(fitHeight, listingData.price)}
+        {this.getImageView(fitHeight)}
       </View>
     );
   }
 }
+
+// TODO: Get ride of hard coded image1.
+const mapStateToProps = (state, currentProps) => {
+  const imageId = currentProps.listing.val().images.image1.imageId;
+  return {
+    imageKey: imageId,
+    imageData: state.images[imageId],
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ItemView);
+
 
 // <Image
 //   source={{ uri: `data:image/png;base64,${this.state.imageBase64}` }}
