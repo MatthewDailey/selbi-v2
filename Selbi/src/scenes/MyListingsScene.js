@@ -4,7 +4,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import { loadListingsByStatus } from '../firebase/FirebaseConnector';
 import RoutableScene from '../nav/RoutableScene';
-import { ListingsComponent } from './ListingsScene';
+import ListingsComponent from '../components/ListingsListComponent';
 
 import styles from '../../styles';
 import colors from '../../colors';

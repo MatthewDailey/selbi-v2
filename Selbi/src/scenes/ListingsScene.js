@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-import { ListView, RefreshControl } from 'react-native';
+import React from 'react';
 
-import { loadListingByLocation, loadImage } from '../firebase/FirebaseConnector';
+import { loadListingByLocation } from '../firebase/FirebaseConnector';
 import RoutableScene from '../nav/RoutableScene';
-import ItemView from './ItemView';
+import ListingsComponent from '../components/ListingsListComponent';
 
-import styles from '../../styles';
 
 export default class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -25,7 +23,7 @@ export default class ListingsScene extends RoutableScene {
           // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
           reject(error.message);
         },
-        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
       );
     });
   }
@@ -39,68 +37,6 @@ export default class ListingsScene extends RoutableScene {
       <ListingsComponent
         fetchData={this.fetchData}
         openSimpleScene={this.openSimpleScene}
-      />
-    );
-  }
-}
-
-export class ListingsComponent extends Component {
-  constructor(props) {
-    super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      dataSource: ds,
-      refreshing: false,
-    };
-
-    this.loadData();
-    this._onRefresh = this._onRefresh.bind(this);
-  }
-
-  loadData() {
-    return this.props.fetchData()
-      .then((listings) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(listings),
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  _onRefresh() {
-    console.log('called refresh listings');
-    this.setState({ refreshing: true });
-    this.loadData()
-      .then(() => {
-        this.setState({ refreshing: false });
-      });
-  }
-
-  render() {
-    return (
-      <ListView
-        enableEmptySections
-        removeClippedSubviews={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh}
-          />
-        }
-        contentContainerStyle={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-        }}
-        style={styles.container}
-        dataSource={this.state.dataSource}
-        renderRow={(data) =>
-          <ItemView
-            listing={data}
-            loadImage={loadImage}
-            openSimpleScene={this.props.openSimpleScene}
-          />}
       />
     );
   }
