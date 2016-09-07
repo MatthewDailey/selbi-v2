@@ -23,9 +23,9 @@ import ChatListScene from './src/scenes/ChatListScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
-import myListingsReducer,
-{ setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic, setMyListingsSold, clearMyListings }
-  from './src/reducers/MyListingsReducer';
+import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
+  setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
+import imagesReducer from './src/reducers/ImagesReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
   publishImage, addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
@@ -43,6 +43,7 @@ const store = createStore(combineReducers({
   newListing: newListingReducer,
   localListings: localListingsReducer,
   myListings: myListingsReducer,
+  images: imagesReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
