@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, Alert } from 'react-native';
+import { InteractionManager, Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
@@ -11,6 +11,7 @@ import styles from '../../styles';
 import colors from '../../colors';
 import SignInOrRegisterScene from './SignInOrRegisterScene';
 import RoutableScene from '../nav/RoutableScene';
+import SpinnerOverlay from './SpinnerOverlay';
 
 const fontStyle = {
   margin: 10,
@@ -36,11 +37,33 @@ const Button = MKButton.button()
   .build();
 
 export default class ListingDetailScene extends RoutableScene {
+  constructor(props, context) {
+    super(props, context);
+    this.state = { renderPlaceholderOnly: true };
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      console.log(this.name)
+      this.setState({ renderPlaceholderOnly: false });
+    });
+  }
+
+  render() {
+    if (this.state.renderPlaceholderOnly) {
+      return (
+        <View style={styles.paddedCenterContainer}>
+          <SpinnerOverlay isVisible message="Loading listing..." />
+        </View>
+      );
+    }
+
+    return super.render();
+  }
+
   renderWithNavBar() {
     const imageData = this.props.imageData;
     const listingData = this.props.listingData.val();
-
-    console.log(listingData)
 
     const openChat = () => {
       if (!getUser()) {
