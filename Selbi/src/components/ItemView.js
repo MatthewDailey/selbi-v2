@@ -27,10 +27,10 @@ class ItemView extends Component {
           />
         );
       };
-
       return (
         <TouchableHighlight onPress={openDetailView}>
           <Image
+            key={this.props.imageKey}
             source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
             style={{ height: fitHeight, borderRadius: 3 }}
           >
@@ -65,13 +65,8 @@ class ItemView extends Component {
     const image = this.props.listing.val().images.image1;
 
     if (!this.props.imageData || this.props.imageKey !== image.imageId) {
-      console.log('rendered but no image data');
-      console.log(this.props.imageKey)
       loadImage(this.props.imageKey)
-        .then((imageSnapshot) => {
-          console.log('successfully loaded image');
-          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val());
-        });
+        .then((imageSnapshot) => this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
     }
 
     const widthRatio = image.width / columnWidth;
@@ -90,6 +85,14 @@ class ItemView extends Component {
     );
   }
 }
+
+ItemView.propTypes = {
+  listing: React.PropTypes.object.isRequired, // Should be the entire firebase ref value.
+  imageKey: React.PropTypes.string.isRequired,
+  imageData: React.PropTypes.object, // Value for /images/$imageKey
+  storeImageData: React.PropTypes.func.isRequired,
+  openSimpleScene: React.PropTypes.func.isRequired,
+};
 
 // TODO: Get ride of hard coded image1.
 const mapStateToProps = (state, currentProps) => {
@@ -110,19 +113,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ItemView);
-
-
-// <Image
-//   source={{ uri: `data:image/png;base64,${this.state.imageBase64}` }}
-//   style={{ height: fitHeight, borderRadius: 3 }}
-// />
-
-// ItemView.propTypes = {
-//   title: React.PropTypes.string.isRequired,
-//   price: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-//   img: React.PropTypes.shape({
-//     url: React.PropTypes.string.isRequired,
-//     width: React.PropTypes.number.isRequired,
-//     height: React.PropTypes.number.isRequired,
-//   }),
-// };
