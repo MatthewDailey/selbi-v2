@@ -24,8 +24,6 @@ class NewListing extends Immutable.Record({
 }) {}
 
 export default function (futureListingState = new NewListing(), action) {
-  console.log('-----------action------------');
-  console.log(action);
   switch (getActionType(action)) {
     case NL_SET_LISTING_ID:
       return futureListingState.merge({ listingId: action.listingId });
