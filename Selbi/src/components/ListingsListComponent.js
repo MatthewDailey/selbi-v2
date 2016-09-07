@@ -8,34 +8,20 @@ import styles from '../../styles';
 export default class ListingsComponent extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
     this.state = {
-      dataSource: ds,
       refreshing: false,
     };
 
-    this.loadData();
     this.onRefresh = this.onRefresh.bind(this);
   }
 
   onRefresh() {
     console.log('called refresh listings');
     this.setState({ refreshing: true });
-    this.loadData()
+    this.props.refresh()
       .then(() => {
         this.setState({ refreshing: false });
-      });
-  }
-
-  loadData() {
-    return this.props.fetchData()
-      .then((listings) => {
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(listings),
-        });
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }
 
@@ -55,7 +41,8 @@ export default class ListingsComponent extends Component {
           flexWrap: 'wrap',
         }}
         style={styles.container}
-        dataSource={this.state.dataSource}
+        dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+          .cloneWithRows(this.props.listings)}
         renderRow={(data) =>
           <ItemView
             listing={data}

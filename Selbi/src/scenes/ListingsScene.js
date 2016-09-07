@@ -1,16 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { loadListingByLocation } from '../firebase/FirebaseConnector';
 import RoutableScene from '../nav/RoutableScene';
-import ListingsComponent from '../components/ListingsListComponent';
+import ListingsListComponent from '../components/ListingsListComponent';
 
+import { setLocalListings } from '../reducers/LocalListingsReducer';
 
-export default class ListingsScene extends RoutableScene {
+class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
 
     this.getGeolocation = this.getGeolocation.bind(this);
-    this.fetchData = this.fetchData.bind(this);
+    this.fetchLocalListings = this.fetchLocalListings.bind(this);
   }
 
   getGeolocation() {
@@ -28,16 +30,42 @@ export default class ListingsScene extends RoutableScene {
     });
   }
 
-  fetchData() {
-    return this.getGeolocation().then((latlon) => loadListingByLocation(latlon, 20));
+  componentWillMount() {
+    this.fetchLocalListings();
+  }
+
+  fetchLocalListings() {
+    return this.getGeolocation()
+      .then((latlon) => loadListingByLocation(latlon, 20))
+      .then(this.props.setLocalListings);
   }
 
   renderWithNavBar() {
     return (
-      <ListingsComponent
-        fetchData={this.fetchData}
+      <ListingsListComponent
+        listings={this.props.listings}
+        refresh={this.fetchLocalListings}
         openSimpleScene={this.openSimpleScene}
       />
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    listings: state.localListings,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setLocalListings: (localListings) => {
+      dispatch(setLocalListings(localListings));
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListingsScene);
