@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Text, View, Image, TouchableHighlight } from 'react-native';
+import { MKSpinner } from 'react-native-material-kit';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
 import ListingDetailScene from './ListingDetailScene';
+
+import styles from '../../styles';
+import colors from '../../colors';
 
 export default class ItemView extends Component {
   constructor(props) {
@@ -48,9 +52,11 @@ export default class ItemView extends Component {
       );
     }
     return (
-      <View
-        style={{ height: fitHeight, borderRadius: 3, backgroundColor:'grey' }}
-      />
+      <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.accent }}>
+        <View style={styles.paddedCenterContainerClear}>
+          <MKSpinner />
+        </View>
+      </View>
     );
   }
 
