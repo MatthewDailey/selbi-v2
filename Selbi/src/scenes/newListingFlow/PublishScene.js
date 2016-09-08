@@ -33,7 +33,7 @@ function getPublishingView() {
   return (
     <View style={styles.centerContainer}>
       <Text style={styles.padded}>Updating your listing...</Text>
-      <MKSpinner />
+      <MKSpinner strokeColor={colors.primary} />
     </View>
   );
 }
@@ -188,7 +188,7 @@ const mapDispatchToProps = (dispatch) => {
     setNewListingLocation: (location) => {
       dispatch(setNewListingLocation(location));
     },
-    clearNewListingData: clearNewListing,
+    clearNewListingData: () => dispatch(clearNewListing()),
   };
 };
 
