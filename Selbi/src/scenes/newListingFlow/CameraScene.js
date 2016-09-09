@@ -12,7 +12,7 @@ import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import styles from '../../../styles';
 
-class SimpleCamera extends RoutableScene {
+class CameraScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = {
@@ -86,4 +86,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   undefined,
   mapDispatchToProps
-)(SimpleCamera);
+)(CameraScene);

@@ -7,7 +7,7 @@ import { setNewListingImageDimensions } from '../../reducers/NewListingReducer';
 
 import styles from '../../../styles';
 
-class SimpleImageView extends RoutableScene {
+class ApproveImageScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <Image
@@ -39,4 +39,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SimpleImageView);
+)(ApproveImageScene);
