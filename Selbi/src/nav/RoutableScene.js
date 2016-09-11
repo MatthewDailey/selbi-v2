@@ -42,8 +42,11 @@ export default class RoutableScene extends Component {
     super(props);
     this.goMenu = this.goMenu.bind(this);
     this.goHome = this.goHome.bind(this);
+    this.goHomeHandler = this.goHomeHandler.bind(this);
     this.goNext = this.goNext.bind(this);
+    this.goNextHandler = this.goNextHandler.bind(this);
     this.goBack = this.goBack.bind(this);
+    this.goBackHandler = this.goBackHandler.bind(this);
     this.openSimpleScene = this.openSimpleScene.bind(this);
   }
 
@@ -69,7 +72,7 @@ export default class RoutableScene extends Component {
       return leftButton;
     } else if (this.props.leftIs === 'back') {
       leftButton.title = '<';
-      leftButton.handler = this.goBack;
+      leftButton.handler = this.goBackHandler;
       return leftButton;
     }
     // Return nothing. No left button.
@@ -82,11 +85,11 @@ export default class RoutableScene extends Component {
     };
 
     if (this.props.routeLinks.next && this.props.rightIs === 'next') {
-      rightButton.handler = this.goNext;
+      rightButton.handler = this.goNextHandler;
       rightButton.title = this.props.routeLinks.next.title;
       return rightButton;
     } else if (this.props.routeLinks.home && this.props.rightIs === 'home') {
-      rightButton.handler = this.goHome;
+      rightButton.handler = this.goHomeHandler;
       rightButton.title = this.props.routeLinks.home.title;
       return rightButton;
     }
@@ -103,6 +106,16 @@ export default class RoutableScene extends Component {
     return true;
   }
 
+  /*
+   * Wrapper for goNext to allow passing argument.
+   */
+  goNextHandler() {
+    this.goNext();
+  }
+
+  /*
+   * Push a new route on to the right. Opens the 'next' route by default.
+   */
   goNext(route = 'next') {
     if (this.shouldGoNext(route) && this.props.routeLinks[route]) {
       this.props.navigator.push(this.props.routeLinks[route].getRoute());
@@ -110,6 +123,16 @@ export default class RoutableScene extends Component {
     }
   }
 
+  /*
+   * Wrapper for goNext to allow passing argument.
+   */
+  goBackHandler() {
+    this.goBack();
+  }
+
+  /*
+   * Drops back to the left scene.
+   */
   goBack() {
     if (this.props.routeLinks.back) {
       this.props.navigator.popToRoute(this.props.routeLinks.back.getRoute());
@@ -117,6 +140,13 @@ export default class RoutableScene extends Component {
       this.props.navigator.pop();
     }
     this.onGoBack();
+  }
+
+  /*
+   * Wrapper for goNext to allow passing argument.
+   */
+  goHomeHandler() {
+    this.goHome();
   }
 
   goHome() {

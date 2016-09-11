@@ -52,7 +52,7 @@ describe('<RoutableScene />', () => {
 
       expect(navBar.props.leftButton).to.exist();
       expect(navBar.props.leftButton.title).to.equal('<');
-      expect(navBar.props.leftButton.handler.name).to.equal('bound goBack');
+      expect(navBar.props.leftButton.handler.name).to.equal('bound goBackHandler');
     });
 
     it('will disable without leftIs', () => {
@@ -88,7 +88,7 @@ describe('<RoutableScene />', () => {
       const navBar = wrapper.find('NavigationBar').get(0);
       expect(navBar.props.rightButton).to.exist();
       expect(navBar.props.rightButton.title).to.equal(routeLinks.next.title);
-      expect(navBar.props.rightButton.handler.name).to.equal('bound goNext');
+      expect(navBar.props.rightButton.handler.name).to.equal('bound goNextHandler');
     });
 
     it('will enable with routeLinks.home and rightIs=home', () => {
@@ -102,7 +102,7 @@ describe('<RoutableScene />', () => {
       const navBar = wrapper.find('NavigationBar').get(0);
       expect(navBar.props.rightButton).to.exist();
       expect(navBar.props.rightButton.title).to.equal(routeLinks.home.title);
-      expect(navBar.props.rightButton.handler.name).to.equal('bound goHome');
+      expect(navBar.props.rightButton.handler.name).to.equal('bound goHomeHandler');
     });
 
     it('will disable with routeLinks but without rightIs', () => {
