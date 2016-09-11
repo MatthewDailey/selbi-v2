@@ -126,7 +126,5 @@ routeLinks[publishScene.id] = {
   },
 };
 
-
-module.exports.newListingRoutesLinks = routeLinks;
-
-module.exports.newListingFirstScene = cameraScene;
+module.exports.routesLinks = routeLinks;
+module.exports.firstScene = cameraScene;

@@ -13,7 +13,7 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
-import { newListingFirstScene, newListingRoutesLinks } from './src/scenes/newListingFlow';
+import NewListingFlow from './src/scenes/newListingFlow';
 
 import ChatListScene from './src/scenes/ChatListScene';
 
@@ -95,11 +95,11 @@ let routeLinks = {};
 routeLinks[localListingScene.id] = {
   next: {
     title: 'Sell',
-    getRoute: () => newListingFirstScene,
+    getRoute: () => NewListingFlow.firstScene,
   },
 };
 
-routeLinks = Object.assign(routeLinks, newListingRoutesLinks);
+routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
