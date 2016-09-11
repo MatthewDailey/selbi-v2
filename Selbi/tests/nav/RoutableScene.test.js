@@ -202,6 +202,24 @@ describe('<RoutableScene />', () => {
       navigatorMock.verify();
     });
 
+    it('will not call push on goNext with non-existant route', () => {
+      const nextRoute = {};
+      navigatorMock.expects('push').never();
+
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        navigator: navigatorApi,
+        routeLinks: {
+          next: {
+            getRoute: () => nextRoute,
+            title: 'next',
+          },
+        },
+      });
+      scene.goNext('unknown route');
+      navigatorMock.verify();
+    });
+
     it('wont call push on goNext if shouldGoNext returns false', () => {
       const nextRoute = {};
       navigatorMock.expects('push').never();
