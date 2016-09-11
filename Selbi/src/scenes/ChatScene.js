@@ -32,14 +32,15 @@ export default class ChatScene extends RoutableScene {
   }
 
   componentWillMount() {
+    const sellerUid = this.props.chatData.listingData.sellerId;
     const promiseBuyerPublicData = loadUserPublicData(this.props.chatData.buyerUid);
-    const promiseSellerPublicData = loadUserPublicData(this.props.chatData.sellerUid);
+    const promiseSellerPublicData = loadUserPublicData(sellerUid);
 
     Promise.all([promiseBuyerPublicData, promiseSellerPublicData])
       .then((chatUserPublicData) => {
         const loadedUidToName = {};
         loadedUidToName[this.props.chatData.buyerUid] = chatUserPublicData[0].val().displayName;
-        loadedUidToName[this.props.chatData.sellerUid] = chatUserPublicData[1].val().displayName;
+        loadedUidToName[sellerUid] = chatUserPublicData[1].val().displayName;
         return new Promise((resolve) => {
           this.setState({
             uidToName: loadedUidToName,
@@ -51,7 +52,7 @@ export default class ChatScene extends RoutableScene {
         });
       })
       .then(() => {
-        loadMessages(this.props.chatData.listingId, this.props.chatData.buyerUid)
+        loadMessages(this.props.chatData.listingKey, this.props.chatData.buyerUid)
           .then((snapshot) => {
             if (snapshot.exists()) {
               const allMessages = [];
@@ -69,7 +70,7 @@ export default class ChatScene extends RoutableScene {
 
     this.setState({
       unsubscribeFunction: subscribeToNewMessages(
-        this.props.chatData.listingId,
+        this.props.chatData.listingKey,
         this.props.chatData.buyerUid,
         (newMessageSnapshot) => {
           const newMessagee = this.convertDbMessageToUiMessage(
@@ -93,7 +94,7 @@ export default class ChatScene extends RoutableScene {
   onSend(messages = []) {
     console.log(this.props.chatData);
     messages.forEach((message) =>
-      sendMessage(this.props.chatData.listingId, this.props.chatData.buyerUid, message.text));
+      sendMessage(this.props.chatData.listingKey, this.props.chatData.buyerUid, message.text));
   }
 
   renderWithNavBar() {

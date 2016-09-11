@@ -23,7 +23,7 @@ class ItemView extends Component {
           this.props.imageKey,
           this.props.imageData,
           this.props.listing.key,
-          this.props.listing.val()
+          this.props.listing.val(),
         );
         this.props.openSimpleScene(
           <ListingDetailScene

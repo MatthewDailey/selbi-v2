@@ -55,7 +55,7 @@ export default class ChatListScene extends RoutableScene {
         chats={chats}
         openChatScene={(data) => this.openSimpleScene(
           <ChatScene
-            title={data.title}
+            title={data.listingData.title}
             chatData={data}
             leftIs="back"
           />

@@ -266,9 +266,8 @@ function getListingTitle(listingId) {
     .then((listingSnapShot) => {
       if (listingSnapShot.exists()) {
         return Promise.resolve({
-          title: listingSnapShot.val().title,
-          listingId: listingId,
-          sellerUid: listingSnapShot.val().sellerId,
+          listingKey: listingId,
+          listingData: listingSnapShot.val(),
         });
       } else {
         throw new Error('could not find listing');
@@ -302,7 +301,6 @@ function loadChatDetailsFromUserChats(userChatsData) {
     }
 
     if (sellingData) {
-      console.log()
       Object.keys(sellingData).forEach((listingId) => {
         Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
           getListingTitle(listingId)

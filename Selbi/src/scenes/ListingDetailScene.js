@@ -91,7 +91,8 @@ class ListingDetailScene extends RoutableScene {
         createChatAsBuyer(this.props.listingKey, listingData.sellerId);
         const chatData = {
           title: listingData.title,
-          listingId: this.props.listingKey,
+          listingKey: this.props.listingKey,
+          listingData: this.props.listingData,
           sellerUid: listingData.sellerId,
           buyerUid: getUser().uid,
         };

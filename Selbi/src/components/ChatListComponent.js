@@ -41,7 +41,7 @@ export default class ChatListComponent extends Component {
         dataSource={this.state.dataSource}
         renderRow={(data) => (
           <ChatListItem
-            chatTitle={data.title}
+            chatTitle={data.listingData.title}
             chatType={data.type}
             openChatScene={() => this.props.openChatScene(data)}
           />)}
@@ -56,9 +56,8 @@ ChatListComponent.propTypes = {
   chats: React.PropTypes.arrayOf((propValue, key) => {
     const chatData = propValue[key];
     if (!chatData.buyerUid
-      || !chatData.sellerUid
-      || !chatData.listingId
-      || !chatData.title
+      || !chatData.listingKey
+      || !chatData.listingData
       || !chatData.type) {
       return Error(`ChatData is missing a property ${JSON.stringify(chatData, undefined, 4)}`);
     }
