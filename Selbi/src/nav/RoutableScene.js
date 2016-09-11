@@ -40,7 +40,7 @@ export function withNavigatorProps(reactElement) {
 export default class RoutableScene extends Component {
   constructor(props) {
     super(props);
-    this.goMenu = this.goMenu.bind(this)
+    this.goMenu = this.goMenu.bind(this);
     this.goHome = this.goHome.bind(this);
     this.goNext = this.goNext.bind(this);
     this.goBack = this.goBack.bind(this);
