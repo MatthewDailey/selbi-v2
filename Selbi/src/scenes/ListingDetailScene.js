@@ -69,7 +69,7 @@ export default class ListingDetailScene extends RoutableScene {
     }
 
     const imageData = this.props.imageData;
-    const listingData = this.props.listingData.val();
+    const listingData = this.props.listingData;
 
     const openChat = () => {
       if (!getUser()) {
@@ -86,14 +86,13 @@ export default class ListingDetailScene extends RoutableScene {
       } else if (listingData.sellerId === getUser().uid) {
         Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
       } else {
-        createChatAsBuyer(this.props.listingData.key, listingData.sellerId);
+        createChatAsBuyer(this.props.listingKey, listingData.sellerId);
         const chatData = {
           title: listingData.title,
-          listingId: this.props.listingData.key,
+          listingId: this.props.listingKey,
           sellerUid: listingData.sellerId,
           buyerUid: getUser().uid,
         };
-        console.log(chatData)
         this.openSimpleScene(
           <ChatScene
             title={chatData.title}

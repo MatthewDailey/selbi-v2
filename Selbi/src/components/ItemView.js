@@ -22,8 +22,10 @@ class ItemView extends Component {
           <ListingDetailScene
             title={this.props.listing.val().title}
             leftIs="back"
+            imageKey={this.props.imageKey}
             imageData={this.props.imageData}
-            listingData={this.props.listing}
+            listingKey={this.props.listing.key}
+            listingData={this.props.listing.val()}
           />
         );
       };
