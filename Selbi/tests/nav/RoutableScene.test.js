@@ -202,6 +202,28 @@ describe('<RoutableScene />', () => {
       navigatorMock.verify();
     });
 
+    it('will call push on getNext for custom arg', () => {
+      const nextRoute = {};
+      navigatorMock.expects('push').withArgs(nextRoute);
+
+      navigatorMock.expects('pop').never();
+      navigatorMock.expects('resetTo').never();
+      navigatorMock.expects('popToRoute').never();
+      navigatorMock.expects('popToTop').never();
+      const scene = new RoutableScene({
+        leftIs: 'back',
+        navigator: navigatorApi,
+        routeLinks: {
+          coolRoute: {
+            getRoute: () => nextRoute,
+            title: 'next',
+          },
+        },
+      });
+      scene.goNext('coolRoute');
+      navigatorMock.verify();
+    });
+
     it('will not call push on goNext with non-existant route', () => {
       const nextRoute = {};
       navigatorMock.expects('push').never();
