@@ -13,11 +13,7 @@ import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
-import SimpleCamera from './src/scenes/newListingFlow/CameraScene';
-import ApproveImageScene from './src/scenes/newListingFlow/ApproveImageScene';
-import PublishScene from './src/scenes/newListingFlow/PublishScene';
-import PriceInputScene from './src/scenes/newListingFlow/PriceInputScene';
-import TitleInputScene from './src/scenes/newListingFlow/TitleInputScene';
+import { newListingFirstScene, newListingRoutesLinks } from './src/scenes/newListingFlow';
 
 import ChatListScene from './src/scenes/ChatListScene';
 
@@ -27,8 +23,8 @@ import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyLi
   setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
 
-import { registerWithEmail, signInWithEmail, signOut, getUser, createListing, createUser,
-  publishImage, addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
+import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
+  addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
@@ -63,21 +59,6 @@ const listenForUserListings = (user) => {
 };
 addAuthStateChangeListener(listenForUserListings);
 
-const priceInputScene = {
-  it: 'price-listing',
-  renderContent: withNavigatorProps(
-    <PriceInputScene
-      title="Create Listing (2/3)"
-      leftIs="back"
-      rightIs="next"
-      inputTitle="How much do you want to sell for?"
-      placeholder="USD"
-      isNumeric
-      floatingLabel
-    />
-  ),
-};
-
 const localListingScene = {
   id: 'listings-scene',
   renderContent: withNavigatorProps(
@@ -108,112 +89,17 @@ const chatListScene = {
   ),
 };
 
-const loginScene = {
-  id: 'login-scene',
-  renderContent: withNavigatorProps(
-    <SignInOrRegisterScene
-      title="Wait! One more thing."
-      leftIs="back"
-      rightIs="next"
-      registerWithEmail={registerWithEmail}
-      signInWithEmail={signInWithEmail}
-      createUser={createUser}
-    />),
-};
+let routeLinks = {};
 
-const publishScene = {
-  id: 'post-login',
-  renderContent: withNavigatorProps(
-    <PublishScene
-      title=""
-      rightIs="home"
-      createListing={createListing}
-      publishImage={publishImage}
-    />
-  ),
-};
-
-const titleScene = {
-  id: 'title-scene',
-  renderContent: withNavigatorProps(
-    <TitleInputScene
-      title="Create Listing (3/3)"
-      leftIs="back"
-      rightIs="next"
-      inputTitle="What are you selling?"
-      placeholder="Eg. 'Magic coffee table!'"
-    />
-  ),
-};
-
-const cameraScene = {
-  id: 'b',
-  renderContent: withNavigatorProps(
-    <SimpleCamera
-      title="Create Listing (1/3)"
-      leftIs="back"
-      rightIs="next"
-    />),
-};
-
-const imageScene = {
-  id: 'c',
-  renderContent: withNavigatorProps(
-    <ApproveImageScene
-      title=""
-      leftIs="back"
-      rightIs="next"
-    />),
-};
-
-const routeLinks = {};
-
+// Link local listings to sell flow.
 routeLinks[localListingScene.id] = {
   next: {
     title: 'Sell',
-    getRoute: () => cameraScene,
+    getRoute: () => newListingFirstScene,
   },
 };
-routeLinks[cameraScene.id] = {
-  next: {
-    title: '',
-    getRoute: () => imageScene,
-  },
-};
-routeLinks[imageScene.id] = {
-  next: {
-    title: 'Accept Photo',
-    getRoute: () => priceInputScene,
-  },
-};
-routeLinks[priceInputScene.id] = {
-  next: {
-    title: 'OK',
-    getRoute: () => titleScene,
-  },
-};
-routeLinks[titleScene.id] = {
-  next: {
-    title: 'Post',
-    getRoute: () => {
-      if (getUser()) {
-        return publishScene;
-      }
-      return loginScene;
-    },
-  },
-};
-routeLinks[loginScene.id] = {
-  next: {
-    title: '',
-    getRoute: () => publishScene,
-  },
-};
-routeLinks[publishScene.id] = {
-  home: {
-    title: 'Done',
-  },
-};
+
+routeLinks = Object.assign(routeLinks, newListingRoutesLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
