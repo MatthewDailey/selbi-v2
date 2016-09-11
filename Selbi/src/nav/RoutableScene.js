@@ -51,6 +51,14 @@ export default class RoutableScene extends Component {
     // Implemented by children.
   }
 
+  onGoBack() {
+    // Implemented by children.
+  }
+
+  onGoNext(route) {
+    // Implemented by children.
+  }
+
   getLeftButton() {
     const leftButton = {
       tintColor: colors.secondary,
@@ -98,6 +106,7 @@ export default class RoutableScene extends Component {
   goNext(route = 'next') {
     if (this.shouldGoNext(route) && this.props.routeLinks[route]) {
       this.props.navigator.push(this.props.routeLinks[route].getRoute());
+      this.onGoNext(route);
     }
   }
 
@@ -107,6 +116,7 @@ export default class RoutableScene extends Component {
     } else {
       this.props.navigator.pop();
     }
+    this.onGoBack();
   }
 
   goHome() {
