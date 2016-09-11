@@ -22,6 +22,7 @@ import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
   setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
+import listingDetailReducer from './src/reducers/ListingDetailReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
@@ -40,6 +41,7 @@ const store = createStore(combineReducers({
   localListings: localListingsReducer,
   myListings: myListingsReducer,
   images: imagesReducer,
+  listingDetails: listingDetailReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
