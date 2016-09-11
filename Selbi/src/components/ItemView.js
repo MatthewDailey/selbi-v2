@@ -5,6 +5,7 @@ import { MKSpinner } from 'react-native-material-kit';
 
 import { loadImage } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
+import { setListingDetails } from '../reducers/ListingDetailReducer';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -18,14 +19,16 @@ class ItemView extends Component {
   getImageView(fitHeight) {
     if (this.props.imageData) {
       const openDetailView = () => {
+        this.props.setListingDetails(
+          this.props.imageKey,
+          this.props.imageData,
+          this.props.listing.key,
+          this.props.listing.val()
+        );
         this.props.openSimpleScene(
           <ListingDetailScene
             title={this.props.listing.val().title}
             leftIs="back"
-            imageKey={this.props.imageKey}
-            imageData={this.props.imageData}
-            listingKey={this.props.listing.key}
-            listingData={this.props.listing.val()}
           />
         );
       };
@@ -94,6 +97,7 @@ ItemView.propTypes = {
   imageData: React.PropTypes.object, // Value for /images/$imageKey
   storeImageData: React.PropTypes.func.isRequired,
   openSimpleScene: React.PropTypes.func.isRequired,
+  setListingDetails: React.PropTypes.func.isRequired,
 };
 
 // TODO: Get ride of hard coded image1.
@@ -108,6 +112,15 @@ const mapStateToProps = (state, currentProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
+    setListingDetails: (imageKey, imageData, listingKey, listingData) => dispatch(
+      setListingDetails({
+        key: imageKey,
+        data: imageData,
+      }, {
+        key: listingKey,
+        data: listingData,
+      })
+    ),
   };
 };
 

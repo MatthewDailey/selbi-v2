@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { InteractionManager, Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
@@ -6,6 +7,8 @@ import { MKButton } from 'react-native-material-kit';
 import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser }
   from '../firebase/FirebaseConnector';
 import ChatScene from './ChatScene';
+
+import { clearListingDetails } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -35,7 +38,7 @@ const Button = MKButton.button()
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
-export default class ListingDetailScene extends RoutableScene {
+class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
     this.state = { renderPlaceholderOnly: true };
@@ -70,7 +73,6 @@ export default class ListingDetailScene extends RoutableScene {
 
     const imageData = this.props.imageData;
     const listingData = this.props.listingData;
-
     const openChat = () => {
       if (!getUser()) {
         this.openSimpleScene(
@@ -153,3 +155,21 @@ export default class ListingDetailScene extends RoutableScene {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return state.listingDetails;
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    clearListingDetailStore: () => {
+      dispatch(clearListingDetails());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ListingDetailScene);
