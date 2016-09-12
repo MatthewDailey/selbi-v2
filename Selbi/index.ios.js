@@ -63,6 +63,11 @@ const listenForUserListings = (user) => {
 };
 addAuthStateChangeListener(listenForUserListings);
 
+const chatFromDetailScene = {
+  id: 'chat-details-scene',
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
+};
+
 const chatScene = {
   id: 'chat-scene',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
@@ -161,7 +166,7 @@ routeLinks[listingDetailScene.id] = {
   chat: {
     getRoute: () => {
       if (getUser()) {
-        return chatScene;
+        return chatFromDetailScene;
       }
       return chatSignInScene;
     },
@@ -173,6 +178,12 @@ routeLinks[chatSignInScene.id] = {
     title: '',
     getRoute: () => chatScene,
   },
+};
+
+routeLinks[chatFromDetailScene.id] = {
+  back: {
+    getRoute: () => listingDetailScene,
+  }
 };
 
 routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);

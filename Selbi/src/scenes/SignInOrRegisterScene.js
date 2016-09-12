@@ -112,7 +112,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
     const lastName = this.state.lastName;
 
     if (!firstName || !lastName) {
-      Alert.alert('First and last name must be filled out.')
+      Alert.alert('First and last name must be filled out.');
       return Promise.resolve();
     }
 
@@ -134,6 +134,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         }
       })
       .catch((error) => {
+        console.log(error);
         Alert.alert(error.message);
       });
   }
@@ -156,7 +157,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .catch((error) => Alert.alert(error.message));
+      .catch((error) => {
+        console.log(error);
+        Alert.alert(error.message);
+      });
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
