@@ -4,7 +4,7 @@ import { InteractionManager, Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser }
+import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser, loadImage }
   from '../firebase/FirebaseConnector';
 import ChatScene from './ChatScene';
 
@@ -51,7 +51,12 @@ class ListingDetailScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly) {
+    if (this.state.renderPlaceholderOnly || !this.props.imageData) {
+      if (!this.props.imageData) {
+        loadImage(this.props.imageKey).then((imageSnapshot) =>
+          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
+      }
+
       return (
         <View
           style={{
