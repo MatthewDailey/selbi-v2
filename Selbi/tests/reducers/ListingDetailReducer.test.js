@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 
-import listingDetailReducer, { clearListingDetails, setListingDetails }
+import listingDetailReducer, { clearListingDetails, setListingDetails, setListingDetailsOnly }
   from '../../src/reducers/ListingDetailReducer';
 
 chai.use(dirtyChai);
@@ -24,11 +24,27 @@ describe('ListingDetailReducer', () => {
   it('can set details', () => {
     const initialState = listingDetailReducer();
 
+    const testBuyerUid = 'buyerUid';
     const afterSettingState = listingDetailReducer(initialState,
-      setListingDetails(testImage, testListing));
+      setListingDetails(testBuyerUid, testImage, testListing));
 
+    expect(afterSettingState.buyerUid).to.equal(testBuyerUid);
     expect(afterSettingState.imageKey).to.equal(testImage.key);
     expect(afterSettingState.imageData).to.equal(testImage.data);
+    expect(afterSettingState.listingKey).to.equal(testListing.key);
+    expect(afterSettingState.listingData).to.equal(testListing.data);
+  });
+
+  it('can set only listing details', () => {
+    const initialState = listingDetailReducer();
+
+    const testBuyerUid = 'buyerUid';
+    const afterSettingState = listingDetailReducer(initialState,
+      setListingDetailsOnly(testBuyerUid, testListing));
+
+    expect(afterSettingState.buyerUid).to.equal(testBuyerUid);
+    expect(afterSettingState.imageKey).to.not.exist();
+    expect(afterSettingState.imageData).to.not.exist();
     expect(afterSettingState.listingKey).to.equal(testListing.key);
     expect(afterSettingState.listingData).to.equal(testListing.data);
   });
@@ -39,7 +55,7 @@ describe('ListingDetailReducer', () => {
     expect(initialState).to.be.empty();
 
     const afterSettingState = listingDetailReducer(initialState,
-      setListingDetails(testImage, testListing));
+      setListingDetails('buyerUid', testImage, testListing));
 
     expect(afterSettingState).to.not.be.empty();
 
