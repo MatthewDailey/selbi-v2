@@ -97,12 +97,20 @@ const mapStateToProps = (state, currentProps) => {
   };
 };
 
+function getUserUid() {
+  const user = getUser();
+  if (user) {
+    return user.uid;
+  }
+  return undefined;
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
     setListingDetails: (listingKey, listingData) => dispatch(
       setListingDetails(
-        getUser().uid,
+        getUserUid(),
         {
           key: listingKey,
           data: listingData,

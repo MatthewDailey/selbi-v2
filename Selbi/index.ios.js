@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
@@ -13,7 +14,6 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
 import NewListingFlow from './src/scenes/newListingFlow';
-
 import ChatListScene from './src/scenes/ChatListScene';
 
 import ChatScene from './src/scenes/listingPurchaseFlow/ChatScene';
@@ -24,9 +24,9 @@ import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
   setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
-import listingDetailReducer from './src/reducers/ListingDetailReducer';
+import listingDetailReducer, { setBuyerUid } from './src/reducers/ListingDetailReducer';
 
-import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
+import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, createChatAsBuyer,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
@@ -103,6 +103,38 @@ const chatListScene = {
   ),
 };
 
+const mapStateToProps = (state) => {
+  return {
+    onSignedIn: (buyerUid) => {
+      console.log(store.listingDetails)
+      store.dispatch(setBuyerUid(buyerUid));
+      createChatAsBuyer(
+        state.listingDetails.listingKey,
+        state.listingDetails.listingData.sellerId);
+    },
+  };
+};
+
+const ChatSignIn = connect(
+  mapStateToProps,
+  undefined
+)(SignInOrRegisterScene);
+
+
+const chatSignInScene = {
+  id: 'chat-login-scene',
+  renderContent: withNavigatorProps(
+    <ChatSignIn
+      title="Sign in to chat."
+      leftIs="back"
+      rightIs="next"
+      registerWithEmail={registerWithEmail}
+      signInWithEmail={signInWithEmail}
+      createUser={createUser}
+    />),
+};
+
+
 let routeLinks = {};
 
 // Link local listings to sell flow.
@@ -124,12 +156,29 @@ routeLinks[myListingsScene.id] = {
 
 routeLinks[chatListScene.id] = {
   chat: {
-    getRoute: () => chatScene,
+    getRoute: () => {
+      if (getUser()) {
+        return chatScene;
+      }
+      return chatSignInScene;
+    },
   },
 };
 
 routeLinks[listingDetailScene.id] = {
   chat: {
+    getRoute: () => {
+      if (getUser()) {
+        return chatScene;
+      }
+      return chatSignInScene;
+    },
+  },
+};
+
+routeLinks[chatSignInScene.id] = {
+  next: {
+    title: '',
     getRoute: () => chatScene,
   },
 };

@@ -34,6 +34,7 @@ class ChatScene extends RoutableScene {
 
   componentWillMount() {
     const sellerUid = this.props.listingData.sellerId;
+
     const promiseBuyerPublicData = loadUserPublicData(this.props.buyerUid);
     const promiseSellerPublicData = loadUserPublicData(sellerUid);
 
@@ -116,11 +117,16 @@ class ChatScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
+  let computedBuyerUid = state.listingDetails.buyerUid;
+  if (!computedBuyerUid) {
+    computedBuyerUid = getUser().uid;
+  }
+
   return {
     title: state.listingDetails.listingData.title,
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
-    buyerUid: state.listingDetails.buyerUid,
+    buyerUid: computedBuyerUid,
   };
 };
 

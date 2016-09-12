@@ -70,5 +70,5 @@ export default class ListingsComponent extends Component {
 ListingsComponent.propTypes = {
   refresh: React.PropTypes.func,
   listings: React.PropTypes.arrayOf(React.PropTypes.object),
-  openSimpleScene: React.PropTypes.func,
+  openDetailScene: React.PropTypes.func,
 };

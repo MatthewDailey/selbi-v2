@@ -79,21 +79,12 @@ class ListingDetailScene extends RoutableScene {
     const imageData = this.props.imageData;
     const listingData = this.props.listingData;
     const openChat = () => {
-      if (!getUser()) {
-        this.openSimpleScene(
-          <SignInOrRegisterScene
-            title="Please sign in to message."
-            leftIs="back"
-            registerWithEmail={registerWithEmail}
-            signInWithEmail={signInWithEmail}
-            createUser={createUser}
-            goBackOnComplete
-          />
-        );
-      } else if (listingData.sellerId === getUser().uid) {
+      if (getUser() && listingData.sellerId === getUser().uid) {
         Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
       } else {
-        createChatAsBuyer(getUser().uid, this.props.listingKey, listingData.sellerId);
+        if (getUser()) {
+          createChatAsBuyer(this.props.listingKey, listingData.sellerId);
+        }
         this.goNext('chat');
       }
     };
