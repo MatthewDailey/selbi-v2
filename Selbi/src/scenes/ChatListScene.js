@@ -58,11 +58,7 @@ class ChatListScene extends RoutableScene {
         chats={chats}
         openChatScene={(data) => {
           this.props.setListingDetails(data.buyerUid, data.listingKey, data.listingData);
-          this.openSimpleScene(
-            <ChatScene
-              leftIs="back"
-            />
-          );
+          this.goNext('chat');
         }}
       />
     );
