@@ -153,12 +153,7 @@ routeLinks[myListingsScene.id] = {
 
 routeLinks[chatListScene.id] = {
   chat: {
-    getRoute: () => {
-      if (getUser()) {
-        return chatScene;
-      }
-      return chatSignInScene;
-    },
+    getRoute: () => chatScene, // Must be logged in to see chat list scene.
   },
 };
 

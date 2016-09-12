@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../../nav/RoutableScene';
@@ -34,6 +34,13 @@ class ChatScene extends RoutableScene {
 
   componentWillMount() {
     const sellerUid = this.props.listingData.sellerId;
+
+    if (sellerUid === this.props.buyerUid) {
+      // there is an emoji inline.
+      Alert.alert('This is your listing. You already own this! 😀', '',
+        [{ text: 'OK', onPress: this.goBack }]);
+      return;
+    }
 
     const promiseBuyerPublicData = loadUserPublicData(this.props.buyerUid);
     const promiseSellerPublicData = loadUserPublicData(sellerUid);
