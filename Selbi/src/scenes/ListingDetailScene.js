@@ -47,6 +47,10 @@ class ListingDetailScene extends RoutableScene {
     });
   }
 
+  componentWillUnmount() {
+    this.props.clearListingDetailStore();
+  }
+
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly || !this.props.imageData) {
       if (!this.props.imageData) {
