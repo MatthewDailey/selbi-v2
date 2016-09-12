@@ -13,12 +13,12 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 
 import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
+import ChatFlow from './src/scenes/chatFlow';
 
 import LocalListingScene from './src/scenes/LocalListingsScene';
 import ChatListScene from './src/scenes/ChatListScene';
 import MyListingsScene from './src/scenes/MyListingsScene';
 
-import ChatScene from './src/scenes/listingPurchaseFlow/ChatScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
@@ -94,11 +94,6 @@ const chatListScene = {
   ),
 };
 
-const chatScene = {
-  id: 'chat-scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
-};
-
 let routeLinks = {};
 
 // Link local listings to sell flow.
@@ -120,12 +115,13 @@ routeLinks[myListingsScene.id] = {
 
 routeLinks[chatListScene.id] = {
   chat: {
-    getRoute: () => chatScene, // Must be logged in to see chat list scene.
+    getRoute: () => ChatFlow.firstScene, // Must be logged in to see chat list scene.
   },
 };
 
 routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
+routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (

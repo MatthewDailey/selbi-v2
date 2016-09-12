@@ -84,6 +84,7 @@ export default class RoutableScene extends Component {
       tintColor: colors.secondary,
     };
 
+    console.log(this.props.routeLinks);
     if (this.props.routeLinks.next && this.props.rightIs === 'next') {
       rightButton.handler = this.goNextHandler;
       rightButton.title = this.props.routeLinks.next.title;
