@@ -173,7 +173,7 @@ routeLinks[listingDetailScene.id] = {
 routeLinks[chatSignInScene.id] = {
   next: {
     title: '',
-    getRoute: () => chatScene,
+    getRoute: () => chatFromDetailScene,
   },
 };
 
