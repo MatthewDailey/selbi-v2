@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
@@ -9,7 +10,7 @@ import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewM
 
 import colors from '../../colors';
 
-export default class ChatScene extends RoutableScene {
+class ChatScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +33,7 @@ export default class ChatScene extends RoutableScene {
   }
 
   componentWillMount() {
-    const sellerUid = this.props.chatData.listingData.sellerId;
+    const sellerUid = this.props.listingData.sellerId;
     const promiseBuyerPublicData = loadUserPublicData(this.props.chatData.buyerUid);
     const promiseSellerPublicData = loadUserPublicData(sellerUid);
 
@@ -52,7 +53,7 @@ export default class ChatScene extends RoutableScene {
         });
       })
       .then(() => {
-        loadMessages(this.props.chatData.listingKey, this.props.chatData.buyerUid)
+        loadMessages(this.props.listingKey, this.props.chatData.buyerUid)
           .then((snapshot) => {
             if (snapshot.exists()) {
               const allMessages = [];
@@ -70,7 +71,7 @@ export default class ChatScene extends RoutableScene {
 
     this.setState({
       unsubscribeFunction: subscribeToNewMessages(
-        this.props.chatData.listingKey,
+        this.props.listingKey,
         this.props.chatData.buyerUid,
         (newMessageSnapshot) => {
           const newMessagee = this.convertDbMessageToUiMessage(
@@ -94,7 +95,7 @@ export default class ChatScene extends RoutableScene {
   onSend(messages = []) {
     console.log(this.props.chatData);
     messages.forEach((message) =>
-      sendMessage(this.props.chatData.listingKey, this.props.chatData.buyerUid, message.text));
+      sendMessage(this.props.listingKey, this.props.chatData.buyerUid, message.text));
   }
 
   renderWithNavBar() {
@@ -114,3 +115,17 @@ export default class ChatScene extends RoutableScene {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return state.listingDetails;
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChatScene);

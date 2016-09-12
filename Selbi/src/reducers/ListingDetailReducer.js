@@ -2,6 +2,7 @@ import { getActionType } from './ActionUtils';
 
 const LD_SET_DETAILS = 'listing-details-set';
 const LD_CLEAR_DETAILS = 'listing-details-clear';
+const LD_SET_ONLY_LISTING = 'listing-details-only-listing';
 
 export default function (listingDetailsState = {}, action) {
   switch (getActionType(action)) {
@@ -31,3 +32,14 @@ export function setListingDetails(image, listing) {
     },
   };
 }
+
+export function setListingDetailsOnly(listing) {
+  return {
+    type: LD_SET_ONLY_LISTING,
+    data: {
+      listingKey: listing.key,
+      listingData: listing.data,
+    },
+  };
+}
+

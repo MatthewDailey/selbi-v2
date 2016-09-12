@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
@@ -9,11 +10,12 @@ import ChatScene from '../scenes/ChatScene';
 import ChatListComponent from '../components/ChatListComponent';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';
+import { setListingDetailsOnly } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default class ChatListScene extends RoutableScene {
+class ChatListScene extends RoutableScene {
   constructor(props) {
     super(props);
 
@@ -53,13 +55,16 @@ export default class ChatListScene extends RoutableScene {
       <ChatListComponent
         refresh={this.loadChatData}
         chats={chats}
-        openChatScene={(data) => this.openSimpleScene(
-          <ChatScene
-            title={data.listingData.title}
-            chatData={data}
-            leftIs="back"
-          />
-        )}
+        openChatScene={(data) => {
+          this.props.setListingDetails(data.listingKey, data.listingData);
+          this.openSimpleScene(
+            <ChatScene
+              title={data.listingData.title}
+              chatData={data}
+              leftIs="back"
+            />
+          );
+        }}
       />
     );
   }
@@ -93,3 +98,24 @@ export default class ChatListScene extends RoutableScene {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setListingDetails: (listingKey, listingData) => dispatch(
+      setListingDetailsOnly({
+        key: listingKey,
+        data: listingData,
+      })
+    ),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChatListScene);
