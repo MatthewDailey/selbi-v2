@@ -60,7 +60,6 @@ class ChatListScene extends RoutableScene {
           this.props.setListingDetails(data.buyerUid, data.listingKey, data.listingData);
           this.openSimpleScene(
             <ChatScene
-              title={data.listingData.title}
               leftIs="back"
             />
           );

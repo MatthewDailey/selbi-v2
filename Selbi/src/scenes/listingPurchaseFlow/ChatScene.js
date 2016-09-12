@@ -116,7 +116,12 @@ class ChatScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  return state.listingDetails;
+  return {
+    title: state.listingDetails.listingData.title,
+    listingKey: state.listingDetails.listingKey,
+    listingData: state.listingDetails.listingData,
+    buyerUid: state.listingDetails.buyerUid,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
