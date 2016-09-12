@@ -5,8 +5,8 @@ import { withNavigatorProps } from '../../nav/RoutableScene';
 import { setBuyerUid } from '../../reducers/ListingDetailReducer';
 
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
-import ChatScene from './ChatScene';
-import ListingDetailScene from './ListingDetailScene';
+import ChatScene from '../ChatScene';
+import ListingDetailScene from '../ListingDetailScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';

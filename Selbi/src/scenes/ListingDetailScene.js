@@ -4,13 +4,13 @@ import { InteractionManager, Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-import { getUser, loadImage } from '../../firebase/FirebaseConnector';
+import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
-import { clearListingDetails } from '../../reducers/ListingDetailReducer';
+import { clearListingDetails } from '../reducers/ListingDetailReducer';
 
-import styles from '../../../styles';
-import colors from '../../../colors';
-import RoutableScene from '../../nav/RoutableScene';
+import styles from '../../styles';
+import colors from '../../colors';
+import RoutableScene from '../nav/RoutableScene';
 
 const fontStyle = {
   margin: 10,

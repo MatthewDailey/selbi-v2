@@ -2,7 +2,7 @@ import React from 'react-native';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import ListingsScene from '../../src/scenes/LocalListingsScene';
+import ListingsScene from '../../src/scenes/rootScenes/LocalListingsScene';
 
 describe('<ListingsScene />', () => {
   it('can render', () => {

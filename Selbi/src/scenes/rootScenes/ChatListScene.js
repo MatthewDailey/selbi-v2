@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import { View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import RoutableScene from '../nav/RoutableScene';
-import SpinnerOverlay from '../components/SpinnerOverlay';
+import RoutableScene from '../../nav/RoutableScene';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
-import ChatListComponent from '../components/ChatListComponent';
+import ChatListComponent from '../../components/ChatListComponent';
 
-import { loadAllUserChats } from '../firebase/FirebaseConnector';
-import { setListingDetails } from '../reducers/ListingDetailReducer';
+import { loadAllUserChats } from '../../firebase/FirebaseConnector';
+import { setListingDetails } from '../../reducers/ListingDetailReducer';
 
-import styles from '../../styles';
-import colors from '../../colors';
+import styles from '../../../styles';
+import colors from '../../../colors';
 
 class ChatListScene extends RoutableScene {
   constructor(props) {

@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { InteractionManager, View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import RoutableScene from '../nav/RoutableScene';
-import ListingsListComponent from '../components/ListingsListComponent';
+import RoutableScene from '../../nav/RoutableScene';
+import ListingsListComponent from '../../components/ListingsListComponent';
 
-import styles from '../../styles';
-import colors from '../../colors';
+import styles from '../../../styles';
+import colors from '../../../colors';
 
 class MyListingsScene extends RoutableScene {
   constructor(props) {

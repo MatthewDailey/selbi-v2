@@ -15,9 +15,9 @@ import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 
-import LocalListingScene from './src/scenes/LocalListingsScene';
-import ChatListScene from './src/scenes/ChatListScene';
-import MyListingsScene from './src/scenes/MyListingsScene';
+import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
+import ChatListScene from './src/scenes/rootScenes/ChatListScene';
+import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 
 
 import newListingReducer from './src/reducers/NewListingReducer';

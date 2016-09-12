@@ -2,8 +2,8 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
-import ChatScene from '../listingPurchaseFlow/ChatScene';
-import ListingDetailScene from '../listingPurchaseFlow/ListingDetailScene';
+import ChatScene from '../ChatScene';
+import ListingDetailScene from '../ListingDetailScene';
 
 const chatScene = {
   id: 'chat-scene',

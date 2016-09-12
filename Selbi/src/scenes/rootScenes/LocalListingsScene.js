@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { loadListingByLocation } from '../firebase/FirebaseConnector';
-import RoutableScene from '../nav/RoutableScene';
-import ListingsListComponent from '../components/ListingsListComponent';
+import { loadListingByLocation } from '../../firebase/FirebaseConnector';
+import RoutableScene from '../../nav/RoutableScene';
+import ListingsListComponent from '../../components/ListingsListComponent';
 
-import { setLocalListings } from '../reducers/LocalListingsReducer';
+import { setLocalListings } from '../../reducers/LocalListingsReducer';
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
