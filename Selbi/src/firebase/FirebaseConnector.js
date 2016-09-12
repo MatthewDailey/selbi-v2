@@ -72,11 +72,10 @@ export function signInWithEmail(email, password) {
     .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
     .then((userSnapshot) => {
       if (!userSnapshot.exists()) {
-        const currentUser = getUser();
-        const names = currentUser.displayName.split(' ');
-        return insertUserInDatabase(`${names[0]} ${names[1]}`);
+        return insertUserInDatabase(getUser().displayName)
+          .then(() => Promise.resolve(getUser().uid));
       }
-      return Promise.resolve();
+      return Promise.resolve(getUser().uid);
     });
 }
 
