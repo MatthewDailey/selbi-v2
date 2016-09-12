@@ -4,15 +4,12 @@ import { InteractionManager, Image, View, Text, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser, loadImage }
-  from '../../firebase/FirebaseConnector';
-import ChatScene from './ChatScene';
+import { getUser, loadImage } from '../../firebase/FirebaseConnector';
 
 import { clearListingDetails } from '../../reducers/ListingDetailReducer';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
-import SignInOrRegisterScene from '../SignInOrRegisterScene';
 import RoutableScene from '../../nav/RoutableScene';
 
 const fontStyle = {

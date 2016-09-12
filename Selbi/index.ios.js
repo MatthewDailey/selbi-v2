@@ -1,32 +1,33 @@
 import React from 'react';
-import { connect } from 'react-redux';
+
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 
-import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
-import LocalListingScene from './src/scenes/LocalListingsScene';
 
+import Menu from './src/nav/Menu';
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
-import MyListingsScene from './src/scenes/MyListingsScene';
 
 import NewListingFlow from './src/scenes/newListingFlow';
+import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
+
+import LocalListingScene from './src/scenes/LocalListingsScene';
 import ChatListScene from './src/scenes/ChatListScene';
+import MyListingsScene from './src/scenes/MyListingsScene';
 
 import ChatScene from './src/scenes/listingPurchaseFlow/ChatScene';
-import ListingDetailScene from './src/scenes/listingPurchaseFlow/ListingDetailScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
   setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
-import listingDetailReducer, { setBuyerUid } from './src/reducers/ListingDetailReducer';
+import listingDetailReducer from './src/reducers/ListingDetailReducer';
 
-import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, createChatAsBuyer,
+import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
@@ -63,21 +64,6 @@ const listenForUserListings = (user) => {
 };
 addAuthStateChangeListener(listenForUserListings);
 
-const chatFromDetailScene = {
-  id: 'chat-details-scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
-};
-
-const chatScene = {
-  id: 'chat-scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
-};
-
-const listingDetailScene = {
-  id: 'listing-detail-scene',
-  renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" />),
-};
-
 const localListingScene = {
   id: 'listings-scene',
   renderContent: withNavigatorProps(
@@ -108,31 +94,10 @@ const chatListScene = {
   ),
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSignedIn: (buyerUid) => dispatch(setBuyerUid(buyerUid)),
-  };
+const chatScene = {
+  id: 'chat-scene',
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
 };
-
-const ChatSignIn = connect(
-  undefined,
-  mapDispatchToProps
-)(SignInOrRegisterScene);
-
-
-const chatSignInScene = {
-  id: 'chat-login-scene',
-  renderContent: withNavigatorProps(
-    <ChatSignIn
-      title="Sign in to chat."
-      leftIs="back"
-      rightIs="next"
-      registerWithEmail={registerWithEmail}
-      signInWithEmail={signInWithEmail}
-      createUser={createUser}
-    />),
-};
-
 
 let routeLinks = {};
 
@@ -143,13 +108,13 @@ routeLinks[localListingScene.id] = {
     getRoute: () => NewListingFlow.firstScene,
   },
   details: {
-    getRoute: () => listingDetailScene,
+    getRoute: () => ListingPurchaseFlow.firstScene,
   },
 };
 
 routeLinks[myListingsScene.id] = {
   details: {
-    getRoute: () => listingDetailScene,
+    getRoute: () => ListingPurchaseFlow.firstScene,
   },
 };
 
@@ -159,31 +124,8 @@ routeLinks[chatListScene.id] = {
   },
 };
 
-routeLinks[listingDetailScene.id] = {
-  chat: {
-    getRoute: () => {
-      if (getUser()) {
-        return chatFromDetailScene;
-      }
-      return chatSignInScene;
-    },
-  },
-};
-
-routeLinks[chatSignInScene.id] = {
-  next: {
-    title: '',
-    getRoute: () => chatFromDetailScene,
-  },
-};
-
-routeLinks[chatFromDetailScene.id] = {
-  back: {
-    getRoute: () => listingDetailScene,
-  },
-};
-
 routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
+routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
