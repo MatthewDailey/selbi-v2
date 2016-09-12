@@ -110,10 +110,7 @@ const chatListScene = {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSignedIn: (buyerUid) => {
-      console.log(store.listingDetails)
-      dispatch(setBuyerUid(buyerUid));
-    },
+    onSignedIn: (buyerUid) => dispatch(setBuyerUid(buyerUid)),
   };
 };
 
@@ -183,7 +180,7 @@ routeLinks[chatSignInScene.id] = {
 routeLinks[chatFromDetailScene.id] = {
   back: {
     getRoute: () => listingDetailScene,
-  }
+  },
 };
 
 routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
