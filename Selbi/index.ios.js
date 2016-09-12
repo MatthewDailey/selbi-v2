@@ -6,8 +6,7 @@ import { setTheme } from 'react-native-material-kit';
 
 import Menu from './src/nav/Menu';
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
-import ListingScene from './src/scenes/LocalListingsScene';
-
+import LocalListingScene from './src/scenes/LocalListingsScene';
 
 import DrawerNavigator from './src/nav/DrawerNavigator';
 import { withNavigatorProps } from './src/nav/RoutableScene';
@@ -64,7 +63,7 @@ addAuthStateChangeListener(listenForUserListings);
 const localListingScene = {
   id: 'listings-scene',
   renderContent: withNavigatorProps(
-    <ListingScene
+    <LocalListingScene
       title="Near Me"
       leftIs="menu"
       rightIs="next"

@@ -5,15 +5,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
 import { createChatAsBuyer, getUser, registerWithEmail, signInWithEmail, createUser, loadImage }
-  from '../firebase/FirebaseConnector';
+  from '../../firebase/FirebaseConnector';
 import ChatScene from './ChatScene';
 
-import { clearListingDetails } from '../reducers/ListingDetailReducer';
+import { clearListingDetails } from '../../reducers/ListingDetailReducer';
 
-import styles from '../../styles';
-import colors from '../../colors';
-import SignInOrRegisterScene from './SignInOrRegisterScene';
-import RoutableScene from '../nav/RoutableScene';
+import styles from '../../../styles';
+import colors from '../../../colors';
+import SignInOrRegisterScene from '../SignInOrRegisterScene';
+import RoutableScene from '../../nav/RoutableScene';
 
 const fontStyle = {
   margin: 10,
@@ -157,6 +157,7 @@ class ListingDetailScene extends RoutableScene {
 const mapStateToProps = (state) => {
   const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
   return {
+    title: state.listingDetails.listingData.title,
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     imageKey: imageStoreKey,

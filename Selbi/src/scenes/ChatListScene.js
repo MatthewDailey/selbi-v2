@@ -6,7 +6,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
-import ChatScene from '../scenes/ChatScene';
+import ChatScene from './listingPurchaseFlow/ChatScene';
 import ChatListComponent from '../components/ChatListComponent';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';

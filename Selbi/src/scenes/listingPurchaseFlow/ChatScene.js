@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
-import RoutableScene from '../nav/RoutableScene';
+import RoutableScene from '../../nav/RoutableScene';
 
 import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages }
-  from '../firebase/FirebaseConnector';
+  from '../../firebase/FirebaseConnector';
 
-import colors from '../../colors';
+import colors from '../../../colors';
 
 class ChatScene extends RoutableScene {
   constructor(props) {

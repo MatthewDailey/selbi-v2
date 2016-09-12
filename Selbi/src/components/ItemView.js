@@ -10,7 +10,7 @@ import { setListingDetails } from '../reducers/ListingDetailReducer';
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
-import ListingDetailScene from '../scenes/ListingDetailScene';
+import ListingDetailScene from '../scenes/listingPurchaseFlow/ListingDetailScene';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -19,13 +19,9 @@ class ItemView extends Component {
   getImageView(fitHeight) {
     if (this.props.imageData) {
       const openDetailView = () => {
-        this.props.setListingDetails(
-          this.props.listing.key,
-          this.props.listing.val(),
-        );
+        this.props.setListingDetails(this.props.listing.key, this.props.listing.val());
         this.props.openSimpleScene(
           <ListingDetailScene
-            title={this.props.listing.val().title}
             leftIs="back"
           />
         );
