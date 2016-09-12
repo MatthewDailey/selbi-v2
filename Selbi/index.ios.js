@@ -103,21 +103,18 @@ const chatListScene = {
   ),
 };
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = (dispatch) => {
   return {
     onSignedIn: (buyerUid) => {
       console.log(store.listingDetails)
-      store.dispatch(setBuyerUid(buyerUid));
-      createChatAsBuyer(
-        state.listingDetails.listingKey,
-        state.listingDetails.listingData.sellerId);
+      dispatch(setBuyerUid(buyerUid));
     },
   };
 };
 
 const ChatSignIn = connect(
-  mapStateToProps,
-  undefined
+  undefined,
+  mapDispatchToProps
 )(SignInOrRegisterScene);
 
 

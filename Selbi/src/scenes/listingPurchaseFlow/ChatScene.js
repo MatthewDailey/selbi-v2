@@ -5,8 +5,8 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages }
-  from '../../firebase/FirebaseConnector';
+import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
+  createChatAsBuyer } from '../../firebase/FirebaseConnector';
 
 import colors from '../../../colors';
 
@@ -94,6 +94,10 @@ class ChatScene extends RoutableScene {
   }
 
   onSend(messages = []) {
+    if (this.state.messages.length === 0 && this.props.buyerUid === getUser().uid) {
+      createChatAsBuyer(this.props.listingKey, this.props.listingData.sellerId);
+    }
+
     messages.forEach((message) =>
       sendMessage(this.props.listingKey, this.props.buyerUid, message.text));
   }
