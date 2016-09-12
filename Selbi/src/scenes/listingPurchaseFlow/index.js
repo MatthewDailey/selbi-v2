@@ -7,6 +7,7 @@ import { setBuyerUid } from '../../reducers/ListingDetailReducer';
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
 import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
+import EditListingScene from '../EditListingScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
@@ -19,7 +20,7 @@ const chatFromDetailScene = {
 
 const listingDetailScene = {
   id: 'listing-detail-scene',
-  renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" />),
+  renderContent: withNavigatorProps(<EditListingScene leftIs="back" />),
 };
 
 
