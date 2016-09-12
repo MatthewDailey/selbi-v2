@@ -20,8 +20,6 @@ class ItemView extends Component {
     if (this.props.imageData) {
       const openDetailView = () => {
         this.props.setListingDetails(
-          this.props.imageKey,
-          this.props.imageData,
           this.props.listing.key,
           this.props.listing.val(),
         );
@@ -112,13 +110,9 @@ const mapStateToProps = (state, currentProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
-    setListingDetails: (imageKey, imageData, listingKey, listingData) => dispatch(
+    setListingDetails: (listingKey, listingData) => dispatch(
       setListingDetails(
         getUser().uid,
-        {
-          key: imageKey,
-          data: imageData,
-        },
         {
           key: listingKey,
           data: listingData,

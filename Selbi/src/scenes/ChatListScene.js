@@ -10,7 +10,7 @@ import ChatScene from '../scenes/ChatScene';
 import ChatListComponent from '../components/ChatListComponent';
 
 import { loadAllUserChats } from '../firebase/FirebaseConnector';
-import { setListingDetailsOnly } from '../reducers/ListingDetailReducer';
+import { setListingDetails } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -107,7 +107,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setListingDetails: (buyerUid, listingKey, listingData) => dispatch(
-      setListingDetailsOnly(
+      setListingDetails(
         buyerUid,
         {
           key: listingKey,

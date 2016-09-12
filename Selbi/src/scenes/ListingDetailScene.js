@@ -149,9 +149,15 @@ class ListingDetailScene extends RoutableScene {
   }
 }
 
-
 const mapStateToProps = (state) => {
-  return state.listingDetails;
+  const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
+  return {
+    listingKey: state.listingDetails.listingKey,
+    listingData: state.listingDetails.listingData,
+    imageKey: imageStoreKey,
+    imageData: state.images[imageStoreKey],
+    buyerUid: state.listingDetails.buyerUid,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
