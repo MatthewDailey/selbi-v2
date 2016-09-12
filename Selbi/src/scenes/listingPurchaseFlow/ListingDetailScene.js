@@ -94,11 +94,7 @@ class ListingDetailScene extends RoutableScene {
         Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
       } else {
         createChatAsBuyer(getUser().uid, this.props.listingKey, listingData.sellerId);
-        this.openSimpleScene(
-          <ChatScene
-            leftIs="back"
-          />
-        );
+        this.goNext('chat');
       }
     };
 

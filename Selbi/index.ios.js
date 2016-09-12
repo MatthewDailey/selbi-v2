@@ -16,6 +16,9 @@ import NewListingFlow from './src/scenes/newListingFlow';
 
 import ChatListScene from './src/scenes/ChatListScene';
 
+import ChatScene from './src/scenes/listingPurchaseFlow/ChatScene';
+import ListingDetailScene from './src/scenes/listingPurchaseFlow/ListingDetailScene';
+
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
@@ -60,6 +63,16 @@ const listenForUserListings = (user) => {
 };
 addAuthStateChangeListener(listenForUserListings);
 
+const chatScene = {
+  id: 'chat-scene',
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
+};
+
+const listingDetailScene = {
+  id: 'listing-detail-scene',
+  renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" />),
+};
+
 const localListingScene = {
   id: 'listings-scene',
   renderContent: withNavigatorProps(
@@ -97,6 +110,21 @@ routeLinks[localListingScene.id] = {
   next: {
     title: 'Sell',
     getRoute: () => NewListingFlow.firstScene,
+  },
+  details: {
+    getRoute: () => listingDetailScene,
+  },
+};
+
+routeLinks[chatListScene.id] = {
+  chat: {
+    getRoute: () => chatScene,
+  },
+};
+
+routeLinks[listingDetailScene.id] = {
+  chat: {
+    getRoute: () => chatScene,
   },
 };
 

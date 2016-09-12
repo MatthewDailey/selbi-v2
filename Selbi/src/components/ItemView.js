@@ -10,8 +10,6 @@ import { setListingDetails } from '../reducers/ListingDetailReducer';
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
-import ListingDetailScene from '../scenes/listingPurchaseFlow/ListingDetailScene';
-
 import styles from '../../styles';
 import colors from '../../colors';
 
@@ -20,11 +18,7 @@ class ItemView extends Component {
     if (this.props.imageData) {
       const openDetailView = () => {
         this.props.setListingDetails(this.props.listing.key, this.props.listing.val());
-        this.props.openSimpleScene(
-          <ListingDetailScene
-            leftIs="back"
-          />
-        );
+        this.props.openDetailScene();
       };
       return (
         <TouchableHighlight onPress={openDetailView}>
@@ -90,7 +84,7 @@ ItemView.propTypes = {
   imageKey: React.PropTypes.string.isRequired,
   imageData: React.PropTypes.object, // Value for /images/$imageKey
   storeImageData: React.PropTypes.func.isRequired,
-  openSimpleScene: React.PropTypes.func.isRequired,
+  openDetailScene: React.PropTypes.func.isRequired,
   setListingDetails: React.PropTypes.func.isRequired,
 };
 

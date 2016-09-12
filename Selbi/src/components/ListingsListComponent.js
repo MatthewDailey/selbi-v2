@@ -60,7 +60,7 @@ export default class ListingsComponent extends Component {
         renderRow={(data) =>
           <ItemView
             listing={data}
-            openSimpleScene={this.props.openSimpleScene}
+            openDetailScene={this.props.openDetailScene}
           />}
       />
     );

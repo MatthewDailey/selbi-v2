@@ -45,7 +45,7 @@ class ListingsScene extends RoutableScene {
       <ListingsListComponent
         listings={this.props.listings}
         refresh={this.fetchLocalListings}
-        openSimpleScene={this.openSimpleScene}
+        openDetailScene={() => this.goNext('details')}
       />
     );
   }
