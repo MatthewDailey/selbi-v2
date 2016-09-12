@@ -7,6 +7,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
+import SpinnerOverlay from '../components/SpinnerOverlay';
 
 const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withPassword(true)
@@ -116,6 +117,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
       return Promise.resolve();
     }
 
+    this.setState({ signingIn: true })
+
     // TODO we should not need to sign in after registering. This is a hacky way to work
     // around the fact that updating user name can't be done until after the user is created
     // but user updates don't trigger onAuthStateChanged events.
@@ -142,6 +145,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
   signInWithEmailAndPassword() {
     const email = this.state.emailSignIn;
     const password = this.state.passwordSignIn;
+
+    this.setState({ signingIn: true });
 
     return this.props.signInWithEmail(email, password)
       .then((user) => {
@@ -276,16 +281,18 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
   renderWithNavBar() {
     return (
-      <ScrollableTabView
-        tabBarBackgroundColor={colors.primary}
-        tabBarUnderlineColor={colors.secondary}
-        tabBarActiveTextColor={colors.secondary}
-        style={styles.fullScreenContainer}
-      >
-        {this.getInnerView(TabTypes.signIn, this.signInWithEmailAndPassword)}
-        {this.getInnerView(TabTypes.register, this.registerUserWithEmailAndPassword)}
-      </ScrollableTabView>
+      <View style={styles.container}>
+        <ScrollableTabView
+          tabBarBackgroundColor={colors.primary}
+          tabBarUnderlineColor={colors.secondary}
+          tabBarActiveTextColor={colors.secondary}
+          style={styles.fullScreenContainer}
+        >
+          {this.getInnerView(TabTypes.signIn, this.signInWithEmailAndPassword)}
+          {this.getInnerView(TabTypes.register, this.registerUserWithEmailAndPassword)}
+        </ScrollableTabView>
+        <SpinnerOverlay isVisible={this.state.signingIn} />
+      </View>
     );
   }
 }
-
