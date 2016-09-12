@@ -4,7 +4,7 @@ import { InteractionManager, View } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import RoutableScene from '../nav/RoutableScene';
-import ListingsComponent from '../components/ListingsListComponent';
+import ListingsListComponent from '../components/ListingsListComponent';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -39,27 +39,27 @@ class MyListingsScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <View tabLabel="Inactive" style={styles.fullScreenContainer}>
-          <ListingsComponent
+          <ListingsListComponent
             listings={this.props.inactive}
-            openSimpleScene={this.openSimpleScene}
+            openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Public" style={styles.fullScreenContainer}>
-          <ListingsComponent
+          <ListingsListComponent
             listings={this.props.public}
-            openSimpleScene={this.openSimpleScene}
+            openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Private" style={styles.fullScreenContainer}>
-          <ListingsComponent
+          <ListingsListComponent
             listings={this.props.private}
-            openSimpleScene={this.openSimpleScene}
+            openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Sold" style={styles.fullScreenContainer}>
-          <ListingsComponent
+          <ListingsListComponent
             listings={this.props.sold}
-            openSimpleScene={this.openSimpleScene}
+            openDetailScene={() => this.goNext('details')}
           />
         </View>
       </ScrollableTabView>

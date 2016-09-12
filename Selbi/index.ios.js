@@ -116,6 +116,12 @@ routeLinks[localListingScene.id] = {
   },
 };
 
+routeLinks[myListingsScene.id] = {
+  details: {
+    getRoute: () => listingDetailScene,
+  },
+};
+
 routeLinks[chatListScene.id] = {
   chat: {
     getRoute: () => chatScene,
