@@ -34,13 +34,13 @@ class ChatScene extends RoutableScene {
 
   componentWillMount() {
     const sellerUid = this.props.listingData.sellerId;
-    const promiseBuyerPublicData = loadUserPublicData(this.props.chatData.buyerUid);
+    const promiseBuyerPublicData = loadUserPublicData(this.props.buyerUid);
     const promiseSellerPublicData = loadUserPublicData(sellerUid);
 
     Promise.all([promiseBuyerPublicData, promiseSellerPublicData])
       .then((chatUserPublicData) => {
         const loadedUidToName = {};
-        loadedUidToName[this.props.chatData.buyerUid] = chatUserPublicData[0].val().displayName;
+        loadedUidToName[this.props.buyerUid] = chatUserPublicData[0].val().displayName;
         loadedUidToName[sellerUid] = chatUserPublicData[1].val().displayName;
         return new Promise((resolve) => {
           this.setState({
@@ -53,7 +53,7 @@ class ChatScene extends RoutableScene {
         });
       })
       .then(() => {
-        loadMessages(this.props.listingKey, this.props.chatData.buyerUid)
+        loadMessages(this.props.listingKey, this.props.buyerUid)
           .then((snapshot) => {
             if (snapshot.exists()) {
               const allMessages = [];
@@ -72,13 +72,13 @@ class ChatScene extends RoutableScene {
     this.setState({
       unsubscribeFunction: subscribeToNewMessages(
         this.props.listingKey,
-        this.props.chatData.buyerUid,
+        this.props.buyerUid,
         (newMessageSnapshot) => {
-          const newMessagee = this.convertDbMessageToUiMessage(
+          const newMessage = this.convertDbMessageToUiMessage(
             newMessageSnapshot.key, newMessageSnapshot.val());
           this.setState((previousState) => {
             return {
-              messages: GiftedChat.append(previousState.messages, [newMessagee]),
+              messages: GiftedChat.append(previousState.messages, [newMessage]),
             };
           });
         }
@@ -93,9 +93,8 @@ class ChatScene extends RoutableScene {
   }
 
   onSend(messages = []) {
-    console.log(this.props.chatData);
     messages.forEach((message) =>
-      sendMessage(this.props.listingKey, this.props.chatData.buyerUid, message.text));
+      sendMessage(this.props.listingKey, this.props.buyerUid, message.text));
   }
 
   renderWithNavBar() {

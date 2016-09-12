@@ -273,10 +273,10 @@ function getListingTitle(listingId) {
         throw new Error('could not find listing');
       }
     })
-    .catch(() => {
-      return Promise.resolve({
-        title: 'No listing found for this chat.',
-      });
+    .catch((error) => {
+      console.log(error);
+      // No listing found so return nothing.
+      return Promise.resolve(undefined);
     });
 }
 
@@ -292,11 +292,16 @@ function loadChatDetailsFromUserChats(userChatsData) {
     if (buyingData) {
       Object.keys(buyingData).forEach((listingId) => chatPromises.push(
         getListingTitle(listingId)
-          .then((listingTitleData) =>
-            Promise.resolve(Object.assign(listingTitleData, {
+          .then((listingTitleData) => {
+            if (!listingTitleData) {
+              return Promise.resolve(undefined);
+            }
+
+            return Promise.resolve(Object.assign(listingTitleData, {
               buyerUid: getUser().uid,
               type: 'buying',
-            })))
+            }));
+          })
       ));
     }
 
@@ -304,9 +309,17 @@ function loadChatDetailsFromUserChats(userChatsData) {
       Object.keys(sellingData).forEach((listingId) => {
         Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
           getListingTitle(listingId)
-            .then((listingTitleData) =>
-              Promise.resolve(
-                Object.assign(listingTitleData, { buyerUid: buyerUid, type: 'selling' }))))
+            .then((listingTitleData) => {
+              if (!listingTitleData) {
+                return Promise.resolve(undefined);
+              }
+
+              return Promise.resolve(Object.assign(listingTitleData, {
+                buyerUid: buyerUid,
+                type: 'selling',
+              }));
+            })
+          )
         );
       });
     }
@@ -348,7 +361,7 @@ export function loadMessages(listingId, buyerUid) {
 }
 
 export function sendMessage(listingId, buyerUid, messageText) {
-  console.log(`user: ${getUser().uid}`)
+  console.log(`user: ${getUser().uid}`);
   return firebaseApp
     .database()
     .ref('messages')

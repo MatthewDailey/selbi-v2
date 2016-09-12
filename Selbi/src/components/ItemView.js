@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Text, View, Image, TouchableHighlight } from 'react-native';
 import { MKSpinner } from 'react-native-material-kit';
 
-import { loadImage } from '../firebase/FirebaseConnector';
+import { loadImage, getUser } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
 import { setListingDetails } from '../reducers/ListingDetailReducer';
 
@@ -113,13 +113,16 @@ const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
     setListingDetails: (imageKey, imageData, listingKey, listingData) => dispatch(
-      setListingDetails({
-        key: imageKey,
-        data: imageData,
-      }, {
-        key: listingKey,
-        data: listingData,
-      })
+      setListingDetails(
+        getUser().uid,
+        {
+          key: imageKey,
+          data: imageData,
+        },
+        {
+          key: listingKey,
+          data: listingData,
+        })
     ),
   };
 };

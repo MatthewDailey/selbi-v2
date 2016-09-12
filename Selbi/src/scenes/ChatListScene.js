@@ -36,13 +36,14 @@ class ChatListScene extends RoutableScene {
   loadChatData() {
     return loadAllUserChats()
       .then((allUserChats) => {
-        const loadedBuyingChats = allUserChats.filter(
+        const allValidUserChats = allUserChats.filter(Boolean);
+        const loadedBuyingChats = allValidUserChats.filter(
           (chatDetails) => chatDetails.type === 'buying');
-        const loadedSellingChats = allUserChats.filter(
+        const loadedSellingChats = allValidUserChats.filter(
           (chatDetails) => chatDetails.type === 'selling');
         this.setState({
           loading: false,
-          allChats: allUserChats,
+          allChats: allValidUserChats,
           buyingChats: loadedBuyingChats,
           sellingChats: loadedSellingChats,
         }, () => console.log(this.state));
@@ -56,11 +57,10 @@ class ChatListScene extends RoutableScene {
         refresh={this.loadChatData}
         chats={chats}
         openChatScene={(data) => {
-          this.props.setListingDetails(data.listingKey, data.listingData);
+          this.props.setListingDetails(data.buyerUid, data.listingKey, data.listingData);
           this.openSimpleScene(
             <ChatScene
               title={data.listingData.title}
-              chatData={data}
               leftIs="back"
             />
           );
@@ -106,11 +106,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setListingDetails: (listingKey, listingData) => dispatch(
-      setListingDetailsOnly({
-        key: listingKey,
-        data: listingData,
-      })
+    setListingDetails: (buyerUid, listingKey, listingData) => dispatch(
+      setListingDetailsOnly(
+        buyerUid,
+        {
+          key: listingKey,
+          data: listingData,
+        })
     ),
   };
 };

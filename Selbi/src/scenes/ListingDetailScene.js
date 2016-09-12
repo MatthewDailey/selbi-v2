@@ -88,18 +88,10 @@ class ListingDetailScene extends RoutableScene {
       } else if (listingData.sellerId === getUser().uid) {
         Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
       } else {
-        createChatAsBuyer(this.props.listingKey, listingData.sellerId);
-        const chatData = {
-          title: listingData.title,
-          listingKey: this.props.listingKey,
-          listingData: this.props.listingData,
-          sellerUid: listingData.sellerId,
-          buyerUid: getUser().uid,
-        };
+        createChatAsBuyer(getUser().uid, this.props.listingKey, listingData.sellerId);
         this.openSimpleScene(
           <ChatScene
-            title={chatData.title}
-            chatData={chatData}
+            title={this.props.listingData.title}
             leftIs="back"
           />
         );
