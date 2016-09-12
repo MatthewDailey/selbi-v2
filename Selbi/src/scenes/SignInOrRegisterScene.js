@@ -120,6 +120,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
     // around the fact that updating user name can't be done until after the user is created
     // but user updates don't trigger onAuthStateChanged events.
     return this.props.registerWithEmail(email, password)
+      .then(() => this.props.createUser(firstName, lastName))
+      .then(() => this.props.signInWithEmail(email, password))
       .then((user) => {
         if (this.props.onSignedIn) {
           this.props.onSignedIn(user);
@@ -131,8 +133,6 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .then(() => this.props.createUser(firstName, lastName))
-      .then(() => this.props.signInWithEmail(email, password))
       .catch((error) => {
         Alert.alert(error.message);
       });
