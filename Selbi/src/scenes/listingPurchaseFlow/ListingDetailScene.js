@@ -83,6 +83,19 @@ class ListingDetailScene extends RoutableScene {
       }
     };
 
+    const getChatButton = () => {
+      if (this.props.routeLinks.chat) {
+        return (
+          <Button
+            onPress={openChat}
+          >
+            <Text>MESSAGE</Text>
+          </Button>
+        );
+      }
+      return <View />;
+    };
+
     return (
       <View style={{
         flex: 1,
@@ -114,11 +127,7 @@ class ListingDetailScene extends RoutableScene {
               alignItems: 'flex-end',
             }}>
               <View style={buttonViewStyle}>
-                <Button
-                  onPress={openChat}
-                >
-                  <Text>MESSAGE</Text>
-                </Button>
+                {getChatButton()}
               </View>
               <View style={buttonViewStyle}>
                 <Button>
