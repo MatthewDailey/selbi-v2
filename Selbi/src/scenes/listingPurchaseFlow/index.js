@@ -25,7 +25,7 @@ const listingDetailScene = {
 
 const editListingScene = {
   id: 'edit-listing-scene',
-  renderContent: withNavigatorProps(<EditListingScene leftIs="back" />),
+  renderContent: withNavigatorProps(<EditListingScene leftIs="back" rightIs="home" />),
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -75,6 +75,12 @@ routeLinks[listingDetailScene.id] = {
     },
   },
 };
+
+routeLinks[editListingScene.id] = {
+  home: {
+    title: 'Save',
+  },
+}
 
 routeLinks[chatSignInScene.id] = {
   next: {

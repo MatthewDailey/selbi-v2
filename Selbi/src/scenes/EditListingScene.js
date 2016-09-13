@@ -4,8 +4,14 @@ import { connect } from 'react-redux';
 import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { updateListingStore } from '../reducers/ListingDetailReducer';
-import { loadImage } from '../firebase/FirebaseConnector';
+import {
+  setNewListingTitle,
+  setNewListingDescription,
+  setNewListingPrice,
+  setNewListingLocation,
+  setNewListingImageLocalUri,
+  setNewListingImageDimensions
+} from '../reducers/NewListingReducer';
 
 import RoutableScene from '../nav/RoutableScene';
 
@@ -119,12 +125,15 @@ class EditListingScene extends RoutableScene {
 
         <PriceInput
           value={this.props.listingPrice.toString()}
+          onTextChange={(newText) => this.props.setPrice(newText)}
         />
         <TitleInput
           value={this.props.listingTitle}
+          onTextChange={(newText) => this.props.setTitle(newText)}
         />
         <DescriptionInput
           value={this.props.listingDescription}
+          onTextChange={(newText) => this.props.setDescription(newText)}
         />
 
         <View
@@ -196,9 +205,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    updateListing: (listingData) => {
-      dispatch(updateListingStore(listingData));
-    },
+    setTitle: (title) => dispatch(setNewListingTitle(title)),
+    setDescription: (description) => dispatch(setNewListingDescription(description)),
+    setPrice: (price) => dispatch(setNewListingPrice(price)),
   };
 };
 
