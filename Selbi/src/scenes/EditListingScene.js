@@ -8,6 +8,7 @@ import {
   setNewListingTitle,
   setNewListingDescription,
   setNewListingPrice,
+  setNewListingStatus,
   setNewListingLocation,
   setNewListingImageLocalUri,
   setNewListingImageDimensions
@@ -152,19 +153,35 @@ class EditListingScene extends RoutableScene {
             }}
           >
             <View>
-              <MKRadioButton checked group={this.radioGroup} />
+              <MKRadioButton
+                checked={this.props.listingStatus === 'public'}
+                group={this.radioGroup}
+                onPress={() => this.props.setStatus('public')}
+              />
               <Text>Public</Text>
             </View>
             <View>
-              <MKRadioButton group={this.radioGroup} />
+              <MKRadioButton
+                checked={this.props.listingStatus === 'private'}
+                group={this.radioGroup}
+                onPress={() => this.props.setStatus('private')}
+              />
               <Text>Private</Text>
             </View>
             <View>
-              <MKRadioButton group={this.radioGroup} />
+              <MKRadioButton
+                checked={this.props.listingStatus === 'inactive'}
+                group={this.radioGroup}
+                onPress={() => this.props.setStatus('inactive')}
+              />
               <Text>Inactive</Text>
             </View>
             <View>
-              <MKRadioButton group={this.radioGroup} />
+              <MKRadioButton
+                checked={this.props.listingStatus === 'sold'}
+                group={this.radioGroup}
+                onPress={() => this.props.setStatus('sold')}
+              />
               <Text>Sold</Text>
             </View>
           </View>
@@ -191,6 +208,7 @@ class EditListingScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     title: 'Edit Listing',
+    listingStatus: state.newListing.status,
     listingKey: state.newListing.listingId,
     listingTitle: state.newListing.title,
     listingDescription: state.newListing.description,
@@ -208,6 +226,7 @@ const mapDispatchToProps = (dispatch) => {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
     setPrice: (price) => dispatch(setNewListingPrice(price)),
+    setStatus: (status) => dispatch(setNewListingStatus(status))
   };
 };
 
