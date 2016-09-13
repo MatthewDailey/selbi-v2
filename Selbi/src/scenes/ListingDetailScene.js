@@ -52,13 +52,15 @@ class ListingDetailScene extends RoutableScene {
     this.props.clearListingDetailStore();
   }
 
-  onGoNext() {
-    this.props.setListingDataForEditing(
-      this.props.imageKey,
-      this.props.imageData,
-      this.props.listingKey,
-      this.props.listingData
-    );
+  onGoNext(routeName) {
+    if (routeName === 'edit') {
+      this.props.setListingDataForEditing(
+        this.props.imageKey,
+        this.props.imageData,
+        this.props.listingKey,
+        this.props.listingData
+      );
+    }
   }
 
   renderWithNavBar() {
@@ -89,25 +91,59 @@ class ListingDetailScene extends RoutableScene {
 
     const imageData = this.props.imageData;
     const listingData = this.props.listingData;
-    const openChat = () => {
-      if (getUser() && listingData.sellerId === getUser().uid) {
-        Alert.alert('This is your listing. You already own this! 😀'); // there is an emoji inline.
-      } else {
-        this.goNext('chat');
-      }
-    };
 
     const getChatButton = () => {
       if (this.props.routeLinks.chat) {
         return (
           <Button
-            onPress={openChat}
+            onPress={() => this.goNext('chat')}
           >
             <Text>MESSAGE</Text>
           </Button>
         );
       }
       return <View />;
+    };
+
+    const getBottomButtons = () => {
+      if (getUser() && listingData.sellerId === getUser().uid) {
+        return (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+            }}
+          >
+            <View style={buttonViewStyle}>
+              <Button onPress={() => this.goNext('edit')}>
+                <Text>Update Listing</Text>
+              </Button>
+            </View>
+          </View>
+        );
+      }
+
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+          }}
+        >
+          <View style={buttonViewStyle}>
+            {getChatButton()}
+          </View>
+          <View style={buttonViewStyle}>
+            <Button>
+              <Text>BUY</Text>
+            </Button>
+          </View>
+        </View>
+      );
     };
 
     return (
@@ -134,21 +170,7 @@ class ListingDetailScene extends RoutableScene {
               <Text style={fontStyle}>{`$${listingData.price}`}</Text>
               <Text style={fontStyle}><Icon name="heart-o" size={30} color={colors.white} /></Text>
             </View>
-            <View style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-            }}>
-              <View style={buttonViewStyle}>
-                {getChatButton()}
-              </View>
-              <View style={buttonViewStyle}>
-                <Button>
-                  <Text>BUY</Text>
-                </Button>
-              </View>
-            </View>
+            { getBottomButtons() }
           </View>
 
         </Image>

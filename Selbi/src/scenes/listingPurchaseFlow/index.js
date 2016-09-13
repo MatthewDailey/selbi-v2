@@ -62,7 +62,7 @@ routeLinks[chatFromDetailScene.id] = {
 };
 
 routeLinks[listingDetailScene.id] = {
-  next: {
+  edit: {
     title: 'Edit',
     getRoute: () => editListingScene,
   },
