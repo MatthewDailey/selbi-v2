@@ -7,6 +7,7 @@ import { MKButton } from 'react-native-material-kit';
 import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
 import { clearListingDetails } from '../reducers/ListingDetailReducer';
+import { setFromExistingListing } from '../reducers/NewListingReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -49,6 +50,15 @@ class ListingDetailScene extends RoutableScene {
 
   componentWillUnmount() {
     this.props.clearListingDetailStore();
+  }
+
+  onGoNext() {
+    this.props.setListingDataForEditing(
+      this.props.imageKey,
+      this.props.imageData,
+      this.props.listingKey,
+      this.props.listingData
+    );
   }
 
   renderWithNavBar() {
@@ -164,6 +174,8 @@ const mapDispatchToProps = (dispatch) => {
     clearListingDetailStore: () => {
       dispatch(clearListingDetails());
     },
+    setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
+      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData))
   };
 };
 

@@ -20,9 +20,13 @@ const chatFromDetailScene = {
 
 const listingDetailScene = {
   id: 'listing-detail-scene',
-  renderContent: withNavigatorProps(<EditListingScene leftIs="back" />),
+  renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
 };
 
+const editListingScene = {
+  id: 'edit-listing-scene',
+  renderContent: withNavigatorProps(<EditListingScene leftIs="back" />),
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -58,6 +62,10 @@ routeLinks[chatFromDetailScene.id] = {
 };
 
 routeLinks[listingDetailScene.id] = {
+  next: {
+    title: 'Edit',
+    getRoute: () => editListingScene,
+  },
   chat: {
     getRoute: () => {
       if (getUser()) {

@@ -8,14 +8,17 @@ const NL_SET_DESCRIPTION = 'new-listing-set-description';
 const NL_SET_LOCATION = 'new-listing-set-location';
 const NL_SET_IMAGE_DIMENSIONS = 'new-listing-set-image-dimensions';
 const NL_SET_IMAGE_URI = 'new-listing-set-image-local-uri';
+const NL_SET_FROM_EXISTING_LISTING = 'new-listing-set-from-existing';
+const NL_SET_STATUS = 'new-listing-set-status';
 const NL_CLEAR_DATA = 'new-listing-clear-data';
 
 class NewListing extends Immutable.Record({
-  status: 'building',
+  status: 'inactive',
   price: undefined,
   title: undefined,
   listingId: undefined,
   description: '',
+  imageId: undefined,
   imageUri: undefined,
   imageHeight: undefined,
   imageWidth: undefined,
@@ -40,11 +43,39 @@ export default function (futureListingState = new NewListing(), action) {
       return futureListingState.merge({ imageHeight: action.height, imageWidth: action.width });
     case NL_SET_IMAGE_URI:
       return futureListingState.merge({ imageUri: action.imageUri });
+    case NL_SET_STATUS:
+      return futureListingState.merge({ status: action.status });
+    case NL_SET_FROM_EXISTING_LISTING:
+      return futureListingState.merge(action.data);
     case NL_CLEAR_DATA:
       return new NewListing();
     default:
       return futureListingState;
   }
+}
+
+export function setFromExistingListing(imageKey, imageData, listingKey, listingData) {
+  return {
+    type: NL_SET_FROM_EXISTING_LISTING,
+    data: {
+      imageId: imageKey,
+      imageUri: `data:image/png;base64,${imageData.base64}`,
+      imageHeight: imageData.height,
+      imageWidth: imageData.width,
+      listingId: listingKey,
+      title: listingData.title,
+      description: listingData.description,
+      price: listingData.price,
+      status: listingData.status,
+    },
+  };
+}
+
+export function setNewListingStatus(listingStatus) {
+  return {
+    type: NL_SET_STATUS,
+    status: listingStatus,
+  };
 }
 
 export function setNewListingId(id) {

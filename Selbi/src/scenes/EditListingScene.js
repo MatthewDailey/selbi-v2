@@ -54,12 +54,7 @@ class EditListingScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly || !this.props.imageData) {
-      if (!this.props.imageData) {
-        loadImage(this.props.imageKey).then((imageSnapshot) =>
-          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
-      }
-
+    if (this.state.renderPlaceholderOnly) {
       return (
         <View
           style={{
@@ -108,7 +103,7 @@ class EditListingScene extends RoutableScene {
             <View style={imageContainerStyle} >
               <Image
                 key={this.props.imageKey}
-                source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
+                source={{ uri: this.props.listingImageUri }}
                 resizeMode="cover"
                 style={{ height: 48, width: 48 }}
               />
@@ -123,13 +118,13 @@ class EditListingScene extends RoutableScene {
         </View>
 
         <PriceInput
-          value={this.props.listingData.price.toString()}
+          value={this.props.listingPrice.toString()}
         />
         <TitleInput
-          value={this.props.listingData.title}
+          value={this.props.listingTitle}
         />
         <DescriptionInput
-          value={this.props.listingData.description}
+          value={this.props.listingDescription}
         />
 
         <View
@@ -185,13 +180,17 @@ class EditListingScene extends RoutableScene {
 
 
 const mapStateToProps = (state) => {
-  const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
   return {
     title: 'Edit Listing',
-    listingKey: state.listingDetails.listingKey,
-    listingData: state.listingDetails.listingData,
-    imageKey: imageStoreKey,
-    imageData: state.images[imageStoreKey],
+    listingKey: state.newListing.listingId,
+    listingTitle: state.newListing.title,
+    listingDescription: state.newListing.description,
+    listingPrice: state.newListing.price,
+    listingImageUri: state.newListing.imageUri,
+    listingLocation: {
+      lat: state.newListing.locationLat,
+      lon: state.newListing.locationLon,
+    },
   };
 };
 

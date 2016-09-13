@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import { MKSpinner, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { setNewListingId, setNewListingLocation, clearNewListing }
+import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
 
 
@@ -120,7 +120,10 @@ class PublishScene extends RoutableScene {
             onPress={
               () => this.setState({ status: publishStatus.publishing },
                 () => makeListingPrivate(this.props.newListing)
-                  .then(() => this.setState({ status: publishStatus.publishedPrivate }))
+                  .then(() => {
+                    this.setState({ status: publishStatus.publishedPrivate })
+                    this.props.setListingStatus('private');
+                  })
                   .catch(this.handleError))
             }
           >
@@ -133,7 +136,10 @@ class PublishScene extends RoutableScene {
               () => this.setState({ status: publishStatus.publishing },
                 () => this.getGeolocation()
                   .then(() => makeListingPublic(this.props.newListing))
-                  .then(() => this.setState({ status: publishStatus.publishedPublic }))
+                  .then(() => {
+                    this.setState({ status: publishStatus.publishedPublic });
+                    this.props.setListingStatus('public');
+                  })
                   .catch(this.handleError))
             }
           >
@@ -189,6 +195,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setNewListingLocation(location));
     },
     clearNewListingData: () => dispatch(clearNewListing()),
+    setListingStatus: (status) => dispatch(setNewListingStatus(status)),
   };
 };
 
