@@ -1,7 +1,6 @@
-
 {
   "name": "@selbi/react-native-image-reader",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,6 +12,7 @@
   "author": "mjd",
   "license": "",
   "peerDependencies": {
-    "react-native": "0.31.0"
-  }
+    "react-native": ">=0.31.0"
+  },
+  "dependencies": {}
 }

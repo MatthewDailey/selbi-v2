@@ -24,7 +24,7 @@ class ItemView extends Component {
         <TouchableHighlight onPress={openDetailView}>
           <Image
             key={this.props.imageKey}
-            source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
+            source={resolveAssetSource({ uri: `data:image/png;base64,${this.props.imageData.base64}` })}
             style={{ height: fitHeight, borderRadius: 3 }}
           >
             <Text

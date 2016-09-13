@@ -5,6 +5,8 @@ import { Image } from 'react-native';
 import RoutableScene from '../../nav/RoutableScene';
 import { setNewListingImageDimensions } from '../../reducers/NewListingReducer';
 
+const resolveAssetSource = require('resolveAssetSource');
+
 import styles from '../../../styles';
 
 class ApproveImageScene extends RoutableScene {
@@ -16,7 +18,7 @@ class ApproveImageScene extends RoutableScene {
           this.props.setNewListingImageDimensions(height, width);
         }}
         style={styles.container}
-        source={{ uri: this.props.imageUri }}
+        source={resolveAssetSource({ uri: this.props.imageUri })}
       />
     );
   }
