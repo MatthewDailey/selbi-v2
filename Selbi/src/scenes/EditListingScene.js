@@ -184,9 +184,8 @@ class EditListingScene extends RoutableScene {
               paddingBottom: 16,
             }}
           >
-            <MKButton>
-              <Text>Approximate Location: San Francisco</Text>
-            </MKButton>
+            <Text>Approximate Location: San Francisco</Text>
+            <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
             <DraggableAnnotationExample
               region={{
                 latitude: this.props.listingLocation.lat,
