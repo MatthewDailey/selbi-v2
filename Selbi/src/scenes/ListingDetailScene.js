@@ -8,6 +8,7 @@ import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
 import { clearListingDetails } from '../reducers/ListingDetailReducer';
 import { setFromExistingListing } from '../reducers/NewListingReducer';
+import { storeImage } from '../reducers/ImagesReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -193,6 +194,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
     clearListingDetailStore: () => {
       dispatch(clearListingDetails());
     },

@@ -149,8 +149,13 @@ export function updateListing(listingId, title, description, price, images) {
     title,
     description,
     price,
-    images,
   };
+
+  if (images) {
+    listing.images = images;
+  }
+
+  console.log(listing)
 
   const listingRef = firebaseApp.database().ref('/listings').child(listingId);
 
@@ -236,7 +241,7 @@ export function changeListingStatus(newStatus, listingId, latlon) {
  *
  * @returns Promise fulfilled with DataSnapshot of the listing if the listing exists.
  */
-function loadListingData(listingId) {
+export function loadListingData(listingId) {
   return firebaseApp
     .database()
     .ref('/listings')

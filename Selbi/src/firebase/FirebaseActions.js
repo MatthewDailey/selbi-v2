@@ -1,5 +1,5 @@
 import ImageReader from '@selbi/react-native-image-reader';
-import { publishImage, createListing, changeListingStatus, updateListing }
+import { publishImage, createListing, changeListingStatus, updateListing, loadListingData }
   from './FirebaseConnector';
 
 export default undefined;
@@ -30,26 +30,40 @@ export function createNewListingFromStore(newListingData) {
     ));
 }
 
-export function updateListingFromStore(listingId, newListingData) {
-  return ImageReader
-    .readImage(newListingData.imageUri)
-    .then((imageBase64) => publishImage(
-      imageBase64[0],
-      newListingData.imageHeight,
-      newListingData.imageWidth))
-    .then((imageKey) => updateListing(
+export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
+  let updateImagePromise = Promise.resolve();
+
+  if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
+    updateImagePromise = ImageReader
+      .readImage(newListingData.imageUri)
+      .then((imageBase64) => publishImage(
+        imageBase64[0],
+        newListingData.imageHeight,
+        newListingData.imageWidth))
+      .then((imageKey) => updateListing(
+        listingId,
+        newListingData.title,
+        newListingData.description,
+        newListingData.price,
+        {
+          image1: {
+            imageId: imageKey,
+            width: newListingData.imageWidth,
+            height: newListingData.imageHeight,
+          },
+        }
+      ));
+  } else {
+    updateImagePromise = updateListing(
       listingId,
       newListingData.title,
       newListingData.description,
-      newListingData.price,
-      {
-        image1: {
-          imageId: imageKey,
-          width: newListingData.imageWidth,
-          height: newListingData.imageHeight,
-        },
-      }
-    ));
+      newListingData.price);
+  }
+
+  return updateImagePromise
+
+    .then(() => loadListingData(listingId));
 }
 
 export function makeListingPublic(listingData) {

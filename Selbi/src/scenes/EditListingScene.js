@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractionManager, ScrollView, View, Text, Image, MapView } from 'react-native';
+import { InteractionManager, ScrollView, View, Text, Image, MapView, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,7 +16,7 @@ import {
 
 import RoutableScene from '../nav/RoutableScene';
 
-import { updateListingFromStore } from '../firebase/FirebaseActions';
+import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
 import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
@@ -113,9 +113,14 @@ class EditListingScene extends RoutableScene {
   goHome() {
     this.setState({ storingUpdate: true });
 
-    // TODO Update listing in firebase then back out. Detail view should be listening to firebase.
-    updateListingFromStore(this.props.listingKey, this.props.fullListingData)
-      .then(() => this.goBack());
+    updateListingFromStoreAndLoadResult(this.props.listingKey, this.props.fullListingData)
+      .then((updatedSnapshot) => this.props.setDetails(updatedSnapshot.val()))
+      .then(() => this.goBack())
+      .catch((error) => {
+        console.log(error);
+        this.setState({ storingUpdate: false });
+        Alert.alert('There was an error updating your listing.')
+      });
   }
 
   renderWithNavBar() {
@@ -299,7 +304,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
-    setPrice: (price) => dispatch(setNewListingPrice(price)),
+    setPrice: (price) => dispatch(setNewListingPrice(parseFloat(price))),
     setStatus: (status) => dispatch(setNewListingStatus(status)),
     setDetails: (listingData) => dispatch(setListingData(listingData)),
   };
