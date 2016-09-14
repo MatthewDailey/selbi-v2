@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import SpinnerOverlay from '../components/SpinnerOverlay';
+
 import {
   setNewListingTitle,
   setNewListingDescription,
@@ -15,6 +17,9 @@ import {
 } from '../reducers/NewListingReducer';
 
 import RoutableScene from '../nav/RoutableScene';
+
+import { updateListing } from '../firebase/FirebaseConnector';
+import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
@@ -91,12 +96,12 @@ class DraggableAnnotationExample extends React.Component {
   }
 }
 
-
-
 class EditListingScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
-    this.state = { renderPlaceholderOnly: true };
+    this.state = {
+      renderPlaceholderOnly: true
+    };
 
     this.radioGroup = new MKRadioButton.Group();
   }
@@ -105,6 +110,18 @@ class EditListingScene extends RoutableScene {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });
     });
+  }
+
+  goHome() {
+    this.setState({ storingUpdate: true });
+
+    // TODO Update listing in firebase then back out. Detail view should be listening to firebase.
+    updateListing(
+      this.props.listingKey,
+      this.props.listingTitle,
+      this.props.listingDescription,
+      this.props.listingPrice)
+      .then(() => this.goBack());
   }
 
   renderWithNavBar() {
@@ -140,120 +157,125 @@ class EditListingScene extends RoutableScene {
     };
 
     return (
-      <ScrollView style={styles.paddedContainer}>
-        <View
-          style={{
-            paddingTop: 16,
-            paddingBottom: 16,
-          }}
-        >
+      <View>
+        <ScrollView style={styles.paddedContainer}>
           <View
             style={{
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
+              paddingTop: 16,
+              paddingBottom: 16,
             }}
           >
-            <View style={imageContainerStyle} >
-              <Image
-                key={this.props.imageKey}
-                source={{ uri: this.props.listingImageUri }}
-                resizeMode="cover"
-                style={{ height: 48, width: 48 }}
-              />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}
+            >
+              <View style={imageContainerStyle} >
+                <Image
+                  key={this.props.imageKey}
+                  source={{ uri: this.props.listingImageUri }}
+                  resizeMode="cover"
+                  style={{ height: 48, width: 48 }}
+                />
+              </View>
+              <MKButton style={imageContainerStyle}>
+                <Text><Icon name="camera" size={20} color={colors.dark} /></Text>
+              </MKButton>
+              <View style={imageContainerStyle} />
+              <View style={imageContainerStyle} />
+              <View style={imageContainerStyle} />
             </View>
-            <MKButton style={imageContainerStyle}>
-              <Text><Icon name="camera" size={20} color={colors.dark} /></Text>
+          </View>
+
+          <PriceInput
+            value={this.props.listingPrice.toString()}
+            onTextChange={(newText) => this.props.setPrice(newText)}
+          />
+          <TitleInput
+            value={this.props.listingTitle}
+            onTextChange={(newText) => this.props.setTitle(newText)}
+          />
+          <DescriptionInput
+            value={this.props.listingDescription}
+            onTextChange={(newText) => this.props.setDescription(newText)}
+          />
+
+          <View
+            style={{
+              paddingTop: 16,
+              paddingBottom: 16,
+            }}
+          >
+            <Text>Listing Visibility</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+              }}
+            >
+              <View>
+                <MKRadioButton
+                  checked={this.props.listingStatus === 'public'}
+                  group={this.radioGroup}
+                  onPress={() => this.props.setStatus('public')}
+                />
+                <Text>Public</Text>
+              </View>
+              <View>
+                <MKRadioButton
+                  checked={this.props.listingStatus === 'private'}
+                  group={this.radioGroup}
+                  onPress={() => this.props.setStatus('private')}
+                />
+                <Text>Private</Text>
+              </View>
+              <View>
+                <MKRadioButton
+                  checked={this.props.listingStatus === 'inactive'}
+                  group={this.radioGroup}
+                  onPress={() => this.props.setStatus('inactive')}
+                />
+                <Text>Inactive</Text>
+              </View>
+              <View>
+                <MKRadioButton
+                  checked={this.props.listingStatus === 'sold'}
+                  group={this.radioGroup}
+                  onPress={() => this.props.setStatus('sold')}
+                />
+                <Text>Sold</Text>
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={{
+              paddingTop: 16,
+              paddingBottom: 16,
+            }}
+          >
+            <MKButton>
+              <Text>Location: San Francisco</Text>
+              <Text>Tap to update.</Text>
             </MKButton>
-            <View style={imageContainerStyle} />
-            <View style={imageContainerStyle} />
-            <View style={imageContainerStyle} />
           </View>
-        </View>
-
-        <PriceInput
-          value={this.props.listingPrice.toString()}
-          onTextChange={(newText) => this.props.setPrice(newText)}
-        />
-        <TitleInput
-          value={this.props.listingTitle}
-          onTextChange={(newText) => this.props.setTitle(newText)}
-        />
-        <DescriptionInput
-          value={this.props.listingDescription}
-          onTextChange={(newText) => this.props.setDescription(newText)}
-        />
-
-        <View
-          style={{
-            paddingTop: 16,
-            paddingBottom: 16,
-          }}
-        >
-          <Text>Listing Visibility</Text>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
+          <DraggableAnnotationExample
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
             }}
-          >
-            <View>
-              <MKRadioButton
-                checked={this.props.listingStatus === 'public'}
-                group={this.radioGroup}
-                onPress={() => this.props.setStatus('public')}
-              />
-              <Text>Public</Text>
-            </View>
-            <View>
-              <MKRadioButton
-                checked={this.props.listingStatus === 'private'}
-                group={this.radioGroup}
-                onPress={() => this.props.setStatus('private')}
-              />
-              <Text>Private</Text>
-            </View>
-            <View>
-              <MKRadioButton
-                checked={this.props.listingStatus === 'inactive'}
-                group={this.radioGroup}
-                onPress={() => this.props.setStatus('inactive')}
-              />
-              <Text>Inactive</Text>
-            </View>
-            <View>
-              <MKRadioButton
-                checked={this.props.listingStatus === 'sold'}
-                group={this.radioGroup}
-                onPress={() => this.props.setStatus('sold')}
-              />
-              <Text>Sold</Text>
-            </View>
-          </View>
-        </View>
+          />
 
-        <View
-          style={{
-            paddingTop: 16,
-            paddingBottom: 16,
-          }}
-        >
-          <MKButton>
-            <Text>Location: San Francisco</Text>
-            <Text>Tap to update.</Text>
-          </MKButton>
-        </View>
-        <DraggableAnnotationExample
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
-      </ScrollView>
+
+        </ScrollView>
+        <SpinnerOverlay isVisible={this.state.storingUpdate} />
+      </View>
     );
   }
 }
@@ -280,7 +302,8 @@ const mapDispatchToProps = (dispatch) => {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
     setPrice: (price) => dispatch(setNewListingPrice(price)),
-    setStatus: (status) => dispatch(setNewListingStatus(status))
+    setStatus: (status) => dispatch(setNewListingStatus(status)),
+    setDetails: (listingData) => dispatch(setListingData(listingData)),
   };
 };
 

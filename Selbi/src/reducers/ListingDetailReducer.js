@@ -3,14 +3,18 @@ import { getActionType } from './ActionUtils';
 const LD_SET_DETAILS = 'listing-details-set';
 const LD_SET_BUYER = 'listing-details-set-buyer';
 const LD_CLEAR_DETAILS = 'listing-details-clear';
+const LD_SET_LISTING_DATA = 'listing-details-set-data';
 
 export default function (listingDetailsState = {}, action) {
+  const listingDetails = Object.assign({}, listingDetailsState);
   switch (getActionType(action)) {
     case LD_SET_DETAILS:
       return Object.assign({}, action.data);
     case LD_SET_BUYER:
-      const listingDetails = Object.assign({}, listingDetailsState);
       listingDetails.buyerUid = action.buyerUid;
+      return listingDetails;
+    case LD_SET_LISTING_DATA:
+      listingDetails.listingData = action.data;
       return listingDetails;
     case LD_CLEAR_DETAILS:
       return {};
@@ -32,7 +36,14 @@ export function setBuyerUid(buyer) {
   };
 }
 
-export function setListingDetails(buyer, listing) {
+export function setListingData(listingData) {
+  return {
+    type: LD_SET_LISTING_DATA,
+    data: listingData,
+  };
+}
+
+export function setBuyerAndListingDetails(buyer, listing) {
   return {
     type: LD_SET_DETAILS,
     data: {

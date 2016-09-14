@@ -80,7 +80,7 @@ routeLinks[editListingScene.id] = {
   home: {
     title: 'Save',
   },
-}
+};
 
 routeLinks[chatSignInScene.id] = {
   next: {

@@ -5,7 +5,7 @@ import { MKSpinner } from 'react-native-material-kit';
 
 import { loadImage, getUser } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
-import { setListingDetails } from '../reducers/ListingDetailReducer';
+import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -109,7 +109,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
     setListingDetails: (listingKey, listingData) => dispatch(
-      setListingDetails(
+      setBuyerAndListingDetails(
         getUserUid(),
         {
           key: listingKey,

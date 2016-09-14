@@ -9,7 +9,7 @@ import SpinnerOverlay from '../../components/SpinnerOverlay';
 import ChatListComponent from '../../components/ChatListComponent';
 
 import { loadAllUserChats } from '../../firebase/FirebaseConnector';
-import { setListingDetails } from '../../reducers/ListingDetailReducer';
+import { setBuyerAndListingDetails } from '../../reducers/ListingDetailReducer';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setListingDetails: (buyerUid, listingKey, listingData) => dispatch(
-      setListingDetails(
+      setBuyerAndListingDetails(
         buyerUid,
         {
           key: listingKey,

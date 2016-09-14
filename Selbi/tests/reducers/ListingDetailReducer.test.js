@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 
-import listingDetailReducer, { clearListingDetails, setListingDetails, setListingDetailsOnly }
+import listingDetailReducer, { clearListingDetails, setBuyerAndListingDetails, setListingDetailsOnly }
   from '../../src/reducers/ListingDetailReducer';
 
 chai.use(dirtyChai);
@@ -26,7 +26,7 @@ describe('ListingDetailReducer', () => {
 
     const testBuyerUid = 'buyerUid';
     const afterSettingState = listingDetailReducer(initialState,
-      setListingDetails(testBuyerUid, testImage, testListing));
+      setBuyerAndListingDetails(testBuyerUid, testImage, testListing));
 
     expect(afterSettingState.buyerUid).to.equal(testBuyerUid);
     expect(afterSettingState.imageKey).to.equal(testImage.key);
@@ -55,7 +55,7 @@ describe('ListingDetailReducer', () => {
     expect(initialState).to.be.empty();
 
     const afterSettingState = listingDetailReducer(initialState,
-      setListingDetails('buyerUid', testImage, testListing));
+      setBuyerAndListingDetails('buyerUid', testImage, testListing));
 
     expect(afterSettingState).to.not.be.empty();
 

@@ -144,6 +144,18 @@ export function createListing(titleInput,
     .then(() => Promise.resolve(newListingRef.key));
 }
 
+export function updateListing(listingId, title, description, price) {
+  const listing = {
+    title,
+    description,
+    price,
+  };
+
+  const listingRef = firebaseApp.database().ref('/listings').child(listingId);
+
+  return listingRef.update(listing);
+}
+
 /*
  * This code snippet demonstrates how to change the status of a user's listing.
  *
