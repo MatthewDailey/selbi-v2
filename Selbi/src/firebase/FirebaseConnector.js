@@ -144,11 +144,12 @@ export function createListing(titleInput,
     .then(() => Promise.resolve(newListingRef.key));
 }
 
-export function updateListing(listingId, title, description, price) {
+export function updateListing(listingId, title, description, price, images) {
   const listing = {
     title,
     description,
     price,
+    images,
   };
 
   const listingRef = firebaseApp.database().ref('/listings').child(listingId);

@@ -1,5 +1,6 @@
 import ImageReader from '@selbi/react-native-image-reader';
-import { publishImage, createListing, changeListingStatus } from './FirebaseConnector';
+import { publishImage, createListing, changeListingStatus, updateListing }
+  from './FirebaseConnector';
 
 export default undefined;
 
@@ -26,6 +27,28 @@ export function createNewListingFromStore(newListingData) {
         },
       },
       '' // category
+    ));
+}
+
+export function updateListingFromStore(listingId, newListingData) {
+  return ImageReader
+    .readImage(newListingData.imageUri)
+    .then((imageBase64) => publishImage(
+      imageBase64[0],
+      newListingData.imageHeight,
+      newListingData.imageWidth))
+    .then((imageKey) => updateListing(
+      listingId,
+      newListingData.title,
+      newListingData.description,
+      newListingData.price,
+      {
+        image1: {
+          imageId: imageKey,
+          width: newListingData.imageWidth,
+          height: newListingData.imageHeight,
+        },
+      }
     ));
 }
 

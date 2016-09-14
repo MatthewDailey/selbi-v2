@@ -12,13 +12,11 @@ import {
   setNewListingPrice,
   setNewListingStatus,
   setNewListingLocation,
-  setNewListingImageLocalUri,
-  setNewListingImageDimensions
 } from '../reducers/NewListingReducer';
 
 import RoutableScene from '../nav/RoutableScene';
 
-import { updateListing } from '../firebase/FirebaseConnector';
+import { updateListingFromStore } from '../firebase/FirebaseActions';
 import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
@@ -116,11 +114,7 @@ class EditListingScene extends RoutableScene {
     this.setState({ storingUpdate: true });
 
     // TODO Update listing in firebase then back out. Detail view should be listening to firebase.
-    updateListing(
-      this.props.listingKey,
-      this.props.listingTitle,
-      this.props.listingDescription,
-      this.props.listingPrice)
+    updateListingFromStore(this.props.listingKey, this.props.fullListingData)
       .then(() => this.goBack());
   }
 
@@ -286,6 +280,7 @@ class EditListingScene extends RoutableScene {
 
 const mapStateToProps = (state) => {
   return {
+    fullListingData: state.newListing,
     title: 'Edit Listing',
     listingStatus: state.newListing.status,
     listingKey: state.newListing.listingId,
