@@ -7,7 +7,7 @@ import { MKButton } from 'react-native-material-kit';
 import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
 import { clearListingDetails } from '../reducers/ListingDetailReducer';
-import { setFromExistingListing } from '../reducers/NewListingReducer';
+import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles from '../../styles';
@@ -55,6 +55,7 @@ class ListingDetailScene extends RoutableScene {
 
   onGoNext(routeName) {
     if (routeName === 'edit') {
+      this.props.clearListingDataForEditing();
       this.props.setListingDataForEditing(
         this.props.imageKey,
         this.props.imageData,
@@ -199,7 +200,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(clearListingDetails());
     },
     setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
-      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData))
+      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
+    clearListingDataForEditing: () => dispatch(clearNewListing()),
   };
 };
 

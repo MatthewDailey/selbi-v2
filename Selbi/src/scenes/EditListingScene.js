@@ -134,6 +134,17 @@ class EditListingScene extends RoutableScene {
 
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
+      loadLocationForListing(this.props.listingKey)
+        .then((latlon) => {
+          console.log(latlon);
+          if(latlon) {
+            this.props.setLocation({
+              lat: latlon[0],
+              lon: latlon[1],
+            });
+          }
+        });
+
       return (
         <View
           style={{
@@ -165,7 +176,7 @@ class EditListingScene extends RoutableScene {
     };
 
     const getLocationComponent = () => {
-      if (this.props.listingStatus === 'public') {
+      if (this.props.listingLocation.lat && this.props.listingLocation.lon) {
         return (
           <View
             style={{
@@ -178,8 +189,8 @@ class EditListingScene extends RoutableScene {
             </MKButton>
             <DraggableAnnotationExample
               region={{
-                latitude: 37.78825,
-                longitude: -122.4324,
+                latitude: this.props.listingLocation.lat,
+                longitude: this.props.listingLocation.lon,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}
@@ -187,7 +198,7 @@ class EditListingScene extends RoutableScene {
           </View>
         );
       } else {
-        return <Text>No location for this status.</Text>
+        return <Text>No location for this listing. Tap to add one.</Text>
       }
     };
 
@@ -322,6 +333,7 @@ const mapDispatchToProps = (dispatch) => {
     setDescription: (description) => dispatch(setNewListingDescription(description)),
     setPrice: (price) => dispatch(setNewListingPrice(parseFloat(price))),
     setStatus: (status) => dispatch(setNewListingStatus(status)),
+    setLocation: (latlon) => dispatch(setNewListingLocation(latlon)),
     setDetails: (listingData) => dispatch(setListingData(listingData)),
   };
 };
