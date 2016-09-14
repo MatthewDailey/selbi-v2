@@ -461,6 +461,12 @@ export function loadListingByLocation(latlon, radiusKm) {
   });
 }
 
+export function loadLocationForListing(listingId) {
+  const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
+
+  return geoListings.get(listingId);
+}
+
 /*
  * This code snippet shows how to load listings based on the status, for example, load all private
  * listings for a given user.

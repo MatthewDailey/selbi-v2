@@ -17,6 +17,7 @@ import {
 import RoutableScene from '../nav/RoutableScene';
 
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
+import { loadLocationForListing } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
@@ -163,9 +164,36 @@ class EditListingScene extends RoutableScene {
       justifyContent: 'center',
     };
 
+    const getLocationComponent = () => {
+      if (this.props.listingStatus === 'public') {
+        return (
+          <View
+            style={{
+              paddingTop: 16,
+              paddingBottom: 16,
+            }}
+          >
+            <MKButton>
+              <Text>Approximate Location: San Francisco</Text>
+            </MKButton>
+            <DraggableAnnotationExample
+              region={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            />
+          </View>
+        );
+      } else {
+        return <Text>No location for this status.</Text>
+      }
+    };
+
     return (
-      <View>
-        <ScrollView style={styles.paddedContainer}>
+      <View style={styles.paddedContainer}>
+        <ScrollView >
           <View
             style={{
               paddingTop: 16,
@@ -262,26 +290,7 @@ class EditListingScene extends RoutableScene {
             </View>
           </View>
 
-          <View
-            style={{
-              paddingTop: 16,
-              paddingBottom: 16,
-            }}
-          >
-            <MKButton>
-              <Text>Location: San Francisco</Text>
-              <Text>Tap to update.</Text>
-            </MKButton>
-          </View>
-          <DraggableAnnotationExample
-            region={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          />
-
+          {getLocationComponent()}
 
         </ScrollView>
         <SpinnerOverlay isVisible={this.state.storingUpdate} />
