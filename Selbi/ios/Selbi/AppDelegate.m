@@ -35,6 +35,13 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
+  UIUserNotificationType allNotificationTypes =
+  (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+  UIUserNotificationSettings *settings =
+  [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+  [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+  
   [FIRApp configure];
 
   return YES;
