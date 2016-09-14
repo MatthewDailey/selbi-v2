@@ -23,6 +23,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		19488A3EC8284E62929FB0D9 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D1E25F616184E54A362AE15 /* MaterialIcons.ttf */; };
 		366B0DE86B3F457EBE61B363 /* libRCTMaterialKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B568E4E6FE1F4CD1A9C91680 /* libRCTMaterialKit.a */; };
+		5D9E1E084D1C4542A61E1D45 /* libRNFIRAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8723D20E883B4631800C72B3 /* libRNFIRAnalytics.a */; };
 		6E765F23BDED4E43AD34119A /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D772FF6BEB40178DFF8D16 /* libRNFIRMessaging.a */; };
 		70546E04AED5267DC118B06C /* libPods-Selbi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */; };
 		7557E6CE6FA64ACA8EC4DB56 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86DA0AAF0796407AB040EBAB /* Ionicons.ttf */; };
@@ -160,6 +161,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RCTCamera;
 		};
+		C9FCB5F61D8A03CA0004EE34 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNFIRAnalytics;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -191,6 +199,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		86DA0AAF0796407AB040EBAB /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		8723D20E883B4631800C72B3 /* libRNFIRAnalytics.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRAnalytics.a; sourceTree = "<group>"; };
 		90BC9A4D812D402C885B7AAE /* RCTMaterialKit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTMaterialKit.xcodeproj; path = "../node_modules/react-native-material-kit/iOS/RCTMaterialKit.xcodeproj"; sourceTree = "<group>"; };
 		941F84B6AAD845D4BF0749C3 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		95752F99C8ED47CFB13F332C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -207,6 +216,7 @@
 		FA8EBC0206443D8693BCDD1F /* Pods-SelbiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB936554B4504A9E9F54D2EC /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		FFCC13AB75DC4B6985BC2357 /* libRNImageReader.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImageReader.a; sourceTree = "<group>"; };
+		FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRAnalytics.xcodeproj; path = "../node_modules/react-native-firebase-analytics/ios/RNFIRAnalytics.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +250,7 @@
 				953AA730D9274C6B9C665155 /* libRNImageReader.a in Frameworks */,
 				6E765F23BDED4E43AD34119A /* libRNFIRMessaging.a in Frameworks */,
 				70546E04AED5267DC118B06C /* libPods-Selbi.a in Frameworks */,
+				5D9E1E084D1C4542A61E1D45 /* libRNFIRAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +362,7 @@
 				6B751A89A6E54F1CACFBB5BA /* RNVectorIcons.xcodeproj */,
 				B0AB3F9419A4458AAFE33DAD /* RNImageReader.xcodeproj */,
 				4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */,
+				FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -441,6 +453,14 @@
 			isa = PBXGroup;
 			children = (
 				C9DC96B21D66D4400012A155 /* libRCTCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C9FCB5E61D8A03CA0004EE34 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C9FCB5F71D8A03CA0004EE34 /* libRNFIRAnalytics.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -605,6 +625,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = C9FCB5E61D8A03CA0004EE34 /* Products */;
+					ProjectRef = FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */;
+				},
+				{
 					ProductGroup = C98348D41D89B1D30049D4C5 /* Products */;
 					ProjectRef = 4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */;
 				},
@@ -736,6 +760,13 @@
 			fileType = archive.ar;
 			path = libRCTCamera.a;
 			remoteRef = C9DC96B11D66D4400012A155 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C9FCB5F71D8A03CA0004EE34 /* libRNFIRAnalytics.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFIRAnalytics.a;
+			remoteRef = C9FCB5F61D8A03CA0004EE34 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -918,6 +949,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
@@ -935,6 +967,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -961,6 +994,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -995,6 +1029,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1055,6 +1090,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1100,6 +1136,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;

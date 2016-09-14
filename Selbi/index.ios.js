@@ -1,9 +1,9 @@
 import React from 'react';
-
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
+import Analytics from 'react-native-firebase-analytics';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -63,6 +63,16 @@ const listenForUserListings = (user) => {
   }
 };
 addAuthStateChangeListener(listenForUserListings);
+
+const recordUserForAnalytics = (user) => {
+  if (user) {
+    Analytics.setUserId(user.uid);
+  } else {
+    Analytics.setUserId(null);
+  }
+};
+addAuthStateChangeListener(recordUserForAnalytics)
+
 
 const localListingScene = {
   id: 'listings-scene',
