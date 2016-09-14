@@ -137,6 +137,25 @@ class EditListingScene extends RoutableScene {
       });
   }
 
+  getGeolocation() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.props.setLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+          resolve();
+        },
+        (error) => {
+          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
+          reject(error.message);
+        },
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    });
+  }
+
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
       loadLocationForListing(this.props.listingKey)
@@ -203,7 +222,7 @@ class EditListingScene extends RoutableScene {
           </View>
         );
       } else {
-        return <Text>No location for this listing. Tap to add one.</Text>
+        return <Text>No location for this listing. Only public listings have an associated location.</Text>
       }
     };
 
@@ -275,7 +294,10 @@ class EditListingScene extends RoutableScene {
                 <MKRadioButton
                   checked={this.props.listingStatus === 'public'}
                   group={this.radioGroup}
-                  onPress={() => this.props.setStatus('public')}
+                  onPress={() => {
+                    this.getGeolocation()
+                      .then(() => this.props.setStatus('public'));
+                  }}
                 />
                 <Text>Public</Text>
               </View>

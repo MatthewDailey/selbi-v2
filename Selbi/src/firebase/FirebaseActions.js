@@ -30,6 +30,30 @@ export function createNewListingFromStore(newListingData) {
     ));
 }
 
+export function makeListingPublic(listingData) {
+  if (!listingData.listingId) {
+    return Promise.reject('Need a listing id to make the listing public.');
+  }
+  if (!listingData.locationLat || !listingData.locationLon) {
+    return Promise.reject('Public listings require geolocation');
+  }
+
+  return changeListingStatus(
+    'public',
+    listingData.listingId,
+    [listingData.locationLat, listingData.locationLon]);
+}
+
+export function makeListingPrivate(listingData) {
+  if (!listingData.listingId) {
+    return Promise.reject('Need a listing id to make the listing private.');
+  }
+
+  return changeListingStatus(
+    'private',
+    listingData.listingId);
+}
+
 export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   if (isNaN(newListingData.price)) {
     return Promise.reject('Price must be a number.');
@@ -65,30 +89,14 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
       newListingData.price);
   }
 
+  if (newListingData.status === 'public') {
+    updateImagePromise = updateImagePromise
+      .then(() => makeListingPublic(newListingData));
+  } else {
+    updateImagePromise = updateImagePromise
+      .then(() => changeListingStatus(newListingData.status, newListingData.listingId));
+  }
+
   return updateImagePromise
     .then(() => loadListingData(listingId));
-}
-
-export function makeListingPublic(listingData) {
-  if (!listingData.listingId) {
-    return Promise.reject('Need a listing id to make the listing public.');
-  }
-  if (!listingData.locationLat || !listingData.locationLon) {
-    return Promise.reject('Public listings require geolocation');
-  }
-
-  return changeListingStatus(
-    'public',
-    listingData.listingId,
-    [listingData.locationLat, listingData.locationLon]);
-}
-
-export function makeListingPrivate(listingData) {
-  if (!listingData.listingId) {
-    return Promise.reject('Need a listing id to make the listing private.');
-  }
-
-  return changeListingStatus(
-    'private',
-    listingData.listingId);
 }
