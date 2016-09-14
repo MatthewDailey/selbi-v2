@@ -37,8 +37,7 @@ class ListingsScene extends RoutableScene {
   fetchLocalListings() {
     return this.getGeolocation()
       .then((latlon) => loadListingByLocation(latlon, 20))
-      .then(this.props.setLocalListings)
-      .catch(console.log);
+      .then(this.props.setLocalListings);
   }
 
   renderWithNavBar() {
