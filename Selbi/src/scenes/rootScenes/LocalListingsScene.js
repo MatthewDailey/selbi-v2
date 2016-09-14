@@ -22,6 +22,7 @@ class ListingsScene extends RoutableScene {
           resolve([position.coords.latitude, position.coords.longitude]);
         },
         (error) => {
+          console.log(error);
           // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
           reject(error.message);
         },
@@ -31,7 +32,7 @@ class ListingsScene extends RoutableScene {
   }
 
   componentWillMount() {
-    this.fetchLocalListings();
+    this.fetchLocalListings().catch(console.log);
   }
 
   fetchLocalListings() {
