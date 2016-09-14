@@ -59,6 +59,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
+          // TODO: Could be more secure and require that listing sellerId or buyerId is auth uid.
           ".validate": "newData.hasChildren(['listingId', 'buyerId', 'messageId']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"

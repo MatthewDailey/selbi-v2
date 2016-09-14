@@ -1,12 +1,20 @@
-import { expect } from 'chai';
-import Queue from 'firebase-queue';
 import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
-import { testSafeWorker } from './QueueUtilities';
+import { writeToQueueAndExpectHandled } from './QueueUtilities';
+
+const testMessageNotification = {
+  listingId: 'test-listing-id',
+  buyerId: testUserUid,
+  messageId: 'test-message-id',
+};
 
 describe('/messageNotifications', () => {
-  it('passes', () => {
-    // Blank test.
+  it('test writing to queue', (done) => {
+    writeToQueueAndExpectHandled(
+      FirebaseTest.testUserApp,
+      'messageNotifications',
+      testMessageNotification,
+      done);
   });
 });
 
