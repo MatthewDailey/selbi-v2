@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractionManager, ScrollView, View, Text, Image } from 'react-native';
+import { InteractionManager, ScrollView, View, Text, Image, MapView } from 'react-native';
 import { connect } from 'react-redux';
 import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -45,6 +45,53 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
     marginTop: 10,
   })
   .build();
+
+class DraggableAnnotationExample extends React.Component {
+  state = {
+    isFirstLoad: true,
+    annotations: [],
+  };
+
+  createAnnotation = (longitude, latitude) => {
+    return {
+      longitude,
+      latitude,
+      draggable: true,
+      onDragStateChange: (event) => {
+        if (event.state === 'idle') {
+          this.setState({
+            annotations: [this.createAnnotation(event.longitude, event.latitude)],
+          });
+        }
+        console.log('Drag state: ' + event.state);
+      },
+    };
+  };
+
+  render() {
+    if (this.state.isFirstLoad) {
+      var onRegionChangeComplete = (region) => {
+        //When the MapView loads for the first time, we can create the annotation at the
+        //region that was loaded.
+        this.setState({
+          isFirstLoad: false,
+          annotations: [this.createAnnotation(region.longitude, region.latitude)],
+        });
+      };
+    }
+
+    return (
+      <MapView
+        style={{ height: 160 }}
+        onRegionChangeComplete={onRegionChangeComplete}
+        region={this.props.region}
+        annotations={this.state.annotations}
+      />
+    );
+  }
+}
+
+
 
 class EditListingScene extends RoutableScene {
   constructor(props, context) {
@@ -198,7 +245,14 @@ class EditListingScene extends RoutableScene {
             <Text>Tap to update.</Text>
           </MKButton>
         </View>
-
+        <DraggableAnnotationExample
+          region={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
       </ScrollView>
     );
   }
