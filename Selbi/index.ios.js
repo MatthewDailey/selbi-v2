@@ -163,10 +163,4 @@ function NavApp() {
   );
 }
 
-import TestFCM from './src/components/TestFCM';
-
-function testApp() {
-  return <TestFCM/>;
-}
-
-AppRegistry.registerComponent('Selbi', () => testApp);
+AppRegistry.registerComponent('Selbi', () => NavApp);
