@@ -13,6 +13,7 @@
 #import "RCTRootView.h"
 
 #import "RNFIRMessaging.h"
+#import "Firebase.h"
 
 @implementation AppDelegate
 
@@ -34,7 +35,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-//  [FIRApp configure];
+  [FIRApp configure];
 
   return YES;
 }
