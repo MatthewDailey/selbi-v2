@@ -66,7 +66,6 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   }
 
   return updateImagePromise
-
     .then(() => loadListingData(listingId));
 }
 
