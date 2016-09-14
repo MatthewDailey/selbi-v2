@@ -31,6 +31,10 @@ export function createNewListingFromStore(newListingData) {
 }
 
 export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
+  if (isNaN(newListingData.price)) {
+    return Promise.reject('Price must be a number.');
+  }
+
   let updateImagePromise = Promise.resolve();
 
   if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {

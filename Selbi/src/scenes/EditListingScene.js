@@ -47,6 +47,7 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
     height: 48,  // have to do it on iOS
     marginTop: 10,
   })
+  .withKeyboardType('numeric')
   .build();
 
 class DraggableAnnotationExample extends React.Component {
@@ -92,6 +93,13 @@ class DraggableAnnotationExample extends React.Component {
       />
     );
   }
+}
+
+function getPriceString(price) {
+  if (price) {
+    return price.toString();
+  }
+  return undefined;
 }
 
 class EditListingScene extends RoutableScene {
@@ -192,7 +200,7 @@ class EditListingScene extends RoutableScene {
           </View>
 
           <PriceInput
-            value={this.props.listingPrice.toString()}
+            value={getPriceString(this.props.listingPrice)}
             onTextChange={(newText) => this.props.setPrice(newText)}
           />
           <TitleInput
@@ -281,7 +289,6 @@ class EditListingScene extends RoutableScene {
     );
   }
 }
-
 
 const mapStateToProps = (state) => {
   return {
