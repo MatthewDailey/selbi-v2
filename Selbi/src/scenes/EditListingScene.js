@@ -180,7 +180,10 @@ class EditListingScene extends RoutableScene {
                   style={{ height: 48, width: 48 }}
                 />
               </View>
-              <MKButton style={imageContainerStyle}>
+              <MKButton
+                style={imageContainerStyle}
+                onPress={() => this.goNext('camera')}
+              >
                 <Text><Icon name="camera" size={20} color={colors.dark} /></Text>
               </MKButton>
               <View style={imageContainerStyle} />

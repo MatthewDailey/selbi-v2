@@ -47,6 +47,8 @@ export default class RoutableScene extends Component {
     this.goNextHandler = this.goNextHandler.bind(this);
     this.goBack = this.goBack.bind(this);
     this.goBackHandler = this.goBackHandler.bind(this);
+    this.goReturn = this.goReturn.bind(this);
+    this.goReturnHandler = this.goReturnHandler.bind(this);
     this.openSimpleScene = this.openSimpleScene.bind(this);
   }
 
@@ -59,6 +61,10 @@ export default class RoutableScene extends Component {
   }
 
   onGoNext(route) {
+    // Implemented by children.
+  }
+
+  onGoReturn() {
     // Implemented by children.
   }
 
@@ -84,7 +90,6 @@ export default class RoutableScene extends Component {
       tintColor: colors.secondary,
     };
 
-    console.log(this.props.routeLinks);
     if (this.props.routeLinks.next && this.props.rightIs === 'next') {
       rightButton.handler = this.goNextHandler;
       rightButton.title = this.props.routeLinks.next.title;
@@ -92,6 +97,10 @@ export default class RoutableScene extends Component {
     } else if (this.props.routeLinks.home && this.props.rightIs === 'home') {
       rightButton.handler = this.goHomeHandler;
       rightButton.title = this.props.routeLinks.home.title;
+      return rightButton;
+    } else if (this.props.routeLinks.return && this.props.rightIs === 'return') {
+      rightButton.handler = this.goReturnHandler;
+      rightButton.title = this.props.routeLinks.return.title;
       return rightButton;
     }
 
@@ -143,9 +152,19 @@ export default class RoutableScene extends Component {
     this.onGoBack();
   }
 
-  /*
-   * Wrapper for goNext to allow passing argument.
-   */
+  goReturnHandler() {
+    this.goReturn();
+  }
+
+  goReturn() {
+    if (this.props.routeLinks.return) {
+      this.props.navigator.popToRoute(this.props.routeLinks.return.getRoute());
+    } else {
+      this.props.navigator.pop();
+    }
+    this.onGoReturn();
+  }
+
   goHomeHandler() {
     this.goHome();
   }
@@ -197,5 +216,5 @@ RoutableScene.propTypes = {
   navigator: React.PropTypes.object,
   routeLinks: React.PropTypes.object,
   leftIs: React.PropTypes.oneOf(['back', 'menu']),
-  rightIs: React.PropTypes.oneOf(['next', 'home']),
+  rightIs: React.PropTypes.oneOf(['next', 'home', 'return']),
 };

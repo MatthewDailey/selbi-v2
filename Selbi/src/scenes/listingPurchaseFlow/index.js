@@ -9,6 +9,9 @@ import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
 import EditListingScene from '../EditListingScene';
 
+import SimpleCamera from '../newListingFlow/CameraScene';
+import ApproveImageScene from '../newListingFlow/ApproveImageScene';
+
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
 
@@ -26,6 +29,26 @@ const listingDetailScene = {
 const editListingScene = {
   id: 'edit-listing-scene',
   renderContent: withNavigatorProps(<EditListingScene leftIs="back" rightIs="home" />),
+};
+
+const cameraScene = {
+  id: 'edit-camera-scene',
+  renderContent: withNavigatorProps(
+    <SimpleCamera
+      title="New Picture"
+      leftIs="back"
+      rightIs="next"
+    />),
+};
+
+const imageScene = {
+  id: 'edit-image-scene',
+  renderContent: withNavigatorProps(
+    <ApproveImageScene
+      title=""
+      leftIs="back"
+      rightIs="return"
+    />),
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -77,6 +100,9 @@ routeLinks[listingDetailScene.id] = {
 };
 
 routeLinks[editListingScene.id] = {
+  camera: {
+    getRoute: () => cameraScene,
+  },
   home: {
     title: 'Save',
   },
@@ -86,6 +112,20 @@ routeLinks[chatSignInScene.id] = {
   next: {
     title: '',
     getRoute: () => chatFromDetailScene,
+  },
+};
+
+routeLinks[cameraScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => imageScene,
+  },
+};
+
+routeLinks[imageScene.id] = {
+  return: {
+    title: 'Accept Photo',
+    getRoute: () => editListingScene,
   },
 };
 
