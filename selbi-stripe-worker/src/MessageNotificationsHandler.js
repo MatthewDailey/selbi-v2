@@ -46,6 +46,8 @@ export default class MessageNotificationsHandler {
       const buyerId = data.buyerId;
       const messageId = data.messageId;
 
+      console.log(`Handling messageNotification ${listingId} : ${buyerId} : ${messageId}`)
+
       const loadNotificationData = () => {
         const promiseLoadMessage = firebaseDb
           .ref('messages')
@@ -76,7 +78,7 @@ export default class MessageNotificationsHandler {
           .then((messageAndListing) => {
             const message = messageAndListing[0];
             const listing = messageAndListing[1];
-            const sellerId = listing.sellerUid;
+            const sellerId = listing.sellerId;
 
             const getRecipient = (messageAuthorId) => {
               if (messageAuthorId === buyerId) {
@@ -89,7 +91,6 @@ export default class MessageNotificationsHandler {
               .then((authorPublicInfo) => authorPublicInfo.displayName);
 
             const recipientId = getRecipient(message.authorUid);
-
             const promiseRecipientFcmToken = loadUserPrivateInfo(recipientId)
               .then((recipient) => {
                 if (recipient.fcmToken) {

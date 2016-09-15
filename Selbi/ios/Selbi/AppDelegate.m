@@ -54,4 +54,9 @@
      handler(UIBackgroundFetchResultNewData);
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  application.applicationIconBadgeNumber = 0;
+}
+
 @end

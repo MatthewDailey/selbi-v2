@@ -405,12 +405,23 @@ export function loadMessages(listingId, buyerUid) {
 
 export function sendMessage(listingId, buyerUid, messageText) {
   console.log(`user: ${getUser().uid}`);
-  return firebaseApp
+  const newMessageRef = firebaseApp
     .database()
     .ref('messages')
     .child(listingId)
     .child(buyerUid)
     .push()
+
+  firebaseApp
+    .database()
+    .ref('messageNotifications/tasks')
+    .push({
+      listingId,
+      buyerId: buyerUid,
+      messageId: newMessageRef.key,
+    });
+
+  return newMessageRef
     .set({
       text: messageText,
       authorUid: getUser().uid,

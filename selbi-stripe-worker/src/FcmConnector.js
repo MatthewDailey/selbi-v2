@@ -13,6 +13,7 @@ export function sendNotification(targetFcmToken, title, body) {
     notification: {
       title,
       body,
+      badge: '1',
     },
   };
 
