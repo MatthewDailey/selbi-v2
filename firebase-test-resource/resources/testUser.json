@@ -1,4 +1,5 @@
 {
+  "fcmToken" : "fake:fcm:token",
   "locations" : {
     "sellingFrom": {
       "address1": "655 Natoma Street",

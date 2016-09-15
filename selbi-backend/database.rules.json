@@ -594,6 +594,9 @@
         "userAgreementAccepted": {
           ".validate": "newData.isBoolean()"
         },
+        "fcmToken" : {
+          ".validate": "newData.isString()"
+        },
         // TODO: Validate email is valid as well.
         "email": {
           ".validate": "newData.isString()"
