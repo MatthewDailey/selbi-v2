@@ -7,10 +7,13 @@ const fcm = new FCM(serverKey);
 
 export default undefined;
 
-export function sendNotification(targetFcmToken, notification) {
+export function sendNotification(targetFcmToken, title, body) {
   const message = {
     to: targetFcmToken,
-    notification,
+    notification: {
+      title,
+      body,
+    },
   };
 
   return new Promise((resolve, reject) => {
