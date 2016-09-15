@@ -36,6 +36,7 @@ export default class ChatListComponent extends Component {
             onRefresh={this.onRefresh}
           />
         }
+        enableEmptySections
         style={styles.container}
         removeClippedSubviews={false}
         dataSource={this.state.dataSource}
