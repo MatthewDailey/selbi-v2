@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
+import FCM from 'react-native-fcm';
 
 const developConfig = {
   apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
@@ -32,6 +33,21 @@ export function getUser() {
   return firebaseApp
     .auth()
     .currentUser;
+}
+
+export function setUserFcmToken(fcmToken) {
+  if (!getUser()) {
+    return Promise.reject('Not signed in.');
+  }
+  console.log('-----about to set fcmToken----------')
+  console.log(fcmToken);
+  return firebaseApp
+    .database()
+    .ref('/users')
+    .child(getUser().uid)
+    .update({
+      fcmToken
+    });
 }
 
 /*
@@ -73,9 +89,18 @@ export function signInWithEmail(email, password) {
     .then((userSnapshot) => {
       if (!userSnapshot.exists()) {
         return insertUserInDatabase(getUser().displayName)
+          .then(() => {
+            FCM.requestPermissions(); // for iOS
+            return FCM.getFCMToken();
+          })
+          .then(setUserFcmToken)
           .then(() => Promise.resolve(getUser().uid));
       }
-      return Promise.resolve(getUser().uid);
+
+      FCM.requestPermissions(); // for iOS
+      return FCM.getFCMToken()
+        .then(setUserFcmToken)
+        .then(() => Promise.resolve(getUser().uid));
     });
 }
 
@@ -84,6 +109,7 @@ export function signOut() {
     .auth()
     .signOut();
 }
+
 
 export function createUser(firstName, lastName) {
   const userDisplayName = `${firstName} ${lastName}`;

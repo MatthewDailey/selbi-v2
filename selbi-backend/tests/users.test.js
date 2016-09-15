@@ -125,6 +125,16 @@ describe('/users', () => {
         .catch(done);
     });
 
+    it('can update fcmToken', (done) => {
+      usersRef
+        .child(testUserUid)
+        .update({
+          fcmToken: 'testFcmToken',
+        })
+        .then(done)
+        .catch(done);
+    });
+
     it('Cannot read other\'s data.', (done) => {
       usersRef
         .child(extraUserUid)
