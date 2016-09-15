@@ -14,6 +14,7 @@ export function sendNotification(targetFcmToken, title, body) {
       title,
       body,
       badge: '1',
+      sound: 'Default',
     },
   };
 
