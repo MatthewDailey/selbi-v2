@@ -31,8 +31,6 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
-import { connectFcm } from './src/components/FcmConnector';
-
 import colors from './colors';
 
 // Used to set camera shutter button color.
