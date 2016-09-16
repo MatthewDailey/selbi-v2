@@ -9,6 +9,7 @@ export default class InputScene extends RoutableScene {
   constructor(props) {
     super(props);
 
+    this.onSubmit = this.onSubmit.bind(this);
     this.onInputTextChange = this.onInputTextChange.bind(this);
     this.state = { renderPlaceholderOnly: true };
   }
@@ -41,6 +42,10 @@ export default class InputScene extends RoutableScene {
     });
   }
 
+  onSubmit() {
+    this.goNext();
+  }
+
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
       return (
@@ -62,7 +67,7 @@ export default class InputScene extends RoutableScene {
               onTextChange={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
               returnKeyType="done"
-              onSubmitEditing={this.goNext}
+              onSubmitEditing={this.onSubmit}
             />
           </View>
         </View>

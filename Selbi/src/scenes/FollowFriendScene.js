@@ -22,6 +22,10 @@ class FollowFriendScene extends InputScene {
     return this.props.inputValue.toLowerCase().trim().replace(/^@/gm, '');
   }
 
+  onSubmit() {
+    this.goReturn();
+  }
+
   shouldGoReturn() {
     if (!this.props.inputValue) {
       Alert.alert('Friend username input must not be empty.');
