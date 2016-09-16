@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { View, Text, TouchableHighlight, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -9,50 +10,11 @@ function notImplemented() {
   Alert.alert('Not yet supported.');
 }
 
-export default class Menu extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      userDisplayName: undefined,
-      username: undefined,
-    };
-
-    this.updateStateFromUser = this.updateStateFromUser.bind(this);
-  }
-
-  updateStateFromUser(user) {
-    if (user) {
-      this.props.loadUserPublicData(user.uid)
-        .then((publicDataSnapshot) => {
-          const userPublicData = publicDataSnapshot.val();
-          this.setState({
-            userDisplayName: userPublicData.displayName,
-            username: userPublicData.username,
-          });
-        })
-        .catch(console.log);
-    } else {
-      this.setState({
-        userDisplayName: undefined,
-      });
-    }
-  }
-
-  componentDidMount() {
-    this.props.addAuthStateChangeListener(this.updateStateFromUser);
-
-    this.updateStateFromUser(this.props.getUser());
-  }
-
-  componentWillUnmount() {
-    this.props.removeAuthStateChangeListener(this.updateStateFromUser);
-  }
-
+class Menu extends Component {
   render() {
     const ifSignedIn = (sceneFunction) =>
       (scene) => {
-        if (this.state.userDisplayName) {
+        if (this.props.userDisplayName) {
           sceneFunction(scene);
         } else {
           Alert.alert('You must sign in first.');
@@ -76,8 +38,8 @@ export default class Menu extends Component {
 
     const getSignedInHeader = () =>
       <View style={styles.paddedCenterContainerWhite}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.state.userDisplayName}</Text>
-        <Text style={{fontWeight: 'normal', fontSize: 13}}>{`@${this.state.username}`}</Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.props.userDisplayName}</Text>
+        <Text style={{fontWeight: 'normal', fontSize: 13}}>{`@${this.props.username}`}</Text>
         <View style={styles.halfPadded}/>
         <TouchableHighlight onPress={() => {
           this.props.signOut();
@@ -97,13 +59,13 @@ export default class Menu extends Component {
       </TouchableHighlight>
 
     const getHeader = () => {
-      if (this.state.userDisplayName) {
+      if (this.props.userDisplayName) {
         return getSignedInHeader();
       }
       return getSignedOutHeader();
     };
 
-    const signInMenuStyle = this.state.userDisplayName ? {} :
+    const signInMenuStyle = this.props.userDisplayName ? {} :
       { textDecorationLine: 'line-through' };
 
     return (
@@ -125,7 +87,7 @@ export default class Menu extends Component {
           <Text style={styles.menuText}><Icon name="map-marker" size={20}/> Local Listings</Text>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => setSceneAndCloseMenu(this.props.friendsListingScene)}
+          onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene)}
           underlayColor={colors.secondary}
         >
           <Text style={styles.menuText}>
@@ -202,3 +164,10 @@ export default class Menu extends Component {
     );
   }
 }
+
+export default connect(
+  (state) => {
+    return { userDisplayName: state.user.displayName, username: state.user.username };
+  },
+  undefined
+)(Menu);

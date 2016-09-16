@@ -30,12 +30,14 @@ import imagesReducer from './src/reducers/ImagesReducer';
 import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
+import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
+import styles from './styles';
 
 // Used to set camera shutter button color.
 setTheme({
@@ -51,6 +53,7 @@ const store = createStore(combineReducers({
   listingDetails: listingDetailReducer,
   followFriend: followFriendReducer,
   friendsListings: friendsListingsReducer,
+  user: userReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
@@ -79,6 +82,21 @@ const recordUserForAnalytics = (user) => {
 };
 addAuthStateChangeListener(recordUserForAnalytics)
 
+const storeUserData = (user) => {
+  if (user) {
+    loadUserPublicData(user.uid)
+      .then((publicDataSnapshot) => {
+        const userPublicData = publicDataSnapshot.val();
+        store.dispatch(setUserData({
+          displayName: userPublicData.displayName,
+          username: userPublicData.username,
+        }));
+      });
+  } else {
+    store.dispatch(clearUserData());
+  }
+};
+addAuthStateChangeListener(storeUserData)
 
 const localListingScene = {
   id: 'listings-scene',
@@ -189,8 +207,6 @@ function renderMenu(navigator, closeMenu) {
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}
-      addAuthStateChangeListener={addAuthStateChangeListener}
-      removeAuthStateChangeListener={removeAuthStateChangeListener}
       loadUserPublicData={loadUserPublicData}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
