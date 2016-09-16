@@ -8,7 +8,7 @@ describe('/usernames', () => {
   beforeEach((done) => {
     FirebaseTest.serviceAccountApp.database()
       .ref('usernames')
-      .child(minimalUserUid)
+      .child(testMinimalUsername)
       .remove()
       .then(done)
       .catch(done);
@@ -17,8 +17,8 @@ describe('/usernames', () => {
   it('can add username', (done) => {
     FirebaseTest.minimalUserApp.database()
       .ref('usernames')
-      .child(minimalUserUid)
-      .set(testMinimalUsername)
+      .child(testMinimalUsername)
+      .set(minimalUserUid)
       .then(done)
       .catch(done);
   });
@@ -26,23 +26,23 @@ describe('/usernames', () => {
   it('can read other\'s username', (done) => {
     FirebaseTest.minimalUserApp.database()
       .ref('usernames')
-      .child(minimalUserUid)
-      .set(testMinimalUsername)
+      .child(testMinimalUsername)
+      .set(minimalUserUid)
       .then(() => FirebaseTest.testUserApp.database()
           .ref('usernames')
-          .child(minimalUserUid)
+          .child(testMinimalUsername)
           .once('value'))
-      .then((usernameSnapshot) => expect(usernameSnapshot.val()).to.equal(testMinimalUsername))
+      .then((usernameSnapshot) => expect(usernameSnapshot.val()).to.equal(minimalUserUid))
       .then(() => done())
       .catch(done);
   });
 
-  it('cannot add number as username', (done) => {
+  it('cannot add non-uid for username value', (done) => {
     expectUnableToStore(
       FirebaseTest.minimalUserApp.database()
         .ref('usernames')
-        .child(minimalUserUid)
-        .set(1))
+        .child(testMinimalUsername)
+        .set('not a uid'))
       .then(done)
       .catch(done);
   });
@@ -51,8 +51,8 @@ describe('/usernames', () => {
     expectUnableToStore(
       FirebaseTest.minimalUserApp.database()
         .ref('usernames')
-        .child(testUserUid)
-        .set(testMinimalUsername))
+        .child(testMinimalUsername)
+        .set(testUserUid))
       .then(done)
       .catch(done);
   });

@@ -578,9 +578,8 @@
 
     "usernames" : {
       ".read": true,
-      "$uid" : {
-        ".write": "auth.uid === $uid",
-        ".validate": "newData.isString()"
+      "$username" : {
+        ".write": "auth.uid === newData.val()"
       }
     },
     "userPublicData": {
