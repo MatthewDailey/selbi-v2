@@ -2,6 +2,8 @@ import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
 
+import { convertToUsername } from './FirebaseUtils';
+
 const developConfig = {
   apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
   authDomain: 'selbi-develop.firebaseapp.com',
@@ -61,13 +63,55 @@ export function registerWithEmail(emailInput, passwordInput) {
     .createUserWithEmailAndPassword(emailInput, passwordInput);
 }
 
+/*
+ * @returns username if name is available, undefined otherwise.
+ */
+function checkUsernameTaken(username) {
+  return firebaseApp.database()
+    .ref('usernames')
+    .child(username)
+    .once('value')
+    .then((usernameSnapshot) => {
+      if (usernameSnapshot.exists()) {
+        return undefined;
+      }
+      return username;
+    });
+}
+
+function getValidUsername(userDisplayName) {
+  const usernameBase = convertToUsername(userDisplayName);
+  let usernameIndex = 0;
+
+  const getUsernameWithIndex = (usernameAttempt) => checkUsernameTaken(usernameAttempt)
+    .then((validUsername) => {
+      console.log(`Checked name ${usernameAttempt} and got ${validUsername}`);
+      if (validUsername) {
+        return validUsername;
+      }
+      return getUsernameWithIndex(`${usernameBase}${usernameIndex++}`);
+    });
+
+  return getUsernameWithIndex(usernameBase);
+}
+
 function insertUserInDatabase(userDisplayName) {
-  const promiseUserPublicData = firebaseApp
-    .database()
-    .ref('/userPublicData')
-    .child(getUser().uid)
-    .set({
-      displayName: userDisplayName,
+  const promiseUserPublicDataAndUsername = getValidUsername(userDisplayName)
+    .then((validUsername) => {
+      const promiseUserPublicData = firebaseApp
+        .database()
+        .ref('/userPublicData')
+        .child(getUser().uid)
+        .set({
+          username: validUsername,
+          displayName: userDisplayName,
+        });
+      const promiseUsername = firebaseApp
+        .database()
+        .ref('/usernames')
+        .child(validUsername)
+        .set(getUser().uid);
+      return Promise.all([promiseUserPublicData, promiseUsername]);
     });
 
   const promiseUsers = firebaseApp
@@ -78,7 +122,7 @@ function insertUserInDatabase(userDisplayName) {
       userAgreementAccepted: false,
     });
 
-  return Promise.all([promiseUsers, promiseUserPublicData]);
+  return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
 }
 
 export function signInWithEmail(email, password) {
