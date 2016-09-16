@@ -416,7 +416,21 @@ function loadChatDetailsFromUserChats(userChatsData) {
 }
 
 export function addFriend(friendUsername) {
-  return Promise.reject();
+  return firebaseApp.database()
+    .ref('usernames')
+    .child(friendUsername)
+    .once('value')
+    .then((friendUsernameSnapshot) => {
+      if (friendUsernameSnapshot.exists()) {
+        return friendUsernameSnapshot.val();
+      }
+      return Promise.reject();
+    })
+    .then((friendUid) => firebaseApp.database()
+      .ref('following')
+      .child(getUser().uid)
+      .child(friendUid)
+      .set(true));
 }
 
 export function loadAllUserChats() {

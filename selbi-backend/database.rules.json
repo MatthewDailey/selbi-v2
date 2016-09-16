@@ -582,6 +582,7 @@
         ".write": "auth.uid === newData.val()"
       }
     },
+
     "userPublicData": {
       "$uid" : {
         ".write": "auth.uid == $uid",
