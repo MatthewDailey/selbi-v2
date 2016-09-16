@@ -18,7 +18,7 @@ import ChatFlow from './src/scenes/chatFlow';
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
-
+import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
@@ -26,6 +26,7 @@ import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyLi
   setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
 import listingDetailReducer from './src/reducers/ListingDetailReducer';
+import followFriendReducer from './src/reducers/FollowFriendReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
@@ -45,6 +46,7 @@ const store = createStore(combineReducers({
   myListings: myListingsReducer,
   images: imagesReducer,
   listingDetails: listingDetailReducer,
+  followFriend: followFriendReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
@@ -104,6 +106,17 @@ const chatListScene = {
   ),
 };
 
+const followFriendScene = {
+  id: 'follow-friend',
+  renderContent: withNavigatorProps(
+    <FollowFriendScene
+      title="Follow a Friend"
+      leftIs="back"
+      rightIs="return"
+    />
+  ),
+};
+
 let routeLinks = {};
 
 // Link local listings to sell flow.
@@ -143,6 +156,7 @@ function renderMenu(navigator, closeMenu) {
       localListingScene={localListingScene}
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
+      followFriendScene={followFriendScene}
       addAuthStateChangeListener={addAuthStateChangeListener}
       removeAuthStateChangeListener={removeAuthStateChangeListener}
       loadUserPublicData={loadUserPublicData}

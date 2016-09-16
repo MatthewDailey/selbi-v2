@@ -64,6 +64,11 @@ export default class Menu extends Component {
       this.props.closeMenu();
     };
 
+    const pushSceneAndCloseMenu = (scene) => {
+      this.props.navigator.push(scene);
+      this.props.closeMenu();
+    };
+
     const signInOrRegister = () => {
       this.props.navigator.push(this.props.signInOrRegisterScene);
       this.props.closeMenu();
@@ -163,7 +168,10 @@ export default class Menu extends Component {
           }}
         />
 
-        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
+        <TouchableHighlight
+          onPress={() => ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene)}
+          underlayColor={colors.secondary}
+        >
           <Text style={styles.menuText}>
             <Icon name="user-plus" size={20}/> <Text style={signInMenuStyle}>Follow a Friend</Text>
           </Text>
