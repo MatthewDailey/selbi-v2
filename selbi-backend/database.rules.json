@@ -565,6 +565,17 @@
         }
       }
     },
+
+    "following" : {
+      "$uid" : {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid",
+        "$friendUid" : {
+          ".validate": "newData.isBoolean() && $uid != $friendUid"
+        }
+      }
+    },
+
     "usernames" : {
       ".read": true,
       "$uid" : {
