@@ -15,6 +15,7 @@ export default class Menu extends Component {
 
     this.state = {
       userDisplayName: undefined,
+      username: undefined,
     };
 
     this.updateStateFromUser = this.updateStateFromUser.bind(this);
@@ -22,10 +23,15 @@ export default class Menu extends Component {
 
   updateStateFromUser(user) {
     if (user) {
-      console.log(user.displayName);
-      this.setState({
-        userDisplayName: user.displayName,
-      });
+      this.props.loadUserPublicData(user.uid)
+        .then((publicDataSnapshot) => {
+          const userPublicData = publicDataSnapshot.val();
+          this.setState({
+            userDisplayName: userPublicData.displayName,
+            username: userPublicData.username,
+          });
+        })
+        .catch(console.log);
     } else {
       this.setState({
         userDisplayName: undefined,
@@ -66,6 +72,7 @@ export default class Menu extends Component {
     const getSignedInHeader = () =>
       <View style={styles.paddedCenterContainerWhite}>
         <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.state.userDisplayName}</Text>
+        <Text style={{fontWeight: 'normal', fontSize: 13}}>{`@${this.state.username}`}</Text>
         <View style={styles.halfPadded}/>
         <TouchableHighlight onPress={() => {
           this.props.signOut()

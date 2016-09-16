@@ -27,7 +27,7 @@ import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyLi
 import imagesReducer from './src/reducers/ImagesReducer';
 import listingDetailReducer from './src/reducers/ListingDetailReducer';
 
-import { registerWithEmail, signInWithEmail, signOut, getUser, createUser,
+import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
@@ -145,6 +145,7 @@ function renderMenu(navigator, closeMenu) {
       chatListScene={chatListScene}
       addAuthStateChangeListener={addAuthStateChangeListener}
       removeAuthStateChangeListener={removeAuthStateChangeListener}
+      loadUserPublicData={loadUserPublicData}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
         renderContent: withNavigatorProps(
