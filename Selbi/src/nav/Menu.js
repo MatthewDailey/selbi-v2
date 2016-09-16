@@ -75,7 +75,7 @@ export default class Menu extends Component {
         <Text style={{fontWeight: 'normal', fontSize: 13}}>{`@${this.state.username}`}</Text>
         <View style={styles.halfPadded}/>
         <TouchableHighlight onPress={() => {
-          this.props.signOut()
+          this.props.signOut();
           setSceneAndCloseMenu(this.props.localListingScene);
         }} underlayColor={colors.secondary}>
           <Text style={{fontSize: 10}}>Sign out</Text>
@@ -165,12 +165,26 @@ export default class Menu extends Component {
 
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
-            <Icon name="user" size={20}/> <Text style={signInMenuStyle}>My Profile</Text>
+            <Icon name="user-plus" size={20}/> <Text style={signInMenuStyle}>Follow a Friend</Text>
+          </Text>
+        </TouchableHighlight>
+
+        <View
+          style={{
+            margin: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: `${colors.dark}64`,
+          }}
+        />
+
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
+          <Text style={styles.menuText}>
+            <Icon name="user" size={20} /> <Text style={signInMenuStyle}>My Profile</Text>
           </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
-            <Icon name="gear" size={20}/> <Text style={signInMenuStyle}>Settings</Text>
+            <Icon name="gear" size={20} /> <Text style={signInMenuStyle}>Settings</Text>
           </Text>
         </TouchableHighlight>
       </View>
