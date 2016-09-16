@@ -415,8 +415,53 @@ function loadChatDetailsFromUserChats(userChatsData) {
   return Promise.all(chatPromises);
 }
 
+function loadUserListingsByStatus(uid, status) {
+  return firebaseApp
+    .database()
+    .ref('/userListings')
+    .child(uid)
+    .child(status)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return Promise.resolve(snapshot.val());
+      }
+      return Promise.resolve({});
+    })
+    .then((listingsOfStatus) => {
+      const allListings = [];
+      Object.keys(listingsOfStatus)
+        .forEach((listingId) => {
+          allListings.push(
+            firebaseApp
+              .database()
+              .ref('/listings')
+              .child(listingId)
+              .once('value'));
+        });
+      return Promise.all(allListings);
+    });
+}
+
 export function loadFriendsListings() {
-  return Promise.resolve([]);
+  return firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .once('value')
+    .then((followingSnapshot) => {
+      if (followingSnapshot.exists()) {
+        const listingsListsPromises = [];
+        console.log(followingSnapshot.val());
+        Object.keys(followingSnapshot.val()).forEach(
+          (friendUid) => {
+            listingsListsPromises.push(loadUserListingsByStatus(friendUid, 'public'));
+            listingsListsPromises.push(loadUserListingsByStatus(friendUid, 'private'));
+          });
+        return Promise.all(listingsListsPromises);
+      }
+      return Promise.resolve([]);
+    })
+    .then((listOfListingsLists) => [].concat.apply([], listOfListingsLists));
 }
 
 export function addFriend(friendUsername) {
@@ -589,32 +634,7 @@ export function loadListingsByStatus(status) {
   if (!getUser()) {
     return Promise.resolve([]);
   }
-
-  return firebaseApp
-    .database()
-    .ref('/userListings')
-    .child(getUser().uid)
-    .child(status)
-    .once('value')
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        return Promise.resolve(snapshot.val());
-      }
-      return Promise.resolve({});
-    })
-    .then((listingsOfStatus) => {
-      const allListings = [];
-      Object.keys(listingsOfStatus)
-        .forEach((listingId) => {
-          allListings.push(
-            firebaseApp
-              .database()
-              .ref('/listings')
-              .child(listingId)
-              .once('value'));
-        });
-      return Promise.all(allListings);
-    });
+  return loadUserListingsByStatus(getUser().uid, status);
 }
 
 // Must be logged in first.

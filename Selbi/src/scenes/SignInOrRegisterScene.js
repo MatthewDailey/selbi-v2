@@ -138,6 +138,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       })
       .catch((error) => {
         console.log(error);
+        this.setState({ signingIn: true });
         Alert.alert('There was an error during registration.');
       });
   }
@@ -164,6 +165,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       })
       .catch((error) => {
         console.log(error);
+        this.setState({ signingIn: false });
         Alert.alert('There was an error during sign in.');
       });
   }

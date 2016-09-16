@@ -456,7 +456,7 @@
         // Only owner can write. Owner and friends can read.
         "private": {
           ".write": "$uid === auth.uid",
-          ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists()",
+          ".read": true,
           "$listingId": {
             ".validate": "newData.isBoolean()"
           }
