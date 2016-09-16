@@ -18,6 +18,8 @@ import ChatFlow from './src/scenes/chatFlow';
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
+import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
+
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
@@ -27,6 +29,7 @@ import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyLi
 import imagesReducer from './src/reducers/ImagesReducer';
 import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
+import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
   addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
@@ -47,6 +50,7 @@ const store = createStore(combineReducers({
   images: imagesReducer,
   listingDetails: listingDetailReducer,
   followFriend: followFriendReducer,
+  friendsListings: friendsListingsReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
@@ -106,6 +110,17 @@ const chatListScene = {
   ),
 };
 
+const friendsListingScene = {
+  id: 'friends-listings',
+  renderContent: withNavigatorProps(
+    <FriendsListingsScene
+      title="Friend's Listings"
+      leftIs="menu"
+      rightIs="next"
+    />
+  ),
+};
+
 const followFriendScene = {
   id: 'follow-friend',
   renderContent: withNavigatorProps(
@@ -121,6 +136,16 @@ let routeLinks = {};
 
 // Link local listings to sell flow.
 routeLinks[localListingScene.id] = {
+  next: {
+    title: 'Sell',
+    getRoute: () => NewListingFlow.firstScene,
+  },
+  details: {
+    getRoute: () => ListingPurchaseFlow.firstScene,
+  },
+};
+
+routeLinks[friendsListingScene.id] = {
   next: {
     title: 'Sell',
     getRoute: () => NewListingFlow.firstScene,
@@ -160,6 +185,7 @@ function renderMenu(navigator, closeMenu) {
       getUser={getUser}
       closeMenu={closeMenu}
       localListingScene={localListingScene}
+      friendsListingScene={friendsListingScene}
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}

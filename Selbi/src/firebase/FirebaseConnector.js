@@ -415,6 +415,10 @@ function loadChatDetailsFromUserChats(userChatsData) {
   return Promise.all(chatPromises);
 }
 
+export function loadFriendsListings() {
+  return Promise.resolve([]);
+}
+
 export function addFriend(friendUsername) {
   return firebaseApp.database()
     .ref('usernames')

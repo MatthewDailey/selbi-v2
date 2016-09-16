@@ -124,7 +124,10 @@ export default class Menu extends Component {
         >
           <Text style={styles.menuText}><Icon name="map-marker" size={20}/> Local Listings</Text>
         </TouchableHighlight>
-        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
+        <TouchableHighlight
+          onPress={() => setSceneAndCloseMenu(this.props.friendsListingScene)}
+          underlayColor={colors.secondary}
+        >
           <Text style={styles.menuText}>
             <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friend's Listings</Text>
           </Text>
