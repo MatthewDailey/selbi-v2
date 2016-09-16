@@ -1,10 +1,56 @@
+import React from 'react';
+import { View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
 import InputScene from './InputScene';
+import SpinnerOverlay from '../components/SpinnerOverlay';
+
 import { setPossibleFriendUsername } from '../reducers/FollowFriendReducer';
+import { addFriend } from '../firebase/FirebaseConnector';
+
+import styles from '../../styles';
 
 class FollowFriendScene extends InputScene {
-  shouldGoReturn
+  constructor(props) {
+    super(props);
+    this.state = {
+      saving: false,
+    };
+  }
+
+  shouldGoReturn() {
+    if (!this.props.inputValue) {
+      Alert.alert('Friend username input must not be empty.');
+    } else if (!this.state.saving) {
+      this.setState({
+        saving: true,
+      });
+
+      addFriend(this.props.inputValue)
+        .then(() => {
+          Alert.alert(`Added \'${this.props.inputValue}\' as a friend.`);
+          this.props.navigator.pop();
+        })
+        .catch(() => {
+          Alert.alert(`Unable to add \'${this.props.inputValue}\' as a friend.`);
+          this.setState({
+            saving: false,
+          });
+        });
+    }
+    return false;
+  }
+
+  renderWithNavBar() {
+    const inputView = super.renderWithNavBar();
+
+    return (
+      <View style={styles.container}>
+        {inputView}
+        <SpinnerOverlay isVisible={this.state.saving} />
+      </View>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
