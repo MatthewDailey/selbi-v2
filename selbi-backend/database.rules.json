@@ -565,12 +565,22 @@
         }
       }
     },
+    "usernames" : {
+      ".read": true,
+      "$uid" : {
+        ".write": "auth.uid === $uid",
+        ".validate": "newData.isString()"
+      }
+    },
     "userPublicData": {
       "$uid" : {
         ".write": "auth.uid == $uid",
         ".read": true,
-        ".validate": "newData.hasChildren(['displayName'])",
+        ".validate": "newData.hasChildren(['displayName', 'username'])",
         "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "username": {
           ".validate": "newData.isString()"
         },
         "profileImageUrl": {

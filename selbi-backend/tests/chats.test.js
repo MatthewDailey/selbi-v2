@@ -1,4 +1,4 @@
-import FirebaseTest, { minimalUserUid, testUserUid, expectUnableToStore}
+import FirebaseTest, { minimalUserUid, testUserUid, expectUnableToStore }
   from '@selbi/firebase-test-resource';
 
 const testListingId = 'testListing';
