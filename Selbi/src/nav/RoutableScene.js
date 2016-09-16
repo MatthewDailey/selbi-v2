@@ -156,9 +156,17 @@ export default class RoutableScene extends Component {
     this.goReturn();
   }
 
+  shouldGoReturn() {
+    return true;
+  }
+
   goReturn() {
-    if (this.props.routeLinks.return) {
-      this.props.navigator.popToRoute(this.props.routeLinks.return.getRoute());
+    if (this.props.routeLinks.return && this.shouldGoReturn()) {
+      if (this.props.routeLinks.return.getRoute) {
+        this.props.navigator.popToRoute(this.props.routeLinks.return.getRoute());
+      } else {
+        this.props.navigator.pop();
+      }
     } else {
       this.props.navigator.pop();
     }

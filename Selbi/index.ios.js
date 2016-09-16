@@ -110,7 +110,7 @@ const followFriendScene = {
   id: 'follow-friend',
   renderContent: withNavigatorProps(
     <FollowFriendScene
-      title="Follow a Friend"
+      title=""
       leftIs="back"
       rightIs="return"
     />
@@ -139,6 +139,12 @@ routeLinks[myListingsScene.id] = {
 routeLinks[chatListScene.id] = {
   chat: {
     getRoute: () => ChatFlow.firstScene, // Must be logged in to see chat list scene.
+  },
+};
+
+routeLinks[followFriendScene.id] = {
+  return: {
+    title: 'Add Friend',
   },
 };
 

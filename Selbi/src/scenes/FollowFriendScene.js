@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import InputScene from './InputScene';
 import { setPossibleFriendUsername } from '../reducers/FollowFriendReducer';
 
+class FollowFriendScene extends InputScene {
+  shouldGoReturn
+}
+
 const mapStateToProps = (state) => {
   return {
     inputValue: state.followFriend.username,
@@ -22,4 +26,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InputScene);
+)(FollowFriendScene);
