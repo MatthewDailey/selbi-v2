@@ -44,3 +44,6 @@ android/keystores/debug.keystore
 
 # Google pointer based on scheme being run
 ios/Selbi/GoogleService-Info.plist
+
+# Javascript config
+.env

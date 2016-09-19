@@ -3,6 +3,20 @@ Selbi - Mobile App
 
 This package implements the Selbi mobile app in React Native
 
+Build Process
+-------------
+
+To build and run against various Selbi stages (see `../README.md` for details), we use an additional
+build phase to run a script which sets up the necessary components.
+
+Peices that require custom configuration:
+- FCM and Firebase Analytics - This requires the proper `GoogleService-Info.plist` in place at
+`ios/Selbi/GoogleService-Info.plist`. These are stored in `ios/Selbi/selbiBuildResources` and copied
+ into place at build time.
+- Firebase Realtime DB connection - We use [react-native-config](https://github.com/luggit/react-native-config)
+to manage JS configuration including the Realtime DB connection info. Since we access this directly
+from javascript, we use seperate management from the iOS firebase info.
+
 Testing
 -------
 

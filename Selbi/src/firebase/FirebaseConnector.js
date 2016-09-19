@@ -1,14 +1,15 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
+import Config from 'react-native-config'
 
 import { convertToUsername } from './FirebaseUtils';
 
 const developConfig = {
-  apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
-  authDomain: 'selbi-develop.firebaseapp.com',
-  databaseURL: 'https://selbi-develop.firebaseio.com',
-  storageBucket: 'selbi-develop.appspot.com',
+  apiKey: Config.FIREBASE_API_KEY,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  databaseURL: Config.FIREBASE_DATABASE_URL,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
 };
 
 // Note that this also reloads user auth settings. Therefore, this must not be loaded lazily.
