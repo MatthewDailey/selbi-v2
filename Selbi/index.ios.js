@@ -33,11 +33,10 @@ import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
-  addAuthStateChangeListener, removeAuthStateChangeListener, listenToListingsByStatus }
+  addAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
-import styles from './styles';
 
 // Used to set camera shutter button color.
 setTheme({
@@ -86,11 +85,15 @@ const storeUserData = (user) => {
   if (user) {
     loadUserPublicData(user.uid)
       .then((publicDataSnapshot) => {
-        const userPublicData = publicDataSnapshot.val();
-        store.dispatch(setUserData({
-          displayName: userPublicData.displayName,
-          username: userPublicData.username,
-        }));
+        if (publicDataSnapshot.exists()) {
+          const userPublicData = publicDataSnapshot.val();
+          store.dispatch(setUserData({
+            displayName: userPublicData.displayName,
+            username: userPublicData.username,
+          }));
+        } else {
+          signOut();
+        }
       });
   } else {
     store.dispatch(clearUserData());
