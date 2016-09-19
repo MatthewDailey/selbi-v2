@@ -24,6 +24,7 @@
     "react-dom": "15.2.1",
     "react-native": "^0.31.0",
     "react-native-camera": "lwansbrough/react-native-camera",
+    "react-native-config": "^0.1.0",
     "react-native-credit-card": "^0.1.9",
     "react-native-drawer": "^2.2.6",
     "react-native-fcm": "^1.1.0",

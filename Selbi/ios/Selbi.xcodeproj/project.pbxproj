@@ -24,6 +24,7 @@
 		19488A3EC8284E62929FB0D9 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D1E25F616184E54A362AE15 /* MaterialIcons.ttf */; };
 		366B0DE86B3F457EBE61B363 /* libRCTMaterialKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B568E4E6FE1F4CD1A9C91680 /* libRCTMaterialKit.a */; };
 		5D9E1E084D1C4542A61E1D45 /* libRNFIRAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8723D20E883B4631800C72B3 /* libRNFIRAnalytics.a */; };
+		65F6FBA3EBB94E56B675C57A /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A686F06748C24FD7804125F1 /* libReactNativeConfig.a */; };
 		6E765F23BDED4E43AD34119A /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9D772FF6BEB40178DFF8D16 /* libRNFIRMessaging.a */; };
 		70546E04AED5267DC118B06C /* libPods-Selbi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */; };
 		7557E6CE6FA64ACA8EC4DB56 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86DA0AAF0796407AB040EBAB /* Ionicons.ttf */; };
@@ -133,6 +134,13 @@
 			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
 			remoteInfo = RCTCameraRoll;
 		};
+		C97C70171D908E3800793D40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F41F79618C6041478BB424B1 /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
 		C98348E41D89B1D40049D4C5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */;
@@ -205,6 +213,7 @@
 		95752F99C8ED47CFB13F332C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		980B69C42E52474B807F3CD3 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		A07147F6395B4947AD6AE7EF /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
+		A686F06748C24FD7804125F1 /* libReactNativeConfig.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeConfig.a; sourceTree = "<group>"; };
 		B0AB3F9419A4458AAFE33DAD /* RNImageReader.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImageReader.xcodeproj; path = "../node_modules/@selbi/react-native-image-reader/ios/RNImageReader.xcodeproj"; sourceTree = "<group>"; };
 		B568E4E6FE1F4CD1A9C91680 /* libRCTMaterialKit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTMaterialKit.a; sourceTree = "<group>"; };
 		BBD6E67E99E146F3B0619B81 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -213,6 +222,7 @@
 		C9FCB5D41D89C31B0004EE34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Selbi/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SelbiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE6D76FCDDA32141DA733ADA /* Pods-Selbi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.debug.xcconfig"; sourceTree = "<group>"; };
+		F41F79618C6041478BB424B1 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		FA8EBC0206443D8693BCDD1F /* Pods-SelbiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB936554B4504A9E9F54D2EC /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		FFCC13AB75DC4B6985BC2357 /* libRNImageReader.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImageReader.a; sourceTree = "<group>"; };
@@ -251,6 +261,7 @@
 				6E765F23BDED4E43AD34119A /* libRNFIRMessaging.a in Frameworks */,
 				70546E04AED5267DC118B06C /* libPods-Selbi.a in Frameworks */,
 				5D9E1E084D1C4542A61E1D45 /* libRNFIRAnalytics.a in Frameworks */,
+				65F6FBA3EBB94E56B675C57A /* libReactNativeConfig.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +374,7 @@
 				B0AB3F9419A4458AAFE33DAD /* RNImageReader.xcodeproj */,
 				4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */,
 				FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */,
+				F41F79618C6041478BB424B1 /* ReactNativeConfig.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -421,6 +433,14 @@
 			isa = PBXGroup;
 			children = (
 				C97952FE1D66E35200BCD992 /* libRCTCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C97C70071D908E3800793D40 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C97C70181D908E3800793D40 /* libReactNativeConfig.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -626,6 +646,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = C97C70071D908E3800793D40 /* Products */;
+					ProjectRef = F41F79618C6041478BB424B1 /* ReactNativeConfig.xcodeproj */;
+				},
+				{
 					ProductGroup = C9FCB5E61D8A03CA0004EE34 /* Products */;
 					ProjectRef = FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */;
 				},
@@ -733,6 +757,13 @@
 			fileType = archive.ar;
 			path = libRCTCameraRoll.a;
 			remoteRef = C97952FD1D66E35200BCD992 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C97C70181D908E3800793D40 /* libReactNativeConfig.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeConfig.a;
+			remoteRef = C97C70171D908E3800793D40 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C98348E51D89B1D40049D4C5 /* libRNFIRMessaging.a */ = {
@@ -965,6 +996,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
@@ -982,6 +1014,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1010,6 +1043,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1046,6 +1080,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1108,6 +1143,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1154,6 +1190,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1200,6 +1237,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1226,6 +1264,7 @@
 					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-config/ios/ReactNativeConfig",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1255,6 +1294,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
