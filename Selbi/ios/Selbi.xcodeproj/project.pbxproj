@@ -813,6 +813,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
+			showEnvVarsInLog = 0;
 		};
 		1566C63DA7A45CB75EB2639C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -870,7 +871,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo '\\n\\n\\n\\n'\necho 'Hello from build script'\necho '\\n\\n\\n\\n\\n'";
+			shellScript = "cp Selbi/selbiBuildResources/$SELBI_STAGE/GoogleService-Info.plist ./Selbi/";
 		};
 		D9258FE07CF3A97502D34689 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
