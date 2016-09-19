@@ -130,9 +130,9 @@ export function signInWithEmail(email, password) {
   return firebaseApp
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
+    .then((user) => firebaseApp.database().ref('users').child(user.uid).once('value'))
     .then((userSnapshot) => {
-      if (!userSnapshot.exists()) {
+      if (!userSnapshot || !userSnapshot.exists()) {
         return insertUserInDatabase(getUser().displayName)
           .then(() => {
             FCM.requestPermissions(); // for iOS
