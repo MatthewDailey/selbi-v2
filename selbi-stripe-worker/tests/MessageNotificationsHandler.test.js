@@ -47,6 +47,7 @@ describe('MessageNotificationsHandler', () => {
         .child(testUserUid)
         .update({
           displayName: testUserDisplayName,
+          username: 'testuser',
         }))
       // Store listing.
       .then(() => FirebaseTest.serviceAccountApp.database()
