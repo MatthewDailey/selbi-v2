@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import Config from 'react-native-config'
+import Config from 'react-native-config';
 
 import { convertToUsername } from './FirebaseUtils';
 

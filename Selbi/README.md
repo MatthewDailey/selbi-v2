@@ -20,6 +20,12 @@ from javascript, we use seperate management from the iOS firebase info.
 Probably the right long term solution is to write a native module which holds firebase endpoints
 and then provides them to JS to remove the duplicate config instances.
 
+Hot Updates
+-----------
+
+For hot patching, we use [Code Push](https://microsoft.github.io/code-push/). To use this, you
+must install the code push cli.
+
 Testing
 -------
 

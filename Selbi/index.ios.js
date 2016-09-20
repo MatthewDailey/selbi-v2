@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
+import codePush from 'react-native-code-push';
+import Config from 'react-native-config';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -37,6 +39,8 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadU
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
+
+var RCTLog = require('RCTLog');
 
 // Used to set camera shutter button color.
 setTheme({
@@ -227,16 +231,26 @@ function renderMenu(navigator, closeMenu) {
   );
 }
 
-function NavApp() {
-  return (
-    <Provider store={store}>
-      <DrawerNavigator
-        initialRoute={localListingScene}
-        routeLinks={routeLinks}
-        renderMenuWithNavigator={renderMenu}
-      />
-    </Provider>
-  );
+class NavApp extends Component {
+  componentDidMount() {
+    codePush.sync({
+      updateDialog: true,
+      deploymentKey: Config.CODE_PUSH_KEY,
+      installMode: codePush.InstallMode.IMMEDIATE,
+    });
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <DrawerNavigator
+          initialRoute={localListingScene}
+          routeLinks={routeLinks}
+          renderMenuWithNavigator={renderMenu}
+        />
+      </Provider>
+    );
+  }
 }
 
 AppRegistry.registerComponent('Selbi', () => NavApp);
