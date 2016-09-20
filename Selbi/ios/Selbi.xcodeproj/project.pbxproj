@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -23,7 +24,6 @@
 		19488A3EC8284E62929FB0D9 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D1E25F616184E54A362AE15 /* MaterialIcons.ttf */; };
 		7557E6CE6FA64ACA8EC4DB56 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86DA0AAF0796407AB040EBAB /* Ionicons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		88AA298BDCDA4CFD875E489E /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A70A854A698440DA3A02DEA /* libCodePush.a */; };
 		8E9703D2146543AB8D54E240 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0D7D4D9FD99F4960BA08ED58 /* FontAwesome.ttf */; };
 		91B3DA80055043C3A51B28DB /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB936554B4504A9E9F54D2EC /* Entypo.ttf */; };
 		A248620265864E7A7479F5C6 /* libPods-SelbiTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */; };
@@ -36,6 +36,7 @@
 		C941BBB61D90F94B00250C9E /* libPods-Selbi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C941BBB51D90F94B00250C9E /* libPods-Selbi.a */; };
 		C941BBB71D90F95800250C9E /* libRNFIRAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FCB5F71D8A03CA0004EE34 /* libRNFIRAnalytics.a */; };
 		C941BBB81D90F96A00250C9E /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97C70181D908E3800793D40 /* libReactNativeConfig.a */; };
+		C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C941BBE41D91121200250C9E /* libCodePush.a */; };
 		C97953081D66E3B500BCD992 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97952FE1D66E35200BCD992 /* libRCTCameraRoll.a */; };
 		C9FCB5D51D89C31B0004EE34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9FCB5D41D89C31B0004EE34 /* GoogleService-Info.plist */; };
 		D731A994098E4CE2B5365F8B /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 684C996EC8AC448FBB143D3D /* EvilIcons.ttf */; };
@@ -195,7 +196,6 @@
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* SelbiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SelbiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0667282BE293434AB7BC83C5 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		0A70A854A698440DA3A02DEA /* libCodePush.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libCodePush.a; sourceTree = "<group>"; };
 		0D7D4D9FD99F4960BA08ED58 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 				C941BBB61D90F94B00250C9E /* libPods-Selbi.a in Frameworks */,
 				C941BBB81D90F96A00250C9E /* libReactNativeConfig.a in Frameworks */,
 				C941BBB71D90F95800250C9E /* libRNFIRAnalytics.a in Frameworks */,
-				88AA298BDCDA4CFD875E489E /* libCodePush.a in Frameworks */,
+				C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */,
 				DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1061,6 +1061,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = SelbiSplash;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1090,6 +1091,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Selbi;
+				PROVISIONING_PROFILE = "23a65f97-f2f1-4c45-843a-bc033473381c";
 				SELBI_STAGE = develop;
 			};
 			name = Debug;
@@ -1100,6 +1102,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = SelbiSplash;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1128,6 +1131,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Selbi;
+				PROVISIONING_PROFILE = "23a65f97-f2f1-4c45-843a-bc033473381c";
 				SELBI_STAGE = production;
 			};
 			name = Release;
@@ -1288,6 +1292,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = SelbiSplash;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1316,6 +1321,7 @@
 					"-lc++",
 				);
 				PRODUCT_NAME = Selbi;
+				PROVISIONING_PROFILE = "23a65f97-f2f1-4c45-843a-bc033473381c";
 				SELBI_STAGE = staging;
 			};
 			name = Staging;
