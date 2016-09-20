@@ -26,6 +26,19 @@ Hot Updates
 For hot patching, we use [Code Push](https://microsoft.github.io/code-push/). To use this, you
 must install the code push cli.
 
+To test with test flight the steps are:
+0. Update build number and/or version in the Selbi 'General' header in XCode. As we iterate, we should
+only be updating the build number. Only update the version number for a new release.
+1. Set scheme to 'Staging'
+2. From `<repo root>/Selbi` run `cp Selbi/selbiBuildResources/stating/.env .`
+3. In XCode go to `Product` menu and hit `Archive`. This will build the archive and open the archive
+manager.
+4. Select the new version and click `Upload to App Store...`.
+5. Visit the [Itunes Connect Activity page](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/activity/ios/builds)
+ and monitor to progress of the upload.
+6. Once the build upload is complete, go to the [Internal Testing](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/testflight/internal)
+tab to choose a test version and notify testers.
+
 Testing
 -------
 
