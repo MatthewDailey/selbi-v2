@@ -11,8 +11,135 @@
       ".write" : false
     },
 
+    "messages": {
+      "$listingId" : {
+        "$buyerId" : {
+          ".read": "auth.uid === $buyerId || auth.uid === root.child('listings/' + $listingId + '/sellerId').val()",
+          "$messageId" : {
+            ".write" : "!data.exists() && (auth.uid === $buyerId || auth.uid === root.child('listings/' + $listingId + '/sellerId').val())",
+            ".validate" : "newData.hasChildren(['text', 'authorUid', 'createdAt'])",
+            "text": {
+              ".validate": "newData.isString()"
+            },
+            "authorUid": {
+              ".validate": "newData.isString() && newData.val() === auth.uid"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber()"
+            }
+          }
+        }
+      }
+    },
+
+    "chats": {
+      "$uid": {
+        ".read" : "auth.uid === $uid",
+        "selling" : {
+          "$listingId" : {
+            "$buyerUid" : {
+              ".write" : "auth.uid === $buyerUid",
+              ".validate" : "newData.isBoolean()"
+            }
+          }
+        },
+        "buying" : {
+          "$listingId": {
+            ".write" : "auth.uid === $uid",
+            ".validate" : "newData.isBoolean()"
+          }
+        }
+      }
+    },
+
+    "messageNotifications": {
+      "tasks": {
+        // Auth'd users can write, only service account can read.
+        ".read": false,
+        ".write": "auth.uid != null",
+        ".indexOn": "_state",
+        "$taskId": {
+          // TODO: Could be more secure and require that listing sellerId or buyerId is auth uid.
+          ".validate": "newData.hasChildren(['listingId', 'buyerId', 'messageId']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          "_state": {
+            ".validate": "newData.isString()"
+          },
+          "_state_changed": {
+            ".validate": "newData.isNumber() && (newData.val() === now || data.val() === newData.val())"
+          },
+          "_owner": {
+            ".validate": "newData.isString()"
+          },
+          "_progress": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "_error_details": {
+            "error": {
+              ".validate": "newData.isString()"
+            },
+            "error_stack": {
+              ".validate": "newData.isString()"
+            },
+            "previous_state": {
+              ".validate": "newData.isString()"
+            },
+            "original_task": {
+              /* This space intentionally left blank, for malformed tasks */
+            },
+            "attempts": {
+              ".validate": "newData.isNumber() && newData.val() > 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "_id": {
+            ".validate": "newData.isString()"
+          },
+          "listingId": {
+            ".validate": "newData.isString()"
+          },
+          "buyerId": {
+            ".validate": "newData.isString()"
+          },
+          "messageId": {
+            ".validate": "newData.isString()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "specs": {
+        // Only accessible from service account.
+        ".read": false,
+        ".write": false,
+        "$specId": {
+          ".validate": "newData.hasChild('in_progress_state')",
+          "start_state": {
+            ".validate": "newData.isString()"
+          },
+          "in_progress_state": {
+            ".validate": "newData.isString()"
+          },
+          "finished_state": {
+            ".validate": "newData.isString()"
+          },
+          "error_state": {
+            ".validate": "newData.isString()"
+          },
+          "timeout": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+
     "images": {
-      ".read": "auth.uid != null",
+      ".read": true,
       "$imageId" : {
         ".write": "auth.uid != null && (!data.exists() || data.child('owner').val() === auth.uid)",
         ".validate": "newData.hasChildren(['owner', 'height', 'width', 'base64'])",
@@ -329,7 +456,7 @@
         // Only owner can write. Owner and friends can read.
         "private": {
           ".write": "$uid === auth.uid",
-          ".read": "$uid === auth.uid || root.child('users/' + $uid + '/friends/' + auth.uid).exists()",
+          ".read": true,
           "$listingId": {
             ".validate": "newData.isBoolean()"
           }
@@ -369,7 +496,7 @@
       "$listingId": {
         // TODO Limit write to owner and read to allowed readers via userListings.
         ".write": "auth.uid != null && (!data.exists() || data.child('sellerId').val() === auth.uid)",
-        ".read": "auth.uid != null",
+        ".read": "true",
         "title": {
           ".validate": "newData.isString()"
         },
@@ -414,6 +541,7 @@
     // Mapping of geo data to listing id.
     "geolistings": {
       ".read": true,
+      ".indexOn": "g",
       "$listingId": {
         ".write": "root.child('/listings/' + $listingId + '/sellerId').val() == auth.uid",
         ".validate": "newData.hasChildren(['g', 'l'])",
@@ -437,6 +565,43 @@
         }
       }
     },
+
+    "following" : {
+      "$uid" : {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid",
+        "$friendUid" : {
+          ".validate": "newData.isBoolean() && $uid != $friendUid"
+        }
+      }
+    },
+
+    "usernames" : {
+      ".read": true,
+      "$username" : {
+        ".write": "auth.uid === newData.val()"
+      }
+    },
+
+    "userPublicData": {
+      "$uid" : {
+        ".write": "auth.uid == $uid",
+        ".read": true,
+        ".validate": "newData.hasChildren(['displayName', 'username'])",
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "username": {
+          ".validate": "newData.isString()"
+        },
+        "profileImageUrl": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
     // All background data about a user.
     "users": {
       // No read permissions at /users so users cannot be iterated over.
@@ -450,20 +615,8 @@
         "userAgreementAccepted": {
           ".validate": "newData.isBoolean()"
         },
-        "name": {
-          ".validate": "newData.hasChildren(['first', 'last'])",
-          "$other": {
-            ".validate": false
-          },
-          "first": {
-            ".validate": "newData.isString()"
-          },
-          "last": {
-            ".validate": "newData.isString()"
-          }
-        },
-        "profileImageUrl": {
-          ".validate": "newData.isString() && newData.val().matches(/^http(s)?:/)"
+        "fcmToken" : {
+          ".validate": "newData.isString()"
         },
         // TODO: Validate email is valid as well.
         "email": {

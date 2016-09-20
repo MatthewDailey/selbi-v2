@@ -1,6 +1,11 @@
 package com.selbi;
 
 import com.facebook.react.ReactActivity;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
+import com.evollu.react.fa.FIRAnalyticsPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 
 public class MainActivity extends ReactActivity {
 

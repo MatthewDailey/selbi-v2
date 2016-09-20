@@ -26,6 +26,7 @@ deployment:
     branch: staging
     commands:
       - cd selbi-backend && firebase deploy --project selbi-staging
+      - cd Selbi && code-push release-react selbi ios -d staging -m
       - echo $STAGING_GCLOUD_SECRET | base64 --decode > ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
@@ -36,6 +37,7 @@ deployment:
     branch: production
     commands:
       - cd selbi-backend && firebase deploy --project selbi-production
+      - cd Selbi && code-push release-react selbi ios -d production -m
       - echo $PRODUCTION_GCLOUD_SECRET | base64 --decode > ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json

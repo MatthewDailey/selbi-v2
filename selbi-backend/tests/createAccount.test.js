@@ -2,18 +2,7 @@ import { expect } from 'chai';
 import Queue from 'firebase-queue';
 import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
-function testSafeWorker(worker, done) {
-  return (data, progress, resolve, reject) => {
-    try {
-      worker(data);
-      resolve();
-      done();
-    } catch (e) {
-      reject(e);
-      done(e);
-    }
-  };
-}
+import { testSafeWorker } from './QueueUtilities';
 
 describe('Create Account', function() {
   this.timeout(6000);

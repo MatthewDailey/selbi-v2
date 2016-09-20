@@ -5,7 +5,12 @@ import initializeStripe from 'stripe';
 import ServiceAccount from '@selbi/service-accounts';
 import CreateCustomerHandler from './src/CreateCustomerHandler';
 import CreateAccountHandler from './src/CreateAccountHandler';
+import MessageNotificationHandler from './src/MessageNotificationsHandler';
 import QueueListener from './src/QueueListener';
+
+import { sendNotification } from './src/FcmConnector';
+
+
 
 const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
 
@@ -21,12 +26,17 @@ const createAccountHandler = new CreateAccountHandler(firebaseDb, stripe.account
 const createAccountQueueListener = new QueueListener('/createAccount');
 createAccountQueueListener.start(firebaseDb, createAccountHandler.getTaskHandler());
 
+const messageNotificationHandler = new MessageNotificationHandler(firebaseDb, sendNotification);
+const messageNotificationQueueListener = new QueueListener('messageNotifications');
+messageNotificationQueueListener.start(firebaseDb, messageNotificationHandler.getTaskHandler());
+
 process.on('SIGINT', () => {
   console.log('Received SIGINT, starting graceful shutdown...');
 
   Promise.all([
     createCustomerQueueListener.shutdown(),
-    createAccountQueueListener.shutdown()])
+    createAccountQueueListener.shutdown(),
+    messageNotificationQueueListener.shutdown()])
     .then(() => serviceAccountApp.delete())
     .then(() => console.log('Graceful shutdown of firebase connections complete.'))
     .then(() => process.exit(0))

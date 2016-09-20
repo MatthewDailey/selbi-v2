@@ -12,6 +12,9 @@
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
 
+#import "RNFIRMessaging.h"
+#import "Firebase.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -31,7 +34,29 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
+  UIUserNotificationType allNotificationTypes =
+  (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge);
+  UIUserNotificationSettings *settings =
+  [UIUserNotificationSettings settingsForTypes:allNotificationTypes categories:nil];
+  [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
+  
+  [FIRApp configure];
+
   return YES;
+}
+
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+{
+     [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
+     handler(UIBackgroundFetchResultNewData);
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  application.applicationIconBadgeNumber = 0;
 }
 
 @end

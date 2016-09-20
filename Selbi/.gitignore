@@ -39,3 +39,11 @@ buck-out/
 \.buckd/
 android/app/libs
 android/keystores/debug.keystore
+
+####Custom Selbi build system stuff
+
+# Google pointer based on scheme being run
+ios/Selbi/GoogleService-Info.plist
+
+# Javascript config
+.env
