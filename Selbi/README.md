@@ -17,6 +17,9 @@ Peices that require custom configuration:
 to manage JS configuration including the Realtime DB connection info. Since we access this directly
 from javascript, we use seperate management from the iOS firebase info.
 
+Probably the right long term solution is to write a native module which holds firebase endpoints
+and then provides them to JS to remove the duplicate config instances.
+
 Testing
 -------
 
