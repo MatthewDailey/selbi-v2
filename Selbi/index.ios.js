@@ -95,8 +95,6 @@ const storeUserData = (user) => {
             displayName: userPublicData.displayName,
             username: userPublicData.username,
           }));
-        } else {
-          signOut();
         }
       });
   } else {
