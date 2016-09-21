@@ -1,19 +1,14 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import Config from 'react-native-config';
 
 import { convertToUsername } from './FirebaseUtils';
+import config from '../../config';
 
-const developConfig = {
-  apiKey: Config.FIREBASE_API_KEY,
-  authDomain: Config.FIREBASE_AUTH_DOMAIN,
-  databaseURL: Config.FIREBASE_DATABASE_URL,
-  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
-};
+console.log('Initializing firebase', config.firebase);
 
 // Note that this also reloads user auth settings. Therefore, this must not be loaded lazily.
-const firebaseApp = firebase.initializeApp(developConfig);
+const firebaseApp = firebase.initializeApp(config.firebase);
 
 export default undefined;
 

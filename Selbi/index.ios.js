@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
-import Config from 'react-native-config';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -39,6 +38,7 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadU
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
+import config from './config';
 
 // Used to set camera shutter button color.
 setTheme({
@@ -232,7 +232,7 @@ class NavApp extends Component {
     this.codeRefreshInterval = setInterval(() => {
       codePush.sync({
         updateDialog: true,
-        deploymentKey: Config.CODE_PUSH_KEY,
+        deploymentKey: config.codePushKey,
         installMode: codePush.InstallMode.IMMEDIATE,
       });
     },
