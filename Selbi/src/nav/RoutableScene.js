@@ -1,5 +1,6 @@
 import React, { cloneElement, Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableHighlight } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import NavigationBar from '@selbi/react-native-navbar';
 
@@ -73,9 +74,12 @@ export default class RoutableScene extends Component {
       tintColor: colors.secondary,
     };
     if (this.props.leftIs === 'menu' && this.props.openMenu) {
-      leftButton.title = 'Menu';
-      leftButton.handler = this.goMenu;
-      return leftButton;
+      // TODO (mdailey): fix the spacing and background color of menu button.
+      return (
+        <TouchableHighlight onPress={this.goMenu}>
+          <Text><Icon name="bars" size={20} color={colors.secondary} /></Text>
+        </TouchableHighlight>
+      );
     } else if (this.props.leftIs === 'back') {
       leftButton.title = '<';
       leftButton.handler = this.goBackHandler;
