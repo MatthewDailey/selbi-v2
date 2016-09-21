@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ListView, RefreshControl } from 'react-native';
+import { View, ListView, RefreshControl, Text } from 'react-native';
 
 import ItemView from './ItemView';
 import SpinnerOverlay from './SpinnerOverlay';
@@ -45,6 +45,13 @@ export default class ListingsComponent extends Component {
       );
     }
 
+    if (this.props.listings.length === 0) {
+      return (
+        <View style={styles.paddedCenterContainer}>
+          <Text>{this.props.emptyMessage}</Text>
+        </View>
+      );
+    }
     return (
       <ListView
         enableEmptySections
@@ -69,6 +76,7 @@ export default class ListingsComponent extends Component {
 
 ListingsComponent.propTypes = {
   refresh: React.PropTypes.func,
+  emptyMessage: React.PropTypes.string,
   listings: React.PropTypes.arrayOf(React.PropTypes.object),
   openDetailScene: React.PropTypes.func,
 };
