@@ -13,6 +13,11 @@ export default StyleSheet.create({
     backgroundColor: colors.secondary,
     alignItems: 'center',
   },
+  centerContainerClear: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   paddedCenterContainer: {
     padding: paddingSize,
     flex: 1,

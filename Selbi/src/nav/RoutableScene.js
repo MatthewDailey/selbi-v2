@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import NavigationBar from '@selbi/react-native-navbar';
 
 import colors from '../../colors';
-
+import styles from '../../styles';
 
 /*
  * Allows binding all navigator props to components which extend RoutableScene.
@@ -70,20 +70,29 @@ export default class RoutableScene extends Component {
   }
 
   getLeftButton() {
-    const leftButton = {
-      tintColor: colors.secondary,
-    };
     if (this.props.leftIs === 'menu' && this.props.openMenu) {
       // TODO (mdailey): fix the spacing and background color of menu button.
       return (
-        <TouchableHighlight onPress={this.goMenu}>
-          <Text><Icon name="bars" size={20} color={colors.secondary} /></Text>
+        <TouchableHighlight
+          onPress={this.goMenu}
+          style={styles.paddedCenterContainerClear}
+          underlayColor={colors.primary}
+          activeOpacity={0.5}
+        >
+          <Text><Icon name="bars" size={18} color={colors.secondary} /></Text>
         </TouchableHighlight>
       );
     } else if (this.props.leftIs === 'back') {
-      leftButton.title = '<';
-      leftButton.handler = this.goBackHandler;
-      return leftButton;
+      return (
+        <TouchableHighlight
+          onPress={this.goBackHandler}
+          style={styles.paddedCenterContainerClear}
+          underlayColor={colors.primary}
+          activeOpacity={0.5}
+        >
+          <Text><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
+        </TouchableHighlight>
+      );
     }
     // Return nothing. No left button.
     return undefined;
