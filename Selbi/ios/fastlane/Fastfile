@@ -30,8 +30,7 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :staging do
-    ENV["$SELBI_STAGE"] = "staging"
-    sh "cp ../selbiBuildResources/$SELBI_STAGE/.env ../"
+    sh "cp ../../selbiBuildResources/staging/.env ../../"
     # match(type: "appstore") # more information: https://codesigning.guide
     gym(scheme: "Selbi Staging") # Build your app - more options available
     pilot
