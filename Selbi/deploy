@@ -1,0 +1,70 @@
+function print_help {
+    echo 'Usage: ./deploy <code level> <stage>'
+    echo
+    echo "  This tool requires both code-push and fastlane to be installed."
+    echo "    - code-push: https://github.com/Microsoft/react-native-code-push/tree/v1.13.6-beta"
+    echo "    - fastlane: https://fastlane.tools/"
+    echo
+    echo "  Note that pushing native code will increment the build version. This build version will need to be commited."
+    echo
+    echo "  Also note that code-push checks binary version compatibility between push and update so JS updates don't end up going to the wrong binary version."
+    echo
+    echo "  * code level - Specifies whether to deploy native code or javascript."
+    echo "                 One of 'js' or 'native'. "
+    echo '  * stage - The Selbi stage to deploy.'
+    echo "            One of 'develop' 'staging' or 'production'. If no stage is provided, will select develop."
+}
+
+# Answer help request.
+if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) ]]
+then
+    print_help
+    exit 0;
+fi
+
+# Check that first and second arg are valid.
+if [[ (( "$1" != "js" ) && ( "$1" != "native" ))
+    || (( ! -z "$2" ) && ( "$2" != "develop" ) && ( "$2" != "staging" ) && ( "$2" != "production" )) ]]
+then
+    print_help
+    exit 1;
+fi
+
+codeLevel=$1
+stage="develop"
+
+if [[ ! -z "$2" ]]
+then
+    stage=$2
+fi
+
+function deploy_js {
+    # Make sure to put the proper config file in place.
+    cp selbiBuildResources/$stage/config.js .
+
+    code-push release-react selbi ios -d $stage -m
+}
+
+function deploy_native {
+    if [ "$stage" = "staging" ]
+    then
+        cd ios && fastlane staging
+    else
+        echo Cannot deploy native for stage=$stage.
+        exit 1
+    fi
+}
+
+echo Attmepting to deploy $codeLevel to $stage...
+echo
+echo
+
+if [[ "$codeLevel" = "js" ]]
+then
+    deploy_js
+fi
+
+if [[ "$codeLevel" = "native" ]]
+then
+    deploy_native
+fi

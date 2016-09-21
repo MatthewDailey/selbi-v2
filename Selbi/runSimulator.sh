@@ -5,14 +5,7 @@ function print_help {
     echo '            If no stage is provided, will automatically connect to develop.'
 }
 
-
-if [ "$1" = "-h" ]
-then
-    print_help
-    exit 0;
-fi
-
-if [ "$1" = "--help" ]
+if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) ]]
 then
     print_help
     exit 0;

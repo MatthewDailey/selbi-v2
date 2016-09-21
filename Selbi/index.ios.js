@@ -40,6 +40,9 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadU
 import colors from './colors';
 import config from './config';
 
+// Necessary for code-push to not error out.
+const RCTLog = require('RCTLog');
+
 // Used to set camera shutter button color.
 setTheme({
   accentColor: colors.accent,
@@ -229,18 +232,18 @@ function renderMenu(navigator, closeMenu) {
 
 class NavApp extends Component {
   componentDidMount() {
-    this.codeRefreshInterval = setInterval(() => {
+    this.refreshCode = setInterval(() => {
       codePush.sync({
         updateDialog: true,
         deploymentKey: config.codePushKey,
         installMode: codePush.InstallMode.IMMEDIATE,
       });
     },
-    5000);
+      5000);
   }
 
   componentWillUnmount() {
-    clearInterval(this.codeRefreshInterval);
+    clearInterval(this.refreshCode);
   }
 
   render() {
@@ -255,7 +258,5 @@ class NavApp extends Component {
     );
   }
 }
-
-NavApp.mixins
 
 AppRegistry.registerComponent('Selbi', () => NavApp);
