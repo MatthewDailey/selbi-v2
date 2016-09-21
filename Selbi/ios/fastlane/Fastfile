@@ -32,6 +32,7 @@ platform :ios do
   lane :staging do
     sh "cp ../../selbiBuildResources/staging/.env ../../"
     # match(type: "appstore") # more information: https://codesigning.guide
+    increment_build_number
     gym(scheme: "Selbi Staging") # Build your app - more options available
     pilot
 
