@@ -6,14 +6,12 @@ class QueueListener {
   }
 
   /*
-   * Initializes the CreateCustomerQueueListener synchronously.
+   * Initializes the QueueListener synchronously.
    *
-   * @returns CreateCustomerQueueListener this.
+   * @returns QueueListener this.
    */
   start(firebaseDb, queueEventHandler) {
-    this.queue = new Queue(
-      firebaseDb.ref(this.queueRefPath),
-      queueEventHandler);
+    this.queue = new Queue(firebaseDb.ref(this.queueRefPath), queueEventHandler);
     return this;
   }
 
