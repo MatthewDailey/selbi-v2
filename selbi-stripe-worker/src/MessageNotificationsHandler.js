@@ -46,7 +46,7 @@ export default class MessageNotificationsHandler {
       const buyerId = data.buyerId;
       const messageId = data.messageId;
 
-      console.log(`Handling messageNotification ${listingId} : ${buyerId} : ${messageId}`)
+      console.log(`Handling messageNotification ${listingId} : ${buyerId} : ${messageId}`);
 
       const loadNotificationData = () => {
         const promiseLoadMessage = firebaseDb

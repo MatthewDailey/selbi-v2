@@ -53,4 +53,4 @@ app.get('/', (req, res) => {
 });
 app.listen(8080);
 
-console.log('stripe-worker has started.');
+console.log(`stripe-worker has started. SELBI_ENVIRONMENT=${process.env.SELBI_ENVIRONMENT}`);

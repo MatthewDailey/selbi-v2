@@ -20,6 +20,17 @@ from javascript, we use seperate management from the iOS firebase info.
 Probably the right long term solution is to write a native module which holds firebase endpoints
 and then provides them to JS to remove the duplicate config instances.
 
+Schemes
+-------
+We use schemes in XCode to manage deploying different version of the app.
+
+- 'Selbi Develop' - builds the develop version, communicating with selbi-develop.
+- 'Selbi Staging' - builds the staging version, communicating with selbi-staging.
+- 'Selbi Production' - builds the production version, communicating with selbi-production.
+
+These can be built and deployed directly to test flight via `fastlane staging`.
+
+
 Hot Updates
 -----------
 

@@ -516,29 +516,27 @@ export function loadMessages(listingId, buyerUid) {
 }
 
 export function sendMessage(listingId, buyerUid, messageText) {
-  console.log(`user: ${getUser().uid}`);
   const newMessageRef = firebaseApp
     .database()
     .ref('messages')
     .child(listingId)
     .child(buyerUid)
-    .push()
-
-  firebaseApp
-    .database()
-    .ref('messageNotifications/tasks')
-    .push({
-      listingId,
-      buyerId: buyerUid,
-      messageId: newMessageRef.key,
-    });
+    .push();
 
   return newMessageRef
     .set({
       text: messageText,
       authorUid: getUser().uid,
       createdAt: new Date().getTime(),
-    });
+    })
+    .then(() => firebaseApp
+      .database()
+      .ref('messageNotifications/tasks')
+      .push({
+        listingId,
+        buyerId: buyerUid,
+        messageId: newMessageRef.key,
+      }));
 }
 
 /*

@@ -93,7 +93,7 @@ describe('QueueListener', () => {
     this.timeout(5000);
 
     beforeEach(function () {
-      this.worker = new QueueListener('/createCustomer');
+      this.worker = new QueueListener('createCustomer');
     });
 
     afterEach(function (done) {
@@ -114,8 +114,7 @@ describe('QueueListener', () => {
     it('calls handler when data is queued', function (done) {
       const queueHandler = sinon.spy((data, progress, resolve, reject) => {
         expect(data.uid).to.equal(testUserUid);
-        resolve()
-          .then(done);
+        resolve().then(done);
       });
 
       this.worker.start(this.firebaseApp.database(), queueHandler);
@@ -132,7 +131,7 @@ describe('QueueListener', () => {
     this.timeout(5000);
 
     beforeEach(function () {
-      this.worker = new QueueListener('/createAccount');
+      this.worker = new QueueListener('createAccount');
     });
 
     afterEach(function (done) {
@@ -153,8 +152,7 @@ describe('QueueListener', () => {
     it('calls handler when data is queued', function (done) {
       const queueHandler = sinon.spy((data, progress, resolve, reject) => {
         expect(data.uid).to.equal(testUserUid);
-        resolve()
-          .then(done);
+        resolve().then(done);
       });
 
       this.worker.start(this.firebaseApp.database(), queueHandler);

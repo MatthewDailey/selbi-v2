@@ -30,6 +30,7 @@ deployment:
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-staging
+      - cd selbi-stripe-worker && cp selbiBuildResources/staging/app.yaml .
       - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
       - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
   production:
@@ -40,6 +41,7 @@ deployment:
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-production
+      - cd selbi-stripe-worker && cp selbiBuildResources/production/app.yaml .
       - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
       - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
 

@@ -48,6 +48,8 @@ class CreateCustomerHandler {
     const firebaseDb = this.firebaseDb;
     const stripeCustomersApi = this.stripeCustomersApi;
     return (data, progress, resolveCreateCustomerTask, rejectCreateCustomerTask) => {
+      console.log(`Handling createCustomer uid:${data.uid}`);
+
       const userRef = () => firebaseDb
         .ref('users')
         .child(data.uid);
