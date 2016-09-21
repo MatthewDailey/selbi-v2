@@ -120,6 +120,7 @@ const myListingsScene = {
     <MyListingsScene
       title="My Listings"
       leftIs="menu"
+      rightIs="next"
     />
   ),
 };
@@ -180,6 +181,10 @@ routeLinks[friendsListingScene.id] = {
 };
 
 routeLinks[myListingsScene.id] = {
+  next: {
+    title: 'Sell',
+    getRoute: () => NewListingFlow.firstScene,
+  },
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
   },
