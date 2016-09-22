@@ -41,24 +41,28 @@ class MyListingsScene extends RoutableScene {
         <View tabLabel="Inactive" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.inactive}
+            emptyMessage="You have no inactive listings."
             openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Public" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.public}
+            emptyMessage="You have no public listings."
             openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Private" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.private}
+            emptyMessage="You have no private listings."
             openDetailScene={() => this.goNext('details')}
           />
         </View>
         <View tabLabel="Sold" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.sold}
+            emptyMessage="You have not sold any listings."
             openDetailScene={() => this.goNext('details')}
           />
         </View>

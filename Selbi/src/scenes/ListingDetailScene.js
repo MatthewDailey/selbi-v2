@@ -49,10 +49,6 @@ class ListingDetailScene extends RoutableScene {
     });
   }
 
-  componentWillUnmount() {
-    this.props.clearListingDetailStore();
-  }
-
   onGoNext(routeName) {
     if (routeName === 'edit') {
       this.props.clearListingDataForEditing();
@@ -196,9 +192,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
-    clearListingDetailStore: () => {
-      dispatch(clearListingDetails());
-    },
     setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
       dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),

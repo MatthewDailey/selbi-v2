@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
-import Config from 'react-native-config';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -39,8 +38,10 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadU
   from './src/firebase/FirebaseConnector';
 
 import colors from './colors';
+import config from './config';
 
-var RCTLog = require('RCTLog');
+// Necessary for code-push to not error out.
+const RCTLog = require('RCTLog');
 
 // Used to set camera shutter button color.
 setTheme({
@@ -119,6 +120,7 @@ const myListingsScene = {
     <MyListingsScene
       title="My Listings"
       leftIs="menu"
+      rightIs="next"
     />
   ),
 };
@@ -137,7 +139,7 @@ const friendsListingScene = {
   id: 'friends-listings',
   renderContent: withNavigatorProps(
     <FriendsListingsScene
-      title="Friend's Listings"
+      title="Friends' Listings"
       leftIs="menu"
       rightIs="next"
     />
@@ -179,6 +181,10 @@ routeLinks[friendsListingScene.id] = {
 };
 
 routeLinks[myListingsScene.id] = {
+  next: {
+    title: 'Sell',
+    getRoute: () => NewListingFlow.firstScene,
+  },
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
   },
@@ -231,11 +237,18 @@ function renderMenu(navigator, closeMenu) {
 
 class NavApp extends Component {
   componentDidMount() {
-    codePush.sync({
-      updateDialog: true,
-      deploymentKey: Config.CODE_PUSH_KEY,
-      installMode: codePush.InstallMode.IMMEDIATE,
-    });
+    this.refreshCode = setInterval(() => {
+      codePush.sync({
+        updateDialog: true,
+        deploymentKey: config.codePushKey,
+        installMode: codePush.InstallMode.IMMEDIATE,
+      });
+    },
+      5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.refreshCode);
   }
 
   render() {

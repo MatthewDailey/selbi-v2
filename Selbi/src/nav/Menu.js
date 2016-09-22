@@ -40,13 +40,6 @@ class Menu extends Component {
       <View style={styles.paddedCenterContainerWhite}>
         <Text style={{fontWeight: 'bold', fontSize: 16}}>{this.props.userDisplayName}</Text>
         <Text style={{fontWeight: 'normal', fontSize: 13}}>{`@${this.props.username}`}</Text>
-        <View style={styles.halfPadded}/>
-        <TouchableHighlight onPress={() => {
-          this.props.signOut();
-          setSceneAndCloseMenu(this.props.localListingScene);
-        }} underlayColor={colors.secondary}>
-          <Text style={{fontSize: 10}}>Sign out</Text>
-        </TouchableHighlight>
       </View>;
 
     const getSignedOutHeader = () =>
@@ -65,11 +58,39 @@ class Menu extends Component {
       return getSignedOutHeader();
     };
 
+    const getSignedInFooter = () =>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+        }}
+      >
+
+
+        <TouchableHighlight onPress={() => {
+          this.props.signOut();
+          setSceneAndCloseMenu(this.props.localListingScene);
+        }} underlayColor={colors.secondary}>
+          <Text style={styles.menuText}><Icon name="sign-out" size={20} /> Sign out</Text>
+        </TouchableHighlight>
+      </View>
+
+    const getSignedOutFooter = () => <View />
+
+    const getFooter = () => {
+      if (this.props.userDisplayName) {
+        return getSignedInFooter();
+      }
+      return getSignedOutFooter();
+    };
+    // const signInMenuStyle = this.props.userDisplayName ? {} :
+    //   { textDecorationLine: 'line-through' };
+
     const signInMenuStyle = this.props.userDisplayName ? {} :
-      { textDecorationLine: 'line-through' };
+    { color: colors.greyedOut };
 
     return (
-      <View style={styles.padded}>
+      <View style={styles.paddedContainerClear}>
         {getHeader()}
 
         <View
@@ -160,6 +181,8 @@ class Menu extends Component {
             <Icon name="gear" size={20} /> <Text style={signInMenuStyle}>Settings</Text>
           </Text>
         </TouchableHighlight>
+
+        {getFooter()}
       </View>
     );
   }

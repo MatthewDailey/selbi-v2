@@ -13,6 +13,11 @@ export default StyleSheet.create({
     backgroundColor: colors.secondary,
     alignItems: 'center',
   },
+  centerContainerClear: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   paddedCenterContainer: {
     padding: paddingSize,
     flex: 1,
@@ -26,7 +31,6 @@ export default StyleSheet.create({
   },
   paddedCenterContainerWhite: {
     padding: paddingSize,
-    flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
   },
@@ -51,6 +55,10 @@ export default StyleSheet.create({
     flex: 1,
     padding: paddingSize,
     backgroundColor: colors.secondary,
+  },
+  paddedContainerClear: {
+    flex: 1,
+    padding: paddingSize,
   },
   menuText: {
     fontSize: 20,
@@ -80,5 +88,5 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-  }
+  },
 });

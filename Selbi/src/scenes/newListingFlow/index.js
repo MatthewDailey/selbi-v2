@@ -42,7 +42,7 @@ const titleScene = {
       title="Create Listing (3/3)"
       leftIs="back"
       rightIs="next"
-      inputTitle="What are you selling?"
+      inputTitle="What do you want to title this listing?"
       placeholder="Eg. 'Magic coffee table!'"
     />
   ),

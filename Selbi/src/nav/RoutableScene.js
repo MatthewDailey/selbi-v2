@@ -1,10 +1,11 @@
 import React, { cloneElement, Component } from 'react';
-import { View } from 'react-native';
+import { View, Text, TouchableHighlight } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import NavigationBar from '@selbi/react-native-navbar';
 
 import colors from '../../colors';
-
+import styles from '../../styles';
 
 /*
  * Allows binding all navigator props to components which extend RoutableScene.
@@ -69,17 +70,29 @@ export default class RoutableScene extends Component {
   }
 
   getLeftButton() {
-    const leftButton = {
-      tintColor: colors.secondary,
-    };
     if (this.props.leftIs === 'menu' && this.props.openMenu) {
-      leftButton.title = 'Menu';
-      leftButton.handler = this.goMenu;
-      return leftButton;
+      // TODO (mdailey): fix the spacing and background color of menu button.
+      return (
+        <TouchableHighlight
+          onPress={this.goMenu}
+          style={styles.paddedCenterContainerClear}
+          underlayColor={colors.primary}
+          activeOpacity={0.5}
+        >
+          <Text><Icon name="bars" size={18} color={colors.secondary} /></Text>
+        </TouchableHighlight>
+      );
     } else if (this.props.leftIs === 'back') {
-      leftButton.title = '<';
-      leftButton.handler = this.goBackHandler;
-      return leftButton;
+      return (
+        <TouchableHighlight
+          onPress={this.goBackHandler}
+          style={styles.paddedCenterContainerClear}
+          underlayColor={colors.primary}
+          activeOpacity={0.5}
+        >
+          <Text><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
+        </TouchableHighlight>
+      );
     }
     // Return nothing. No left button.
     return undefined;
@@ -197,6 +210,16 @@ export default class RoutableScene extends Component {
   }
 
   render() {
+    const title = (
+      <Text
+        style={{
+          fontFamily: 'Iowan Old Style',
+        }}
+      >
+        {this.props.title}
+      </Text>
+    );
+
     return (
       // Note this flex:1 style. Super fucking important to make sure listview can scroll.
       // Without it, the view will just bounce back. Who the fuck knows why.
@@ -204,7 +227,7 @@ export default class RoutableScene extends Component {
         <NavigationBar
           tintColor={colors.primary}
           style={{ backgroundColor: colors.primary }}
-          title={{ title: this.props.title, tintColor: colors.dark }}
+          title={{ title }}
           leftButton={this.getLeftButton()}
           rightButton={this.getRightButton()}
         />

@@ -22,11 +22,19 @@ const paletteThree = {
   dark: '#08182b', // super dark blue
 };
 
+const paletteFour = {
+  accent: '#E71D36', // vivid red.
+  primary: '#5BC5A7', // teal
+  secondary: '#FFFFFF', // white
+  dark: '#011627', // super dark blue, verging on black.
+};
+
 export default Object.assign(
-  paletteOne,
+  paletteFour,
   {
     white: '#ffffff',
     black: '#000',
+    greyedOut: '#dddddd',
   }
 );
 
