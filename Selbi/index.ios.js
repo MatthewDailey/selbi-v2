@@ -33,7 +33,7 @@ import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 
-import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, loadUserPublicData,
+import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus }
   from './src/firebase/FirebaseConnector';
 
@@ -84,19 +84,22 @@ const recordUserForAnalytics = (user) => {
 };
 addAuthStateChangeListener(recordUserForAnalytics)
 
+let unwatchUserPublicData;
 const storeUserData = (user) => {
   if (user) {
-    loadUserPublicData(user.uid)
-      .then((publicDataSnapshot) => {
-        if (publicDataSnapshot.exists()) {
-          const userPublicData = publicDataSnapshot.val();
-          store.dispatch(setUserData({
-            displayName: userPublicData.displayName,
-            username: userPublicData.username,
-          }));
-        }
-      });
+    unwatchUserPublicData = watchUserPublicData(user.uid, (publicDataSnapshot) => {
+      if (publicDataSnapshot.exists()) {
+        const userPublicData = publicDataSnapshot.val();
+        store.dispatch(setUserData({
+          displayName: userPublicData.displayName,
+          username: userPublicData.username,
+        }));
+      }
+    });
   } else {
+    if (unwatchUserPublicData) {
+      unwatchUserPublicData();
+    }
     store.dispatch(clearUserData());
   }
 };
@@ -216,7 +219,7 @@ function renderMenu(navigator, closeMenu) {
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}
-      loadUserPublicData={loadUserPublicData}
+      loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={{
         id: 'menu-sign-scene',
         renderContent: withNavigatorProps(

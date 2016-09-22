@@ -5,7 +5,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../nav/RoutableScene';
 
-import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
+import { watchUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
   createChatAsBuyer } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
@@ -42,8 +42,8 @@ class ChatScene extends RoutableScene {
       return;
     }
 
-    const promiseBuyerPublicData = loadUserPublicData(this.props.buyerUid);
-    const promiseSellerPublicData = loadUserPublicData(sellerUid);
+    const promiseBuyerPublicData = watchUserPublicData(this.props.buyerUid);
+    const promiseSellerPublicData = watchUserPublicData(sellerUid);
 
     Promise.all([promiseBuyerPublicData, promiseSellerPublicData])
       .then((chatUserPublicData) => {

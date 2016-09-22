@@ -487,12 +487,18 @@ export function loadAllUserChats() {
     .then(loadChatDetailsFromUserChats);
 }
 
-export function loadUserPublicData(uid) {
-  return firebaseApp
+export function watchUserPublicData(uid, handler) {
+  firebaseApp
     .database()
     .ref('userPublicData')
     .child(uid)
-    .once('value');
+    .on('value', handler);
+
+  return () => firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .off('value', handler);
 }
 
 /*
