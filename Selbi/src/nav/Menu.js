@@ -65,8 +65,11 @@ class Menu extends Component {
       return getSignedOutHeader();
     };
 
+    // const signInMenuStyle = this.props.userDisplayName ? {} :
+    //   { textDecorationLine: 'line-through' };
+
     const signInMenuStyle = this.props.userDisplayName ? {} :
-      { textDecorationLine: 'line-through' };
+    { color: colors.greyedOut };
 
     return (
       <View style={styles.padded}>
