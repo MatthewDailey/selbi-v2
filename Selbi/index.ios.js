@@ -139,7 +139,7 @@ const friendsListingScene = {
   id: 'friends-listings',
   renderContent: withNavigatorProps(
     <FriendsListingsScene
-      title="Friend's Listings"
+      title="Friends' Listings"
       leftIs="menu"
       rightIs="next"
     />
