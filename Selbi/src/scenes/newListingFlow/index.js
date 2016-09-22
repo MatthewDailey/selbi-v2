@@ -9,6 +9,7 @@ import PublishScene from './PublishScene';
 import PriceInputScene from './PriceInputScene';
 import TitleInputScene from './TitleInputScene';
 import ChooseVisibilityScene from './ChooseVisibilityScene';
+import PublishCompletedScene from './PublishCompleteScene';
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
 
 const loginScene = {
@@ -95,6 +96,16 @@ const chooseVisibilityScene = {
   ),
 };
 
+const publishCompletedScene = {
+  id: 'publish-completed',
+  renderContent: withNavigatorProps(
+    <PublishCompletedScene
+      title="Success!"
+      rightIs="home"
+    />
+  ),
+};
+
 const routeLinks = {};
 
 routeLinks[cameraScene.id] = {
@@ -132,7 +143,13 @@ routeLinks[loginScene.id] = {
     getRoute: () => chooseVisibilityScene,
   },
 };
-routeLinks[publishScene.id] = {
+routeLinks[chooseVisibilityScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => publishCompletedScene,
+  },
+};
+routeLinks[publishCompletedScene.id] = {
   home: {
     title: 'Done',
   },
