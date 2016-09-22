@@ -60,6 +60,7 @@ class CameraScene extends RoutableScene {
     return (
       <View style={styles.container} >
         <Camera
+          captureAudio={false}
           ref={(cam) => {
             this.camera = cam;
           }}
