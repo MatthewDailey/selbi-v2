@@ -8,6 +8,7 @@ import ApproveImageScene from './ApproveImageScene';
 import PublishScene from './PublishScene';
 import PriceInputScene from './PriceInputScene';
 import TitleInputScene from './TitleInputScene';
+import ChooseVisibilityScene from './ChooseVisibilityScene';
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
 
 const loginScene = {
@@ -69,7 +70,7 @@ const imageScene = {
 };
 
 const priceInputScene = {
-  it: 'price-listing',
+  id: 'price-listing',
   renderContent: withNavigatorProps(
     <PriceInputScene
       title="Create Listing (2/3)"
@@ -79,6 +80,17 @@ const priceInputScene = {
       placeholder="USD"
       isNumeric
       floatingLabel
+    />
+  ),
+};
+
+const chooseVisibilityScene = {
+  id: 'choose-visibility',
+  renderContent: withNavigatorProps(
+    <ChooseVisibilityScene
+      title="Choose Visibility"
+      leftIs="back"
+      rightIs="next"
     />
   ),
 };
@@ -108,7 +120,7 @@ routeLinks[titleScene.id] = {
     title: 'Post',
     getRoute: () => {
       if (getUser()) {
-        return publishScene;
+        return chooseVisibilityScene;
       }
       return loginScene;
     },
@@ -117,7 +129,7 @@ routeLinks[titleScene.id] = {
 routeLinks[loginScene.id] = {
   next: {
     title: '',
-    getRoute: () => publishScene,
+    getRoute: () => chooseVisibilityScene,
   },
 };
 routeLinks[publishScene.id] = {
