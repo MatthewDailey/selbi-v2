@@ -15,6 +15,7 @@ import { withNavigatorProps } from './src/nav/RoutableScene';
 import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
+import EditListingFlow from './src/scenes/editListingFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -25,8 +26,8 @@ import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer from './src/reducers/LocalListingsReducer';
-import myListingsReducer, { setMyListingsInactive, setMyListingsPrivate, setMyListingsPublic,
-  setMyListingsSold, clearMyListings } from './src/reducers/MyListingsReducer';
+import myListingsReducer, { setMyListingsPrivate, setMyListingsPublic, setMyListingsSold,
+  clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
 import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
@@ -206,6 +207,7 @@ routeLinks[followFriendScene.id] = {
 routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (

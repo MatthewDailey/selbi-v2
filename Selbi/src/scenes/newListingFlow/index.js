@@ -9,7 +9,10 @@ import PriceInputScene from './PriceInputScene';
 import TitleInputScene from './TitleInputScene';
 import ChooseVisibilityScene from './ChooseVisibilityScene';
 import PublishCompletedScene from './PublishCompleteScene';
+
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
+
+import EditListingFlow from '../editListingFlow';
 
 const loginScene = {
   id: 'login-scene',
@@ -38,7 +41,7 @@ const titleScene = {
 };
 
 const cameraScene = {
-  id: 'b',
+  id: 'create-camera-scene',
   renderContent: withNavigatorProps(
     <SimpleCamera
       title="Create Listing (1/3)"
@@ -48,7 +51,7 @@ const cameraScene = {
 };
 
 const imageScene = {
-  id: 'c',
+  id: 'create-image-scene',
   renderContent: withNavigatorProps(
     <ApproveImageScene
       title=""
@@ -137,10 +140,15 @@ routeLinks[chooseVisibilityScene.id] = {
   },
 };
 routeLinks[publishCompletedScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => EditListingFlow.firstScene,
+  },
   home: {
     title: 'Done',
   },
 };
+
 
 module.exports.routesLinks = routeLinks;
 module.exports.firstScene = cameraScene;

@@ -33,7 +33,7 @@ class ChooseVisibilityScene extends RoutableScene {
           To sell faster, we recommend adding more details.
         </Text>
         <View style={styles.halfPadded}>
-          <Button>
+          <Button onPress={() => this.goNext()}>
             <Text>Add Details</Text>
           </Button>
         </View>

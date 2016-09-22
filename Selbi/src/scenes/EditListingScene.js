@@ -52,10 +52,13 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
   .build();
 
 class DraggableAnnotationExample extends React.Component {
-  state = {
-    isFirstLoad: true,
-    annotations: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isFirstLoad: true,
+      annotations: [],
+    };
+  }
 
   createAnnotation = (longitude, latitude) => {
     return {
@@ -133,7 +136,7 @@ class EditListingScene extends RoutableScene {
       .catch((error) => {
         console.log(error);
         this.setState({ storingUpdate: false });
-        Alert.alert('There was an error updating your listing.')
+        Alert.alert(`There was an error updating your listing. ${error.message}`);
       });
   }
 
@@ -308,14 +311,6 @@ class EditListingScene extends RoutableScene {
                   onPress={() => this.props.setStatus('private')}
                 />
                 <Text>Private</Text>
-              </View>
-              <View>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'inactive'}
-                  group={this.radioGroup}
-                  onPress={() => this.props.setStatus('inactive')}
-                />
-                <Text>Inactive</Text>
               </View>
               <View>
                 <MKRadioButton
