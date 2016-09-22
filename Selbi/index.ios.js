@@ -88,15 +88,16 @@ addAuthStateChangeListener(recordUserForAnalytics)
 let unwatchUserPublicData;
 const storeUserData = (user) => {
   if (user) {
-    unwatchUserPublicData = watchUserPublicData(user.uid, (publicDataSnapshot) => {
-      if (publicDataSnapshot.exists()) {
-        const userPublicData = publicDataSnapshot.val();
-        store.dispatch(setUserData({
-          displayName: userPublicData.displayName,
-          username: userPublicData.username,
-        }));
-      }
-    });
+    unwatchUserPublicData = watchUserPublicData(user.uid,
+      (publicDataSnapshot) => {
+        if (publicDataSnapshot.exists()) {
+          const userPublicData = publicDataSnapshot.val();
+          store.dispatch(setUserData({
+            displayName: userPublicData.displayName,
+            username: userPublicData.username,
+          }));
+        }
+      });
   } else {
     if (unwatchUserPublicData) {
       unwatchUserPublicData();
