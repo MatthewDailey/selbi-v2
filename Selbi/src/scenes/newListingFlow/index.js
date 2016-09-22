@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
+import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
 import { withNavigatorProps } from '../../nav/RoutableScene';
 import SimpleCamera from './CameraScene';
 import ApproveImageScene from './ApproveImageScene';
-import PublishScene from './PublishScene';
 import PriceInputScene from './PriceInputScene';
 import TitleInputScene from './TitleInputScene';
 import ChooseVisibilityScene from './ChooseVisibilityScene';
@@ -23,18 +22,6 @@ const loginScene = {
       signInWithEmail={signInWithEmail}
       createUser={createUser}
     />),
-};
-
-const publishScene = {
-  id: 'post-login',
-  renderContent: withNavigatorProps(
-    <PublishScene
-      title=""
-      rightIs="home"
-      createListing={createListing}
-      publishImage={publishImage}
-    />
-  ),
 };
 
 const titleScene = {
