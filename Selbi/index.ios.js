@@ -63,8 +63,6 @@ const store = createStore(combineReducers({
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
   if (user) {
-    listenToListingsByStatus('inactive',
-      (listings) => store.dispatch(setMyListingsInactive(listings)));
     listenToListingsByStatus('public',
       (listings) => store.dispatch(setMyListingsPublic(listings)));
     listenToListingsByStatus('private',
