@@ -31,7 +31,6 @@ export default StyleSheet.create({
   },
   paddedCenterContainerWhite: {
     padding: paddingSize,
-    flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
   },
@@ -56,6 +55,10 @@ export default StyleSheet.create({
     flex: 1,
     padding: paddingSize,
     backgroundColor: colors.secondary,
+  },
+  paddedContainerClear: {
+    flex: 1,
+    padding: paddingSize,
   },
   menuText: {
     fontSize: 20,
