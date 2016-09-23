@@ -118,7 +118,7 @@ routeLinks[priceInputScene.id] = {
 };
 routeLinks[titleScene.id] = {
   next: {
-    title: 'Post',
+    title: 'OK',
     getRoute: () => {
       if (getUser()) {
         return chooseVisibilityScene;
