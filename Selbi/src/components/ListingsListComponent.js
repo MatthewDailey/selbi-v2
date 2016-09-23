@@ -63,12 +63,20 @@ export default class ListingsComponent extends Component {
       .build();
 
     if (this.props.listings.length === 0) {
+      const getRefreshButton = () => {
+        if (this.props.refresh) {
+          return (
+            <RefreshButton>
+              <Text><Icon name="refresh" size={16}/></Text>
+            </RefreshButton>
+          );
+        }
+        return undefined;
+      };
       return (
         <View style={styles.paddedCenterContainer}>
           <Text>{this.props.emptyMessage}</Text>
-          <RefreshButton>
-            <Text><Icon name="refresh" size={16} /></Text>
-          </RefreshButton>
+          {getRefreshButton()}
           <SpinnerOverlay isVisible={this.state.refreshing} message="" />
         </View>
       );
