@@ -33,7 +33,7 @@ const imageScene = {
     />),
 };
 
-const routeLinks = {}
+const routeLinks = {};
 
 routeLinks[editListingScene.id] = {
   camera: {
