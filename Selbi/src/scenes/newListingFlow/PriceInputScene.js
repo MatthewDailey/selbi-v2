@@ -5,11 +5,11 @@ import { setNewListingPrice } from '../../reducers/NewListingReducer';
 
 
 function getPriceString(state) {
-  const price = state.newListing.get('price');
+  const price = state.newListing.get('priceString');
   if (price) {
     return price.toString();
   }
-  return undefined;
+  return '';
 }
 
 const mapStateToProps = (state) => {
