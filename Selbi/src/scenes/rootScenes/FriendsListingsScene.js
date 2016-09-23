@@ -30,6 +30,7 @@ class ListingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ListingsListComponent
+        emptyMessage="None of your friends have a listing right now."
         listings={this.props.listings}
         refresh={this.fetchListings}
         openDetailScene={() => this.goNext('details')}

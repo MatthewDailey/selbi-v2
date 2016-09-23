@@ -37,6 +37,7 @@ class ListingsScene extends RoutableScene {
   }
 
   fetchLocalListings() {
+    console.log('fetching local listings')
     return this.getGeolocation()
       .then((latlon) => loadListingByLocation(latlon, 20))
       .then(this.props.setLocalListings);

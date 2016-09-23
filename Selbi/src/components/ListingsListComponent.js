@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { View, ListView, RefreshControl, Text } from 'react-native';
+import { MKButton } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ItemView from './ItemView';
 import SpinnerOverlay from './SpinnerOverlay';
 import styles from '../../styles';
+import colors from '../../colors';
 
 export default class ListingsComponent extends Component {
   constructor(props) {
@@ -21,7 +24,8 @@ export default class ListingsComponent extends Component {
     this.props.refresh()
       .then(() => {
         this.setState({ refreshing: false });
-      });
+      })
+      .catch(console.log);
   }
 
   render() {
@@ -31,6 +35,8 @@ export default class ListingsComponent extends Component {
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
+            colors={[colors.secondary]}
+            tintColor={colors.secondary}
           />
         );
       }
@@ -45,31 +51,48 @@ export default class ListingsComponent extends Component {
       );
     }
 
+    const RefreshButton = MKButton.button()
+      .withStyle({
+        borderRadius: 20,
+        margin: 20,
+      })
+      .withOnPress(() => {
+        console.log('pressed that button')
+        this.onRefresh();
+      })
+      .build();
+
     if (this.props.listings.length === 0) {
       return (
         <View style={styles.paddedCenterContainer}>
           <Text>{this.props.emptyMessage}</Text>
+          <RefreshButton>
+            <Text><Icon name="refresh" size={16} /></Text>
+          </RefreshButton>
+          <SpinnerOverlay isVisible={this.state.refreshing} message="" />
         </View>
       );
     }
     return (
-      <ListView
-        enableEmptySections
-        removeClippedSubviews={false}
-        refreshControl={getRefreshControl()}
-        contentContainerStyle={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-        }}
-        style={styles.container}
-        dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-          .cloneWithRows(this.props.listings)}
-        renderRow={(data) =>
-          <ItemView
-            listing={data}
-            openDetailScene={this.props.openDetailScene}
-          />}
-      />
+      <View style={styles.container}>
+        <ListView
+          enableEmptySections
+          removeClippedSubviews={false}
+          refreshControl={getRefreshControl()}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}
+          dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+            .cloneWithRows(this.props.listings)}
+          renderRow={(data) =>
+            <ItemView
+              listing={data}
+              openDetailScene={this.props.openDetailScene}
+            />}
+        />
+        <SpinnerOverlay isVisible={this.state.refreshing} message="" />
+      </View>
     );
   }
 }
