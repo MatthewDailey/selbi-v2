@@ -65,8 +65,6 @@ class Menu extends Component {
           justifyContent: 'flex-end',
         }}
       >
-
-
         <TouchableHighlight onPress={() => {
           this.props.signOut();
           setSceneAndCloseMenu(this.props.localListingScene);
@@ -75,7 +73,19 @@ class Menu extends Component {
         </TouchableHighlight>
       </View>
 
-    const getSignedOutFooter = () => <View />
+    const getSignedOutFooter = () =>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+        }}
+      >
+        <TouchableHighlight onPress={() => {
+          signInOrRegister();
+        }} underlayColor={colors.secondary}>
+          <Text style={styles.menuText}><Icon name="sign-in" size={20} /> Sign in</Text>
+        </TouchableHighlight>
+      </View>
 
     const getFooter = () => {
       if (this.props.userDisplayName) {
