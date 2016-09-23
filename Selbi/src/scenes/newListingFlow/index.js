@@ -31,7 +31,7 @@ const titleScene = {
   id: 'title-scene',
   renderContent: withNavigatorProps(
     <TitleInputScene
-      title="Create Listing (3/3)"
+      title="Create Listing (3/4)"
       leftIs="back"
       rightIs="next"
       inputTitle="What do you want to title this listing?"
@@ -44,7 +44,7 @@ const cameraScene = {
   id: 'create-camera-scene',
   renderContent: withNavigatorProps(
     <SimpleCamera
-      title="Create Listing (1/3)"
+      title="Create Listing (1/4)"
       leftIs="back"
       rightIs="next"
     />),
@@ -64,7 +64,7 @@ const priceInputScene = {
   id: 'price-listing',
   renderContent: withNavigatorProps(
     <PriceInputScene
-      title="Create Listing (2/3)"
+      title="Create Listing (2/4)"
       leftIs="back"
       rightIs="next"
       inputTitle="How much do you want to sell for?"
@@ -79,7 +79,7 @@ const chooseVisibilityScene = {
   id: 'choose-visibility',
   renderContent: withNavigatorProps(
     <ChooseVisibilityScene
-      title="Choose Visibility"
+      title="Create Listing (4/4)"
       leftIs="back"
       rightIs="next"
     />
