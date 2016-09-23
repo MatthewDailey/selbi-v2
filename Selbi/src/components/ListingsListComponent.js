@@ -67,7 +67,7 @@ export default class ListingsComponent extends Component {
         if (this.props.refresh) {
           return (
             <RefreshButton>
-              <Text><Icon name="refresh" size={16}/></Text>
+              <Text><Icon name="refresh" size={16} /></Text>
             </RefreshButton>
           );
         }
