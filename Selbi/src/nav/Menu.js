@@ -122,12 +122,12 @@ class Menu extends Component {
           underlayColor={colors.secondary}
         >
           <Text style={styles.menuText}>
-            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friend's Listings</Text>
+            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friends' Listings</Text>
           </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
-            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Favorites</Text>
+            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Saved Listings</Text>
           </Text>
         </TouchableHighlight>
 

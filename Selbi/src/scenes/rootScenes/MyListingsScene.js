@@ -6,6 +6,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
 
+import { clearNewListing } from '../../reducers/NewListingReducer';
+
 import styles from '../../../styles';
 import colors from '../../../colors';
 
@@ -22,6 +24,10 @@ class MyListingsScene extends RoutableScene {
         renderPlaceholderOnly: false,
       });
     });
+  }
+
+  onGoNext() {
+    this.props.clearNewListingData();
   }
 
   renderWithNavBar() {
@@ -72,7 +78,15 @@ const mapStateToProps = (state) => {
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    clearNewListingData: () => {
+      dispatch(clearNewListing());
+    },
+  };
+};
+
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(MyListingsScene);

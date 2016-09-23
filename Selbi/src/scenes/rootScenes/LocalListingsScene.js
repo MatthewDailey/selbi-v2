@@ -6,6 +6,7 @@ import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
 
 import { setLocalListings } from '../../reducers/LocalListingsReducer';
+import { clearNewListing } from '../../reducers/NewListingReducer';
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -41,6 +42,10 @@ class ListingsScene extends RoutableScene {
       .then(this.props.setLocalListings);
   }
 
+  onGoNext() {
+    this.props.clearNewListingData();
+  }
+
   renderWithNavBar() {
     return (
       <ListingsListComponent
@@ -63,6 +68,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setLocalListings: (localListings) => {
       dispatch(setLocalListings(localListings));
+    },
+    clearNewListingData: () => {
+      dispatch(clearNewListing());
     },
   };
 };

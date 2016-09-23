@@ -6,6 +6,7 @@ import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
 
 import { setFriendsListings } from '../../reducers/FriendsListingsReducer';
+import { clearNewListing } from '../../reducers/NewListingReducer';
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -20,6 +21,10 @@ class ListingsScene extends RoutableScene {
 
   fetchListings() {
     return loadFriendsListings().then(this.props.setListings);
+  }
+
+  onGoNext() {
+    this.props.clearNewListingData();
   }
 
   renderWithNavBar() {
@@ -43,6 +48,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setListings: (listings) => {
       dispatch(setFriendsListings(listings));
+    },
+    clearNewListingData: () => {
+      dispatch(clearNewListing());
     },
   };
 };
