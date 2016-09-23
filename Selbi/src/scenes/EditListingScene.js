@@ -16,6 +16,7 @@ import {
 
 import RoutableScene from '../nav/RoutableScene';
 
+import { isStringFloat } from '../utils';
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
 import { loadLocationForListing } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
@@ -266,8 +267,12 @@ class EditListingScene extends RoutableScene {
           </View>
 
           <PriceInput
-            value={getPriceString(this.props.listingPrice)}
-            onTextChange={(newText) => this.props.setPrice(newText)}
+            value={this.props.listingPrice}
+            onTextChange={(newText) => {
+              if (isStringFloat(newText)) {
+                this.props.setPrice(newText)
+              }
+            }}
           />
           <TitleInput
             value={this.props.listingTitle}
@@ -329,6 +334,14 @@ class EditListingScene extends RoutableScene {
   }
 }
 
+function getPriceString(state) {
+  const price = state.newListing.get('priceString');
+  if (price) {
+    return price.toString();
+  }
+  return '';
+}
+
 const mapStateToProps = (state) => {
   return {
     fullListingData: state.newListing,
@@ -337,7 +350,7 @@ const mapStateToProps = (state) => {
     listingKey: state.newListing.listingId,
     listingTitle: state.newListing.title,
     listingDescription: state.newListing.description,
-    listingPrice: state.newListing.price,
+    listingPrice: getPriceString(state),
     listingImageUri: state.newListing.imageUri,
     listingLocation: {
       lat: state.newListing.locationLat,

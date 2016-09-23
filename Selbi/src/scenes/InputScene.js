@@ -2,7 +2,7 @@ import React from 'react';
 import { InteractionManager, View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
-import { isStringFloat } from '../utils'
+import { isStringFloat } from '../utils';
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 

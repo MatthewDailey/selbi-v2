@@ -68,6 +68,7 @@ export function setFromExistingListing(imageKey, imageData, listingKey, listingD
       title: listingData.title,
       description: listingData.description,
       price: listingData.price,
+      priceString: listingData.price.toString(),
       status: listingData.status,
     },
   };
