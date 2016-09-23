@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default function SellerInfoOverlay() {
+const InactiveSellerInfo = function SellerInfoOverlay() {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
@@ -29,8 +29,6 @@ export default function SellerInfoOverlay() {
         }}
       >
         <View style={styles.paddedContainer}>
-          <Text>You currently have:</Text>
-
           <View style={{flex: 1, flexDirection: 'row'}}>
             <View style={{flex: 1, alignItems: 'center' }}>
               <Text
@@ -83,11 +81,9 @@ export default function SellerInfoOverlay() {
 
           <View style={{padding: 8}} />
 
-          <Text >Since you've been gone:</Text>
-
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>No activity. You should add some friends or chat with a seller.</Text>
+          <Text style={{ fontSize: 10 }}>No recent activity. You should add some friends or chat with a seller.</Text>
 
           <View style={{padding: 4}} />
 
@@ -110,3 +106,141 @@ export default function SellerInfoOverlay() {
     </View>
   );
 }
+
+const ActiveSellerInfo = function SellerInfoOverlay() {
+  const FlatButton = MKButton.flatButton()
+    .withStyle({
+      borderRadius: 5,
+    })
+    .withBackgroundColor(colors.white)
+    .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
+    .build();
+
+  return (
+    <View>
+      <View
+        style={{
+          margin: 8,
+          shadowOffset:{
+            width: 2,
+            height: 2,
+          },
+          shadowColor: 'black',
+          shadowOpacity: 1.0,
+        }}
+      >
+        <View style={styles.paddedContainer}>
+
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 1, alignItems: 'center' }}>
+              <Text
+                style={{
+                  color: colors.public,
+                  fontSize: 20,
+                  fontWeight: '300',
+                  padding: 8,
+                }}
+              >
+                2
+              </Text>
+              <Text style={{ fontSize: 10, color: colors.public }}>Public Listings</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: colors.private,
+                  fontSize: 20,
+                  fontWeight: '300',
+                  padding: 8,
+                }}
+              >
+                3
+              </Text>
+              <Text style={{ fontSize: 10, color: colors.private }}>Private Listings</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'center'}}>
+              <Text
+                style={{
+                  color: colors.accent,
+                  fontSize: 20,
+                  fontWeight: '300',
+                  padding: 8,
+                }}
+              >
+                11
+              </Text>
+              <Text style={{ fontSize: 10, color: colors.accent }}>New Notifications</Text>
+            </View>
+          </View>
+
+          <View style={{padding: 8}} />
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🎁 Tommy added a new listing.</Text>
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>😘 TJ (@tjpavlu) is now following you.</Text>
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🤑 Miron bought your listing 'massive dildo'.</Text>
+
+          <View style={{padding: 4}} />
+
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>...and 6 more notifications.</Text>
+
+          <View style={{padding: 4}} />
+
+          <View style={{alignItems: 'flex-end'}}>
+            <FlatButton>
+              <Text>View all notifications <Icon name="arrow-right"/></Text>
+            </FlatButton>
+          </View>
+
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const SignedOutSellerInfo = function SellerInfoOverlay() {
+  const FlatButton = MKButton.flatButton()
+    .withStyle({
+      borderRadius: 5,
+    })
+    .withBackgroundColor(colors.white)
+    .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
+    .build();
+
+  return (
+    <View>
+      <View
+        style={{
+          margin: 8,
+          shadowOffset: {
+            width: 2,
+            height: 2,
+          },
+          shadowColor: 'black',
+          shadowOpacity: 1.0,
+        }}
+      >
+        <FlatButton>
+          <Text style={styles.menuText}>Sign in <Icon name="sign-in" size={20}/></Text>
+        </FlatButton>
+      </View>
+    </View>
+  );
+}
+
+export default SignedOutSellerInfo;
