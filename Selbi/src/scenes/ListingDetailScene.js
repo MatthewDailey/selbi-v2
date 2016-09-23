@@ -6,7 +6,6 @@ import { MKButton } from 'react-native-material-kit';
 
 import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
-import { clearListingDetails } from '../reducers/ListingDetailReducer';
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
@@ -15,8 +14,14 @@ import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
 const fontStyle = {
-  margin: 10,
+  padding: 10,
   color: 'white',
+  textShadowColor: colors.dark,
+  textShadowOffset: {
+    width: 1,
+    height: 1,
+  },
+  textShadowRadius: 2,
   fontSize: 30,
   backgroundColor: 'transparent',
 };

@@ -297,10 +297,7 @@ class EditListingScene extends RoutableScene {
                 <MKRadioButton
                   checked={this.props.listingStatus === 'public'}
                   group={this.radioGroup}
-                  onPress={() => {
-                    this.getGeolocation()
-                      .then(() => this.props.setStatus('public'));
-                  }}
+                  onPress={() => this.getGeolocation().then(() => this.props.setStatus('public'))}
                 />
                 <Text>Public</Text>
               </View>
