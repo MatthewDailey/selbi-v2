@@ -67,7 +67,7 @@ const InactiveSellerInfo = function SellerInfoOverlay() {
               >
                 0
               </Text>
-              <Text style={{ fontSize: 10, color: colors.accent }}>New Notifications</Text>
+              <Text style={{ fontSize: 10, color: colors.accent }}>Notifications</Text>
             </View>
           </View>
 
@@ -169,7 +169,7 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
               >
                 11
               </Text>
-              <Text style={{ fontSize: 10, color: colors.accent }}>New Notifications</Text>
+              <Text style={{ fontSize: 10, color: colors.accent }}>Notifications</Text>
             </View>
           </View>
 
@@ -243,4 +243,4 @@ const SignedOutSellerInfo = function SellerInfoOverlay() {
   );
 }
 
-export default SignedOutSellerInfo;
+export default ActiveSellerInfo;
