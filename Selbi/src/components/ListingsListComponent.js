@@ -81,6 +81,7 @@ export default class ListingsComponent extends Component {
         </View>
       );
     }
+
     return (
       <View style={styles.container}>
         <ListView
