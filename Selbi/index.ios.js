@@ -111,7 +111,7 @@ const localListingScene = {
   id: 'listings-scene',
   renderContent: withNavigatorProps(
     <LocalListingScene
-      title="Near Me"
+      title="Local Listings"
       leftIs="menu"
       rightIs="next"
     />),
