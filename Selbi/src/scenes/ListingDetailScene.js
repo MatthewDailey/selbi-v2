@@ -12,6 +12,7 @@ import { storeImage } from '../reducers/ImagesReducer';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
+import LoadingListingComponent from '../components/LoadingListingComponent';
 
 const fontStyle = {
   padding: 10,
@@ -130,7 +131,19 @@ DetailBottomButtons.propTypes = {
 class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
-    this.state = { renderPlaceholderOnly: true };
+    this.state = {
+      renderPlaceholderOnly: true,
+      showExtraDetails: false,
+    };
+
+    this.toggleShowExtraDetails = this.toggleShowExtraDetails.bind(this);
+  }
+
+  toggleShowExtraDetails() {
+    console.log(`Toggling show extra details. New value=${!this.state.showExtraDetails}`);
+    this.setState({
+      showExtraDetails: !this.state.showExtraDetails,
+    });
   }
 
   componentDidMount() {
@@ -158,23 +171,7 @@ class ListingDetailScene extends RoutableScene {
           this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
       }
 
-      return (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: `${colors.dark}`,
-          }}
-        >
-          <View style={styles.paddedCenterContainerClear}>
-            <Text
-              color={colors.white}
-              style={styles.friendlyTextLight}
-            >
-              Loading listing...
-            </Text>
-          </View>
-        </View>
-      );
+      return <LoadingListingComponent />;
     }
 
     const imageData = this.props.imageData;
@@ -182,7 +179,7 @@ class ListingDetailScene extends RoutableScene {
 
     return (
       <TouchableHighlight
-        onPress={() => console.log('clicked image')}
+        onPress={this.toggleShowExtraDetails}
         style={styles.container}
       >
         <Image
