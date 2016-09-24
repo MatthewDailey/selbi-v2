@@ -33,6 +33,26 @@ const buttonViewStyle = {
   marginRight: 20,
 };
 
+function DetailTopInfo({ price }) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Text style={fontStyle}>{`$${price}`}</Text>
+      <Text style={fontStyle}>
+        <Icon name="heart-o" size={30} color={colors.white} />
+      </Text>
+    </View>
+  );
+}
+DetailTopInfo.propTypes = {
+  price: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]).isRequired,
+};
+
 const Button = MKButton.button()
   .withStyle({
     borderRadius: 5,
@@ -176,18 +196,7 @@ class ListingDetailScene extends RoutableScene {
               justifyContent: 'space-between',
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text style={fontStyle}>{`$${listingData.price}`}</Text>
-              <Text style={fontStyle}>
-                <Icon name="heart-o" size={30} color={colors.white} />
-              </Text>
-            </View>
+            <DetailTopInfo price={listingData.price} />
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
               isChatButtonVisible={!!this.props.routeLinks.chat}
