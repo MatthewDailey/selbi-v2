@@ -27,6 +27,8 @@ const paletteFour = {
   primary: '#5BC5A7', // teal
   secondary: '#FFFFFF', // white
   dark: '#011627', // super dark blue, verging on black.
+  private: '#002CC2',
+  public: '#008DC2',
 };
 
 export default Object.assign(

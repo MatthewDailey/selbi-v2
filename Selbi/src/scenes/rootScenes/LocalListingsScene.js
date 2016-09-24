@@ -1,15 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
+import { ScrollView } from 'react-native';
 import { loadListingByLocation } from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
+import SellerInfoOverlay from '../../components/SellerInfoOverlay';
 
 import { setLocalListings } from '../../reducers/LocalListingsReducer';
+import { clearNewListing } from '../../reducers/NewListingReducer';
+
+const initialSellerInfoHeight = 260;
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
+
+    this.state = {
+      sellerInfoOpacity: 1,
+      sellerInfoHeight: initialSellerInfoHeight,
+    };
 
     this.getGeolocation = this.getGeolocation.bind(this);
     this.fetchLocalListings = this.fetchLocalListings.bind(this);
@@ -36,19 +45,27 @@ class ListingsScene extends RoutableScene {
   }
 
   fetchLocalListings() {
+    console.log('fetching local listings')
     return this.getGeolocation()
       .then((latlon) => loadListingByLocation(latlon, 20))
       .then(this.props.setLocalListings);
   }
 
+  onGoNext() {
+    this.props.clearNewListingData();
+  }
+
   renderWithNavBar() {
     return (
-      <ListingsListComponent
-        listings={this.props.listings}
-        emptyMessage={'Be the first to sell in your neighborhood!'}
-        refresh={this.fetchLocalListings}
-        openDetailScene={() => this.goNext('details')}
-      />
+      <ScrollView>
+        <SellerInfoOverlay />
+        <ListingsListComponent
+          listings={this.props.listings}
+          emptyMessage={'Be the first to sell in your neighborhood!'}
+          refresh={this.fetchLocalListings}
+          openDetailScene={() => this.goNext('details')}
+        />
+      </ScrollView>
     );
   }
 }
@@ -63,6 +80,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setLocalListings: (localListings) => {
       dispatch(setLocalListings(localListings));
+    },
+    clearNewListingData: () => {
+      dispatch(clearNewListing());
     },
   };
 };

@@ -495,6 +495,20 @@ export function loadUserPublicData(uid) {
     .once('value');
 }
 
+export function watchUserPublicData(uid, handler) {
+  firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .on('value', handler);
+
+  return () => firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .off('value', handler);
+}
+
 /*
  * chatData must have:
  * - sellerUid

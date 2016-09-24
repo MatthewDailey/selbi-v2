@@ -16,6 +16,7 @@ import {
 
 import RoutableScene from '../nav/RoutableScene';
 
+import { isStringFloat } from '../utils';
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
 import { loadLocationForListing } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
@@ -52,10 +53,13 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
   .build();
 
 class DraggableAnnotationExample extends React.Component {
-  state = {
-    isFirstLoad: true,
-    annotations: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isFirstLoad: true,
+      annotations: [],
+    };
+  }
 
   createAnnotation = (longitude, latitude) => {
     return {
@@ -133,7 +137,7 @@ class EditListingScene extends RoutableScene {
       .catch((error) => {
         console.log(error);
         this.setState({ storingUpdate: false });
-        Alert.alert('There was an error updating your listing.')
+        Alert.alert(`There was an error updating your listing. ${error.message}`);
       });
   }
 
@@ -263,8 +267,12 @@ class EditListingScene extends RoutableScene {
           </View>
 
           <PriceInput
-            value={getPriceString(this.props.listingPrice)}
-            onTextChange={(newText) => this.props.setPrice(newText)}
+            value={this.props.listingPrice}
+            onTextChange={(newText) => {
+              if (isStringFloat(newText)) {
+                this.props.setPrice(newText)
+              }
+            }}
           />
           <TitleInput
             value={this.props.listingTitle}
@@ -294,10 +302,7 @@ class EditListingScene extends RoutableScene {
                 <MKRadioButton
                   checked={this.props.listingStatus === 'public'}
                   group={this.radioGroup}
-                  onPress={() => {
-                    this.getGeolocation()
-                      .then(() => this.props.setStatus('public'));
-                  }}
+                  onPress={() => this.getGeolocation().then(() => this.props.setStatus('public'))}
                 />
                 <Text>Public</Text>
               </View>
@@ -308,14 +313,6 @@ class EditListingScene extends RoutableScene {
                   onPress={() => this.props.setStatus('private')}
                 />
                 <Text>Private</Text>
-              </View>
-              <View>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'inactive'}
-                  group={this.radioGroup}
-                  onPress={() => this.props.setStatus('inactive')}
-                />
-                <Text>Inactive</Text>
               </View>
               <View>
                 <MKRadioButton
@@ -337,6 +334,14 @@ class EditListingScene extends RoutableScene {
   }
 }
 
+function getPriceString(state) {
+  const price = state.newListing.get('priceString');
+  if (price) {
+    return price.toString();
+  }
+  return '';
+}
+
 const mapStateToProps = (state) => {
   return {
     fullListingData: state.newListing,
@@ -345,7 +350,7 @@ const mapStateToProps = (state) => {
     listingKey: state.newListing.listingId,
     listingTitle: state.newListing.title,
     listingDescription: state.newListing.description,
-    listingPrice: state.newListing.price,
+    listingPrice: getPriceString(state),
     listingImageUri: state.newListing.imageUri,
     listingLocation: {
       lat: state.newListing.locationLat,

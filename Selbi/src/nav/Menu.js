@@ -65,8 +65,6 @@ class Menu extends Component {
           justifyContent: 'flex-end',
         }}
       >
-
-
         <TouchableHighlight onPress={() => {
           this.props.signOut();
           setSceneAndCloseMenu(this.props.localListingScene);
@@ -75,7 +73,19 @@ class Menu extends Component {
         </TouchableHighlight>
       </View>
 
-    const getSignedOutFooter = () => <View />
+    const getSignedOutFooter = () =>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+        }}
+      >
+        <TouchableHighlight onPress={() => {
+          signInOrRegister();
+        }} underlayColor={colors.secondary}>
+          <Text style={styles.menuText}><Icon name="sign-in" size={20} /> Sign in</Text>
+        </TouchableHighlight>
+      </View>
 
     const getFooter = () => {
       if (this.props.userDisplayName) {
@@ -112,12 +122,12 @@ class Menu extends Component {
           underlayColor={colors.secondary}
         >
           <Text style={styles.menuText}>
-            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friend's Listings</Text>
+            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friends' Listings</Text>
           </Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
-            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Favorites</Text>
+            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Saved Listings</Text>
           </Text>
         </TouchableHighlight>
 

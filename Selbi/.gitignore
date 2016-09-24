@@ -47,3 +47,6 @@ ios/Selbi/GoogleService-Info.plist
 
 # Javascript config
 config.js
+
+# Build artifacts
+ios/Selbi.app.dSYM.zip

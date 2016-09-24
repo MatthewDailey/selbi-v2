@@ -2,6 +2,7 @@ import React from 'react';
 import { InteractionManager, View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
+import { isStringFloat } from '../utils';
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 
@@ -27,7 +28,10 @@ export default class InputScene extends RoutableScene {
 
   parseInputValue(newText) {
     if (this.props.isNumeric) {
-      return parseFloat(newText);
+      if (isStringFloat(newText)) {
+        return newText;
+      }
+      return this.props.inputValue;
     }
     return newText;
   }

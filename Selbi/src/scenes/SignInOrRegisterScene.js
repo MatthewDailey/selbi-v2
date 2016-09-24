@@ -172,7 +172,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
     const SubmitButton = MKButton
-      .flatButton()
+      .button()
+      .withStyle({
+        borderRadius: 5,
+      })
+      .withBackgroundColor(colors.secondary)
       .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
         registerOrSignInMethod();

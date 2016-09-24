@@ -223,10 +223,10 @@ export default class RoutableScene extends Component {
     return (
       // Note this flex:1 style. Super fucking important to make sure listview can scroll.
       // Without it, the view will just bounce back. Who the fuck knows why.
-      <View style={{ flex: 1, backgroundColor: colors.accent }}>
+      <View style={{ flex: 1, backgroundColor: colors.secondary }}>
         <NavigationBar
           tintColor={colors.primary}
-          style={{ backgroundColor: colors.primary }}
+          style={{ backgroundColor: colors.primary, zIndex: 2 }}
           title={{ title }}
           leftButton={this.getLeftButton()}
           rightButton={this.getRightButton()}

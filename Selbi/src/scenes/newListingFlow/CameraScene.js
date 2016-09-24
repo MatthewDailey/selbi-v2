@@ -12,12 +12,38 @@ import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import styles from '../../../styles';
 
+const ColoredRaisedButton = MKButton
+  .accentColoredFab()
+  .build();
+
+function CameraButton({ takePicture }) {
+  return (
+    <View
+      style={{
+        bottom: 100,
+        height: 0,
+        alignSelf: 'center',
+      }}
+    >
+      <ColoredRaisedButton onPress={takePicture}>
+        <Icon name="camera" size={20} color={colors.secondary} />
+      </ColoredRaisedButton>
+    </View>
+  );
+}
+
+CameraButton.propTypes = {
+  takePicture: React.PropTypes.func.isRequired,
+};
+
 class CameraScene extends RoutableScene {
   constructor(props) {
     super(props);
     this.state = {
       capturing: false,
     };
+
+    this.takePicture = this.takePicture.bind(this);
   }
 
   toggleCapturing() {
@@ -26,49 +52,31 @@ class CameraScene extends RoutableScene {
     });
   }
 
+  takePicture() {
+    this.toggleCapturing();
+    this.camera.capture()
+      .then((data) => {
+        this.props.setNewListingImageLocalUri(data.path);
+        this.toggleCapturing();
+        this.goNext();
+      })
+      .catch(err => console.error(err));
+  }
+
   renderWithNavBar() {
-    const takePicture = () => {
-      this.toggleCapturing();
-      this.camera.capture()
-        .then((data) => {
-          this.props.setNewListingImageLocalUri(data.path);
-          this.toggleCapturing();
-          this.goNext();
-        })
-        .catch(err => console.error(err));
-    };
-
-    const getShutterButton = () => {
-      const ColoredRaisedButton = MKButton
-        .accentColoredFab()
-        .withOnPress(takePicture)
-        .build();
-
-      return (
-        <View
-          style={{
-            bottom: 50,
-          }}
-        >
-          <ColoredRaisedButton>
-            <Icon name="camera" size={20} color={colors.secondary} />
-          </ColoredRaisedButton>
-        </View>
-      );
-    };
-
+    // Unclear why the subview in camara is needed. The camera preview would not show up properly
+    // without it.
     return (
       <View style={styles.container} >
         <Camera
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-          style={styles.cameraPreview}
+          captureAudio={false}
+          ref={(cam) => { this.camera = cam; }}
+          style={{ flex: 1 }}
           aspect={Camera.constants.Aspect.fill}
         >
-
-          {getShutterButton()}
+          <View />
         </Camera>
+        <CameraButton takePicture={this.takePicture} />
         <SpinnerOverlay isVisible={this.state.capturing} message="Capturing photo..." />
       </View>
     );

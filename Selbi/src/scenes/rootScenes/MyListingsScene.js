@@ -6,6 +6,8 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
 
+import { clearNewListing } from '../../reducers/NewListingReducer';
+
 import styles from '../../../styles';
 import colors from '../../../colors';
 
@@ -24,6 +26,10 @@ class MyListingsScene extends RoutableScene {
     });
   }
 
+  onGoNext() {
+    this.props.clearNewListingData();
+  }
+
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
       return (
@@ -38,13 +44,6 @@ class MyListingsScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <View tabLabel="Inactive" style={styles.fullScreenContainer}>
-          <ListingsListComponent
-            listings={this.props.inactive}
-            emptyMessage="You have no inactive listings."
-            openDetailScene={() => this.goNext('details')}
-          />
-        </View>
         <View tabLabel="Public" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.public}
@@ -73,14 +72,21 @@ class MyListingsScene extends RoutableScene {
 
 const mapStateToProps = (state) => {
   return {
-    inactive: state.myListings.inactive,
     public: state.myListings.public,
     private: state.myListings.private,
     sold: state.myListings.sold,
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    clearNewListingData: () => {
+      dispatch(clearNewListing());
+    },
+  };
+};
+
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(MyListingsScene);

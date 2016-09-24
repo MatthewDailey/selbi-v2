@@ -84,9 +84,4 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
-  cameraPreview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
 });
