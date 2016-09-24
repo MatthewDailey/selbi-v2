@@ -7,9 +7,12 @@ import { MKButton } from 'react-native-material-kit';
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
 
-import { getUser, loadImage } from '../firebase/FirebaseConnector';
+import { distanceInMilesString, getGeolocation } from '../utils';
+
+import { getUser, loadImage, loadLocationForListing } from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
+import { setListingDistance } from '../reducers/ListingDetailReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles from '../../styles';
@@ -158,7 +161,7 @@ function ExtraDetailsOverlay({
     return (
       <View style={backgroundStyle}>
         <Text style={styles.friendlyHeaderLightLeftAlign}>
-          {`For sale by ${sellerName} in ${sellerLocal}.`}
+          {`For sale by ${sellerName} ${sellerLocal} miles away.`}
         </Text>
         <Text style={styles.friendlyHeaderLightLeftAlign}>Details:</Text>
         <Text style={styles.friendlyTextLightLeftAlign}>{description}</Text>
@@ -211,6 +214,32 @@ class ListingDetailScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    if (!this.props.listingGeo) {
+      const promiseUserLocation = getGeolocation();
+      const promiseListingLocation = loadLocationForListing(this.props.listingKey);
+
+      const toPoint = (latlon) => {
+        return {
+          lat: latlon[0],
+          lon: latlon[1],
+        };
+      };
+
+      Promise.all([promiseUserLocation, promiseListingLocation])
+        .then((userAndListingLocations) => {
+          console.log(`Loaded locations`, userAndListingLocations);
+          const userLocation = userAndListingLocations[0];
+          const listingLocation = userAndListingLocations[1];
+          if (listingLocation) {
+            this.props.setListingDistanceForDetails(
+              distanceInMilesString(
+                userLocation,
+                toPoint(listingLocation)));
+          }
+        })
+        .catch(console.log);
+    }
+
     if (this.state.renderPlaceholderOnly || !this.props.imageData) {
       if (!this.props.imageData) {
         loadImage(this.props.imageKey).then((imageSnapshot) =>
@@ -243,7 +272,7 @@ class ListingDetailScene extends RoutableScene {
               isVisible={this.state.showExtraDetails}
               description={listingData.description}
               sellerName={'Matt Dailey'}
-              sellerLocal={'San Francisco (94103)'}
+              sellerLocal={this.props.listingDistance}
             />
             <DetailTopInfo price={listingData.price} />
             <DetailBottomButtons
@@ -265,6 +294,7 @@ const mapStateToProps = (state) => {
     title: state.listingDetails.listingData.title,
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
+    listingDistance: state.listingDetails.listingDistance,
     imageKey: imageStoreKey,
     imageData: state.images[imageStoreKey],
     buyerUid: state.listingDetails.buyerUid,
@@ -277,6 +307,7 @@ const mapDispatchToProps = (dispatch) => {
     setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
       dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),
+    setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
   };
 };
 
