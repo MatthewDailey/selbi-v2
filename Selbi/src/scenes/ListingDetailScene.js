@@ -131,12 +131,20 @@ DetailBottomButtons.propTypes = {
   openEdit: React.PropTypes.func.isRequired,
 };
 
-function ExtraDetailsOverlay({ isVisible, message, backgroundColor = colors.dark }) {
+function ExtraDetailsOverlay({
+    isVisible,
+    description,
+    sellerName,
+    sellerLocal,
+    backgroundColor = colors.dark }) {
   if (isVisible) {
     const { width, height } = Dimensions.get('window');
 
     const backgroundStyle = {
       position: 'absolute',
+      paddingTop: 50,
+      paddingLeft: 20,
+      paddingRight: 20,
       top: 0,
       left: 0,
       height,
@@ -149,19 +157,22 @@ function ExtraDetailsOverlay({ isVisible, message, backgroundColor = colors.dark
 
     return (
       <View style={backgroundStyle}>
-        <View style={styles.paddedCenterContainerClear}>
-          <Text
-            color={colors.white}
-            style={styles.friendlyTextLight}
-          >
-            {message}
-          </Text>
-        </View>
+        <Text style={styles.friendlyHeaderLightLeftAlign}>
+          {`For sale by ${sellerName} in ${sellerLocal}.`}
+        </Text>
+        <Text style={styles.friendlyHeaderLightLeftAlign}>Details:</Text>
+        <Text style={styles.friendlyTextLightLeftAlign}>{description}</Text>
       </View>
     );
   }
   return <View />;
 }
+
+ExtraDetailsOverlay.propTypes = {
+  isVisible: React.PropTypes.bool,
+  description: React.PropTypes.string,
+  backgroundColor: React.PropTypes.string,
+};
 
 class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
@@ -228,7 +239,12 @@ class ListingDetailScene extends RoutableScene {
               justifyContent: 'space-between',
             }}
           >
-            <ExtraDetailsOverlay isVisible={this.state.showExtraDetails} message={listingData.description} />
+            <ExtraDetailsOverlay
+              isVisible={this.state.showExtraDetails}
+              description={listingData.description}
+              sellerName={'Matt Dailey'}
+              sellerLocal={'San Francisco (94103)'}
+            />
             <DetailTopInfo price={listingData.price} />
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}

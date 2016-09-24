@@ -72,6 +72,18 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  friendlyTextLightLeftAlign: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+  },
+  friendlyHeaderLightLeftAlign: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '400',
+    padding: paddingSize / 2,
+  },
   friendlyText: {
     fontSize: 20,
     fontWeight: '300',
