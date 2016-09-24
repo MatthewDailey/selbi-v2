@@ -241,14 +241,16 @@ function renderMenu(navigator, closeMenu) {
 
 class NavApp extends Component {
   componentDidMount() {
-    this.refreshCode = setInterval(() => {
-      codePush.sync({
-        updateDialog: true,
-        deploymentKey: config.codePushKey,
-        installMode: codePush.InstallMode.IMMEDIATE,
-      });
-    },
+    if (config.codePushKey) {
+      this.refreshCode = setInterval(() => {
+        codePush.sync({
+          updateDialog: true,
+          deploymentKey: config.codePushKey,
+          installMode: codePush.InstallMode.IMMEDIATE,
+        });
+      },
       5000);
+    }
   }
 
   componentWillUnmount() {
