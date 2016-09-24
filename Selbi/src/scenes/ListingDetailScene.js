@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { InteractionManager, Image, View, Text, Alert } from 'react-native';
+import { InteractionManager, Image, View, Text, Alert, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
@@ -54,7 +54,6 @@ function ChatButton({ isVisible, openChat }) {
   }
   return <View />;
 }
-
 ChatButton.propTypes = {
   isVisible: React.PropTypes.bool.isRequired,
   openChat: React.PropTypes.func.isRequired,
@@ -162,28 +161,32 @@ class ListingDetailScene extends RoutableScene {
     const listingData = this.props.listingData;
 
     return (
-      <View style={{
-        flex: 1,
-        backgroundColor: colors.dark,
-      }}>
+      <TouchableHighlight
+        onPress={() => console.log('clicked image')}
+        style={styles.container}
+      >
         <Image
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
-          style={{
-            flex: 1,
-          }}
+          style={styles.container}
         >
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}>
-            <View style={{
+          <View
+            style={{
               flex: 1,
-              flexDirection: 'row',
+              flexDirection: 'column',
               justifyContent: 'space-between',
-            }}>
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
               <Text style={fontStyle}>{`$${listingData.price}`}</Text>
-              <Text style={fontStyle}><Icon name="heart-o" size={30} color={colors.white} /></Text>
+              <Text style={fontStyle}>
+                <Icon name="heart-o" size={30} color={colors.white} />
+              </Text>
             </View>
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
@@ -192,9 +195,8 @@ class ListingDetailScene extends RoutableScene {
               openEdit={() => this.goNext('edit')}
             />
           </View>
-
         </Image>
-      </View>
+      </TouchableHighlight>
     );
   }
 }
