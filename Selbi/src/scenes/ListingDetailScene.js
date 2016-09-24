@@ -42,6 +42,72 @@ const Button = MKButton.button()
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
+function ChatButton({ isVisible, openChat }) {
+  if (isVisible) {
+    return (
+      <Button
+        onPress={openChat}
+      >
+        <Text>MESSAGE</Text>
+      </Button>
+    );
+  }
+  return <View />;
+}
+
+ChatButton.propTypes = {
+  isVisible: React.PropTypes.bool.isRequired,
+  openChat: React.PropTypes.func.isRequired,
+};
+
+function DetailBottomButtons({ isSeller, isChatButtonVisible, openChat, openEdit }) {
+  if (isSeller) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+        }}
+      >
+        <View style={buttonViewStyle}>
+          <Button onPress={openEdit}>
+            <Text>Update Listing</Text>
+          </Button>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+      }}
+    >
+      <View style={buttonViewStyle}>
+        <ChatButton isVisible={isChatButtonVisible} openChat={openChat} />
+      </View>
+      <View style={buttonViewStyle}>
+        <Button>
+          <Text>BUY</Text>
+        </Button>
+      </View>
+    </View>
+  );
+}
+
+DetailBottomButtons.propTypes = {
+  isSeller: React.PropTypes.bool.isRequired,
+  isChatButtonVisible: React.PropTypes.bool.isRequired,
+  openChat: React.PropTypes.func.isRequired,
+  openEdit: React.PropTypes.func.isRequired,
+};
+
 class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
@@ -95,60 +161,6 @@ class ListingDetailScene extends RoutableScene {
     const imageData = this.props.imageData;
     const listingData = this.props.listingData;
 
-    const getChatButton = () => {
-      if (this.props.routeLinks.chat) {
-        return (
-          <Button
-            onPress={() => this.goNext('chat')}
-          >
-            <Text>MESSAGE</Text>
-          </Button>
-        );
-      }
-      return <View />;
-    };
-
-    const getBottomButtons = () => {
-      if (getUser() && listingData.sellerId === getUser().uid) {
-        return (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-            }}
-          >
-            <View style={buttonViewStyle}>
-              <Button onPress={() => this.goNext('edit')}>
-                <Text>Update Listing</Text>
-              </Button>
-            </View>
-          </View>
-        );
-      }
-
-      return (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}
-        >
-          <View style={buttonViewStyle}>
-            {getChatButton()}
-          </View>
-          <View style={buttonViewStyle}>
-            <Button>
-              <Text>BUY</Text>
-            </Button>
-          </View>
-        </View>
-      );
-    };
-
     return (
       <View style={{
         flex: 1,
@@ -173,7 +185,12 @@ class ListingDetailScene extends RoutableScene {
               <Text style={fontStyle}>{`$${listingData.price}`}</Text>
               <Text style={fontStyle}><Icon name="heart-o" size={30} color={colors.white} /></Text>
             </View>
-            { getBottomButtons() }
+            <DetailBottomButtons
+              isSeller={!!getUser() && listingData.sellerId === getUser().uid}
+              isChatButtonVisible={!!this.props.routeLinks.chat}
+              openChat={() => this.goNext('chat')}
+              openEdit={() => this.goNext('edit')}
+            />
           </View>
 
         </Image>
