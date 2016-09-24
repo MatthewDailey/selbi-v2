@@ -4,6 +4,9 @@ import { InteractionManager, Image, View, Text, Alert, TouchableHighlight } from
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
+// noinspection Eslint - Dimensions provided by react-native env.
+import Dimensions from 'Dimensions';
+
 import { getUser, loadImage } from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
@@ -128,6 +131,38 @@ DetailBottomButtons.propTypes = {
   openEdit: React.PropTypes.func.isRequired,
 };
 
+function ExtraDetailsOverlay({ isVisible, message, backgroundColor = colors.dark }) {
+  if (isVisible) {
+    const { width, height } = Dimensions.get('window');
+
+    const backgroundStyle = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      height,
+      width,
+    };
+
+    if (backgroundColor) {
+      backgroundStyle.backgroundColor = `${backgroundColor}aa`;
+    }
+
+    return (
+      <View style={backgroundStyle}>
+        <View style={styles.paddedCenterContainerClear}>
+          <Text
+            color={colors.white}
+            style={styles.friendlyTextLight}
+          >
+            {message}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+  return <View />;
+}
+
 class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
@@ -193,6 +228,7 @@ class ListingDetailScene extends RoutableScene {
               justifyContent: 'space-between',
             }}
           >
+            <ExtraDetailsOverlay isVisible={this.state.showExtraDetails} message={listingData.description} />
             <DetailTopInfo price={listingData.price} />
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
