@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 
+import { getGeolocation } from '../../utils';
+
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
 
@@ -45,29 +47,6 @@ class ChooseVisibilityScene extends RoutableScene {
     this.goNext();
   }
 
-  getGeolocation() {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.props.setNewListingLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-          resolve();
-        },
-        (error) => {
-          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
-          if (error.code === 1) {
-            reject('Please grant Selbi permission to use your location.');
-          } else {
-            reject('Unable to read your location. Give it another shot in a sec.');
-          }
-        },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-      );
-    });
-  }
-
   renderWithNavBar() {
     return (
       <View style={styles.paddedContainer}>
@@ -102,7 +81,8 @@ class ChooseVisibilityScene extends RoutableScene {
                   .then((newListingId) => {
                     this.props.setNewListingId(newListingId);
                   })
-                  .then(() => this.getGeolocation())
+                  .then(getGeolocation)
+                  .then(this.props.setNewListingLocation)
                   .then(() => makeListingPublic(this.props.newListing))
                   .then(() => {
                     this.props.setListingStatus('public');

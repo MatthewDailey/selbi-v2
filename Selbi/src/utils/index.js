@@ -37,4 +37,26 @@ export function distanceInMilesString(pointOne, pointTwo) {
   return distanceMiles.toFixed(0);
 }
 
+export function getGeolocation() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+      },
+      (error) => {
+        // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
+        if (error.code === 1) {
+          reject('Please grant Selbi permission to use your location.');
+        } else {
+          reject('Unable to read your location. Give it another shot in a sec.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  });
+}
+
 
