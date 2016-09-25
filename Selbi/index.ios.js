@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -175,8 +176,8 @@ routeLinks[localListingScene.id] = {
 
 routeLinks[friendsListingScene.id] = {
   next: {
-    title: 'Sell',
-    getRoute: () => NewListingFlow.firstScene,
+    title: <Text><Icon name="user-plus" size={20}/></Text>,
+    getRoute: () => followFriendScene,
   },
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
