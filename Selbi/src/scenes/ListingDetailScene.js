@@ -384,7 +384,8 @@ class ListingDetailScene extends RoutableScene {
 
     return (
       <TouchableHighlight
-        underlayColor={colors.white}
+        underlayColor={colors.transparent}
+        activeOpacity={1}
         onPress={this.toggleShowExtraDetails}
         style={styles.container}
       >
