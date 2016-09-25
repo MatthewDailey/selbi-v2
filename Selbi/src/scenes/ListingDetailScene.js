@@ -217,31 +217,34 @@ class ListingDetailScene extends RoutableScene {
     }
   }
 
+  loadAndStoreListingDistance() {
+    const promiseUserLocation = getGeolocation();
+    const promiseListingLocation = loadLocationForListing(this.props.listingKey);
+
+    const toPoint = (latlon) => {
+      return {
+        lat: latlon[0],
+        lon: latlon[1],
+      };
+    };
+
+    Promise.all([promiseUserLocation, promiseListingLocation])
+      .then((userAndListingLocations) => {
+        const userLocation = userAndListingLocations[0];
+        const listingLocation = userAndListingLocations[1];
+        if (listingLocation) {
+          this.props.setListingDistanceForDetails(
+            distanceInMilesString(
+              userLocation,
+              toPoint(listingLocation)));
+        }
+      })
+      .catch(console.log);
+  }
+
   renderWithNavBar() {
     if (!this.props.listingGeo) {
-      const promiseUserLocation = getGeolocation();
-      const promiseListingLocation = loadLocationForListing(this.props.listingKey);
-
-      const toPoint = (latlon) => {
-        return {
-          lat: latlon[0],
-          lon: latlon[1],
-        };
-      };
-
-      Promise.all([promiseUserLocation, promiseListingLocation])
-        .then((userAndListingLocations) => {
-          console.log(`Loaded locations`, userAndListingLocations);
-          const userLocation = userAndListingLocations[0];
-          const listingLocation = userAndListingLocations[1];
-          if (listingLocation) {
-            this.props.setListingDistanceForDetails(
-              distanceInMilesString(
-                userLocation,
-                toPoint(listingLocation)));
-          }
-        })
-        .catch(console.log);
+      this.loadAndStoreListingDistance();
     }
 
     if (this.state.renderPlaceholderOnly || !this.props.imageData) {
