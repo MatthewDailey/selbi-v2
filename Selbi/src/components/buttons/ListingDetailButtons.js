@@ -5,7 +5,7 @@ import { MKButton } from 'react-native-material-kit';
 
 import colors from '../../../colors';
 
-const buttonStyle = { fontSize: 20, fontWeight: 'bold' };
+const buttonStyle = { fontSize: 20 };
 const buttonMargin = 8;
 
 const Button = MKButton.button()
@@ -16,16 +16,18 @@ const Button = MKButton.button()
   .withBackgroundColor(colors.primary)
   .build();
 
-export function UpdateButton({ openEdit }) {
+export function UpdateButton({ onPress }) {
   return (
-    <Button onPress={openEdit}>
-      <Text>Update Listing</Text>
+    <Button onPress={onPress}>
+      <Text style={buttonStyle}>Update Listing</Text>
     </Button>
   );
 }
 UpdateButton.propTypes = {
-  openEdit: React.PropTypes.func.isRequired,
+  onPress: React.PropTypes.func.isRequired,
 };
+
+const unsupported = () => Alert.alert('Sorry, not yet supported.');
 
 const LeftButton = MKButton.button()
   .withStyle({
@@ -35,7 +37,6 @@ const LeftButton = MKButton.button()
     marginBottom: buttonMargin,
   })
   .withBackgroundColor(colors.primary)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 const RightButton = MKButton.button()
@@ -46,15 +47,14 @@ const RightButton = MKButton.button()
     marginBottom: buttonMargin,
   })
   .withBackgroundColor(colors.primary)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
-export function ChatButton({ isVisible, openChat }) {
+export function ChatButton({ isVisible, onPress = unsupported }) {
   if (isVisible) {
     return (
-      <LeftButton onPress={openChat}>
+      <LeftButton onPress={onPress}>
         <Text style={buttonStyle}>
-          <Icon name="commenting-o" size={buttonStyle.fontSize} />
+          <Icon name="commenting-o" size={buttonStyle.fontSize}/>
         </Text>
       </LeftButton>
     );
@@ -63,20 +63,21 @@ export function ChatButton({ isVisible, openChat }) {
 }
 ChatButton.propTypes = {
   isVisible: React.PropTypes.bool.isRequired,
-  openChat: React.PropTypes.func.isRequired,
+  onPress: React.PropTypes.func,
 };
 
-export function BuyButton({ price }) {
+export function BuyButton({ price, onPress = unsupported }) {
   return (
-    <RightButton>
+    <RightButton onPress={onPress}>
       <Text style={buttonStyle}>
-        <Icon name="usd" size={buttonStyle.fontSize} /> {price}
+        ${price}
       </Text>
     </RightButton>
   );
 }
 BuyButton.propTypes = {
   price: React.PropTypes.number.isRequired,
+  onPress: React.PropTypes.func,
 };
 
 export default undefined;

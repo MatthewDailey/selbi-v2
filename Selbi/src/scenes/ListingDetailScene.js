@@ -59,7 +59,7 @@ class DetailBottomButtons extends Component {
             }}
           >
             <View style={buttonViewStyle} >
-                <UpdateButton openEdit={this.props.openEdit} />
+              <UpdateButton onPress={this.props.openEdit} />
             </View>
           </View>
         );
@@ -149,8 +149,13 @@ class DetailBottomButtons extends Component {
               </View>
             </TouchableHighlight>
             <View style={{ flexDirection: 'row' }}>
-              <ChatButton isVisible={this.props.isChatButtonVisible} openChat={this.props.openChat} />
-              <BuyButton price={this.props.listingData.price} openEdit={this.props.openEdit} />
+              <ChatButton
+                isVisible={this.props.isChatButtonVisible}
+                onPress={this.props.openChat}
+              />
+              <BuyButton
+                price={this.props.listingData.price}
+              />
             </View>
           </View>
         </View>
@@ -161,6 +166,9 @@ class DetailBottomButtons extends Component {
 }
 
 DetailBottomButtons.propTypes = {
+  listingData: React.PropTypes.object.isRequired,
+  listingDistance: React.PropTypes.string,
+  sellerData: React.PropTypes.object,
   isSeller: React.PropTypes.bool.isRequired,
   isChatButtonVisible: React.PropTypes.bool.isRequired,
   openChat: React.PropTypes.func.isRequired,
