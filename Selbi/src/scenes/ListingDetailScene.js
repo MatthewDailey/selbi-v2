@@ -51,7 +51,7 @@ function DetailTopInfo({ price }) {
     >
       <Text style={fontStyle}>{`$${price}`}</Text>
       <Text style={fontStyle}>
-        <Icon name="heart-o" size={30} color={colors.white} />
+        <Icon name="star-o" size={30} color={colors.white} />
       </Text>
     </View>
   );

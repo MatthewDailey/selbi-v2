@@ -127,7 +127,7 @@ class Menu extends Component {
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={styles.menuText}>
-            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Saved Listings</Text>
+            <Icon name="star-o" size={20} /> <Text style={signInMenuStyle}>Saved Listings</Text>
           </Text>
         </TouchableHighlight>
 
