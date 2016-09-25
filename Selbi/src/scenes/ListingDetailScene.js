@@ -4,12 +4,10 @@ import { InteractionManager, Image, View, Text, Alert, TouchableHighlight } from
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
-// noinspection Eslint - Dimensions provided by react-native env.
-import Dimensions from 'Dimensions';
-
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing, loadUserPublicData } from '../firebase/FirebaseConnector';
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData }
+  from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
 import { setListingDistance, setListingDetailsSellerData } from '../reducers/ListingDetailReducer';
@@ -18,7 +16,9 @@ import { storeImage } from '../reducers/ImagesReducer';
 import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
+
 import LoadingListingComponent from '../components/LoadingListingComponent';
+import TopLeftBackButton from '../components/TopLeftBackButton';
 
 const buttonViewStyle = {
   flex: 1,
@@ -221,54 +221,6 @@ DetailBottomButtons.propTypes = {
   openEdit: React.PropTypes.func.isRequired,
 };
 
-function ExtraDetailsOverlay({
-    isVisible,
-    description,
-    sellerName,
-    sellerDistance }) {
-  if (isVisible) {
-    const { width, height } = Dimensions.get('window');
-
-    const backgroundStyle = {
-      position: 'absolute',
-      paddingTop: 50,
-      paddingLeft: 20,
-      paddingRight: 20,
-      top: 0,
-      left: 0,
-      height,
-      width,
-      backgroundColor: `${colors.dark}aa`,
-    };
-
-    let visibleDescription = `Message ${sellerName} for more info.`;
-    if (description) {
-      visibleDescription = description;
-    }
-
-    let visibleDistance = 'Private listing, distance unknown.';
-    if (sellerDistance) {
-      visibleDistance = `${sellerDistance} miles away.`;
-    }
-
-    return (
-      <View style={backgroundStyle}>
-        <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerName}</Text>
-        <Text style={styles.friendlyHeaderLightLeftAlign}>{visibleDistance}</Text>
-        <Text style={styles.friendlyTextLightLeftAlign}>{visibleDescription}</Text>
-      </View>
-    );
-  }
-  return <View />;
-}
-
-ExtraDetailsOverlay.propTypes = {
-  isVisible: React.PropTypes.bool,
-  description: React.PropTypes.string,
-  sellerName: React.PropTypes.string,
-  sellerDistance: React.PropTypes.string,
-};
-
 class ListingDetailScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
@@ -371,30 +323,7 @@ class ListingDetailScene extends RoutableScene {
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
-          <TouchableHighlight
-            style={{
-              alignItems: 'center',
-              paddingTop: 32,
-              paddingLeft: 8,
-              height: 64,
-              width: 48,
-              opacity: 0.7,
-            }}
-            onPress={this.goBackHandler}
-            underlayColor={colors.transparent}
-            activeOpacity={0.5}
-          >
-            <Text
-              style={{
-                textShadowColor: colors.dark,
-                textShadowOffset: {
-                  width: 1,
-                  height: 1,
-                },
-                textShadowRadius: 2,
-              }}
-            ><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
-          </TouchableHighlight>
+          <TopLeftBackButton onPress={this.goBack} />
           <View
             style={{
               flex: 1,
