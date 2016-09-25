@@ -9,10 +9,10 @@ import Dimensions from 'Dimensions';
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing } from '../firebase/FirebaseConnector';
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData } from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
-import { setListingDistance } from '../reducers/ListingDetailReducer';
+import { setListingDistance, setListingDetailsSellerData } from '../reducers/ListingDetailReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles from '../../styles';
@@ -154,7 +154,7 @@ function ExtraDetailsOverlay({
       backgroundColor: `${colors.dark}aa`,
     };
 
-    let visibleDescription = `No more details provided. Message ${sellerName} for more info.`;
+    let visibleDescription = `Message ${sellerName} for more info.`;
     if (description) {
       visibleDescription = description;
     }
@@ -242,9 +242,23 @@ class ListingDetailScene extends RoutableScene {
       .catch(console.log);
   }
 
+  loadAndStoreSellerData() {
+    loadUserPublicData(this.props.listingData.sellerId)
+      .then((sellerData) => {
+        if (sellerData && sellerData.exists()) {
+          this.props.setSellerData(sellerData.val());
+        }
+      })
+      .catch(console.log);
+  }
+
   renderWithNavBar() {
-    if (!this.props.listingGeo) {
+    if (!this.props.listingDistance) {
       this.loadAndStoreListingDistance();
+    }
+
+    if (!this.props.sellerData) {
+      this.loadAndStoreSellerData();
     }
 
     if (this.state.renderPlaceholderOnly || !this.props.imageData) {
@@ -278,7 +292,7 @@ class ListingDetailScene extends RoutableScene {
             <ExtraDetailsOverlay
               isVisible={this.state.showExtraDetails}
               description={listingData.description}
-              sellerName={'Matt Dailey'}
+              sellerName={this.props.sellerData.displayName}
               sellerDistance={this.props.listingDistance}
             />
             <DetailTopInfo price={listingData.price} />
@@ -302,6 +316,7 @@ const mapStateToProps = (state) => {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     listingDistance: state.listingDetails.listingDistance,
+    sellerData: state.listingDetails.sellerData,
     imageKey: imageStoreKey,
     imageData: state.images[imageStoreKey],
     buyerUid: state.listingDetails.buyerUid,
@@ -315,6 +330,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
+    setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
   };
 };
 
