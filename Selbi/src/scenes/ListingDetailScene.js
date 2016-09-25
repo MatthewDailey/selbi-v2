@@ -134,14 +134,6 @@ DetailBottomButtons.propTypes = {
   openEdit: React.PropTypes.func.isRequired,
 };
 
-function SellerDistanceText({ sellerDistance }) {
-  if (sellerDistance) {
-    return <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerDistance} miles away.</Text>;
-  }
-  return <View />;
-}
-SellerDistanceText.propTypes = { sellerDistance: React.PropTypes.string };
-
 function ExtraDetailsOverlay({
     isVisible,
     description,
@@ -167,10 +159,15 @@ function ExtraDetailsOverlay({
       visibleDescription = description;
     }
 
+    let visibleDistance = 'Private listing, distance unknown.';
+    if (sellerDistance) {
+      visibleDistance = `${sellerDistance} miles away.`;
+    }
+
     return (
       <View style={backgroundStyle}>
         <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerName}</Text>
-        <SellerDistanceText sellerDistance={sellerDistance} />
+        <Text style={styles.friendlyHeaderLightLeftAlign}>{visibleDistance}</Text>
         <Text style={styles.friendlyTextLightLeftAlign}>{visibleDescription}</Text>
       </View>
     );

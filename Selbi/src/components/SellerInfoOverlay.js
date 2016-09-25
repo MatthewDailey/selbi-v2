@@ -193,7 +193,7 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🤑 Miron bought your listing 'massive dildo'.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🤑 Miron bought your listing 'massive cactus'.</Text>
 
           <View style={{padding: 4}} />
 
