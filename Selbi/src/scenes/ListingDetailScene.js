@@ -129,6 +129,7 @@ function BuyButton({ price }) {
   );
 }
 
+
 class DetailBottomButtons extends Component {
   constructor(props) {
     super(props);
@@ -163,9 +164,11 @@ class DetailBottomButtons extends Component {
           return <View />;
         }
 
+        const descriptionFontSize = 18;
+
         if (this.state.showDescription && this.props.listingData.description) {
           return (
-            <Text style={{ flex: 1 }}>
+            <Text style={{ flex: 1, fontSize: descriptionFontSize  }}>
               {this.props.listingData.description}
             </Text>
           );
@@ -176,6 +179,7 @@ class DetailBottomButtons extends Component {
             ellipsizeMode="tail"
             style={{
               flex: 1,
+              fontSize: descriptionFontSize,
             }}
           >
             {this.props.listingData.description}
@@ -191,8 +195,13 @@ class DetailBottomButtons extends Component {
       };
 
       const ListingDistance = () => {
+        const listingDistanceFontSize = 16;
         if (this.props.listingDistance) {
-          return <Text style={{ padding: 8 }}>{`${this.props.listingDistance} miles away`}</Text>;
+          return (
+            <Text style={{ padding: 8, fontSize: listingDistanceFontSize }}>
+              <Icon name="map-marker" size={listingDistanceFontSize} /> {`${this.props.listingDistance} mi.`}
+            </Text>
+          );
         }
         return <View />;
       };
@@ -216,7 +225,7 @@ class DetailBottomButtons extends Component {
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ flex: 1 }}>
                     <Text style={{
-                      fontSize: 25,
+                      fontSize: 30,
                       paddingTop: 8,
                       paddingLeft: 8,
                       paddingRight: 8,
