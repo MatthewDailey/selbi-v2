@@ -213,7 +213,7 @@ export default class RoutableScene extends Component {
     const title = (
       <Text
         style={{
-          fontSize: 30,
+          fontSize: 25,
           fontWeight: '300',
         }}
       >
