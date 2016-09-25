@@ -20,19 +20,6 @@ import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import LoadingListingComponent from '../components/LoadingListingComponent';
 
-const fontStyle = {
-  padding: 10,
-  color: 'white',
-  textShadowColor: colors.dark,
-  textShadowOffset: {
-    width: 1,
-    height: 1,
-  },
-  textShadowRadius: 2,
-  fontSize: 30,
-  backgroundColor: 'transparent',
-};
-
 const buttonViewStyle = {
   flex: 1,
   opacity: 0.7,
@@ -45,36 +32,7 @@ const buttonViewStyle = {
   marginBottom: 40,
   marginLeft: 20,
   marginRight: 20,
-};
-
-const actionButtonStyle = {
-  flex: 1,
-  padding: 8,
-  margin: 2,
-  fontSize: 20,
-  fontWeight: 'bold',
-  textAlign: 'center',
-  backgroundColor: colors.primary,
-};
-
-function DetailTopInfo({ price }) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Text style={fontStyle}>{`$${price}`}</Text>
-      <Text style={fontStyle}>
-        <Icon name="star-o" size={30} color={colors.white} />
-      </Text>
-    </View>
-  );
-}
-DetailTopInfo.propTypes = {
-  price: React.PropTypes.oneOfType([React.PropTypes.number, React.PropTypes.string]).isRequired,
+  borderRadius: 5,
 };
 
 const Button = MKButton.button()
@@ -89,7 +47,7 @@ const LeftButton = MKButton.button()
     flex: 1,
     marginLeft: 4,
     marginRight: 2,
-    marginBottom:4,
+    marginBottom: 4,
   })
   .withBackgroundColor(colors.primary)
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
@@ -145,6 +103,7 @@ class DetailBottomButtons extends Component {
           <View
             style={{
               flex: 1,
+              backgroundColor: colors.transparent,
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
@@ -217,9 +176,9 @@ class DetailBottomButtons extends Component {
         >
           <View style={buttonViewStyle}>
             <TouchableHighlight
-              underlayColor={colors.white}
+              underlayColor={colors.transparent}
+              activeOpacity={1}
               onPress={() => this.setState({ showDescription: !this.state.showDescription })}
-              activeOpacity={0.5}
             >
               <View>
                 <View style={{ flexDirection: 'row' }}>
@@ -239,7 +198,6 @@ class DetailBottomButtons extends Component {
                 </View>
                 <View style={{ flexDirection: 'row', padding: 8 }}>
                   <DescriptionText />
-
                 </View>
               </View>
             </TouchableHighlight>
@@ -405,37 +363,37 @@ class ListingDetailScene extends RoutableScene {
       <TouchableHighlight
         underlayColor={colors.transparent}
         activeOpacity={1}
+        style={{ flex: 1, borderRadius: 5 }}
         onPress={this.toggleShowExtraDetails}
-        style={styles.container}
       >
         <Image
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={styles.container}
         >
-            <TouchableHighlight
+          <TouchableHighlight
+            style={{
+              alignItems: 'center',
+              paddingTop: 32,
+              paddingLeft: 8,
+              height: 64,
+              width: 48,
+              opacity: 0.7,
+            }}
+            onPress={this.goBackHandler}
+            underlayColor={colors.transparent}
+            activeOpacity={0.5}
+          >
+            <Text
               style={{
-                alignItems: 'center',
-                paddingTop: 32,
-                paddingLeft: 8,
-                height: 64,
-                width: 48,
-                opacity: 0.7,
+                textShadowColor: colors.dark,
+                textShadowOffset: {
+                  width: 1,
+                  height: 1,
+                },
+                textShadowRadius: 2,
               }}
-              onPress={this.goBackHandler}
-              underlayColor={colors.transparent}
-              activeOpacity={0.5}
-            >
-              <Text
-                style={{
-                  textShadowColor: colors.dark,
-                  textShadowOffset: {
-                    width: 1,
-                    height: 1,
-                  },
-                  textShadowRadius: 2,
-                }}
-              ><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
-            </TouchableHighlight>
+            ><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
+          </TouchableHighlight>
           <View
             style={{
               flex: 1,
