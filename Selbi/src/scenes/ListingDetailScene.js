@@ -126,7 +126,65 @@ class DetailBottomButtons extends Component {
   }
 
   render() {
-    if (this.props.isSeller) {
+    if (this.props.isVisible) {
+      if (this.props.isSeller) {
+        return (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+            }}
+          >
+            <View style={buttonViewStyle}>
+              <Button onPress={this.props.openEdit}>
+                <Text>Update Listing</Text>
+              </Button>
+            </View>
+          </View>
+        );
+      }
+
+      const DescriptionText = () => {
+        if (!this.props.listingData.description) {
+          return <View />;
+        }
+
+        if (this.state.showDescription && this.props.listingData.description) {
+          return (
+            <Text style={{ flex: 1 }}>
+              {this.props.listingData.description}
+            </Text>
+          );
+        }
+        return (
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              flex: 1,
+            }}
+          >
+            {this.props.listingData.description}
+          </Text>
+        );
+      };
+
+      const SellerName = () => {
+        if (this.props.sellerData && this.state.showDescription) {
+          return <Text style={{ paddingLeft: 8 }}>{this.props.sellerData.displayName}</Text>;
+        }
+        return <View />;
+      };
+
+      const ListingDistance = () => {
+        if (this.props.listingDistance) {
+          return <Text style={{ padding: 8 }}>{`${this.props.listingDistance} miles away`}</Text>;
+        }
+        return <View />;
+      };
+
       return (
         <View
           style={{
@@ -137,95 +195,44 @@ class DetailBottomButtons extends Component {
           }}
         >
           <View style={buttonViewStyle}>
-            <Button onPress={this.props.openEdit}>
-              <Text>Update Listing</Text>
-            </Button>
+            <TouchableHighlight
+              underlayColor={colors.white}
+              onPress={() => this.setState({ showDescription: !this.state.showDescription })}
+              activeOpacity={0.5}
+            >
+              <View>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={{
+                      fontSize: 25,
+                      paddingTop: 8,
+                      paddingLeft: 8,
+                      paddingRight: 8,
+                      fontWeight: '300',
+                    }}>
+                      {this.props.listingData.title}
+                    </Text>
+                    <SellerName style={{ flex: 1 }} />
+                  </View>
+                  <ListingDistance />
+                </View>
+                <View style={{ flexDirection: 'row', padding: 8 }}>
+                  <DescriptionText />
+
+                </View>
+              </View>
+            </TouchableHighlight>
+            <View style={{ borderBottomWidth: 1, borderBottomColor: '#00000064' }} />
+            <View style={{ flexDirection: 'row' }}>
+              <ChatButton isVisible={this.props.isChatButtonVisible} openChat={this.props.openChat} />
+              <View style={{ borderLeftWidth: 1, borderLeftColor: '#00000064' }} />
+              <BuyButton price={this.props.listingData.price} openEdit={this.props.openEdit} />
+            </View>
           </View>
         </View>
       );
     }
-
-    const DescriptionText = () => {
-      if (this.state.showDescription && this.props.listingData.description) {
-        return <Text
-          style={{
-            fontSize: 20,
-            fontWeight: '300',
-            textAlign: 'center',
-          }}
-        >
-          {this.props.listingData.description}
-        </Text>;
-      }
-      return (
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={{
-            flex: 1,
-          }}
-        >
-          {this.props.listingData.description}
-        </Text>
-      );
-    };
-
-    const SellerName = () => {
-      if (this.props.sellerData) {
-        return <Text style={{ textAlign: 'center' }}>{this.props.sellerData.displayName}</Text>;
-      }
-      return <View />;
-    };
-
-    const ListingDistance = () => {
-      if (this.props.listingDistance) {
-        return <Text>{`${this.props.listingDistance} miles away`}</Text>;
-      }
-      return <View />;
-    };
-
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-        }}
-      >
-        <View style={buttonViewStyle}>
-          <TouchableHighlight
-            underlayColor={colors.white}
-            onPress={() => this.setState({ showDescription: !this.state.showDescription })}
-            activeOpacity={0.5}
-          >
-            <View>
-              <Text style={{
-                fontSize: 25,
-                paddingTop: 8,
-                paddingLeft: 8,
-                paddingRight: 8,
-                fontWeight: '300',
-                textAlign: 'center',
-              }}>
-                {this.props.listingData.title}
-              </Text>
-              <SellerName style={{ flex: 1 }} />
-              <View style={{ flexDirection: 'row', padding: 8 }}>
-                <DescriptionText />
-                <ListingDistance style={{ flex: 1 }} />
-              </View>
-            </View>
-          </TouchableHighlight>
-          <View style={{ borderBottomWidth: 1, borderBottomColor: '#00000064' }} />
-          <View style={{ flexDirection: 'row' }}>
-            <ChatButton isVisible={this.props.isChatButtonVisible} openChat={this.props.openChat} />
-            <View style={{ borderLeftWidth: 1, borderLeftColor: '#00000064' }} />
-            <BuyButton price={this.props.listingData.price} openEdit={this.props.openEdit} />
-          </View>
-        </View>
-      </View>
-    );
+    return <View />;
   }
 }
 
@@ -289,7 +296,7 @@ class ListingDetailScene extends RoutableScene {
     super(props, context);
     this.state = {
       renderPlaceholderOnly: true,
-      showExtraDetails: false,
+      showExtraDetails: true,
     };
 
     this.toggleShowExtraDetails = this.toggleShowExtraDetails.bind(this);
@@ -402,6 +409,7 @@ class ListingDetailScene extends RoutableScene {
             }}
           >
             <DetailBottomButtons
+              isVisible={this.state.showExtraDetails}
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
               listingData={listingData}
               isChatButtonVisible={!!this.props.routeLinks.chat}
