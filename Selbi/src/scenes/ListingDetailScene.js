@@ -27,6 +27,7 @@ const buttonViewStyle = {
     width: 2,
     height: 2,
   },
+  backgroundColor: colors.white,
   shadowColor: 'black',
   shadowOpacity: 1.0,
   marginBottom: 40,
@@ -363,12 +364,12 @@ class ListingDetailScene extends RoutableScene {
       <TouchableHighlight
         underlayColor={colors.transparent}
         activeOpacity={1}
-        style={{ flex: 1, borderRadius: 5 }}
+        style={{ flex: 1, backgroundColor: colors.dark }}
         onPress={this.toggleShowExtraDetails}
       >
         <Image
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
-          style={styles.container}
+          style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TouchableHighlight
             style={{
