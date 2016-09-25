@@ -138,7 +138,7 @@ function ExtraDetailsOverlay({
     isVisible,
     description,
     sellerName,
-    sellerLocal,
+    sellerDistance,
     backgroundColor = colors.dark }) {
   if (isVisible) {
     const { width, height } = Dimensions.get('window');
@@ -158,13 +158,16 @@ function ExtraDetailsOverlay({
       backgroundStyle.backgroundColor = `${backgroundColor}aa`;
     }
 
+    let visibleDescription = `No more details provided. Message ${sellerName} for more info.`;
+    if (description) {
+      visibleDescription = description;
+    }
+
     return (
       <View style={backgroundStyle}>
-        <Text style={styles.friendlyHeaderLightLeftAlign}>
-          {`For sale by ${sellerName} ${sellerLocal} miles away.`}
-        </Text>
-        <Text style={styles.friendlyHeaderLightLeftAlign}>Details:</Text>
-        <Text style={styles.friendlyTextLightLeftAlign}>{description}</Text>
+        <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerName}</Text>
+        <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerDistance} miles away</Text>
+        <Text style={styles.friendlyTextLightLeftAlign}>{visibleDescription}</Text>
       </View>
     );
   }
@@ -189,7 +192,6 @@ class ListingDetailScene extends RoutableScene {
   }
 
   toggleShowExtraDetails() {
-    console.log(`Toggling show extra details. New value=${!this.state.showExtraDetails}`);
     this.setState({
       showExtraDetails: !this.state.showExtraDetails,
     });
@@ -272,7 +274,7 @@ class ListingDetailScene extends RoutableScene {
               isVisible={this.state.showExtraDetails}
               description={listingData.description}
               sellerName={'Matt Dailey'}
-              sellerLocal={this.props.listingDistance}
+              sellerDistance={this.props.listingDistance}
             />
             <DetailTopInfo price={listingData.price} />
             <DetailBottomButtons

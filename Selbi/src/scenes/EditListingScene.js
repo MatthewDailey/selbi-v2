@@ -363,7 +363,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
-    // TODO (mdailey): Properly protect against invalid prices.
     setPrice: (price) => dispatch(setNewListingPrice(price)),
     setStatus: (status) => dispatch(setNewListingStatus(status)),
     setLocation: (latlon) => dispatch(setNewListingLocation(latlon)),

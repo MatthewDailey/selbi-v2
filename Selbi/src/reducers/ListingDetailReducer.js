@@ -16,6 +16,7 @@ export default function (listingDetailsState = {}, action) {
       return listingDetails;
     case LD_SET_LISTING_DATA:
       listingDetails.listingData = action.data;
+      listingDetails.listingDistance = undefined;
       return listingDetails;
     case LD_SET_LISTING_GEO:
       listingDetails.listingDistance = action.distance;
@@ -50,7 +51,7 @@ export function setListingData(listingData) {
 export function setListingDistance(distance) {
   return {
     type: LD_SET_LISTING_GEO,
-    distance
+    distance,
   };
 }
 
