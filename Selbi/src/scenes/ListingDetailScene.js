@@ -41,6 +41,7 @@ const Button = MKButton.button()
     borderRadius: 5,
     padding: 15,
   })
+  .withBackgroundColor(colors.primary)
   .build();
 
 const LeftButton = MKButton.button()
@@ -59,7 +60,7 @@ const RightButton = MKButton.button()
     flex: 1,
     marginLeft: 2,
     marginRight: 4,
-    marginBottom:4,
+    marginBottom: 4,
   })
   .withBackgroundColor(colors.primary)
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
@@ -335,11 +336,11 @@ class ListingDetailScene extends RoutableScene {
               isVisible={this.state.showExtraDetails}
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
               listingData={listingData}
+              listingDistance={this.props.listingDistance}
+              sellerData={this.props.sellerData}
               isChatButtonVisible={!!this.props.routeLinks.chat}
               openChat={() => this.goNext('chat')}
               openEdit={() => this.goNext('edit')}
-              sellerData={this.props.sellerData}
-              listingDistance={this.props.listingDistance}
             />
           </View>
         </Image>
