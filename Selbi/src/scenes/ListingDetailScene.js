@@ -50,9 +50,11 @@ const buttonViewStyle = {
 const actionButtonStyle = {
   flex: 1,
   padding: 8,
+  margin: 2,
   fontSize: 20,
   fontWeight: 'bold',
   textAlign: 'center',
+  backgroundColor: colors.primary,
 };
 
 function DetailTopInfo({ price }) {
@@ -80,21 +82,36 @@ const Button = MKButton.button()
     borderRadius: 5,
     padding: 15,
   })
-  .withBackgroundColor(colors.white)
+  .build();
+
+const LeftButton = MKButton.button()
+  .withStyle({
+    flex: 1,
+    marginLeft: 4,
+    marginRight: 2,
+    marginBottom:4,
+  })
+  .withBackgroundColor(colors.primary)
+  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
+  .build();
+
+const RightButton = MKButton.button()
+  .withStyle({
+    flex: 1,
+    marginLeft: 2,
+    marginRight: 4,
+    marginBottom:4,
+  })
+  .withBackgroundColor(colors.primary)
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 function ChatButton({ isVisible, openChat }) {
   if (isVisible) {
     return (
-      <TouchableHighlight
-        activeOpacity={0.5}
-        onPress={openChat}
-        style={styles.container}
-        underlayColor={colors.white}
-      >
-        <Text style={actionButtonStyle}><Icon name="commenting-o" size={20}/></Text>
-      </TouchableHighlight>
+      <LeftButton onPress={openChat}>
+        <Text><Icon name="commenting-o" size={20} /></Text>
+      </LeftButton>
     );
   }
   return <View />;
@@ -104,16 +121,11 @@ ChatButton.propTypes = {
   openChat: React.PropTypes.func.isRequired,
 };
 
-function BuyButton({ price, openEdit }) {
+function BuyButton({ price }) {
   return (
-    <TouchableHighlight
-      onPress={openEdit}
-      style={styles.container}
-      underlayColor={colors.white}
-      activeOpacity={0.5}
-    >
-      <Text style={actionButtonStyle}><Icon name="usd" size={20} />{price}</Text>
-    </TouchableHighlight>
+    <RightButton onPress={() => Alert.alert('Not yet supported.')}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold' }}><Icon name="usd" size={20} /> {price}</Text>
+    </RightButton>
   );
 }
 
@@ -222,10 +234,8 @@ class DetailBottomButtons extends Component {
                 </View>
               </View>
             </TouchableHighlight>
-            <View style={{ borderBottomWidth: 1, borderBottomColor: '#00000064' }} />
             <View style={{ flexDirection: 'row' }}>
               <ChatButton isVisible={this.props.isChatButtonVisible} openChat={this.props.openChat} />
-              <View style={{ borderLeftWidth: 1, borderLeftColor: '#00000064' }} />
               <BuyButton price={this.props.listingData.price} openEdit={this.props.openEdit} />
             </View>
           </View>
