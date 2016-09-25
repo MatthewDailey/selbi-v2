@@ -21,7 +21,7 @@ import TopLeftBackButton from '../components/TopLeftBackButton';
 import { BuyButton, ChatButton, UpdateButton } from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
-const buttonViewStyle = {
+const detailBottomOverlayStyle = {
   flex: 1,
   opacity: 0.7,
   shadowOffset: {
@@ -35,6 +35,38 @@ const buttonViewStyle = {
   marginLeft: 20,
   marginRight: 20,
   borderRadius: 5,
+};
+
+function DescriptionText({ description, showFullDescription }) {
+  if (!description) {
+    return <View />;
+  }
+
+  const descriptionFontSize = 18;
+
+  if (showFullDescription && description) {
+    return (
+      <Text style={{ flex: 1, fontSize: descriptionFontSize  }}>
+        {description}
+      </Text>
+    );
+  }
+  return (
+    <Text
+      numberOfLines={1}
+      ellipsizeMode="tail"
+      style={{
+        flex: 1,
+        fontSize: descriptionFontSize,
+      }}
+    >
+      {description}
+    </Text>
+  );
+}
+DescriptionText.propTypes = {
+  description: React.PropTypes.string,
+  showFullDescription: React.PropTypes.bool,
 };
 
 class DetailBottomButtons extends Component {
@@ -57,47 +89,31 @@ class DetailBottomButtons extends Component {
             alignItems: 'flex-end',
           }}
         >
-          <View style={buttonViewStyle} >
+          <View style={detailBottomOverlayStyle} >
             <UpdateButton onPress={this.props.openEdit} />
           </View>
         </View>
       );
     }
 
-    const DescriptionText = () => {
-      if (!this.props.listingData.description) {
-        return <View />;
-      }
-
-      const descriptionFontSize = 18;
-
-      if (this.state.showDescription && this.props.listingData.description) {
-        return (
-          <Text style={{ flex: 1, fontSize: descriptionFontSize  }}>
-            {this.props.listingData.description}
-          </Text>
-        );
-      }
-      return (
-        <Text
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={{
-            flex: 1,
-            fontSize: descriptionFontSize,
-          }}
-        >
-          {this.props.listingData.description}
-        </Text>
-      );
-    };
-
-    const SellerName = () => {
+    const SellerName = ({ name }) => {
       if (this.props.sellerData && this.state.showDescription) {
-        return <Text style={{ paddingLeft: 8 }}>{this.props.sellerData.displayName}</Text>;
+        return (
+          <Text style={{ paddingLeft: 8 }}>{this.props.sellerData.displayName}</Text>
+        );
       }
       return <View />;
     };
+
+    const Title = () => <Text style={{
+      fontSize: 30,
+      paddingTop: 8,
+      paddingLeft: 8,
+      paddingRight: 8,
+      fontWeight: '300',
+    }}>
+      {this.props.listingData.title}
+    </Text>
 
     const ListingDistance = () => {
       const listingDistanceFontSize = 16;
@@ -120,7 +136,7 @@ class DetailBottomButtons extends Component {
           alignItems: 'flex-end',
         }}
       >
-        <View style={buttonViewStyle}>
+        <View style={detailBottomOverlayStyle}>
           <TouchableHighlight
             underlayColor={colors.transparent}
             activeOpacity={1}
@@ -129,21 +145,16 @@ class DetailBottomButtons extends Component {
             <View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={{
-                    fontSize: 30,
-                    paddingTop: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                    fontWeight: '300',
-                  }}>
-                    {this.props.listingData.title}
-                  </Text>
-                  <SellerName style={{ flex: 1 }} />
+                  <Title />
+                  <SellerName />
                 </View>
                 <ListingDistance />
               </View>
               <View style={{ flexDirection: 'row', padding: 8 }}>
-                <DescriptionText />
+                <DescriptionText
+                  showFullDescription={this.state.showDescription}
+                  description={this.props.listingData.description}
+                />
               </View>
             </View>
           </TouchableHighlight>
