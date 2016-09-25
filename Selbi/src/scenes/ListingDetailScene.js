@@ -19,6 +19,7 @@ import RoutableScene from '../nav/RoutableScene';
 
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
+import { BuyButton, ChatButton, UpdateButton } from '../components/buttons/ListingDetailButtons';
 
 const buttonViewStyle = {
   flex: 1,
@@ -35,60 +36,6 @@ const buttonViewStyle = {
   marginRight: 20,
   borderRadius: 5,
 };
-
-const Button = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-    padding: 15,
-  })
-  .withBackgroundColor(colors.primary)
-  .build();
-
-const LeftButton = MKButton.button()
-  .withStyle({
-    flex: 1,
-    marginLeft: 4,
-    marginRight: 2,
-    marginBottom: 4,
-  })
-  .withBackgroundColor(colors.primary)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-  .build();
-
-const RightButton = MKButton.button()
-  .withStyle({
-    flex: 1,
-    marginLeft: 2,
-    marginRight: 4,
-    marginBottom: 4,
-  })
-  .withBackgroundColor(colors.primary)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-  .build();
-
-function ChatButton({ isVisible, openChat }) {
-  if (isVisible) {
-    return (
-      <LeftButton onPress={openChat}>
-        <Text><Icon name="commenting-o" size={20} /></Text>
-      </LeftButton>
-    );
-  }
-  return <View />;
-}
-ChatButton.propTypes = {
-  isVisible: React.PropTypes.bool.isRequired,
-  openChat: React.PropTypes.func.isRequired,
-};
-
-function BuyButton({ price }) {
-  return (
-    <RightButton onPress={() => Alert.alert('Not yet supported.')}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}><Icon name="usd" size={20} /> {price}</Text>
-    </RightButton>
-  );
-}
-
 
 class DetailBottomButtons extends Component {
   constructor(props) {
@@ -111,10 +58,8 @@ class DetailBottomButtons extends Component {
               alignItems: 'flex-end',
             }}
           >
-            <View style={buttonViewStyle}>
-              <Button onPress={this.props.openEdit}>
-                <Text>Update Listing</Text>
-              </Button>
+            <View style={buttonViewStyle} >
+                <UpdateButton openEdit={this.props.openEdit} />
             </View>
           </View>
         );
