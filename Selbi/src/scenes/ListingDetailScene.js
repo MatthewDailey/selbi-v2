@@ -134,12 +134,19 @@ DetailBottomButtons.propTypes = {
   openEdit: React.PropTypes.func.isRequired,
 };
 
+function SellerDistanceText({ sellerDistance }) {
+  if (sellerDistance) {
+    return <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerDistance} miles away.</Text>;
+  }
+  return <View />;
+}
+SellerDistanceText.propTypes = { sellerDistance: React.PropTypes.string };
+
 function ExtraDetailsOverlay({
     isVisible,
     description,
     sellerName,
-    sellerDistance,
-    backgroundColor = colors.dark }) {
+    sellerDistance }) {
   if (isVisible) {
     const { width, height } = Dimensions.get('window');
 
@@ -152,11 +159,8 @@ function ExtraDetailsOverlay({
       left: 0,
       height,
       width,
+      backgroundColor: `${colors.dark}aa`,
     };
-
-    if (backgroundColor) {
-      backgroundStyle.backgroundColor = `${backgroundColor}aa`;
-    }
 
     let visibleDescription = `No more details provided. Message ${sellerName} for more info.`;
     if (description) {
@@ -166,7 +170,7 @@ function ExtraDetailsOverlay({
     return (
       <View style={backgroundStyle}>
         <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerName}</Text>
-        <Text style={styles.friendlyHeaderLightLeftAlign}>{sellerDistance} miles away</Text>
+        <SellerDistanceText sellerDistance={sellerDistance} />
         <Text style={styles.friendlyTextLightLeftAlign}>{visibleDescription}</Text>
       </View>
     );
@@ -177,7 +181,8 @@ function ExtraDetailsOverlay({
 ExtraDetailsOverlay.propTypes = {
   isVisible: React.PropTypes.bool,
   description: React.PropTypes.string,
-  backgroundColor: React.PropTypes.string,
+  sellerName: React.PropTypes.string,
+  sellerDistance: React.PropTypes.string,
 };
 
 class ListingDetailScene extends RoutableScene {
