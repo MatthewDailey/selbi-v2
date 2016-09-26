@@ -104,6 +104,18 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
+    this.registerOrSignInErrorHandler = this.registerOrSignInErrorHandler.bind(this);
+  }
+
+  registerOrSignInErrorHandler(error) {
+    console.log(error);
+    this.setState({ signingIn: false });
+
+    if (!!error && !!error.message) {
+      Alert.alert(error.message);
+    } else {
+      Alert.alert(`There was an error during ${this.props.signInOrRegisterType.asTitle}.`);
+    }
   }
 
   registerUserWithEmailAndPassword() {
@@ -117,7 +129,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       return Promise.resolve();
     }
 
-    this.setState({ signingIn: true })
+    this.setState({ signingIn: true });
 
     // TODO we should not need to sign in after registering. This is a hacky way to work
     // around the fact that updating user name can't be done until after the user is created
@@ -136,11 +148,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ signingIn: true });
-        Alert.alert('There was an error during registration.');
-      });
+      .catch(this.registerOrSignInErrorHandler);
   }
 
   signInWithEmailAndPassword() {
@@ -163,11 +171,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ signingIn: false });
-        Alert.alert('There was an error during sign in.');
-      });
+      .catch(this.registerOrSignInErrorHandler);
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
@@ -230,7 +234,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         tabLabel={registerOrSignInType.asTitle}
       >
         <FacebookButton >
-          <Text style={{color: colors.white}}>
+          <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
         </FacebookButton>
