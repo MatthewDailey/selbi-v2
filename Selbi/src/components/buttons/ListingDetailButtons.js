@@ -5,6 +5,7 @@ import { MKButton } from 'react-native-material-kit';
 
 import colors from '../../../colors';
 import { paddingSize } from '../../../styles';
+import { isPaymentsEnabled } from '../../../features';
 
 const buttonStyle = { fontSize: 20 };
 const buttonMargin = paddingSize / 2;
@@ -51,7 +52,7 @@ export function ChatButton({ isVisible, onPress = unsupported }) {
     return (
       <LeftButton onPress={onPress}>
         <Text style={buttonStyle}>
-          <Icon name="commenting-o" size={buttonStyle.fontSize}/>
+          <Icon name="commenting-o" size={buttonStyle.fontSize} />
         </Text>
       </LeftButton>
     );
@@ -65,7 +66,15 @@ ChatButton.propTypes = {
 
 export function BuyButton({ price, onPress = unsupported }) {
   return (
-    <RightButton onPress={onPress}>
+    <RightButton
+      onPress={() => {
+        if (isPaymentsEnabled) {
+          onPress();
+        } else {
+          Alert.alert('Pay with Selbi is not currently enabled.');
+        }
+      }}
+    >
       <Text style={buttonStyle}>
         ${price}
       </Text>
