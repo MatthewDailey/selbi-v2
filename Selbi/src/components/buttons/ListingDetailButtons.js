@@ -4,9 +4,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { MKButton } from 'react-native-material-kit';
 
 import colors from '../../../colors';
+import { paddingSize } from '../../../styles';
 
 const buttonStyle = { fontSize: 20 };
-const buttonMargin = 8;
+const buttonMargin = paddingSize / 2;
 
 const Button = MKButton.button()
   .withStyle({
@@ -32,9 +33,7 @@ const unsupported = () => Alert.alert('Sorry, not yet supported.');
 const LeftButton = MKButton.button()
   .withStyle({
     flex: 1,
-    marginLeft: buttonMargin,
     marginRight: buttonMargin / 2,
-    marginBottom: buttonMargin,
   })
   .withBackgroundColor(colors.primary)
   .build();
@@ -43,8 +42,6 @@ const RightButton = MKButton.button()
   .withStyle({
     flex: 1,
     marginLeft: buttonMargin / 2,
-    marginRight: buttonMargin,
-    marginBottom: buttonMargin,
   })
   .withBackgroundColor(colors.primary)
   .build();

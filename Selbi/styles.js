@@ -1,9 +1,15 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors';
 
-const paddingSize = 16;
+export const paddingSize = 16;
 
 export default StyleSheet.create({
+  separator: {
+    padding: 4,
+  },
+  flex: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.secondary,
@@ -50,6 +56,9 @@ export default StyleSheet.create({
   },
   halfPadded: {
     padding: paddingSize / 2,
+  },
+  quarterPadded: {
+    padding: paddingSize / 4,
   },
   paddedContainer: {
     flex: 1,

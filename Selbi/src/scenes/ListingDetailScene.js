@@ -12,7 +12,7 @@ import { setFromExistingListing, clearNewListing } from '../reducers/NewListingR
 import { setListingDistance, setListingDetailsSellerData } from '../reducers/ListingDetailReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
-import styles from '../../styles';
+import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
@@ -31,9 +31,8 @@ const detailBottomOverlayStyle = {
   backgroundColor: colors.white,
   shadowColor: 'black',
   shadowOpacity: 1.0,
-  marginBottom: 40,
-  marginLeft: 20,
-  marginRight: 20,
+  margin: 20,
+  padding: paddingSize / 2,
   borderRadius: 5,
 };
 
@@ -89,38 +88,34 @@ class DetailBottomButtons extends Component {
             alignItems: 'flex-end',
           }}
         >
-          <View style={detailBottomOverlayStyle} >
+          <View style={detailBottomOverlayStyle}>
             <UpdateButton onPress={this.props.openEdit} />
           </View>
         </View>
       );
     }
 
-    const SellerName = ({ name }) => {
-      if (this.props.sellerData && this.state.showDescription) {
+    const SellerName = () => {
+      if (this.props.sellerData) {
         return (
-          <Text style={{ paddingLeft: 8 }}>{this.props.sellerData.displayName}</Text>
+          <VisibilityWrapper isVisible={this.state.showDescription && !!this.props.sellerData}>
+            <Text>{this.props.sellerData.displayName}</Text>
+          </VisibilityWrapper>
         );
       }
       return <View />;
     };
 
-    const Title = () => <Text style={{
-      fontSize: 30,
-      paddingTop: 8,
-      paddingLeft: 8,
-      paddingRight: 8,
-      fontWeight: '300',
-    }}>
-      {this.props.listingData.title}
-    </Text>
+    const Title = () => (
+      <Text style={{ fontSize: 30, fontWeight: '300' }}>{this.props.listingData.title}</Text>
+    );
 
-    const ListingDistance = () => {
-      const listingDistanceFontSize = 16;
+    const ListingDistance = ({ distanceString }) => {
       if (this.props.listingDistance) {
+        const distanceFontSize = 16;
         return (
-          <Text style={{ padding: 8, fontSize: listingDistanceFontSize }}>
-            <Icon name="map-marker" size={listingDistanceFontSize} /> {`${this.props.listingDistance} mi.`}
+          <Text style={{ fontSize: distanceFontSize }}>
+            <Icon name="map-marker" size={distanceFontSize} /> {`${distanceString} mi.`}
           </Text>
         );
       }
@@ -146,16 +141,18 @@ class DetailBottomButtons extends Component {
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
                   <Title />
-                  <SellerName />
                 </View>
-                <ListingDistance />
+                <SellerName />
+                <ListingDistance distanceString={this.props.listingDistance} />
               </View>
-              <View style={{ flexDirection: 'row', padding: 8 }}>
+              <View style={styles.quarterPadded} />
+              <View style={{ flexDirection: 'row' }}>
                 <DescriptionText
                   showFullDescription={this.state.showDescription}
                   description={this.props.listingData.description}
                 />
               </View>
+              <View style={styles.quarterPadded} />
             </View>
           </TouchableHighlight>
           <View style={{ flexDirection: 'row' }}>
