@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
@@ -175,8 +176,8 @@ routeLinks[localListingScene.id] = {
 
 routeLinks[friendsListingScene.id] = {
   next: {
-    title: 'Sell',
-    getRoute: () => NewListingFlow.firstScene,
+    title: <Text><Icon name="user-plus" size={20}/></Text>,
+    getRoute: () => followFriendScene,
   },
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
@@ -241,14 +242,16 @@ function renderMenu(navigator, closeMenu) {
 
 class NavApp extends Component {
   componentDidMount() {
-    this.refreshCode = setInterval(() => {
-      codePush.sync({
-        updateDialog: true,
-        deploymentKey: config.codePushKey,
-        installMode: codePush.InstallMode.IMMEDIATE,
-      });
-    },
+    if (config.codePushKey) {
+      this.refreshCode = setInterval(() => {
+        codePush.sync({
+          updateDialog: true,
+          deploymentKey: config.codePushKey,
+          installMode: codePush.InstallMode.IMMEDIATE,
+        });
+      },
       5000);
+    }
   }
 
   componentWillUnmount() {

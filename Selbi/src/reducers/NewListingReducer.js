@@ -89,7 +89,6 @@ export function setNewListingId(id) {
 }
 
 export function setNewListingPrice(listingPrice) {
-  console.log(`Got price update ${listingPrice}`);
   return {
     type: NL_SET_PRICE,
     price: listingPrice,

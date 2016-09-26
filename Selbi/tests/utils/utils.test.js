@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai'
 import dirtyChai from 'dirty-chai';
 
-import { isStringFloat } from '../../src/utils';
+import { isStringFloat, distanceInMilesString } from '../../src/utils';
 
 chai.use(dirtyChai);
 
@@ -57,6 +57,27 @@ describe('utils', () => {
 
     it('will not match more than 2 decimals', () => {
       expect(isStringFloat('0.123')).to.be.false();
+    });
+  });
+
+  describe('distanceInMilesString', () => {
+    it('distance between 1 point is 0', () => {
+      const pointOne = {
+        lat: 37.785834,
+        lon: -122.406417,
+      };
+      expect(distanceInMilesString(pointOne, pointOne)).to.equal('<1');
+    });
+    it('distance between 1 point is 0', () => {
+      const pointOne = {
+        lat: 37.785834,
+        lon: -122.406417,
+      };
+      const pointTwo = {
+        lat: 37.785834,
+        lon: -122.506417,
+      };
+      expect(distanceInMilesString(pointOne, pointTwo)).to.equal('5');
     });
   });
 });

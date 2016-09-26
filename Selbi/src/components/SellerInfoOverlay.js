@@ -116,6 +116,8 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
     .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
     .build();
 
+  const notificationDescriptionFontSize = 15;
+
   return (
     <View>
       <View
@@ -131,79 +133,33 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
       >
         <View style={styles.paddedContainer}>
 
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={{flex: 1, alignItems: 'center' }}>
-              <Text
-                style={{
-                  color: colors.public,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                2
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.public }}>Public Listings</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
-              <Text
-                style={{
-                  color: colors.private,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                3
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.private }}>Private Listings</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
-              <Text
-                style={{
-                  color: colors.accent,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                11
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.accent }}>Notifications</Text>
-            </View>
-          </View>
-
-          <View style={{padding: 8}} />
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🎁 Tommy added a new listing.</Text>
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🎁 Tommy added a new listing.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>😘 TJ (@tjpavlu) is now following you.</Text>
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>😘 TJ (@tjpavlu) is now following you.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
 
           <View style={{padding: 4}} />
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>🤑 Miron bought your listing 'massive dildo'.</Text>
-
-          <View style={{padding: 4}} />
-
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: 10 }}>...and 6 more notifications.</Text>
+          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>...and 6 more notifications.</Text>
 
           <View style={{padding: 4}} />
 
           <View style={{alignItems: 'flex-end'}}>
             <FlatButton>
-              <Text>View all notifications <Icon name="arrow-right"/></Text>
+              <Text style={{ fontSize: notificationDescriptionFontSize + 2 }}>View all notifications <Icon name="arrow-right"/></Text>
             </FlatButton>
           </View>
 

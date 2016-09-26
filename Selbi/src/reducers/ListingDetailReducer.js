@@ -4,6 +4,8 @@ const LD_SET_DETAILS = 'listing-details-set';
 const LD_SET_BUYER = 'listing-details-set-buyer';
 const LD_CLEAR_DETAILS = 'listing-details-clear';
 const LD_SET_LISTING_DATA = 'listing-details-set-data';
+const LD_SET_LISTING_GEO = 'listing-details-set-geo';
+const LD_SET_SELLER_DATA = 'listing-details-set-seller';
 
 export default function (listingDetailsState = {}, action) {
   const listingDetails = Object.assign({}, listingDetailsState);
@@ -15,6 +17,13 @@ export default function (listingDetailsState = {}, action) {
       return listingDetails;
     case LD_SET_LISTING_DATA:
       listingDetails.listingData = action.data;
+      listingDetails.listingDistance = undefined;
+      return listingDetails;
+    case LD_SET_LISTING_GEO:
+      listingDetails.listingDistance = action.distance;
+      return listingDetails;
+    case LD_SET_SELLER_DATA:
+      listingDetails.sellerData = action.data;
       return listingDetails;
     case LD_CLEAR_DETAILS:
       return {};
@@ -40,6 +49,20 @@ export function setListingData(listingData) {
   return {
     type: LD_SET_LISTING_DATA,
     data: listingData,
+  };
+}
+
+export function setListingDistance(distance) {
+  return {
+    type: LD_SET_LISTING_GEO,
+    distance,
+  };
+}
+
+export function setListingDetailsSellerData(data) {
+  return {
+    type: LD_SET_SELLER_DATA,
+    data,
   };
 }
 

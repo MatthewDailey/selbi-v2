@@ -37,6 +37,7 @@ export default Object.assign(
     white: '#ffffff',
     black: '#000',
     greyedOut: '#dddddd',
+    transparent: '#00000000',
   }
 );
 

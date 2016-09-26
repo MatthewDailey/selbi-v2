@@ -192,9 +192,10 @@ class EditListingScene extends RoutableScene {
       );
     }
 
+    const imageContainerCameraIconSize = 40;
     const imageContainerStyle = {
-      height: 50,
-      width: 50,
+      height: 160,
+      width: 160,
       borderWidth: 1,
       borderColor: colors.dark,
       backgroundColor: `${colors.dark}22`,
@@ -231,8 +232,8 @@ class EditListingScene extends RoutableScene {
     };
 
     return (
-      <View style={styles.paddedContainer}>
-        <ScrollView >
+      <ScrollView >
+        <View style={styles.paddedContainer}>
           <View
             style={{
               paddingTop: 16,
@@ -246,23 +247,25 @@ class EditListingScene extends RoutableScene {
                 flexWrap: 'wrap',
               }}
             >
-              <View style={imageContainerStyle} >
-                <Image
-                  key={this.props.imageKey}
-                  source={{ uri: this.props.listingImageUri }}
-                  resizeMode="cover"
-                  style={{ height: 48, width: 48 }}
-                />
-              </View>
               <MKButton
                 style={imageContainerStyle}
                 onPress={() => this.goNext('camera')}
               >
-                <Text><Icon name="camera" size={20} color={colors.dark} /></Text>
+                <Image
+                  key={this.props.imageKey}
+                  source={{ uri: this.props.listingImageUri }}
+                  resizeMode="cover"
+                  style={{ height: imageContainerStyle.height - 2, width: imageContainerStyle.width - 2 }}/>
+                <Text
+                  style={{
+                    position: 'absolute',
+                    top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
+                    left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
+                  }}
+                >
+                  <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
+                </Text>
               </MKButton>
-              <View style={imageContainerStyle} />
-              <View style={imageContainerStyle} />
-              <View style={imageContainerStyle} />
             </View>
           </View>
 
@@ -294,27 +297,26 @@ class EditListingScene extends RoutableScene {
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'space-between',
                 flexWrap: 'wrap',
               }}
             >
-              <View>
+              <View style={styles.halfPadded}>
                 <MKRadioButton
                   checked={this.props.listingStatus === 'public'}
                   group={this.radioGroup}
                   onPress={() => this.getGeolocation().then(() => this.props.setStatus('public'))}
                 />
-                <Text>Public</Text>
+                <Text>Anyone Nearby</Text>
               </View>
-              <View>
+              <View style={styles.halfPadded}>
                 <MKRadioButton
                   checked={this.props.listingStatus === 'private'}
                   group={this.radioGroup}
                   onPress={() => this.props.setStatus('private')}
                 />
-                <Text>Private</Text>
+                <Text>Friends</Text>
               </View>
-              <View>
+              <View style={styles.halfPadded}>
                 <MKRadioButton
                   checked={this.props.listingStatus === 'sold'}
                   group={this.radioGroup}
@@ -327,9 +329,9 @@ class EditListingScene extends RoutableScene {
 
           {getLocationComponent()}
 
-        </ScrollView>
+        </View>
         <SpinnerOverlay isVisible={this.state.storingUpdate} />
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -363,7 +365,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
-    // TODO (mdailey): Properly protect against invalid prices.
     setPrice: (price) => dispatch(setNewListingPrice(price)),
     setStatus: (status) => dispatch(setNewListingStatus(status)),
     setLocation: (latlon) => dispatch(setNewListingLocation(latlon)),

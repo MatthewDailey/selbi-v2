@@ -1,9 +1,15 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors';
 
-const paddingSize = 16;
+export const paddingSize = 16;
 
 export default StyleSheet.create({
+  separator: {
+    padding: 4,
+  },
+  flex: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.secondary,
@@ -51,6 +57,9 @@ export default StyleSheet.create({
   halfPadded: {
     padding: paddingSize / 2,
   },
+  quarterPadded: {
+    padding: paddingSize / 4,
+  },
   paddedContainer: {
     flex: 1,
     padding: paddingSize,
@@ -65,11 +74,29 @@ export default StyleSheet.create({
     fontWeight: '300',
     padding: paddingSize / 2,
   },
+  greyedOutMenuText: {
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+    color: colors.greyedOut,
+  },
   friendlyTextLight: {
     color: colors.white,
     fontSize: 20,
     fontWeight: '300',
     textAlign: 'center',
+    padding: paddingSize / 2,
+  },
+  friendlyTextLightLeftAlign: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+  },
+  friendlyHeaderLightLeftAlign: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '400',
     padding: paddingSize / 2,
   },
   friendlyText: {

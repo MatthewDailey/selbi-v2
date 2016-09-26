@@ -30,6 +30,12 @@ We use schemes in XCode to manage deploying different version of the app.
 
 These can be built and deployed directly to test flight via `fastlane staging`.
 
+Feature Flags
+-------------
+
+We enable feature flags via `<root>/features.js`. Updates to this can be pushed using code push to
+ hot disable a feature if we need to turn off a feature quickly. An example of a feature we may
+ want to turn off is payments if we find a bug or security hole.
 
 Hot Updates
 -----------

@@ -96,8 +96,7 @@ class Menu extends Component {
     // const signInMenuStyle = this.props.userDisplayName ? {} :
     //   { textDecorationLine: 'line-through' };
 
-    const signInMenuStyle = this.props.userDisplayName ? {} :
-    { color: colors.greyedOut };
+    const signInMenuStyle = this.props.userDisplayName ? styles.menuText : styles.greyedOutMenuText;
 
     return (
       <View style={styles.paddedContainerClear}>
@@ -121,14 +120,10 @@ class Menu extends Component {
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene)}
           underlayColor={colors.secondary}
         >
-          <Text style={styles.menuText}>
-            <Icon name="users" size={20}/> <Text style={signInMenuStyle}>Friends' Listings</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="users" size={20}/> Friends' Listings</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}>
-            <Icon name="heart-o" size={20} /> <Text style={signInMenuStyle}>Saved Listings</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="star-o" size={20} /> Saved Listings</Text>
         </TouchableHighlight>
 
         <View
@@ -143,17 +138,13 @@ class Menu extends Component {
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.myListingScene)}
           underlayColor={colors.secondary}
         >
-          <Text style={styles.menuText}>
-            <Icon name="gift" size={20}/> <Text style={signInMenuStyle}>My Listings</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="gift" size={20}/> My Listings</Text>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.chatListScene)}
           underlayColor={colors.secondary}
         >
-          <Text style={styles.menuText}>
-            <Icon name="commenting-o" size={20}/> <Text style={signInMenuStyle}>Chats</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="commenting-o" size={20}/> Chats</Text>
         </TouchableHighlight>
 
         <View
@@ -168,9 +159,7 @@ class Menu extends Component {
           onPress={() => ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene)}
           underlayColor={colors.secondary}
         >
-          <Text style={styles.menuText}>
-            <Icon name="user-plus" size={20}/> <Text style={signInMenuStyle}>Follow a Friend</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="user-plus" size={20} /> Follow a Friend</Text>
         </TouchableHighlight>
 
         <View
@@ -182,14 +171,22 @@ class Menu extends Component {
         />
 
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}>
-            <Icon name="user" size={20} /> <Text style={signInMenuStyle}>My Profile</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="bell-o" size={20} /> Notifications</Text>
+        </TouchableHighlight>
+
+        <View
+          style={{
+            margin: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: `${colors.dark}64`,
+          }}
+        />
+
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
+          <Text style={signInMenuStyle}><Icon name="user" size={20} /> My Profile</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}>
-            <Icon name="gear" size={20} /> <Text style={signInMenuStyle}>Settings</Text>
-          </Text>
+          <Text style={signInMenuStyle}><Icon name="gear" size={20} /> Settings</Text>
         </TouchableHighlight>
 
         {getFooter()}

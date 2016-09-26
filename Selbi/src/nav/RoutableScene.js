@@ -76,7 +76,7 @@ export default class RoutableScene extends Component {
         <TouchableHighlight
           onPress={this.goMenu}
           style={styles.paddedCenterContainerClear}
-          underlayColor={colors.primary}
+          underlayColor={colors.transparent}
           activeOpacity={0.5}
         >
           <Text><Icon name="bars" size={18} color={colors.secondary} /></Text>
@@ -87,7 +87,7 @@ export default class RoutableScene extends Component {
         <TouchableHighlight
           onPress={this.goBackHandler}
           style={styles.paddedCenterContainerClear}
-          underlayColor={colors.primary}
+          underlayColor={colors.transparent}
           activeOpacity={0.5}
         >
           <Text><Icon name="chevron-left" size={18} color={colors.secondary} /></Text>
@@ -213,7 +213,8 @@ export default class RoutableScene extends Component {
     const title = (
       <Text
         style={{
-          fontFamily: 'Iowan Old Style',
+          fontSize: 25,
+          fontWeight: '300',
         }}
       >
         {this.props.title}
