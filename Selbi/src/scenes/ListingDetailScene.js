@@ -78,6 +78,8 @@ class DetailBottomButtons extends Component {
 
   render() {
     if (this.props.isSeller) {
+      const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
+      delete bottomOverlayStyleMinusPadding.padding;
       return (
         <View
           style={{
@@ -88,7 +90,7 @@ class DetailBottomButtons extends Component {
             alignItems: 'flex-end',
           }}
         >
-          <View style={detailBottomOverlayStyle}>
+          <View style={bottomOverlayStyleMinusPadding}>
             <UpdateButton onPress={this.props.openEdit} />
           </View>
         </View>
