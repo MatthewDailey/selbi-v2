@@ -74,6 +74,12 @@ export default StyleSheet.create({
     fontWeight: '300',
     padding: paddingSize / 2,
   },
+  greyedOutMenuText: {
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+    color: colors.greyedOut,
+  },
   friendlyTextLight: {
     color: colors.white,
     fontSize: 20,
