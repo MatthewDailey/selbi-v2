@@ -171,6 +171,18 @@ class Menu extends Component {
         />
 
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
+          <Text style={signInMenuStyle}><Icon name="bell-o" size={20} /> Notifications</Text>
+        </TouchableHighlight>
+
+        <View
+          style={{
+            margin: 8,
+            borderBottomWidth: 1,
+            borderBottomColor: `${colors.dark}64`,
+          }}
+        />
+
+        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
           <Text style={signInMenuStyle}><Icon name="user" size={20} /> My Profile</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
