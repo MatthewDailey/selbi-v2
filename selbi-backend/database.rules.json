@@ -597,6 +597,12 @@
         "profileImageUrl": {
           ".validate": "newData.isString()"
         },
+        "hasPayment": {
+          ".validate": "newData.isBoolean()"
+        },
+        "hasBankAccount": {
+          ".validate": "newData.isBoolean()"
+        },
         "$other": {
           ".validate": false
         }
