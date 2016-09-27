@@ -1,15 +1,29 @@
 import React from 'react';
-import { View, Text, InteractionManager } from 'react-native';
+import { View, Text, InteractionManager, Image, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import LoadingListingComponent from '../../components/LoadingListingComponent'
+import { loadImage, loadUserPublicData } from '../../firebase/FirebaseConnector';
+
+import { setListingDetailsSellerData } from '../../reducers/ListingDetailReducer';
+import { storeImage } from '../../reducers/ImagesReducer';
+
+import LoadingListingComponent from '../../components/LoadingListingComponent';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+
+
+const FlatButton = MKButton.flatButton()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor(colors.white)
+  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
+  .build();
 
 const Button = MKButton.button()
   .withStyle({
@@ -17,6 +31,63 @@ const Button = MKButton.button()
   })
   .withBackgroundColor(colors.white)
   .build();
+
+const GreenCheck = () => <Icon name="check-square-o" size={20} color="green" />;
+const EmptyCheck = () => <Icon name="square-o" size={20} />
+
+function SellerAcceptsPaymentCheckBox({ checked, takeAction }) {
+  if (checked) {
+    return (
+      <Text style={styles.friendlyTextLeft}>
+        <GreenCheck /> Seller Accepts Pay by Selbi
+      </Text>
+    );
+  }
+  return (
+    <View>
+      <Text style={styles.friendlyTextLeft}>
+        <EmptyCheck /> Seller Accepts Pay by Selbi
+      </Text>
+      <View style={{ alignItems: 'flex-end' }}>
+        <FlatButton onPres={takeAction}>
+          <Text style={{ fontSize: 16 }}>
+            Request seller accept Pay by Selbi <Icon name="arrow-right" />
+          </Text>
+        </FlatButton>
+      </View>
+    </View>
+  );
+}
+SellerAcceptsPaymentCheckBox.propTypes = {
+  checked: React.PropTypes.bool,
+  takeAction: React.PropTypes.func.isRequired,
+};
+
+function PaymentMethodCheckBox({ checked, takeAction }) {
+  if (checked) {
+    return (
+      <Text style={styles.friendlyTextLeft}>
+        <GreenCheck /> Payment method set up
+      </Text>
+    );
+  }
+  return (
+    <View>
+      <Text style={styles.friendlyTextLeft}>
+        <EmptyCheck /> Payment method set up
+      </Text>
+      <View style={{ alignItems: 'flex-end' }}>
+        <FlatButton onPres={takeAction}>
+          <Text style={{ fontSize: 16 }}>Set up payment method <Icon name="arrow-right"/></Text>
+        </FlatButton>
+      </View>
+    </View>
+  );
+}
+PaymentMethodCheckBox.propTypes = {
+  checked: React.PropTypes.bool,
+  takeAction: React.PropTypes.func.isRequired,
+};
 
 class ListingReceiptScene extends RoutableScene {
   constructor(props, context) {
@@ -32,26 +103,58 @@ class ListingReceiptScene extends RoutableScene {
     });
   }
 
+  loadAndStoreSellerData() {
+    loadUserPublicData(this.props.listingData.sellerId)
+      .then((sellerData) => {
+        if (sellerData && sellerData.exists()) {
+          this.props.setSellerData(sellerData.val());
+        }
+      })
+      .catch(console.log);
+  }
+
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly) {
+    if (this.state.renderPlaceholderOnly || !this.props.imageData || !this.props.sellerData) {
+      if (!this.props.imageData) {
+        loadImage(this.props.imageKey).then((imageSnapshot) =>
+          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
+      }
+
+      if (!this.props.sellerData) {
+        this.loadAndStoreSellerData();
+      }
+
       return <LoadingListingComponent />;
     }
 
     return (
-      <View style={styles.paddedContainer}>
-        <Text style={styles.friendlyText}>
-          {`Your listing is visible and ready to sell to ${this.props.visibleTo}.`}
-        </Text>
-        <Text style={styles.friendlyText}>
-          <Icon name="smile-o" size={30} />
-        </Text>
-        <Text style={styles.friendlyText}>
-          To sell faster, we recommend adding more details.
-        </Text>
-        <View style={styles.halfPadded}>
-          <Button onPress={() => this.goNext()}>
-            <Text>Add Details</Text>
-          </Button>
+      <View style={styles.container}>
+        <Image
+          source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
+          style={{ flex: 1, backgroundColor: colors.dark }}
+        />
+        <View style={{ flex: 2, padding: 16 }}>
+          <Text style={styles.friendlyTextLeftLarge}>
+            {this.props.listingData.title}
+          </Text>
+          <Text style={styles.friendlyTextLeft}>
+            {`Price: $${this.props.listingData.price}`}
+          </Text>
+          <View style={styles.halfPadded} />
+          <SellerAcceptsPaymentCheckBox
+            checked={this.props.sellerData.hasBankAccount}
+            takeAction={() => Alert.alert('Not yet implemented')}
+          />
+          <PaymentMethodCheckBox
+            checked
+            takeAction={() => this.goNext('addPayment')}
+          />
+          <View style={styles.halfPadded} />
+          <View style={styles.halfPadded}>
+            <Button onPress={() => this.goNext()}>
+              <Text>Pay with Selbi</Text>
+            </Button>
+          </View>
         </View>
       </View>
     );
@@ -73,7 +176,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    // TODO
+    setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
+    storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
   };
 };
 

@@ -108,7 +108,11 @@ export default StyleSheet.create({
   friendlyTextLeft: {
     fontSize: 20,
     fontWeight: '300',
-    textAlign: 'center',
+    padding: paddingSize / 2,
+  },
+  friendlyTextLeftLarge: {
+    fontSize: 30,
+    fontWeight: '300',
     padding: paddingSize / 2,
   },
 });
