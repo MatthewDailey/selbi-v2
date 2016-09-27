@@ -2,7 +2,7 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
-import CreditCardInputScene from './CreditCardInputScene';
+import CreditCardInputScene from '../listingPurchaseFlow/CreditCardInputScene';
 
 
 const creditCardInputScene = {

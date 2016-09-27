@@ -22,7 +22,6 @@ const FlatButton = MKButton.flatButton()
     borderRadius: 5,
   })
   .withBackgroundColor(colors.white)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 const Button = MKButton.button()
@@ -49,7 +48,7 @@ function SellerAcceptsPaymentCheckBox({ checked, takeAction }) {
         <EmptyCheck /> Seller accepts Pay by Selbi
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPres={takeAction}>
+        <FlatButton onPress={takeAction}>
           <Text style={{ fontSize: 16 }}>
             Request seller accept Pay by Selbi <Icon name="arrow-right" />
           </Text>
@@ -77,7 +76,7 @@ function PaymentMethodCheckBox({ checked, takeAction }) {
         <EmptyCheck /> Payment method set up
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPres={takeAction}>
+        <FlatButton onPress={takeAction}>
           <Text style={{ fontSize: 16 }}>Add a credit card <Icon name="arrow-right"/></Text>
         </FlatButton>
       </View>

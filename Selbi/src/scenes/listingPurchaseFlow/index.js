@@ -7,7 +7,9 @@ import { setBuyerUid } from '../../reducers/ListingDetailReducer';
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
 import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
+
 import ReceiptScene from './ReceiptScene';
+import CreditCardInputScene from './CreditCardInputScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
@@ -75,6 +77,15 @@ const buySignInScene = {
     />),
 };
 
+const creditCardInputScene = {
+  id: 'credit-card-input-scene',
+  renderContent: withNavigatorProps(
+    <CreditCardInputScene
+      title="Add Credit Card"
+      leftIs="back"
+    />),
+};
+
 
 const routeLinks = {};
 
@@ -87,6 +98,9 @@ routeLinks[chatFromDetailScene.id] = {
 routeLinks[receiptScene.id] = {
   back: {
     getRoute: () => listingDetailScene,
+  },
+  addPayment: {
+    getRoute: () => creditCardInputScene,
   },
 };
 
