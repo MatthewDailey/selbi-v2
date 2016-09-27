@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text } from 'react-native';
+import { Alert, View, Text } from 'react-native';
 import { MKButton } from 'react-native-material-kit';
 import { CreditCardInput } from 'react-native-credit-card-input';
 
-import { setCreditCard } from '../../reducers/AddCreditCardReducer';
+import { setCreditCard, AddCreditCardStatus } from '../../reducers/AddCreditCardReducer';
+
+import { createPaymentSource } from '../../stripe/StripeConnector';
 
 import { paddingSize } from '../../../styles';
 import colors from '../../../colors';
@@ -17,10 +19,35 @@ const Button = MKButton.button()
    margin: paddingSize,
  })
   .withBackgroundColor(colors.white)
-  .withOnPress(() => alert('Sorry, not yet supported.'))
   .build();
 
 class CreditCardInputScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      status: AddCreditCardStatus.enteringData,
+    };
+
+    this.submit = this.submit.bind(this);
+  }
+
+  submit() {
+    if (this.props.creditCardData.valid) {
+      createPaymentSource(
+        this.props.creditCardData.values.number,
+        this.props.creditCardData.values.expiry.substring(0, 2),
+        this.props.creditCardData.values.expiry.substring(3, 5),
+        this.props.creditCardData.values.cvc)
+        .then(console.log)
+        .catch(console.log);
+    } else {
+      console.log('Failed to submit with cc data ', this.props.creditCardData);
+      // TODO: Add more specific error based on failure type.
+      Alert.alert('Double check all input values.');
+    }
+  }
+
   renderWithNavBar() {
     console.log(this.props.creditCardData.valid);
 
@@ -33,7 +60,7 @@ class CreditCardInputScene extends RoutableScene {
           onChange={this.props.setCreditCardData}
         />
         <VisibilityWrapper isVisible={this.props.creditCardData.valid}>
-          <Button><Text>Submit</Text></Button>
+          <Button onPress={this.submit}><Text>Submit</Text></Button>
         </VisibilityWrapper>
       </View>
     );
