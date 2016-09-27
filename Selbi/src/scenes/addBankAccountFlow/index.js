@@ -4,6 +4,8 @@ import { withNavigatorProps } from '../../nav/RoutableScene';
 
 import LegalNameInputScene from './LegalNameInputScene';
 import { MonthInputScene, DayInputScene, YearInputScene } from './DateOfBirthInputScenes';
+import { Line1InputScene, Line2InputScene, CityInputScene, PostalInputScene, StateInputScene }
+  from './AddressInputScenes';
 
 const legalNameInput = {
   id: 'bank-legal-name-input',
@@ -36,13 +38,68 @@ const dobDayInput = {
 };
 
 const dobYearInput = {
-  id: 'bank-legal-dob-month',
+  id: 'bank-legal-dob-year',
   renderContent: withNavigatorProps(
     <YearInputScene
       title="Add Bank (4/12)"
       leftIs="back"
       rightIs="next"
     />),
+};
+
+const addressLine1Input = {
+  id: 'bank-addres-line1',
+  renderContent: withNavigatorProps(
+    <Line1InputScene
+      title="Add Bank (5/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const addressLine2Input = {
+  id: 'bank-addres-line2',
+  renderContent: withNavigatorProps(
+    <Line2InputScene
+      title="Add Bank (6/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const addressCityInput = {
+  id: 'bank-address-city',
+  renderContent: withNavigatorProps(
+    <CityInputScene
+      title="Add Bank (7/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const addressPostalInput = {
+  id: 'bank-address-postal',
+  renderContent: withNavigatorProps(
+    <PostalInputScene
+      title="Add Bank (8/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const addressStateInput = {
+  id: 'bank-address-state',
+  renderContent: withNavigatorProps(
+    <StateInputScene
+      title="Add Bank (9/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
 };
 
 const routeLinks = {};
@@ -66,6 +123,47 @@ routeLinks[dobDayInput.id] = {
     title: 'OK',
     getRoute: () => dobYearInput,
   },
+};
+
+routeLinks[dobYearInput.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => addressLine1Input,
+  },
+};
+
+routeLinks[addressLine1Input.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => addressLine2Input,
+  },
+};
+
+routeLinks[addressLine2Input.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => addressCityInput,
+  },
+};
+
+routeLinks[addressCityInput.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => addressPostalInput,
+  },
+};
+
+routeLinks[addressPostalInput.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => addressStateInput,
+  },
+};
+
+routeLinks[addressStateInput.id] = {
+  next: {
+    title: 'OK'
+  }
 };
 
 module.exports.routeLinks = routeLinks;

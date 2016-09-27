@@ -31,7 +31,7 @@ export default class InputScene extends RoutableScene {
   }
 
   parseInputValue(newText) {
-    if (this.props.isNumeric) {
+    if (this.props.isNumeric && !this.props.isNumericString) {
       if (this.props.isInt && isStringInt(newText)) {
         return newText;
       } else if (!this.props.isInt && isStringFloat(newText)) {
