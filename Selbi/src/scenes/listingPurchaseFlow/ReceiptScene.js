@@ -32,34 +32,36 @@ const Button = MKButton.button()
   .build();
 
 const GreenCheck = () => <Icon name="check-square-o" size={20} color="green" />;
-const EmptyCheck = () => <Icon name="square-o" size={20} />
+const EmptyCheck = () => <Icon name="square-o" size={20} />;
 
-function SellerAcceptsPaymentCheckBox({ checked, takeAction }) {
+function CheckBox({ checked, title, takeAction, actionText }) {
   if (checked) {
     return (
       <Text style={styles.friendlyTextLeft}>
-        <GreenCheck /> Seller accepts Pay by Selbi
+        <GreenCheck /> {title}
       </Text>
     );
   }
   return (
     <View>
       <Text style={styles.friendlyTextLeft}>
-        <EmptyCheck /> Seller accepts Pay by Selbi
+        <EmptyCheck /> {title}
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
         <FlatButton onPress={takeAction}>
           <Text style={{ fontSize: 16 }}>
-            Request seller accept Pay by Selbi <Icon name="arrow-right" />
+            {actionText} <Icon name="arrow-right" />
           </Text>
         </FlatButton>
       </View>
     </View>
   );
 }
-SellerAcceptsPaymentCheckBox.propTypes = {
+CheckBox.propTypes = {
   checked: React.PropTypes.bool,
+  title: React.PropTypes.string.isRequired,
   takeAction: React.PropTypes.func.isRequired,
+  actionText: React.PropTypes.string.isRequired,
 };
 
 function PaymentMethodCheckBox({ checked, takeAction }) {
@@ -77,7 +79,7 @@ function PaymentMethodCheckBox({ checked, takeAction }) {
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
         <FlatButton onPress={takeAction}>
-          <Text style={{ fontSize: 16 }}>Add a credit card <Icon name="arrow-right"/></Text>
+          <Text style={{ fontSize: 16 }}>Add a credit card <Icon name="arrow-right" /></Text>
         </FlatButton>
       </View>
     </View>
@@ -145,15 +147,19 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded} />
 
           <View style={styles.halfPadded}>
-            <SellerAcceptsPaymentCheckBox
+            <CheckBox
               checked={this.props.sellerData.hasBankAccount}
+              title="Seller accepts Pay with Selbi"
               takeAction={() => this.goNext('chat')}
+              actionText="RequestSeller accept Pay with Selbi"
             />
           </View>
           <View style={styles.halfPadded}>
-            <PaymentMethodCheckBox
+            <CheckBox
               checked={this.props.hasPaymentMethod}
+              title="Seller accpets Pay with Selbi"
               takeAction={() => this.goNext('addPayment')}
+              actionText="RequestSeller accept Pay with Selbi"
             />
           </View>
 

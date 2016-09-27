@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default function LoadingListingComponent() {
+export default function LoadingListingComponent({ message = 'Loading listing...' }) {
   return (
     <View
       style={{
@@ -17,7 +17,7 @@ export default function LoadingListingComponent() {
           color={colors.white}
           style={styles.friendlyTextLight}
         >
-          Loading listing...
+          {message}
         </Text>
       </View>
     </View>
