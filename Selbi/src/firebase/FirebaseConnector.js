@@ -678,3 +678,39 @@ export function listenToListingsByStatus(status, callback) {
     .child(status)
     .off('value', callback);
 }
+
+function computeExpirationDate(expMonth, expYear) {
+  if (expMonth < 10) {
+    return `0${expMonth}-${expYear % 100}`;
+  }
+  return `${expMonth}-${expYear % 100}`;
+}
+
+export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+
+  const createCustomerTask = {
+    uid: getUser().uid,
+    payload: {
+      source: stripeCreateCardResponse.id,
+      description: `${cardHolderName}'s Credit Card`,
+      email: getUser().email,
+    },
+    metadata: {
+      lastFour: stripeCreateCardResponse.card.last4,
+      expirationDate: computeExpirationDate(
+        stripeCreateCardResponse.card.exp_month,
+        stripeCreateCardResponse.card.exp_year),
+      cardBrand: stripeCreateCardResponse.card.brand,
+    },
+  };
+
+  console.log(createCustomerTask);
+
+  return firebaseApp.database()
+    .ref('createCustomer/tasks')
+    .push()
+    .set(createCustomerTask);
+}

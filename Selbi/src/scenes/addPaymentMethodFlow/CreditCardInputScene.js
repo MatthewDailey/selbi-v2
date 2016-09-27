@@ -7,6 +7,8 @@ import { CreditCardInput } from 'react-native-credit-card-input';
 import { setCreditCard, AddCreditCardStatus } from '../../reducers/AddCreditCardReducer';
 
 import { createPaymentSource } from '../../stripe/StripeConnector';
+import { enqueueCreateCustomerRequest } from '../../firebase/FirebaseConnector';
+
 
 import { paddingSize } from '../../../styles';
 import colors from '../../../colors';
@@ -39,6 +41,12 @@ class CreditCardInputScene extends RoutableScene {
         this.props.creditCardData.values.expiry.substring(0, 2),
         this.props.creditCardData.values.expiry.substring(3, 5),
         this.props.creditCardData.values.cvc)
+        .then((result) => {
+          if (result.error) {
+            return Promise.reject(result);
+          }
+          return enqueueCreateCustomerRequest(this.props.creditCardData.name, result);
+        })
         .then(console.log)
         .catch(console.log);
     } else {
