@@ -94,12 +94,10 @@ const storeUserData = (user) => {
   if (user) {
     unwatchUserPublicData = watchUserPublicData(user.uid,
       (publicDataSnapshot) => {
+        console.log('saw update to user');
         if (publicDataSnapshot.exists()) {
           const userPublicData = publicDataSnapshot.val();
-          store.dispatch(setUserData({
-            displayName: userPublicData.displayName,
-            username: userPublicData.username,
-          }));
+          store.dispatch(setUserData(userPublicData));
         }
       });
   } else {

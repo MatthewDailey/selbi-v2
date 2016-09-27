@@ -144,6 +144,7 @@ class ListingReceiptScene extends RoutableScene {
             takeAction={() => Alert.alert('Not yet implemented')}
           />
           <PaymentMethodCheckBox
+            checked={this.props.hasPaymentMethod}
             takeAction={() => this.goNext('addPayment')}
           />
 
@@ -173,6 +174,7 @@ const mapStateToProps = (state) => {
     imageKey: imageStoreKey,
     imageData: state.images[imageStoreKey],
     buyerUid: state.listingDetails.buyerUid,
+    hasPaymentMethod: state.user.hasPayment,
   };
 };
 const mapDispatchToProps = (dispatch) => {

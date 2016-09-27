@@ -4,7 +4,7 @@ import { Alert, View, Text } from 'react-native';
 import { MKButton } from 'react-native-material-kit';
 import { CreditCardInput } from 'react-native-credit-card-input';
 
-import { setCreditCard, AddCreditCardStatus } from '../../reducers/AddCreditCardReducer';
+import { setCreditCard, clearCreditCard, AddCreditCardStatus } from '../../reducers/AddCreditCardReducer';
 
 import { createPaymentSource } from '../../stripe/StripeConnector';
 import { enqueueCreateCustomerRequest } from '../../firebase/FirebaseConnector';
@@ -52,6 +52,7 @@ class CreditCardInputScene extends RoutableScene {
         })
         .then(() => {
           this.setState({ status: AddCreditCardStatus.success });
+          this.props.clearCreditCardData();
           Alert.alert('Sucessfully added payment method.');
           this.goBack();
         })
@@ -100,9 +101,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setCreditCardData: (data) => {
-      dispatch(setCreditCard(data));
-    },
+    setCreditCardData: (data) => dispatch(setCreditCard(data)),
+    clearCreditCardData: () => dispatch(clearCreditCard()),
   };
 };
 

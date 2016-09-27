@@ -6,6 +6,7 @@ const USER_CLEAR_DATA = 'clear-user-data';
 export default function (priorState = { displayName: undefined, username: undefined }, action) {
   switch (getActionType(action)) {
     case USER_SET_DATA:
+      console.log(action);
       return Object.assign({}, action.data);
     case USER_CLEAR_DATA:
       return { displayName: undefined, username: undefined };
