@@ -6,6 +6,8 @@ import LegalNameInputScene from './LegalNameInputScene';
 import { MonthInputScene, DayInputScene, YearInputScene } from './DateOfBirthInputScenes';
 import { Line1InputScene, Line2InputScene, CityInputScene, PostalInputScene, StateInputScene }
   from './AddressInputScenes';
+import RoutingNumberInputScene from './RoutingNumberInputScene';
+import AccountNumberInputScene from './AccountNumberInputScene';
 
 const legalNameInput = {
   id: 'bank-legal-name-input',
@@ -102,6 +104,28 @@ const addressStateInput = {
   ),
 };
 
+const routingNumberInput = {
+  id: 'bank-routing-number',
+  renderContent: withNavigatorProps(
+    <RoutingNumberInputScene
+      title="Add Bank (10/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const accountNumberInput = {
+  id: 'bank-routing-number',
+  renderContent: withNavigatorProps(
+    <AccountNumberInputScene
+      title="Add Bank (11/12)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
 const routeLinks = {};
 
 routeLinks[legalNameInput.id] = {
@@ -162,8 +186,16 @@ routeLinks[addressPostalInput.id] = {
 
 routeLinks[addressStateInput.id] = {
   next: {
-    title: 'OK'
-  }
+    title: 'OK',
+    getRoute: () => routingNumberInput,
+  },
+};
+
+routeLinks[routingNumberInput.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => accountNumberInput,
+  },
 };
 
 module.exports.routeLinks = routeLinks;

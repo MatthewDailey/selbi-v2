@@ -86,6 +86,8 @@ export const PostalInputScene = connect(
       inputValue: state.addBank.addressPostalCode,
       inputTitle: <Title boldRow="postal" />,
       placeholder: '94103',
+      validateInputOnSubmit: (input) => (input.length === 5),
+      validateFormatSuggestion: 'Input must be a 5 postal code.',
     };
   },
   (dispatch) => {

@@ -3,14 +3,19 @@ import { getActionType } from './ActionUtils';
 
 const BA_CLEAR = 'clear-bank-account-entry';
 const BA_SET_LEGAL_NAME = 'bank-account-set-legal-name';
+
 const BA_SET_DOB_MONTH = 'bank-account-set-dob-month';
 const BA_SET_DOB_DAY = 'bank-account-set-dob-day';
 const BA_SET_DOB_YEAR = 'bank-account-set-dob-year';
+
 const BA_SET_ADDRESS_LINE1 = 'bank-account-set-address-line1';
 const BA_SET_ADDRESS_LINE2 = 'bank-account-set-address-line2';
 const BA_SET_ADDRESS_CITY = 'bank-account-set-address-city';
 const BA_SET_ADDRESS_POSTAL = 'bank-account-set-address-postal';
 const BA_SET_ADDRESS_STATE = 'bank-account-set-address-state';
+
+const BA_SET_BANK_ROUTING = 'bank-account-set-routing';
+const BA_SET_BANK_ACCOUNT = 'bank-account-set-account';
 
 class AddBankAccountData extends Immutable.Record({
   legalName: undefined,
@@ -36,12 +41,14 @@ export default function (previousState = new AddBankAccountData(), action) {
       return new AddBankAccountData();
     case BA_SET_LEGAL_NAME:
       return previousState.merge({ legalName: action.legalName });
+
     case BA_SET_DOB_MONTH:
       return previousState.merge({ dobMonth: action.month });
     case BA_SET_DOB_DAY:
       return previousState.merge({ dobDay: action.day });
     case BA_SET_DOB_YEAR:
       return previousState.merge({ dobYear: action.year });
+
     case BA_SET_ADDRESS_LINE1:
       return previousState.merge({ addressLine1: action.line });
     case BA_SET_ADDRESS_LINE2:
@@ -52,6 +59,11 @@ export default function (previousState = new AddBankAccountData(), action) {
       return previousState.merge({ addressPostalCode: action.postal });
     case BA_SET_ADDRESS_STATE:
       return previousState.merge({ addressState: action.state });
+
+    case BA_SET_BANK_ROUTING:
+      return previousState.merge({ routingNumber: action.number });
+    case BA_SET_BANK_ACCOUNT:
+      return previousState.merge({ accountNumber: action.number });
     default:
       return previousState;
   }
@@ -124,4 +136,18 @@ export function setAddressState(state) {
     type: BA_SET_ADDRESS_STATE,
     state,
   };
+}
+
+export function setBankRouting(number) {
+  return {
+    type: BA_SET_BANK_ROUTING,
+    number,
+  };
+}
+
+export function setBankAccount(number) {
+  return {
+    type: BA_SET_BANK_ACCOUNT,
+    number,
+  }
 }
