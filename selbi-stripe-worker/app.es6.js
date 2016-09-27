@@ -10,9 +10,9 @@ import QueueListener from './src/QueueListener';
 
 import { sendNotification } from './src/FcmConnector';
 
+import config from './config';
 
-
-const stripe = initializeStripe(process.env.STRIPE_PRIVATE);
+const stripe = initializeStripe(config.stripePrivateKey);
 
 const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFromEnvironment(),
   'serviceUser');
