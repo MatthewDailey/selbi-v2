@@ -17,7 +17,6 @@ import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
-import AddPaymentMethodFlow from './src/scenes/addPaymentMethodFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
