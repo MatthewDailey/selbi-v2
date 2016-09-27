@@ -14,6 +14,7 @@ import { paddingSize } from '../../../styles';
 import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 const Button = MKButton.button()
  .withStyle({
@@ -36,6 +37,7 @@ class CreditCardInputScene extends RoutableScene {
 
   submit() {
     if (this.props.creditCardData.valid) {
+      this.setState({ status: AddCreditCardStatus.gettingKey });
       createPaymentSource(
         this.props.creditCardData.values.number,
         this.props.creditCardData.values.expiry.substring(0, 2),
@@ -45,10 +47,20 @@ class CreditCardInputScene extends RoutableScene {
           if (result.error) {
             return Promise.reject(result);
           }
+          this.setState({ status: AddCreditCardStatus.creatingAccount });
           return enqueueCreateCustomerRequest(this.props.creditCardData.name, result);
         })
-        .then(console.log)
-        .catch(console.log);
+        .then(() => {
+          this.setState({ status: AddCreditCardStatus.success });
+          Alert.alert('Sucessfully added payment method.');
+          this.goBack();
+        })
+        .catch((error) => {
+          this.setState({ status: AddCreditCardStatus.failure });
+          // TODO: Add more specific error based on failure type.
+          Alert.alert('Failed to added payment method.');
+          console.log(error);
+        });
     } else {
       console.log('Failed to submit with cc data ', this.props.creditCardData);
       // TODO: Add more specific error based on failure type.
@@ -70,6 +82,11 @@ class CreditCardInputScene extends RoutableScene {
         <VisibilityWrapper isVisible={this.props.creditCardData.valid}>
           <Button onPress={this.submit}><Text>Submit</Text></Button>
         </VisibilityWrapper>
+        <SpinnerOverlay
+          isVisible={this.state.status === AddCreditCardStatus.creatingAccount
+            || this.state.status === AddCreditCardStatus.gettingKey}
+          message="Creating payment method..."
+        />
       </View>
     );
   }

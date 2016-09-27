@@ -707,10 +707,37 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
     },
   };
 
-  console.log(createCustomerTask);
+  return new Promise((resolve, reject) => {
+    const userPaymentRef = firebaseApp.database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('payment');
 
-  return firebaseApp.database()
-    .ref('createCustomer/tasks')
-    .push()
-    .set(createCustomerTask);
+    let isFirstLoadOfPayments = true;
+    const handlePaymentsUpdates = (paymentData) => {
+      if (isFirstLoadOfPayments) {
+        isFirstLoadOfPayments = false;
+
+        // Wait to enqueue until we know we're listening for updates to user status.
+        firebaseApp.database()
+          .ref('createCustomer/tasks')
+          .push()
+          .set(createCustomerTask);
+        return;
+      }
+
+      if (paymentData.exists()) {
+        if (paymentData.val().status === 'OK') {
+          resolve(paymentData.val());
+        } else {
+          reject(paymentData.val().status);
+        }
+      } else {
+        reject('An unknown error occured setting up payment data.');
+      }
+      userPaymentRef.off('value', handlePaymentsUpdates);
+    };
+
+    userPaymentRef.on('value', handlePaymentsUpdates);
+  });
 }

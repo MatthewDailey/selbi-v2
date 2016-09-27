@@ -8,6 +8,8 @@ export const AddCreditCardStatus = {
   enteringData: 'entering-data',
   gettingKey: 'getting-key',
   creatingAccount: 'creating-account',
+  success: 'success',
+  failure: 'failure',
 };
 
 class AddCreditCardData extends Immutable.Record({
@@ -21,11 +23,11 @@ class AddCreditCardData extends Immutable.Record({
     postalCode: undefined,
   },
   status: {  // will be one of ["incomplete", "invalid", and "valid"]
-    number: "incomplete",
-    expiry: "incomplete",
-    cvc: "incomplete",
-    name: "incomplete",
-    postalCode: "incomplete",
+    number: 'incomplete',
+    expiry: 'incomplete',
+    cvc: 'incomplete',
+    name: 'incomplete',
+    postalCode: 'incomplete',
   },
 }) {}
 
