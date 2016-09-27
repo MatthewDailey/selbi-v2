@@ -6,6 +6,10 @@ export function isStringFloat(input) {
   return !!input.match(findFloatRegex);
 }
 
+export function isStringInt(input) {
+  const findFloatRegex = /^[0-9]*$/;
+  return !!input.match(findFloatRegex);
+}
 
 function toRadian(degree) {
   return (degree * Math.PI) / 180;

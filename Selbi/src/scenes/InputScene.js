@@ -2,7 +2,7 @@ import React from 'react';
 import { InteractionManager, View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
-import { isStringFloat } from '../utils';
+import { isStringFloat, isStringInt } from '../utils';
 import styles from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 
@@ -22,13 +22,19 @@ export default class InputScene extends RoutableScene {
     } else if (this.props.isNumeric && isNaN(this.parseInputValue(this.props.inputValue))) {
       Alert.alert('Must be a number.');
       return false;
+    } else if (this.props.validateInputOnSubmit
+        && !this.props.validateInputOnSubmit(this.props.inputValue)) {
+      Alert.alert(this.props.validateFormatSuggestion);
+      return false;
     }
     return true;
   }
 
   parseInputValue(newText) {
     if (this.props.isNumeric) {
-      if (isStringFloat(newText)) {
+      if (this.props.isInt && isStringInt(newText)) {
+        return newText;
+      } else if (!this.props.isInt && isStringFloat(newText)) {
         return newText;
       }
       return this.props.inputValue;
@@ -60,7 +66,9 @@ export default class InputScene extends RoutableScene {
     return (
       <View style={styles.container}>
         <View style={styles.padded}>
-          <Text style={styles.padded}>{this.props.inputTitle}</Text>
+          <View style={styles.padded}>
+            <Text style={styles.friendlyTextLeft}>{this.props.inputTitle}</Text>
+          </View>
           <View style={styles.padded}>
             <MKTextField
               autoFocus
@@ -78,5 +86,9 @@ export default class InputScene extends RoutableScene {
       </View>
     );
   }
+}
+
+InputScene.defaultProps = {
+  validateInputLive: () => true,
 }
 

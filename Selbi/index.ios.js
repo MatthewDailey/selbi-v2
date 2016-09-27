@@ -213,6 +213,7 @@ routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
