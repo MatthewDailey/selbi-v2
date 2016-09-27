@@ -395,7 +395,7 @@
               ".validate": false
             },
             "lastFour": {
-              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+              ".validate": "newData.isString() && newData.val().length === 4"
             },
             // MM-YY
             "expirationDate": {

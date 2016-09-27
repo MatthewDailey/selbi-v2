@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import initializeStripe from 'stripe';
 import fetch from 'node-fetch';
 
+process.env.STRIPE_PUBLIC = 'pk_test_jgbSMlxI62OBXiWH1ENa9o5U';
+
 /*
  * This test simulates creating 2 users (a buy and a seller) and then creating a charge between
  * them using the Stripe Connect API.

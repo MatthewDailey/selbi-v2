@@ -5,7 +5,8 @@ import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 import { testSafeWorker } from './QueueUtilities';
 
 describe('Create Customer', () => {
-  beforeEach((done) => {
+  beforeEach(function (done) {
+    this.timeout(6000);
     FirebaseTest
       .serviceAccountApp
       .database()
@@ -19,7 +20,7 @@ describe('Create Customer', () => {
       FirebaseTest.serviceAccountApp.database().ref('/createCustomer'),
       testSafeWorker(
         (data) => {
-          expect(data.foo).to.equal(testData.foo);
+          expect(data.uid).to.equal(testData.uid);
         },
         done));
 
@@ -27,17 +28,20 @@ describe('Create Customer', () => {
       .database()
       .ref('/createCustomer/tasks')
       .child('testData')
-      .set(testData);
+      .set(testData)
+      .catch(done);
   }
 
-  it('can create queue and handle work as service worker', (done) => {
+  it('can create queue and handle work as service worker', function (done) {
+    this.timeout(6000);
     const testData = {
-      foo: 'bar',
+      uid: 'bar',
     };
     writeToQueueAndExpectHandled(FirebaseTest.serviceAccountApp, testData, done);
   });
 
-  it('can create queue and handle work as  worker', (done) => {
+  it('can create queue and handle work as user worker', function (done) {
+    this.timeout(6000);
     const testData = {
       payload: {
         source: 'stripePaymentCcToken',
@@ -45,7 +49,7 @@ describe('Create Customer', () => {
         email: 'matt@selbi.io',
       },
       metadata: {
-        lastFour: 1234,
+        lastFour: '1234',
         expirationDate: '01-19',
         cardBrand: 'Visa',
       },
