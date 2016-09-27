@@ -164,6 +164,7 @@ class DetailBottomButtons extends Component {
             />
             <BuyButton
               price={this.props.listingData.price}
+              onPress={this.props.openBuy}
             />
           </View>
         </View>
@@ -180,6 +181,7 @@ DetailBottomButtons.propTypes = {
   isChatButtonVisible: React.PropTypes.bool.isRequired,
   openChat: React.PropTypes.func.isRequired,
   openEdit: React.PropTypes.func.isRequired,
+  openBuy: React.PropTypes.func.isRequired,
 };
 
 class ListingDetailScene extends RoutableScene {
@@ -301,6 +303,7 @@ class ListingDetailScene extends RoutableScene {
               isChatButtonVisible={!!this.props.routeLinks.chat}
               openChat={() => this.goNext('chat')}
               openEdit={() => this.goNext('edit')}
+              openBuy={() => this.goNext('buy')}
             />
           </VisibilityWrapper>
         </Image>
