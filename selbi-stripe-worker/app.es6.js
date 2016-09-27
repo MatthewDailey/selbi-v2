@@ -12,6 +12,9 @@ import { sendNotification } from './src/FcmConnector';
 
 import config from './config';
 
+if (!config.stripePrivateKey) {
+  console.warn('Starting stripe worker without Stripe Private key!');
+}
 const stripe = initializeStripe(config.stripePrivateKey);
 
 const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFromEnvironment(),
