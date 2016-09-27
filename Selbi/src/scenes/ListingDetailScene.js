@@ -141,10 +141,10 @@ class DetailBottomButtons extends Component {
           >
             <View>
               <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, flexDirection: 'column' }}>
                   <Title />
+                  <SellerName />
                 </View>
-                <SellerName />
                 <ListingDistance distanceString={this.props.listingDistance} />
               </View>
               <View style={styles.quarterPadded} />
