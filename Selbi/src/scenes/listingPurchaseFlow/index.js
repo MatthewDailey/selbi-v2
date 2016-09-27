@@ -22,6 +22,11 @@ const chatFromDetailScene = {
   renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
 };
 
+const chatFromReceiptScene = {
+  id: 'chat-receipt-scene',
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
+};
+
 const listingDetailScene = {
   id: 'listing-detail-scene',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
@@ -101,6 +106,9 @@ routeLinks[receiptScene.id] = {
   },
   addPayment: {
     getRoute: () => creditCardInputScene,
+  },
+  chat: {
+    getRoute: () => chatFromReceiptScene,
   },
 };
 

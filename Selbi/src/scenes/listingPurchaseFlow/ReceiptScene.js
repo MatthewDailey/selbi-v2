@@ -147,7 +147,7 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded}>
             <SellerAcceptsPaymentCheckBox
               checked={this.props.sellerData.hasBankAccount}
-              takeAction={() => Alert.alert('Not yet implemented')}
+              takeAction={() => this.goNext('chat')}
             />
           </View>
           <View style={styles.halfPadded}>
