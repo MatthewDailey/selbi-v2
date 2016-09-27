@@ -35,9 +35,6 @@ class AddBankAccountData extends Immutable.Record({
 }) {}
 
 export default function (previousState = new AddBankAccountData(), action) {
-  console.log('------Got update to bank account--------');
-  console.log(action);
-  console.log(previousState)
   switch (getActionType(action)) {
     case BA_CLEAR:
       return new AddBankAccountData();

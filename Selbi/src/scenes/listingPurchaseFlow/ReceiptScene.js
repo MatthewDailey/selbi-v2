@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, InteractionManager, Image, Alert } from 'react-native';
+import { ScrollView, View, Text, InteractionManager, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';

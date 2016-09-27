@@ -9,6 +9,7 @@ import { Line1InputScene, Line2InputScene, CityInputScene, PostalInputScene, Sta
 import RoutingNumberInputScene from './RoutingNumberInputScene';
 import AccountNumberInputScene from './AccountNumberInputScene';
 import SsnInputScene from './SsnInputScene';
+import StoreBankAccountScene from './StoreBankAccountScene';
 
 const legalNameInput = {
   id: 'bank-legal-name-input',
@@ -83,10 +84,10 @@ const addressCityInput = {
   ),
 };
 
-const addressPostalInput = {
-  id: 'bank-address-postal',
+const addressStateInput = {
+  id: 'bank-address-state',
   renderContent: withNavigatorProps(
-    <PostalInputScene
+    <StateInputScene
       title="Add Bank (8/12)"
       leftIs="back"
       rightIs="next"
@@ -94,10 +95,10 @@ const addressPostalInput = {
   ),
 };
 
-const addressStateInput = {
-  id: 'bank-address-state',
+const addressPostalInput = {
+  id: 'bank-address-postal',
   renderContent: withNavigatorProps(
-    <StateInputScene
+    <PostalInputScene
       title="Add Bank (9/12)"
       leftIs="back"
       rightIs="next"
@@ -134,6 +135,16 @@ const ssnInput = {
       title="Add Bank (12/12)"
       leftIs="back"
       rightIs="next"
+    />
+  ),
+};
+
+const storeAccountScene = {
+  id: 'bank-store-account',
+  renderContent: withNavigatorProps(
+    <StoreBankAccountScene
+      title="Review Account Details"
+      leftIs="back"
     />
   ),
 }
@@ -185,13 +196,6 @@ routeLinks[addressLine2Input.id] = {
 routeLinks[addressCityInput.id] = {
   next: {
     title: 'OK',
-    getRoute: () => addressPostalInput,
-  },
-};
-
-routeLinks[addressPostalInput.id] = {
-  next: {
-    title: 'OK',
     getRoute: () => addressStateInput,
   },
 };
@@ -199,9 +203,18 @@ routeLinks[addressPostalInput.id] = {
 routeLinks[addressStateInput.id] = {
   next: {
     title: 'OK',
+    getRoute: () => addressPostalInput,
+  },
+};
+
+routeLinks[addressPostalInput.id] = {
+  next: {
+    title: 'OK',
     getRoute: () => routingNumberInput,
   },
 };
+
+
 
 routeLinks[routingNumberInput.id] = {
   next: {
@@ -220,7 +233,7 @@ routeLinks[accountNumberInput.id] = {
 routeLinks[ssnInput.id] = {
   next: {
     title: 'OK',
-    getRoute: () => undefined,
+    getRoute: () => storeAccountScene,
   }
 };
 

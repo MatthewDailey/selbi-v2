@@ -105,6 +105,10 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  labelTextLeft: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
   friendlyTextLeft: {
     fontSize: 20,
     fontWeight: '300',

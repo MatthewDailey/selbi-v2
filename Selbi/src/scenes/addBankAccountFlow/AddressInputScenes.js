@@ -23,8 +23,8 @@ function Title({ boldRow }) {
       <Text style={getStyle('line1')}>Line 1{'\n'}</Text>
       <Text style={getStyle('line2')}>Line 2</Text><Text>{'\n'}</Text>
       <Text style={getStyle('city')}>City</Text><Text>{'\n'}</Text>
-      <Text style={getStyle('postal')}>Postal Code</Text><Text>{'\n'}</Text>
-      <Text style={getStyle('state')}>State</Text>
+      <Text style={getStyle('state')}>State</Text><Text>{'\n'}</Text>
+      <Text style={getStyle('postal')}>Postal Code</Text>
     </Text>
   );
 }
