@@ -3,10 +3,10 @@ import { View, Text, Alert } from 'react-native';
 import { MKTextField, MKButton } from 'react-native-material-kit';
 import CreditCard from 'react-native-credit-card';
 
-import styles from '../../styles';
-import colors from '../../colors';
-import RoutableScene from '../nav/RoutableScene';
-import SpinnerOverlay from '../components/SpinnerOverlay';
+import styles from '../../../styles';
+import colors from '../../../colors';
+import RoutableScene from '../../nav/RoutableScene';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 const buttonViewStyle = {
   flex: 1,
@@ -114,7 +114,7 @@ export default class CreditCardInputScene extends RoutableScene {
               placeholder={'Expiration Date'}
               style={{ height: 48 }}
               value={this.state.expiry}
-              onTextChange={(newNumber) => this.setState({ expiry: newNumber})}
+              onTextChange={(newNumber) => this.setState({ expiry: newNumber })}
               keyboardType={'numeric'}
               returnKeyType="next"
               onSubmitEditing={() => this.setState({ focus: 'cvc' })}
