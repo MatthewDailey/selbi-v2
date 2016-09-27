@@ -16,7 +16,9 @@ export default class InputScene extends RoutableScene {
   }
 
   shouldGoNext() {
-    if (!this.props.inputValue) {
+    if (!this.props.inputValue && this.props.allowEmpty) {
+      return true;
+    } else if (!this.props.inputValue) {
       Alert.alert('Must not be empty.');
       return false;
     } else if (this.props.isNumeric && isNaN(this.parseInputValue(this.props.inputValue))) {

@@ -17,6 +17,8 @@ const BA_SET_ADDRESS_STATE = 'bank-account-set-address-state';
 const BA_SET_BANK_ROUTING = 'bank-account-set-routing';
 const BA_SET_BANK_ACCOUNT = 'bank-account-set-account';
 
+const BA_SET_SSN = 'bank-account-set-ssn';
+
 class AddBankAccountData extends Immutable.Record({
   legalName: undefined,
   dobDay: undefined,
@@ -39,6 +41,7 @@ export default function (previousState = new AddBankAccountData(), action) {
   switch (getActionType(action)) {
     case BA_CLEAR:
       return new AddBankAccountData();
+
     case BA_SET_LEGAL_NAME:
       return previousState.merge({ legalName: action.legalName });
 
@@ -64,6 +67,10 @@ export default function (previousState = new AddBankAccountData(), action) {
       return previousState.merge({ routingNumber: action.number });
     case BA_SET_BANK_ACCOUNT:
       return previousState.merge({ accountNumber: action.number });
+
+    case BA_SET_SSN:
+      return previousState.merge({ ssn: action.ssn });
+
     default:
       return previousState;
   }
@@ -149,5 +156,12 @@ export function setBankAccount(number) {
   return {
     type: BA_SET_BANK_ACCOUNT,
     number,
-  }
+  };
+}
+
+export function setSsn(ssn) {
+  return {
+    type: BA_SET_SSN,
+    ssn,
+  };
 }

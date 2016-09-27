@@ -24,7 +24,7 @@ function Title({ boldRow }) {
       <Text style={getStyle('line2')}>Line 2</Text><Text>{'\n'}</Text>
       <Text style={getStyle('city')}>City</Text><Text>{'\n'}</Text>
       <Text style={getStyle('postal')}>Postal Code</Text><Text>{'\n'}</Text>
-      <Text style={getStyle('state')}>State</Text><Text>{'\n'}</Text>
+      <Text style={getStyle('state')}>State</Text>
     </Text>
   );
 }
@@ -50,6 +50,7 @@ export const Line1InputScene = connect(
 export const Line2InputScene = connect(
   (state) => {
     return {
+      allowEmpty: true,
       inputValue: state.addBank.addressLine2,
       inputTitle: <Title boldRow="line2" />,
       placeholder: 'Apt C',
