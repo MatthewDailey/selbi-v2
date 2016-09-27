@@ -35,6 +35,7 @@ import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
+import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus }
@@ -61,6 +62,7 @@ const store = createStore(combineReducers({
   followFriend: followFriendReducer,
   friendsListings: friendsListingsReducer,
   user: userReducer,
+  addCreditCard: addCreditCardReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
