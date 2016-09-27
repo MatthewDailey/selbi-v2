@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, InteractionManager, Image, Alert } from 'react-native';
+import { ScrollView, View, Text, InteractionManager, Image, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -39,14 +39,14 @@ function SellerAcceptsPaymentCheckBox({ checked, takeAction }) {
   if (checked) {
     return (
       <Text style={styles.friendlyTextLeft}>
-        <GreenCheck /> Seller Accepts Pay by Selbi
+        <GreenCheck /> Seller accepts Pay by Selbi
       </Text>
     );
   }
   return (
     <View>
       <Text style={styles.friendlyTextLeft}>
-        <EmptyCheck /> Seller Accepts Pay by Selbi
+        <EmptyCheck /> Seller accepts Pay by Selbi
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
         <FlatButton onPres={takeAction}>
@@ -78,7 +78,7 @@ function PaymentMethodCheckBox({ checked, takeAction }) {
       </Text>
       <View style={{ alignItems: 'flex-end' }}>
         <FlatButton onPres={takeAction}>
-          <Text style={{ fontSize: 16 }}>Set up payment method <Icon name="arrow-right"/></Text>
+          <Text style={{ fontSize: 16 }}>Add a credit card <Icon name="arrow-right"/></Text>
         </FlatButton>
       </View>
     </View>
@@ -127,35 +127,37 @@ class ListingReceiptScene extends RoutableScene {
       return <LoadingListingComponent />;
     }
 
+    // TODO ScrollView Could be in a better place.
     return (
       <View style={styles.container}>
         <Image
           source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         />
-        <View style={{ flex: 2, padding: 16 }}>
-          <Text style={styles.friendlyTextLeftLarge}>
-            {this.props.listingData.title}
-          </Text>
-          <Text style={styles.friendlyTextLeft}>
-            {`Price: $${this.props.listingData.price}`}
-          </Text>
+        <ScrollView style={{ flex: 2, padding: 16 }}>
+          <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
+          <Text style={styles.friendlyTextLeft}>{`Price: $${this.props.listingData.price}`}</Text>
+
           <View style={styles.halfPadded} />
+
           <SellerAcceptsPaymentCheckBox
             checked={this.props.sellerData.hasBankAccount}
             takeAction={() => Alert.alert('Not yet implemented')}
           />
           <PaymentMethodCheckBox
-            checked
             takeAction={() => this.goNext('addPayment')}
           />
+
           <View style={styles.halfPadded} />
+
           <View style={styles.halfPadded}>
             <Button onPress={() => this.goNext()}>
               <Text>Pay with Selbi</Text>
             </Button>
           </View>
-        </View>
+
+          <View style={styles.padded} />
+        </ScrollView>
       </View>
     );
   }
