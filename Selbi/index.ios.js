@@ -17,6 +17,7 @@ import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
+import AddBankFlow from './src/scenes/addBankAccountFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -35,6 +36,7 @@ import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
+import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus }
@@ -62,6 +64,7 @@ const store = createStore(combineReducers({
   friendsListings: friendsListingsReducer,
   user: userReducer,
   addCreditCard: addCreditCardReducer,
+  addBank: addBankAccountReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
@@ -262,7 +265,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={localListingScene}
+          initialRoute={AddBankFlow.firstScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
         />

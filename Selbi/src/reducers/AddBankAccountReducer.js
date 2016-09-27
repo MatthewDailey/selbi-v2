@@ -3,7 +3,7 @@ import { getActionType } from './ActionUtils';
 
 const BA_CLEAR = 'clear-bank-account-entry';
 const BA_SET_LEGAL_NAME = 'bank-account-set-legal-name';
-const BA_SET_DOB_DAY = 'bank-account-set-legal-name';
+const BA_SET_DOB_DAY = 'bank-account-set-dob-day';
 
 class AddBankAccountData extends Immutable.Record({
   legalName: undefined,
@@ -21,6 +21,9 @@ class AddBankAccountData extends Immutable.Record({
 }) {}
 
 export default function (previousState = new AddBankAccountData(), action) {
+  console.log('------GOt update to bank account--------');
+  console.log(action);
+
   switch (getActionType(action)) {
     case BA_CLEAR:
       return new AddBankAccountData();
