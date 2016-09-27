@@ -6,8 +6,8 @@ const CC_CLEAR = 'clear-credit-card';
 
 export const AddCreditCardStatus = {
   enteringData: 'entering-data',
-  gettingKey: 'getting-key',
-  creatingAccount: 'creating-account',
+  gettingKey: 'Storing credit card with Stripe',
+  creatingAccount: 'Creating account to Selbi',
   success: 'success',
   failure: 'failure',
 };

@@ -85,7 +85,7 @@ class CreditCardInputScene extends RoutableScene {
         <SpinnerOverlay
           isVisible={this.state.status === AddCreditCardStatus.creatingAccount
             || this.state.status === AddCreditCardStatus.gettingKey}
-          message="Creating payment method..."
+          message={`${this.state.status}...`}
         />
       </View>
     );
@@ -96,7 +96,7 @@ const mapStateToProps = (state) => {
   return {
     creditCardData: state.addCreditCard,
   };
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
