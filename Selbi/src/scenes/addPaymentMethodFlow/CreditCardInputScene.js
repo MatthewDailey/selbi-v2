@@ -48,7 +48,7 @@ class CreditCardInputScene extends RoutableScene {
             return Promise.reject(result);
           }
           this.setState({ status: AddCreditCardStatus.creatingAccount });
-          return enqueueCreateCustomerRequest(this.props.creditCardData.name, result);
+          return enqueueCreateCustomerRequest(this.props.creditCardData.values.name, result);
         })
         .then(() => {
           this.setState({ status: AddCreditCardStatus.success });

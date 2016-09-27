@@ -686,6 +686,15 @@ function computeExpirationDate(expMonth, expYear) {
   return `${expMonth}-${expYear % 100}`;
 }
 
+function markUserHasPayment() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasPayment')
+    .set(true);
+}
+
 export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
   if (!getUser()) {
     return Promise.reject('Must be signed in.');
@@ -728,7 +737,12 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
 
       if (paymentData.exists()) {
         if (paymentData.val().status === 'OK') {
-          resolve(paymentData.val());
+          markUserHasPayment()
+            .then(() => resolve(paymentData.val()))
+            .catch((error) => {
+              reject(error);
+              console.log(error);
+            });
         } else {
           reject(paymentData.val().status);
         }
