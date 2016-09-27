@@ -134,19 +134,28 @@ class ListingReceiptScene extends RoutableScene {
           style={{ flex: 1, backgroundColor: colors.dark }}
         />
         <ScrollView style={{ flex: 2, padding: 16 }}>
-          <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
-          <Text style={styles.friendlyTextLeft}>{`Price: $${this.props.listingData.price}`}</Text>
+          <View style={styles.halfPadded}>
+            <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
+            <Text>{this.props.sellerData.displayName}</Text>
+          </View>
+          <View style={styles.halfPadded}>
+            <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
+          </View>
 
           <View style={styles.halfPadded} />
 
-          <SellerAcceptsPaymentCheckBox
-            checked={this.props.sellerData.hasBankAccount}
-            takeAction={() => Alert.alert('Not yet implemented')}
-          />
-          <PaymentMethodCheckBox
-            checked={this.props.hasPaymentMethod}
-            takeAction={() => this.goNext('addPayment')}
-          />
+          <View style={styles.halfPadded}>
+            <SellerAcceptsPaymentCheckBox
+              checked={this.props.sellerData.hasBankAccount}
+              takeAction={() => Alert.alert('Not yet implemented')}
+            />
+          </View>
+          <View style={styles.halfPadded}>
+            <PaymentMethodCheckBox
+              checked={this.props.hasPaymentMethod}
+              takeAction={() => this.goNext('addPayment')}
+            />
+          </View>
 
           <View style={styles.halfPadded} />
 
