@@ -78,6 +78,10 @@ class CreateCustomerHandler {
         .ref('users')
         .child(data.uid);
 
+      data.payload.managed = true;
+      data.payload.country = 'US';
+      data.payload.legal_entity.type = 'individual';
+
       const createStripeAccount = () => new Promise((resolve, reject) => {
         stripeAccountsApi.create(data.payload, (err, account) => {
           if (err) {
