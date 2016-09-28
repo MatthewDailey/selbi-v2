@@ -1,7 +1,4 @@
-
-function validateData(data) {
-  return Promise.resolve();
-}
+import GeoFire from 'geofire';
 
 /*
  * This method demonstrates how to create a charge from a customer to a seller on the Stripe
@@ -44,6 +41,51 @@ function createCharge(stripe,
   });
 }
 
+function changeListingStatusToSold(firebaseDb, listingId) {
+  const newStatus = 'sold';
+  // Start by loading the existing snapshot and verifying it exists.
+  return firebaseDb
+    .ref('listings')
+    .child(listingId)
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Update status on /listing data.
+        return firebaseDb
+          .ref('listings')
+          .child(listingId)
+          .update({
+            status: newStatus,
+          })
+          .then(() => Promise.resolve(snapshot));
+      }
+      throw new Error('No such listing exists while trying to change listing status.');
+    })
+    .then((oldSnapshot) => {
+      const allUpdatePromises = [];
+
+      allUpdatePromises.push(firebaseDb
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child(oldSnapshot.val().status)
+        .child(listingId)
+        .remove());
+
+      allUpdatePromises.push(firebaseDb
+        .ref('/userListings')
+        .child(oldSnapshot.val().sellerId)
+        .child(newStatus)
+        .child(listingId)
+        .set(true));
+
+      allUpdatePromises.push(new GeoFire(firebaseDb.ref('/geolistings'))
+        .remove(listingId));
+
+      return Promise.all(allUpdatePromises)
+        .then(() => Promise.resolve(oldSnapshot));
+    });
+}
+
 /*
  * This class provides the Firebase-Queue listener which is used to process a payment.
  *
@@ -53,7 +95,8 @@ function createCharge(stripe,
  * 3) Execute payment
  * 4) Record purchases to /users/$uid/purchases/$listingId
  * 5) Mark listing as sold
- * 6) Record sale to /users/$uid/sales/$listingId
+ * 6) send notification to seller
+ * 7) Record sale to /users/$uid/sales/$listingId
  *
  * If there is a failure we write to /users/$uid/purchases/$listingId/status which the user will
  * notify.
@@ -67,12 +110,12 @@ class CreatePurchaseHandler {
   getTaskHandler() {
     const firebaseDb = this.firebaseDb;
     const stripe = this.stripe;
-    return (data, progress, resolveCreateAccountTask, rejectCreateAccountTask) => {
+    return (data, progress, resolvePurchaseTask, rejectPurchaseTask) => {
       console.log(`Handling purchase of listing:${data.listingId} buyerUid:${data.buyerUid}`);
 
       const timestamp = Date.now();
 
-      const initializeSaleAndPurchase = (listingData) => {
+      const executeListingPurchase = (listingData) => {
         console.log('initializing sale and purchase for ', listingData);
 
         const saleRecord = {
@@ -162,12 +205,12 @@ class CreatePurchaseHandler {
               const buyerInfo = buyerAndSellerInfo[0];
               const sellerInfo = buyerAndSellerInfo[1];
 
-              if (!buyerInfo.payment || buyerInfo.payment.status != 'OK') {
-                return Promise.reject('buyer payment is not set up.')
+              if (!buyerInfo.payment || buyerInfo.payment.status !== 'OK') {
+                return Promise.reject('buyer payment is not set up.');
               }
 
-              if (!sellerInfo.merchant || sellerInfo.merchant.status != 'OK') {
-                return Promise.reject('seller merchant is not set up.')
+              if (!sellerInfo.merchant || sellerInfo.merchant.status !== 'OK') {
+                return Promise.reject('seller merchant is not set up.');
               }
 
               return Promise.all([
@@ -191,9 +234,12 @@ class CreatePurchaseHandler {
             });
         };
 
-        const markListingAsSold = () => Promise.resolve('todo');
+        const markListingAsSold = () => changeListingStatusToSold(firebaseDb, data.listingId);
+
+        const sendSellerNotification = () => Promise.resolve('todo');
 
         const markChargesSuccessful = () => {
+          resolvePurchaseTask();
           const updateBuyerOnFailure = buyerPurchaseRef.child('status').set('success');
           const updateSellerOnFailure = sellerSaleRef.child('status').set('success');
           return Promise.all([updateBuyerOnFailure, updateSellerOnFailure]);
@@ -206,11 +252,12 @@ class CreatePurchaseHandler {
           .catch((error) => {
             const errorMessage = `ERROR processing payment. ${error}`;
             console.log(errorMessage)
-            rejectCreateAccountTask(errorMessage);
+            rejectPurchaseTask(errorMessage);
             const updateBuyerOnFailure = buyerPurchaseRef.child('status').set(errorMessage);
             const updateSellerOnFailure = sellerSaleRef.child('status').set(errorMessage);
             return Promise.all([updateBuyerOnFailure, updateSellerOnFailure]);
-          });
+          })
+          .then(sendSellerNotification);
       };
 
       return firebaseDb
@@ -223,7 +270,7 @@ class CreatePurchaseHandler {
           }
           return listingSnapshot.val();
         })
-        .then(initializeSaleAndPurchase);
+        .then(executeListingPurchase);
     };
   }
 }
