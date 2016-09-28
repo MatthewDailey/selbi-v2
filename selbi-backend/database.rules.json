@@ -719,6 +719,46 @@
         "phoneNumber": {
           ".validate": "newData.isNumber() && newData.val() > 999999999 && newData.val() < 10000000000"
         },
+        "sales": {
+          "$listingId": {
+            ".validate": "newData.hasChildren(['status', 'timestamp', 'sellerUid', 'buyerUid'])",
+            "status": {
+              ".validate": "newData.isString()"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "sellerUid": {
+              ".validate": "newData.isString()"
+            },
+            "buyerUid": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "purchases": {
+          "$listingId": {
+            ".validate": "newData.hasChildren(['status', 'timestamp', 'sellerUid', 'buyerUid'])",
+            "status": {
+              ".validate": "newData.isString()"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "sellerUid": {
+              ".validate": "newData.isString()"
+            },
+            "buyerUid": {
+              ".validate": "newData.isString()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
         "payment": {
           ".validate": "newData.hasChildren(['stripeCustomerPointer', 'metadata', 'status'])",
           "$other": {
