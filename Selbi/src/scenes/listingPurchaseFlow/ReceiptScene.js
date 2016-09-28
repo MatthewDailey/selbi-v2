@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { loadImage, loadUserPublicData } from '../../firebase/FirebaseConnector';
+import { loadImage, loadUserPublicData, purchaseListing } from '../../firebase/FirebaseConnector';
 
 import { setListingDetailsSellerData } from '../../reducers/ListingDetailReducer';
 import { storeImage } from '../../reducers/ImagesReducer';
@@ -62,32 +62,6 @@ CheckBox.propTypes = {
   title: React.PropTypes.string.isRequired,
   takeAction: React.PropTypes.func.isRequired,
   actionText: React.PropTypes.string.isRequired,
-};
-
-function PaymentMethodCheckBox({ checked, takeAction }) {
-  if (checked) {
-    return (
-      <Text style={styles.friendlyTextLeft}>
-        <GreenCheck /> Payment method set up
-      </Text>
-    );
-  }
-  return (
-    <View>
-      <Text style={styles.friendlyTextLeft}>
-        <EmptyCheck /> Payment method set up
-      </Text>
-      <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPress={takeAction}>
-          <Text style={{ fontSize: 16 }}>Add a credit card <Icon name="arrow-right" /></Text>
-        </FlatButton>
-      </View>
-    </View>
-  );
-}
-PaymentMethodCheckBox.propTypes = {
-  checked: React.PropTypes.bool,
-  takeAction: React.PropTypes.func.isRequired,
 };
 
 class ListingReceiptScene extends RoutableScene {
@@ -157,16 +131,16 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded}>
             <CheckBox
               checked={this.props.hasPaymentMethod}
-              title="Seller accpets Pay with Selbi"
+              title="Payment method set up"
               takeAction={() => this.goNext('addPayment')}
-              actionText="RequestSeller accept Pay with Selbi"
+              actionText="Add a credit card"
             />
           </View>
 
           <View style={styles.halfPadded} />
 
           <View style={styles.halfPadded}>
-            <Button onPress={() => this.goNext()}>
+            <Button onPress={() => purchaseListing(this.props.listingKey)}>
               <Text>Pay with Selbi</Text>
             </Button>
           </View>
