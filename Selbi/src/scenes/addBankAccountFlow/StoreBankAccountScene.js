@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
 import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
@@ -144,8 +145,14 @@ class ChooseVisibilityScene extends RoutableScene {
         <View style={styles.padded} />
 
         <Button onPress={this.createAccount}>
-          <Text><Icon name="university"/> Add Bank Account</Text>
+          <Text><Icon name="university" /> Add Bank Account</Text>
         </Button>
+
+        <SpinnerOverlay
+          isVisible={this.state.publishStatus === PublishStatus.storingToStripe
+            || this.state.publishStatus === PublishStatus.storingToFirebase}
+          message={this.state.publishStatus}
+        />
       </View>
     );
   }

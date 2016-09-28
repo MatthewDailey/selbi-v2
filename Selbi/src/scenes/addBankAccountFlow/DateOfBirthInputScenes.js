@@ -7,6 +7,31 @@ import { setDobMonth, setDobDay, setDobYear } from '../../reducers/AddBankAccoun
 
 export default undefined;
 
+const Title = ({ denomination, bankData }) => {
+  const getStyle = (rowName) => {
+    if (denomination === rowName) {
+      return { fontWeight: 'bold' };
+    }
+    return {};
+  };
+
+  return (
+    <Text>
+      <Text>What is the bank account owner's </Text>
+      <Text style={{ fontWeight: 'bold' }}>{denomination}</Text>
+      <Text> of birth?</Text>
+      <Text>{'\n\n'}</Text>
+      <Text>
+        <Text style={getStyle('month')}>{bankData.dobMonth ? bankData.dobMonth : 'MM'}</Text>
+        <Text>/</Text>
+        <Text style={getStyle('day')}>{bankData.dobDay ? bankData.dobDay : 'DD'}</Text>
+        <Text>/</Text>
+        <Text style={getStyle('year')}>{bankData.dobYear ? bankData.dobYear : 'YYYY'}</Text>
+      </Text>
+    </Text>
+  );
+};
+
 const MonthTitle = () => (
   <Text>
     <Text>What is the bank account owner's </Text>
@@ -24,7 +49,7 @@ export const MonthInputScene = connect(
       isNumeric: true,
       isInt: true,
       inputValue: state.addBank.dobMonth,
-      inputTitle: <MonthTitle />,
+      inputTitle: <Title denomination="month" bankData={state.addBank} />,
       placeholder: '3',
       validateInputOnSubmit: (input) => (parseInt(input, 10) > 0 && parseInt(input, 10) < 13),
       validateFormatSuggestion: 'Input must be between 1 and 12',
@@ -37,24 +62,13 @@ export const MonthInputScene = connect(
   }
 )(InputScene);
 
-const DayTitle = () => (
-  <Text>
-    <Text>What is the bank account owner's </Text>
-    <Text style={{ fontWeight: 'bold' }}>day</Text>
-    <Text> of birth?</Text>
-    <Text>{'\n\n'}MM/</Text>
-    <Text style={{ fontWeight: 'bold' }}>DD</Text>
-    <Text>/YYYY</Text>
-  </Text>
-);
-
 export const DayInputScene = connect(
   (state) => {
     return {
       isNumeric: true,
       isInt: true,
       inputValue: state.addBank.dobDay,
-      inputTitle: <DayTitle />,
+      inputTitle: <Title denomination="day" bankData={state.addBank} />,
       placeholder: '20',
       validateInputOnSubmit: (input) => (parseInt(input, 10) > 0 && parseInt(input, 10) < 32),
       validateFormatSuggestion: 'Input must be between 1 and 32',
@@ -67,23 +81,13 @@ export const DayInputScene = connect(
   }
 )(InputScene);
 
-const YearTitle = () => (
-  <Text>
-    <Text>What is the bank account owner's </Text>
-    <Text style={{ fontWeight: 'bold' }}>year</Text>
-    <Text> of birth?</Text>
-    <Text>{'\n\n'}MM/DD/</Text>
-    <Text style={{ fontWeight: 'bold' }}>YYYY</Text>
-  </Text>
-);
-
 export const YearInputScene = connect(
   (state) => {
     return {
       isNumeric: true,
       isInt: true,
       inputValue: state.addBank.dobYear,
-      inputTitle: <YearTitle />,
+      inputTitle: <Title denomination="year" bankData={state.addBank} />,
       placeholder: '1990',
       validateInputOnSubmit: (input) => parseInt(input, 10) > 1900,
       validateFormatSuggestion: 'Input must be >1900',
