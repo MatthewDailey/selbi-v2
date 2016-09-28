@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 
+import VisibilityWrapper from '../../components/VisibilityWrapper';
+
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
 
@@ -34,22 +36,35 @@ class ChooseVisibilityScene extends RoutableScene {
         </Text>
         <View style={styles.halfPadded}>
           <Button onPress={() => this.goNext()}>
-            <Text>Add Details</Text>
+            <Text><Icon name="list" /> Add Details</Text>
           </Button>
         </View>
+
+        <VisibilityWrapper isVisible={!this.props.hasBankAccount}>
+          <View>
+            <Text style={styles.friendlyText}>
+              You should link your bank account so that users can pay you easily through Selbi.
+            </Text>
+            <View style={styles.halfPadded}>
+              <Button onPress={() => this.goNext('addBank')}>
+                <Text><Icon name="university" /> Add Bank</Text>
+              </Button>
+            </View>
+          </View>
+        </VisibilityWrapper>
       </View>
     );
   }
 }
 
 const mapStateToProps = (state) => {
+  let visibleTo = 'your friends';
   if (state.newListing.status === 'public') {
-    return {
-      visibleTo: 'anyone nearby',
-    };
+    visibleTo = 'anyone nearby';
   }
   return {
-    visibleTo: 'your friends',
+    visibleTo,
+    hasBankAccount: state.user.hasBankAccount,
   };
 };
 
