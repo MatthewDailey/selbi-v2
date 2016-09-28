@@ -10,7 +10,6 @@ export default undefined;
 
 function Title({ boldRow }) {
   const getStyle = (rowName) => {
-    console.log(`rowname ${rowName} boldrow ${boldRow}`)
     if (boldRow === rowName) {
       return { fontWeight: 'bold' };
     }

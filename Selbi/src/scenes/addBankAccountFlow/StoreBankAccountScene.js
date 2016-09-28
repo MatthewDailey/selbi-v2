@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
-import VisibilityWrapper from '../../components/VisibilityWrapper'
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
+import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
+import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
 
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
@@ -21,7 +23,72 @@ const Button = MKButton.button()
   .withBackgroundColor(colors.white)
   .build();
 
+const PublishStatus = {
+  notStarted: 'not started',
+  storingToStripe: 'Sending account data to Stripe...',
+  storingToFirebase: 'Storing Stripe account info...',
+  success: 'Success',
+  failure: 'Failure',
+};
+
 class ChooseVisibilityScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      publishStatus: PublishStatus.notStarted,
+    }
+
+    this.createAccount = this.createAccount.bind(this);
+  }
+  createAccount() {
+    this.setState({ publicStatus: PublishStatus.storingToStripe });
+    const piiPromise = createPiiToken(this.props.bankAccount.ssn);
+    const bankPromise = createBankToken(
+      this.props.bankAccount.legalName,
+      this.props.bankAccount.routingNumber,
+      this.props.bankAccount.accountNumber);
+
+    Promise.all([piiPromise, bankPromise])
+      .then((piiAndBankTokens) => {
+        this.setState({ publicStatus: PublishStatus.storingToFirebase });
+
+        const piiTokenResponse = piiAndBankTokens[0];
+        const bankTokenResponse = piiAndBankTokens[1];
+
+        const fullName = this.props.bankAccount.legalName;
+        const firstName = fullName.substr(0, fullName.indexOf(' '));
+        const lastName = fullName.substr(fullName.indexOf(' ') + 1);
+
+        return enqueueCreateAccountRequest(
+          bankTokenResponse.id,
+          piiTokenResponse.id,
+          firstName,
+          lastName,
+          {
+            day: parseInt(this.props.bankAccount.dobDay, 10),
+            month: parseInt(this.props.bankAccount.dobMonth, 10),
+            year: parseInt(this.props.bankAccount.dobYear, 10),
+          },
+          {
+            line1: this.props.bankAccount.addressLine1,
+            line2: this.props.bankAccount.addressLine2,
+            city: this.props.bankAccount.addressCity,
+            postal_code: this.props.bankAccount.addressPostalCode,
+            state: this.props.bankAccount.addressState,
+          },
+          piiTokenResponse.client_ip,
+          bankTokenResponse.bank_account.last4,
+          bankTokenResponse.bank_account.routing_number,
+          bankTokenResponse.bank_account.bank_name);
+      })
+      .catch((error) => {
+        this.setState({ publicStatus: PublishStatus.failure });
+        console.log(error);
+        Alert.alert(error);
+      });
+  }
+
   renderWithNavBar() {
     return (
       <View style={styles.paddedContainer}>
@@ -76,7 +143,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
         <View style={styles.padded} />
 
-        <Button onPress={() => alert('unsupported')}>
+        <Button onPress={this.createAccount}>
           <Text><Icon name="university"/> Add Bank Account</Text>
         </Button>
       </View>

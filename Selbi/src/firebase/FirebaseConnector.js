@@ -755,3 +755,97 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
     userPaymentRef.on('value', handlePaymentsUpdates);
   });
 }
+
+function markUserHasMerchant() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .set(true);
+};
+
+export function enqueueCreateAccountRequest(
+  bankToken,
+  piiToken,
+  firstName,
+  lastName,
+  dob, // { day, month, year }
+  address, // { line1, line2, city, postal_code, state }
+  ip,
+  accountNumberLastFour,
+  routingNumber,
+  bankName) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  const createAccountTask = {
+    payload: {
+      external_account: bankToken,
+      email: getUser().email,
+      legal_entity: {
+        personal_id_number: piiToken,
+        first_name: firstName,
+        last_name: lastName,
+        dob,
+        address,
+      },
+      tos_acceptance: {
+        date: Math.floor(Date.now() / 1000),
+        ip,
+      },
+    },
+    uid: getUser().uid,
+    metadata: {
+      accountNumberLastFour,
+      routingNumber,
+      bankName,
+    },
+  };
+
+  console.log(createAccountTask);
+
+  return new Promise((resolve, reject) => {
+    const userPaymentRef = firebaseApp.database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('merchant');
+
+    let isFirstLoadOfMerchant = true;
+    const handleMerchantUpdates = (merchantData) => {
+      if (isFirstLoadOfMerchant) {
+        isFirstLoadOfMerchant = false;
+
+        // Wait to enqueue until we know we're listening for updates to user status.
+        firebaseApp.database()
+          .ref('createAccount/tasks')
+          .push()
+          .set(createAccountTask)
+          .catch((error) => {
+            console.log(error);
+            reject('An unknown error occured setting up merchant data.');
+            userPaymentRef.off('value', handleMerchantUpdates);
+          });
+        return;
+      }
+
+      if (merchantData.exists()) {
+        if (merchantData.val().status === 'OK') {
+          markUserHasMerchant()
+            .then(() => resolve(merchantData.val()))
+            .catch((error) => {
+              reject(error);
+              console.log(error);
+            });
+        } else {
+          reject(merchantData.val().status);
+        }
+      } else {
+        reject('An unknown error occured setting up merchant data.');
+      }
+      userPaymentRef.off('value', handleMerchantUpdates);
+    };
+    userPaymentRef.on('value', handleMerchantUpdates);
+  });
+}

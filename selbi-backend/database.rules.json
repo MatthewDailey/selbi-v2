@@ -284,10 +284,10 @@
               ".validate": false
             },
             "accountNumberLastFour": {
-              ".validate": "newData.isNumber() && newData.val() > 999 && newData.val() < 10000"
+              ".validate": "newData.isString() && newData.val().length == 4"
             },
             "routingNumber": {
-              ".validate": "newData.isNumber()"
+              ".validate": "newData.isString()"
             },
             "bankName": {
               ".validate": "newData.isString()"
