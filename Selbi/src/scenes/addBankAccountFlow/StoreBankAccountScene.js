@@ -38,12 +38,13 @@ class ChooseVisibilityScene extends RoutableScene {
 
     this.state = {
       publishStatus: PublishStatus.notStarted,
-    }
+    };
 
     this.createAccount = this.createAccount.bind(this);
   }
   createAccount() {
-    this.setState({ publicStatus: PublishStatus.storingToStripe });
+    this.setState({ publishStatus: PublishStatus.storingToStripe });
+
     const piiPromise = createPiiToken(this.props.bankAccount.ssn);
     const bankPromise = createBankToken(
       this.props.bankAccount.legalName,
@@ -52,7 +53,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
     Promise.all([piiPromise, bankPromise])
       .then((piiAndBankTokens) => {
-        this.setState({ publicStatus: PublishStatus.storingToFirebase });
+        this.setState({ publishStatus: PublishStatus.storingToFirebase });
 
         const piiTokenResponse = piiAndBankTokens[0];
         const bankTokenResponse = piiAndBankTokens[1];
@@ -61,30 +62,42 @@ class ChooseVisibilityScene extends RoutableScene {
         const firstName = fullName.substr(0, fullName.indexOf(' '));
         const lastName = fullName.substr(fullName.indexOf(' ') + 1);
 
+        const address = {
+          line1: this.props.bankAccount.addressLine1,
+          city: this.props.bankAccount.addressCity,
+          postal_code: this.props.bankAccount.addressPostalCode,
+          state: this.props.bankAccount.addressState,
+        };
+        if (this.props.bankAccount.addressLine2) {
+          address.line2 = this.props.bankAccount.addressLine2;
+        }
+
+        const dob = {
+          day: parseInt(this.props.bankAccount.dobDay, 10),
+          month: parseInt(this.props.bankAccount.dobMonth, 10),
+          year: parseInt(this.props.bankAccount.dobYear, 10),
+        };
+
         return enqueueCreateAccountRequest(
           bankTokenResponse.id,
           piiTokenResponse.id,
           firstName,
           lastName,
-          {
-            day: parseInt(this.props.bankAccount.dobDay, 10),
-            month: parseInt(this.props.bankAccount.dobMonth, 10),
-            year: parseInt(this.props.bankAccount.dobYear, 10),
-          },
-          {
-            line1: this.props.bankAccount.addressLine1,
-            line2: this.props.bankAccount.addressLine2,
-            city: this.props.bankAccount.addressCity,
-            postal_code: this.props.bankAccount.addressPostalCode,
-            state: this.props.bankAccount.addressState,
-          },
+          dob,
+          address,
           piiTokenResponse.client_ip,
           bankTokenResponse.bank_account.last4,
           bankTokenResponse.bank_account.routing_number,
           bankTokenResponse.bank_account.bank_name);
       })
+      .then((result) => {
+        this.setState({ publishStatus: PublishStatus.success });
+        console.log(result);
+        Alert.alert('Successfully added the bank account!');
+        this.goHome();
+      })
       .catch((error) => {
-        this.setState({ publicStatus: PublishStatus.failure });
+        this.setState({ publishStatus: PublishStatus.failure });
         console.log(error);
         Alert.alert(error);
       });

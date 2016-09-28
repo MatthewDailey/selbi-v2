@@ -765,6 +765,7 @@ function markUserHasMerchant() {
     .set(true);
 };
 
+
 export function enqueueCreateAccountRequest(
   bankToken,
   piiToken,
@@ -804,48 +805,56 @@ export function enqueueCreateAccountRequest(
     },
   };
 
-  console.log(createAccountTask);
+  const userMerchantRef = firebaseApp.database()
+    .ref('users')
+    .child(getUser().uid)
+    .child('merchant');
 
-  return new Promise((resolve, reject) => {
-    const userPaymentRef = firebaseApp.database()
-      .ref('users')
-      .child(getUser().uid)
-      .child('merchant');
+  const clearUserPublicBankAccountData = () => firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .remove();
 
-    let isFirstLoadOfMerchant = true;
-    const handleMerchantUpdates = (merchantData) => {
-      if (isFirstLoadOfMerchant) {
-        isFirstLoadOfMerchant = false;
+  // Remove the merchant data.
+  return userMerchantRef
+    .remove()
+    .then(clearUserPublicBankAccountData)
+    .then(() => new Promise((resolve, reject) => {
+      let isFirstLoadOfMerchant = true;
+      const handleMerchantUpdates = (merchantData) => {
+        if (isFirstLoadOfMerchant) {
+          isFirstLoadOfMerchant = false;
 
-        // Wait to enqueue until we know we're listening for updates to user status.
-        firebaseApp.database()
-          .ref('createAccount/tasks')
-          .push()
-          .set(createAccountTask)
-          .catch((error) => {
-            console.log(error);
-            reject('An unknown error occured setting up merchant data.');
-            userPaymentRef.off('value', handleMerchantUpdates);
-          });
-        return;
-      }
-
-      if (merchantData.exists()) {
-        if (merchantData.val().status === 'OK') {
-          markUserHasMerchant()
-            .then(() => resolve(merchantData.val()))
+          // Wait to enqueue until we know we're listening for updates to user status.
+          firebaseApp.database()
+            .ref('createAccount/tasks')
+            .push()
+            .set(createAccountTask)
             .catch((error) => {
-              reject(error);
               console.log(error);
+              reject('An unknown error occured setting up merchant data.');
+              userMerchantRef.off('value', handleMerchantUpdates);
             });
-        } else {
-          reject(merchantData.val().status);
+          return;
         }
-      } else {
-        reject('An unknown error occured setting up merchant data.');
-      }
-      userPaymentRef.off('value', handleMerchantUpdates);
-    };
-    userPaymentRef.on('value', handleMerchantUpdates);
-  });
+
+        if (merchantData.exists()) {
+          if (merchantData.val().status === 'OK') {
+            markUserHasMerchant()
+              .then(() => resolve(merchantData.val()))
+              .catch((error) => {
+                reject(error);
+                console.log(error);
+              });
+          } else {
+            reject(merchantData.val().status);
+          }
+        } else {
+          reject('An unknown error occured setting up merchant data.');
+        }
+        userMerchantRef.off('value', handleMerchantUpdates);
+      };
+      userMerchantRef.on('value', handleMerchantUpdates);
+    }));
 }

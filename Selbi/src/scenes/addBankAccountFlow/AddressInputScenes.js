@@ -33,7 +33,7 @@ function Title({ boldRow, bankData }) {
         {bankData.addressState ? bankData.addressState : 'State'}{'\n'}
       </Text>
       <Text style={getStyle('postal')}>
-        {bankData.addressPostalCode ? bankData.addressPostalCode : 'Postal Code'}{'\n'}
+        {bankData.addressPostalCode ? bankData.addressPostalCode : 'Postal Code'}
       </Text>
     </Text>
   );
