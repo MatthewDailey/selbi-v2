@@ -251,7 +251,7 @@ class CreatePurchaseHandler {
           .then(markChargesSuccessful)
           .catch((error) => {
             const errorMessage = `ERROR processing payment. ${error}`;
-            console.log(errorMessage)
+            console.log(errorMessage);
             rejectPurchaseTask(errorMessage);
             const updateBuyerOnFailure = buyerPurchaseRef.child('status').set(errorMessage);
             const updateSellerOnFailure = sellerSaleRef.child('status').set(errorMessage);

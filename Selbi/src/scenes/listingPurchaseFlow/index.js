@@ -10,6 +10,7 @@ import ListingDetailScene from '../ListingDetailScene';
 
 import ReceiptScene from './ReceiptScene';
 import CreditCardInputScene from './CreditCardInputScene';
+import CompletedPurchaseScene from './CompletedPurchaseScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
@@ -91,6 +92,17 @@ const creditCardInputScene = {
     />),
 };
 
+const completedPurchaseScene = {
+  id: 'completedPurchaseScene',
+  renderContent: withNavigatorProps(
+    <CompletedPurchaseScene
+      title="Purchase Complete"
+      leftIs="back"
+      rightIs="home"
+    />
+  ),
+}
+
 
 const routeLinks = {};
 
@@ -109,6 +121,10 @@ routeLinks[receiptScene.id] = {
   },
   chat: {
     getRoute: () => chatFromReceiptScene,
+  },
+  next: {
+    title: '',
+    getRoute: () => completedPurchaseScene,
   },
 };
 
@@ -148,6 +164,12 @@ routeLinks[buySignInScene.id] = {
     getRoute: () => receiptScene,
   },
 };
+
+routeLinks[completedPurchaseScene.id] = {
+  back: {
+    getRoute: () => listingDetailScene,
+  },
+}
 
 module.exports.routesLinks = routeLinks;
 module.exports.firstScene = listingDetailScene;

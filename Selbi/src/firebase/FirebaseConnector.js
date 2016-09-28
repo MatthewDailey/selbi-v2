@@ -864,6 +864,33 @@ export function purchaseListing(listingId) {
     return Promise.reject('Must sign in first.');
   }
 
+  const awaitPurchaseResult = () => new Promise((resolve, reject) => {
+    const purchaseStatusRef = firebaseApp
+      .database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('purchases')
+      .child(listingId)
+      .child('status');
+    console.log('awaiting purchase  ')
+
+    const handlePurchaseUpdate = (statusSnapshot) => {
+      if (statusSnapshot.exists()) {
+        const status = statusSnapshot.val();
+        if (status === 'in-progress') {
+          return;
+        } else if (status === 'success') {
+          resolve();
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        } else {
+          reject(status);
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        }
+      }
+    };
+    purchaseStatusRef.on('value', handlePurchaseUpdate);
+  });
+
   return firebaseApp
     .database()
     .ref('createPurchase/tasks')
@@ -871,5 +898,6 @@ export function purchaseListing(listingId) {
     .set({
       listingId,
       buyerUid: getUser().uid,
-    });
+    })
+    .then(awaitPurchaseResult);
 }

@@ -1,14 +1,12 @@
 import React from 'react';
-import { ScrollView, View, Text, InteractionManager, Image, Alert } from 'react-native';
+import { ScrollView, View, Text, InteractionManager, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { loadImage, loadUserPublicData, purchaseListing } from '../../firebase/FirebaseConnector';
+import { loadImage, loadUserPublicData } from '../../firebase/FirebaseConnector';
 
-import { setListingDetailsSellerData } from '../../reducers/ListingDetailReducer';
 import { storeImage } from '../../reducers/ImagesReducer';
 
 import LoadingListingComponent from '../../components/LoadingListingComponent';
@@ -18,59 +16,13 @@ import styles from '../../../styles';
 import colors from '../../../colors';
 
 
-const FlatButton = MKButton.flatButton()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
-
-const Button = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
-
 const GreenCheck = () => <Icon name="check-square-o" size={20} color="green" />;
-const EmptyCheck = () => <Icon name="square-o" size={20} />;
 
-function CheckBox({ checked, title, takeAction, actionText }) {
-  if (checked) {
-    return (
-      <Text style={styles.friendlyTextLeft}>
-        <GreenCheck /> {title}
-      </Text>
-    );
-  }
-  return (
-    <View>
-      <Text style={styles.friendlyTextLeft}>
-        <EmptyCheck /> {title}
-      </Text>
-      <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPress={takeAction}>
-          <Text style={{ fontSize: 16 }}>
-            {actionText} <Icon name="arrow-right" />
-          </Text>
-        </FlatButton>
-      </View>
-    </View>
-  );
-}
-CheckBox.propTypes = {
-  checked: React.PropTypes.bool,
-  title: React.PropTypes.string.isRequired,
-  takeAction: React.PropTypes.func.isRequired,
-  actionText: React.PropTypes.string.isRequired,
-};
-
-class ListingReceiptScene extends RoutableScene {
+class CompletedPurchaseScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
     this.state = {
       renderPlaceholderOnly: true,
-      purchasing: false,
     };
   }
 
@@ -123,48 +75,19 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded} />
 
           <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.sellerData.hasBankAccount}
-              title="Seller accepts Pay with Selbi"
-              takeAction={() => this.goNext('chat')}
-              actionText="RequestSeller accept Pay with Selbi"
-            />
-          </View>
-          <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.hasPaymentMethod}
-              title="Payment method set up"
-              takeAction={() => this.goNext('addPayment')}
-              actionText="Add a credit card"
-            />
+            <Text style={styles.friendlyTextLeft}>
+              <GreenCheck /> Purchase Complete
+            </Text>
           </View>
 
-          <View style={styles.halfPadded} />
-
           <View style={styles.halfPadded}>
-            <Button
-              onPress={() => {
-                this.setState({ purchasing: true }, () => {
-                  purchaseListing(this.props.listingKey)
-                    .then(() => {
-                      this.setState({ purchasing: false });
-                      this.goNext();
-                    })
-                    .catch((error) => {
-                      Alert.alert(error);
-                      console.log(error);
-                      this.setState({ purchasing: false });
-                    });
-                });
-              }}
-            >
-              <Text>Pay with Selbi</Text>
-            </Button>
+            <Text style={styles.friendlyTextLeft}>
+              You will receive a receipt in your email shortly.
+            </Text>
           </View>
 
           <View style={styles.padded} />
         </ScrollView>
-        <SpinnerOverlay isVisible={this.state.purchasing} message="Completing payment..." />
       </View>
     );
   }
@@ -186,7 +109,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
   };
 };
@@ -194,4 +116,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ListingReceiptScene);
+)(CompletedPurchaseScene);
