@@ -115,6 +115,7 @@ function insertUserInDatabase(userDisplayName) {
     .ref('/users')
     .child(getUser().uid)
     .set({
+      email: getUser().email,
       userAgreementAccepted: false,
     });
 
@@ -763,8 +764,7 @@ function markUserHasMerchant() {
     .child(getUser().uid)
     .child('hasBankAccount')
     .set(true);
-};
-
+}
 
 export function enqueueCreateAccountRequest(
   bankToken,
@@ -857,4 +857,19 @@ export function enqueueCreateAccountRequest(
       };
       userMerchantRef.on('value', handleMerchantUpdates);
     }));
+}
+
+export function purchaseListing(listingId) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  return firebaseApp
+    .database()
+    .ref('createPurchase/tasks')
+    .push()
+    .set({
+      listingId,
+      buyerUid: getUser().uid,
+    });
 }

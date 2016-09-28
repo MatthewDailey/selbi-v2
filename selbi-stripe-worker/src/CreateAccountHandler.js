@@ -65,12 +65,12 @@ function validateData(data) {
 class CreateCustomerHandler {
   constructor(firebaseDatabase, stripeAccountsApi) {
     this.firebaseDb = firebaseDatabase;
-    this.stripeAccountsApi = stripeAccountsApi;
+    this.stripe = stripeAccountsApi;
   }
 
   getTaskHandler() {
     const firebaseDb = this.firebaseDb;
-    const stripeAccountsApi = this.stripeAccountsApi;
+    const stripeAccountsApi = this.stripe;
     return (data, progress, resolveCreateAccountTask, rejectCreateAccountTask) => {
       console.log(`Handling createAccout uid:${data.uid}`);
 
