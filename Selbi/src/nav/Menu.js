@@ -25,7 +25,8 @@ function Divider() {
 const iconSize = flattenStyle(styles.menuText).fontSize;
 const iconStyle = {
   ...flattenStyle(styles.menuText),
-  width: 30,
+  textAlign: 'center',
+  width: 40,
 };
 const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16 };
 const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14 };
@@ -87,18 +88,28 @@ class Menu extends Component {
           }}
           underlayColor={colors.secondary}
         >
-          <Text style={styles.menuText}>
-            <Icon name="sign-out" size={iconSize} /> Sign out
-          </Text>
+          <View style={styles.row}>
+            <Text style={iconStyle}>
+              <Icon name="sign-out" size={iconSize} />
+            </Text>
+            <Text style={styles.menuText}>
+              Sign out
+            </Text>
+          </View>
         </TouchableHighlight>
       </View>;
 
     const getSignedOutFooter = () =>
       <View style={{ flex: 1, justifyContent: 'flex-end' }} >
         <TouchableHighlight onPress={() => signInOrRegister()} underlayColor={colors.secondary}>
-          <Text style={styles.menuText}>
-            <Icon name="sign-in" size={iconSize} /> Sign in
-          </Text>
+          <View style={styles.row}>
+            <Text style={iconStyle}>
+              <Icon name="sign-in" size={iconSize} />
+            </Text>
+            <Text style={styles.menuText}>
+               Sign in
+            </Text>
+          </View>
         </TouchableHighlight>
       </View>;
 
