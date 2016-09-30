@@ -51,7 +51,7 @@ export default class ListingsComponent extends Component {
       );
     }
 
-    const RefreshButton = MKButton.button()
+    const RefreshButton = MKButton.plainFab()
       .withStyle({
         borderRadius: 20,
         margin: 20,
