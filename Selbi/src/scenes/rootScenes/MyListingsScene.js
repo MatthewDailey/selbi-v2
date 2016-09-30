@@ -44,14 +44,14 @@ class MyListingsScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <View tabLabel="Anyone Nearby" style={styles.fullScreenContainer}>
+        <View tabLabel="Local" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.public}
             emptyMessage="You have no public listings."
             openDetailScene={() => this.goNext('details')}
           />
         </View>
-        <View tabLabel="Friends" style={styles.fullScreenContainer}>
+        <View tabLabel="Friends Only" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.private}
             emptyMessage="You have no private listings."

@@ -78,7 +78,9 @@ class DetailBottomButtons extends Component {
   }
 
   render() {
-    if (this.props.isSeller) {
+    const isSold = this.props.listingData.status === 'sold';
+
+    if (this.props.isSeller && !isSold) {
       const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
       delete bottomOverlayStyleMinusPadding.padding;
       return (
@@ -156,19 +158,25 @@ class DetailBottomButtons extends Component {
                 />
               </View>
               <View style={styles.quarterPadded} />
+              <VisibilityWrapper isVisible={isSold}>
+                <Text style={{ flex: 1, fontSize: 20 }}>
+                  SOLD - ${this.props.listingData.price}
+                </Text>
+              </VisibilityWrapper>
             </View>
           </TouchableHighlight>
-          <View style={{ flexDirection: 'row' }}>
-            <ChatButton
-              isVisible={this.props.isChatButtonVisible}
-              onPress={this.props.openChat}
-            />
-            <BuyButton
-              isSold={this.props.listingData.status === 'sold'}
-              price={this.props.listingData.price}
-              onPress={this.props.openBuy}
-            />
-          </View>
+          <VisibilityWrapper isVisible={!isSold}>
+            <View style={{ flexDirection: 'row' }}>
+              <ChatButton
+                isVisible={this.props.isChatButtonVisible}
+                onPress={this.props.openChat}
+              />
+              <BuyButton
+                price={this.props.listingData.price}
+                onPress={this.props.openBuy}
+              />
+            </View>
+          </VisibilityWrapper>
         </View>
       </View>
     );
