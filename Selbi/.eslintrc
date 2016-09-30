@@ -9,5 +9,10 @@
 	"globals": {
 		"navigator": true,
 		"fetch": true
-	}
+	},
+	"parserOptions": {
+		"ecmaFeatures": {
+			"experimentalObjectRestSpread": true
+		}
+	},
 }
