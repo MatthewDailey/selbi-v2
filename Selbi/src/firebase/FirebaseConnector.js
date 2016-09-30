@@ -901,3 +901,28 @@ export function purchaseListing(listingId) {
     })
     .then(awaitPurchaseResult);
 }
+
+/*
+ * listed for updates on a specific listing.
+ *
+ * @returns a function which will detach the listener.
+ */
+export function listenToListing(listingId, listener) {
+  const listenForValueIgnoreEmpty = (listingSnapshot) => {
+    if (listingSnapshot && listingSnapshot.exists()) {
+      listener(listingSnapshot.val());
+    }
+  };
+
+  firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .on('value', listenForValueIgnoreEmpty);
+
+  return () => firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .off('value', listenForValueIgnoreEmpty);
+}

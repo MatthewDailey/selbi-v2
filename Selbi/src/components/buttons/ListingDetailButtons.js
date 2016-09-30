@@ -47,6 +47,13 @@ const RightButton = MKButton.button()
   .withBackgroundColor(colors.primary)
   .build();
 
+const DisabledButton = MKButton.flatButton()
+  .withStyle({
+    flex: 1,
+    marginLeft: buttonMargin / 2,
+  })
+  .build();
+
 export function ChatButton({ isVisible, onPress = unsupported }) {
   if (isVisible) {
     return (
@@ -64,7 +71,16 @@ ChatButton.propTypes = {
   onPress: React.PropTypes.func,
 };
 
-export function BuyButton({ price, onPress = unsupported }) {
+export function BuyButton({ price, onPress = unsupported, isSold }) {
+  if (isSold) {
+    return (
+      <DisabledButton>
+        <Text style={buttonStyle}>
+          SOLD - ${price}
+        </Text>
+      </DisabledButton>
+    );
+  }
   return (
     <RightButton
       onPress={() => {
@@ -84,6 +100,7 @@ export function BuyButton({ price, onPress = unsupported }) {
 BuyButton.propTypes = {
   price: React.PropTypes.number.isRequired,
   onPress: React.PropTypes.func,
+  isSold: React.PropTypes.bool,
 };
 
 export default undefined;

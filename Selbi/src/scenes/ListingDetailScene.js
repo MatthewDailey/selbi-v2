@@ -5,11 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing, loadUserPublicData }
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing }
   from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
-import { setListingDistance, setListingDetailsSellerData } from '../reducers/ListingDetailReducer';
+import { setListingDistance, setListingDetailsSellerData, setListingData }
+  from '../reducers/ListingDetailReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles, { paddingSize } from '../../styles';
@@ -163,6 +164,7 @@ class DetailBottomButtons extends Component {
               onPress={this.props.openChat}
             />
             <BuyButton
+              isSold={this.props.listingData.status === 'sold'}
               price={this.props.listingData.price}
               onPress={this.props.openBuy}
             />
@@ -205,6 +207,25 @@ class ListingDetailScene extends RoutableScene {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });
     });
+
+    this.unbindListingListener = listenToListing(
+      this.props.listingKey,
+      this.props.setListingDetailsData)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.unbindListingListener && nextProps.listingKey !== this.props.listingKey) {
+      this.unbindListingListener();
+      this.unbindListingListener = listenToListing(
+        this.props.listingKey,
+        this.props.setListingDetailsData);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unbindListingListener) {
+      this.unbindListingListener();
+    }
   }
 
   onGoNext(routeName) {
@@ -334,6 +355,7 @@ const mapDispatchToProps = (dispatch) => {
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
+    setListingDetailsData: (listingData) => dispatch(setListingData(listingData)),
   };
 };
 
