@@ -10,6 +10,10 @@ export default StyleSheet.create({
   flex: {
     flex: 1,
   },
+  row: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   container: {
     flex: 1,
     backgroundColor: colors.secondary,
