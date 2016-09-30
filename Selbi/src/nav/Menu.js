@@ -31,6 +31,17 @@ const iconStyle = {
 const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16 };
 const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14 };
 
+function MenuItem({ onPress, icon, title }) {
+  return (
+    <TouchableHighlight onPress={onPress} underlayColor={colors.secondary}>
+      <View style={styles.row}>
+        <Text style={iconStyle}>{icon}</Text>
+        <Text style={styles.menuText}>{title}</Text>
+      </View>
+    </TouchableHighlight>
+  );
+}
+
 class Menu extends Component {
   render() {
     const ifSignedIn = (sceneFunction) =>
@@ -68,7 +79,7 @@ class Menu extends Component {
         <View style={styles.paddedCenterContainerWhite}>
           <Text style={menuHeaderStyle}>Not signed in.</Text>
           <View style={styles.halfPadded} />
-          <Text style={menuHeaderStyle}>Sign in or register.</Text>
+          <Text style={menuSubheaderStyle}>Sign in or register.</Text>
         </View>
       </TouchableHighlight>
 
@@ -81,36 +92,23 @@ class Menu extends Component {
 
     const getSignedInFooter = () =>
       <View style={{ flex: 1, justifyContent: 'flex-end' }} >
-        <TouchableHighlight
+        <MenuItem
           onPress={() => {
             this.props.signOut();
             setSceneAndCloseMenu(this.props.localListingScene);
           }}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="sign-out" size={iconSize} />
-            </Text>
-            <Text style={styles.menuText}>
-              Sign out
-            </Text>
-          </View>
-        </TouchableHighlight>
+          icon={<Icon name="sign-out" size={iconSize} />}
+          title="Sign out"
+        />
       </View>;
 
     const getSignedOutFooter = () =>
       <View style={{ flex: 1, justifyContent: 'flex-end' }} >
-        <TouchableHighlight onPress={() => signInOrRegister()} underlayColor={colors.secondary}>
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="sign-in" size={iconSize} />
-            </Text>
-            <Text style={styles.menuText}>
-               Sign in
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <MenuItem
+          onPress={() => signInOrRegister()}
+          icon={<Icon name="sign-in" size={iconSize} />}
+          title="Sign in"
+        />
       </View>;
 
     const getFooter = () => {
@@ -128,97 +126,53 @@ class Menu extends Component {
 
         <Divider />
 
-        <TouchableHighlight
+        <MenuItem
           onPress={() => setSceneAndCloseMenu(this.props.localListingScene)}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="map-marker" size={iconSize} />
-            </Text>
-            <Text style={styles.menuText}>
-               Local Listings
-            </Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
+          icon={<Icon name="map-marker" size={iconSize} />}
+          title="Local Listings"
+        />
+        <MenuItem
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene)}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="users" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>Friends' Listings</Text>
-          </View>
-        </TouchableHighlight>
+          icon={<Icon name="users" size={iconSize} />}
+          title="Friends' Listings"
+        />
 
         <Divider />
 
-        <TouchableHighlight
+        <MenuItem
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.myListingScene)}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="gift" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>
-               My Listings
-            </Text>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight
+          icon={<Icon name="gift" size={iconSize} />}
+          title="My Listings"
+        />
+        <MenuItem
           onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.chatListScene)}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="commenting-o" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>Chats</Text>
-          </View>
-        </TouchableHighlight>
+          icon={<Icon name="commenting-o" size={iconSize} />}
+          title="Chats"
+        />
 
         <Divider />
 
-        <TouchableHighlight
+        <MenuItem
           onPress={() => ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene)}
-          underlayColor={colors.secondary}
-        >
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="user-plus" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>Follow a Friend</Text>
-          </View>
-        </TouchableHighlight>
+          icon={<Icon name="user-plus" size={iconSize} />}
+          title="Follow a Friend"
+        />
 
         <Divider />
 
-        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="bell-o" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>
-               Notifications
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <MenuItem
+          onPress={ifSignedIn(notImplemented)}
+          icon={<Icon name="bell-o" size={iconSize} />}
+          title="Notifications"
+        />
 
         <Divider />
 
-        <TouchableHighlight onPress={ifSignedIn(notImplemented)} underlayColor={colors.secondary}>
-          <View style={styles.row}>
-            <Text style={iconStyle}>
-              <Icon name="gear" size={iconSize} />
-            </Text>
-            <Text style={signInMenuStyle}>
-               Settings
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <MenuItem
+          onPress={ifSignedIn(notImplemented)}
+          icon={<Icon name="gear" size={iconSize} />}
+          title="Settings"
+        />
 
         {getFooter()}
       </View>
