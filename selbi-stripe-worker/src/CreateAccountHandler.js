@@ -105,6 +105,7 @@ class CreateCustomerHandler {
         });
 
       const updateUserMerchantStatusAndReject = (error) => {
+        console.log(error)
         rejectCreateAccountTask(error);
         return userRef()
           .child('merchant')
