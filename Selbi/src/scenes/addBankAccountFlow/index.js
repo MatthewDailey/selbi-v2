@@ -238,4 +238,4 @@ routeLinks[ssnInput.id] = {
 };
 
 module.exports.routeLinks = routeLinks;
-module.exports.firstScene = addressLine1Input;
+module.exports.firstScene = legalNameInput;

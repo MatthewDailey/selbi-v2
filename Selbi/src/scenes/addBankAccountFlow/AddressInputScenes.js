@@ -20,30 +20,28 @@ function Title({ boldRow, bankData }) {
     return titleStyle;
   };
   return (
-    <View style={styles.row}>
-      <View style={{ flex: 2 }}>
-        <Text style={{ fontSize: 18, fontWeight: '400' }}>What is the bank account owner's address?</Text>
-      </View>
+    <View>
+      <Text style={{ fontSize: 16, fontWeight: '300' }}>What is the bank account owner's address?</Text>
       <View style={styles.quarterPadded} />
-      <View style={{ flex: 3 }}>
-        <Text style={getStyle('line1')}>
-          {bankData.addressLine1 ? bankData.addressLine1 : 'Line 1'}
+      <Text style={getStyle('line1')}>
+        {bankData.addressLine1 ? bankData.addressLine1 : 'Line 1'}
+      </Text>
+      <Text style={getStyle('line2')}>
+        {bankData.addressLine2 ? bankData.addressLine2 : 'Line 2'}
+      </Text>
+      <View style={styles.row}>
+        <Text style={getStyle('city')}>
+          {bankData.addressCity ? bankData.addressCity : 'City'}
         </Text>
-        <Text style={getStyle('line2')}>
-          {bankData.addressLine2 ? bankData.addressLine2 : 'Line 2'}
+        <Text style={titleStyle}>{', '}</Text>
+        <Text style={getStyle('state')}>
+          {bankData.addressState ? bankData.addressState : 'State'}
         </Text>
-        <View style={styles.row}>
-          <Text style={getStyle('city')}>
-            {bankData.addressCity ? bankData.addressCity : 'City'}
-          </Text>
-          <Text style={titleStyle}>{', '}</Text>
-          <Text style={getStyle('state')}>
-            {bankData.addressState ? bankData.addressState : 'State'}
-          </Text>
-        </View>
+        <Text style={titleStyle}>{' ('}</Text>
         <Text style={getStyle('postal')}>
           {bankData.addressPostalCode ? bankData.addressPostalCode : 'Postal Code'}
         </Text>
+        <Text style={titleStyle}>{')'}</Text>
       </View>
     </View>
   );

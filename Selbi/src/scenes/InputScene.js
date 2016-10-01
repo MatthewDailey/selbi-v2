@@ -3,7 +3,7 @@ import { InteractionManager, View, Text, Alert } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
 import { isStringFloat, isStringInt } from '../utils';
-import styles from '../../styles';
+import styles, { paddingSize } from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 
 export default class InputScene extends RoutableScene {
@@ -78,7 +78,7 @@ export default class InputScene extends RoutableScene {
           <View style={styles.padded}>
             <InputTitle />
           </View>
-          <View style={styles.padded}>
+          <View style={{ paddingLeft: paddingSize, paddingRight: paddingSize }}>
             <MKTextField
               autoFocus
               floatingLabelEnabled={this.props.floatingLabel}

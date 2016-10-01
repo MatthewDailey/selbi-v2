@@ -266,7 +266,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={localListingScene}
+          initialRoute={AddBankFlow.firstScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
         />
