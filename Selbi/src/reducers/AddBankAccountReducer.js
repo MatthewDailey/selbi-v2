@@ -4,9 +4,7 @@ import { getActionType } from './ActionUtils';
 const BA_CLEAR = 'clear-bank-account-entry';
 const BA_SET_LEGAL_NAME = 'bank-account-set-legal-name';
 
-const BA_SET_DOB_MONTH = 'bank-account-set-dob-month';
-const BA_SET_DOB_DAY = 'bank-account-set-dob-day';
-const BA_SET_DOB_YEAR = 'bank-account-set-dob-year';
+const BA_SET_DOB = "bank-account-set-dob";
 
 const BA_SET_ADDRESS_LINE1 = 'bank-account-set-address-line1';
 const BA_SET_ADDRESS_LINE2 = 'bank-account-set-address-line2';
@@ -21,9 +19,9 @@ const BA_SET_SSN = 'bank-account-set-ssn';
 
 class AddBankAccountData extends Immutable.Record({
   legalName: undefined,
-  dobDay: undefined,
-  dobMonth: undefined,
-  dobYear: undefined,
+  dobDay: 1,
+  dobMonth: 1,
+  dobYear: 1990,
   addressLine1: undefined,
   addressLine2: undefined,
   addressCity: undefined,
@@ -42,12 +40,12 @@ export default function (previousState = new AddBankAccountData(), action) {
     case BA_SET_LEGAL_NAME:
       return previousState.merge({ legalName: action.legalName });
 
-    case BA_SET_DOB_MONTH:
-      return previousState.merge({ dobMonth: action.month });
-    case BA_SET_DOB_DAY:
-      return previousState.merge({ dobDay: action.day });
-    case BA_SET_DOB_YEAR:
-      return previousState.merge({ dobYear: action.year });
+    case BA_SET_DOB:
+      return previousState.merge({
+        dobMonth: action.dob.month,
+        dobDay: action.dob.day,
+        dobYear: action.dob.year,
+      });
 
     case BA_SET_ADDRESS_LINE1:
       return previousState.merge({ addressLine1: action.line });
@@ -86,24 +84,10 @@ export function setLegalName(legalName) {
   };
 }
 
-export function setDobDay(day) {
+export function setDob(dob) {
   return {
-    type: BA_SET_DOB_DAY,
-    day,
-  };
-}
-
-export function setDobMonth(month) {
-  return {
-    type: BA_SET_DOB_MONTH,
-    month,
-  };
-}
-
-export function setDobYear(year) {
-  return {
-    type: BA_SET_DOB_YEAR,
-    year,
+    type: BA_SET_DOB,
+    dob,
   };
 }
 
