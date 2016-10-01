@@ -1,41 +1,51 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 
 import InputScene from '../InputScene';
 import { setAddressLine1, setAddressLine2, setAddressCity, setAddressPostal, setAddressState }
   from '../../reducers/AddBankAccountReducer';
 
+import styles from '../../../styles';
 
 export default undefined;
+
+const titleStyle = { fontSize: 18, fontWeight: '300' };
 
 function Title({ boldRow, bankData }) {
   const getStyle = (rowName) => {
     if (boldRow === rowName) {
-      return { fontWeight: 'bold' };
+      return { fontSize: titleStyle.fontSize, fontWeight: 'bold' };
     }
-    return {};
+    return titleStyle;
   };
   return (
-    <Text>
-      <Text>What is the bank account owner's address?</Text>
-      <Text>{'\n\n'}</Text>
-      <Text style={getStyle('line1')}>
-        {bankData.addressLine1 ? bankData.addressLine1 : 'Line 1'}{'\n'}
-      </Text>
-      <Text style={getStyle('line2')}>
-        {bankData.addressLine2 ? bankData.addressLine2 : 'Line 2'}{'\n'}
-      </Text>
-      <Text style={getStyle('city')}>
-        {bankData.addressCity ? bankData.addressCity : 'City'}{'\n'}
-      </Text>
-      <Text style={getStyle('state')}>
-        {bankData.addressState ? bankData.addressState : 'State'}{'\n'}
-      </Text>
-      <Text style={getStyle('postal')}>
-        {bankData.addressPostalCode ? bankData.addressPostalCode : 'Postal Code'}
-      </Text>
-    </Text>
+    <View style={styles.row}>
+      <View style={{ flex: 2 }}>
+        <Text style={{ fontSize: 18, fontWeight: '400' }}>What is the bank account owner's address?</Text>
+      </View>
+      <View style={styles.quarterPadded} />
+      <View style={{ flex: 3 }}>
+        <Text style={getStyle('line1')}>
+          {bankData.addressLine1 ? bankData.addressLine1 : 'Line 1'}
+        </Text>
+        <Text style={getStyle('line2')}>
+          {bankData.addressLine2 ? bankData.addressLine2 : 'Line 2'}
+        </Text>
+        <View style={styles.row}>
+          <Text style={getStyle('city')}>
+            {bankData.addressCity ? bankData.addressCity : 'City'}
+          </Text>
+          <Text style={titleStyle}>{', '}</Text>
+          <Text style={getStyle('state')}>
+            {bankData.addressState ? bankData.addressState : 'State'}
+          </Text>
+        </View>
+        <Text style={getStyle('postal')}>
+          {bankData.addressPostalCode ? bankData.addressPostalCode : 'Postal Code'}
+        </Text>
+      </View>
+    </View>
   );
 }
 Title.propTypes = {

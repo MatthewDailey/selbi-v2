@@ -65,11 +65,18 @@ export default class InputScene extends RoutableScene {
       );
     }
 
+    const InputTitle = () => {
+      if (React.isValidElement(this.props.inputTitle)) {
+        return <View>{this.props.inputTitle}</View>;
+      }
+      return <Text style={styles.friendlyTextLeft}>{this.props.inputTitle}</Text>;
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.padded}>
           <View style={styles.padded}>
-            <Text style={styles.friendlyTextLeft}>{this.props.inputTitle}</Text>
+            <InputTitle />
           </View>
           <View style={styles.padded}>
             <MKTextField
