@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text } from 'react-native';
+import { AppRegistry, Text, Linking } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
@@ -256,11 +256,27 @@ class NavApp extends Component {
       },
       5000);
     }
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        console.log('Initial url is: ', url);
+      } else {
+        console.log('No initial url.');
+      }
+    }).catch(err => console.error('An error occurred', err));
+
+    Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
     clearInterval(this.refreshCode);
+    Linking.removeEventListener('url', this._handleOpenURL);
   }
+
+  _handleOpenURL(event) {
+    console.log('Opened url: ', event.url);
+  }
+
 
   render() {
     return (

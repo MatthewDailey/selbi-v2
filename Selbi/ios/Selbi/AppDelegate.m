@@ -9,6 +9,8 @@
 
 #import "AppDelegate.h"
 
+#import "RCTLinkingManager.h"
+
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
 
@@ -42,9 +44,45 @@
   [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
   [[UIApplication sharedApplication] registerForRemoteNotifications];
   
+  // Set deepLinkURLScheme to the custom URL scheme you defined in your
+  // Xcode project.
+  [FIROptions defaultOptions].deepLinkURLScheme = @"io.selbi.app";
+  
   [FIRApp configure];
 
   return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+  
+  FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
+  
+  if (dynamicLink) {
+    // Handle the deep link. For example, show the deep-linked content or
+    // apply a promotional offer to the user's account.
+    return [RCTLinkingManager application:application openURL:dynamicLink.url
+                        sourceApplication:sourceApplication annotation:annotation];
+  }
+  
+  return NO;
+}
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<NSString *, id> *)options {
+  return [self application:app openURL:url sourceApplication:nil annotation:@{}];
+}
+
+// Only if your app is using [Universal Links](https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/AppSearch/UniversalLinks.html).
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
+{
+  return [RCTLinkingManager application:application
+                   continueUserActivity:userActivity
+                     restorationHandler:restorationHandler];
 }
 
 
