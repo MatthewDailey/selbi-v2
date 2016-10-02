@@ -1,27 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ScrollView } from 'react-native';
-import { loadListingByLocation } from '../../firebase/FirebaseConnector';
+import { ScrollView, Alert } from 'react-native';
+
+import { listenToListingsByLocation } from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
+
 import ListingsListComponent from '../../components/ListingsListComponent';
 import SellerInfoOverlay from '../../components/SellerInfoOverlay';
 
-import { setLocalListings } from '../../reducers/LocalListingsReducer';
+import { setLocalListings, addLocalListing, clearLocalListings } from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-const initialSellerInfoHeight = 260;
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
 
-    this.state = {
-      sellerInfoOpacity: 1,
-      sellerInfoHeight: initialSellerInfoHeight,
-    };
-
     this.getGeolocation = this.getGeolocation.bind(this);
     this.fetchLocalListings = this.fetchLocalListings.bind(this);
+    this.clearLocalListings = this.clearLocalListings.bind(this);
   }
 
   getGeolocation() {
@@ -44,11 +41,31 @@ class ListingsScene extends RoutableScene {
     this.fetchLocalListings().catch(console.log);
   }
 
+  componentWillUnmount() {
+    clearNewListing();
+  }
+
+  clearLocalListings() {
+    if (this.detatchLocalListingListener) {
+      this.detatchLocalListingListener();
+    }
+
+    this.props.clearLocalListings();
+  }
+
   fetchLocalListings() {
+    clearNewListing();
+
     console.log('fetching local listings')
     return this.getGeolocation()
-      .then((latlon) => loadListingByLocation(latlon, 20))
-      .then(this.props.setLocalListings);
+      .then((latlon) => {
+        this.detatchLocalListingListener =
+          listenToListingsByLocation(latlon, 20, this.props.addLocalListing);
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert(error);
+      });
   }
 
   onGoNext() {
@@ -78,9 +95,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    addLocalListing: (newListing) => {
+      dispatch(addLocalListing(newListing))
+    },
     setLocalListings: (localListings) => {
       dispatch(setLocalListings(localListings));
     },
+    clearLocalListings: () => dispatch(clearLocalListings()),
     clearNewListingData: () => {
       dispatch(clearNewListing());
     },

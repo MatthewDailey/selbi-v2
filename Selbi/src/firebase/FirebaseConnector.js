@@ -591,7 +591,7 @@ export function loadListingByLocation(latlon, radiusKm) {
   });
 
   return new Promise((fulfill) => {
-    const listingsInArea = [];
+    const listingsInArea = {};
     const loadListingsPromises = [];
 
     geoQuery.on('key_entered', (listingId) => {
@@ -600,7 +600,7 @@ export function loadListingByLocation(latlon, radiusKm) {
         loadListingData(listingId)
           .then((snapshot) => {
             if (snapshot.exists()) {
-              listingsInArea.push(snapshot);
+              listingsInArea[snapshot.key] = snapshot;
             }
           }));
     });
@@ -617,6 +617,29 @@ export function loadListingByLocation(latlon, radiusKm) {
     });
   });
 }
+
+export function listenToListingsByLocation(latlon, radiusKm, handler) {
+  const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
+
+  const geoQuery = geoListings.query({
+    center: latlon,
+    radius: radiusKm,
+  });
+
+  geoQuery.on('key_entered', (listingId) => {
+    loadListingData(listingId)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          handler(snapshot);
+        }
+      });
+  });
+
+  return () => {
+    geoQuery.cancel();
+  };
+}
+
 
 export function loadLocationForListing(listingId) {
   const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
