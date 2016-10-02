@@ -1,54 +1,73 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ScrollView } from 'react-native';
-import { loadListingByLocation } from '../../firebase/FirebaseConnector';
+import { ScrollView, Alert } from 'react-native';
+
+import { listenToListingsByLocation } from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
+
 import ListingsListComponent from '../../components/ListingsListComponent';
 import SellerInfoOverlay from '../../components/SellerInfoOverlay';
 
-import { setLocalListings } from '../../reducers/LocalListingsReducer';
+import { addLocalListing, removeLocalListing, clearLocalListings }
+  from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-const initialSellerInfoHeight = 260;
+import { getGeolocation, watchGeolocation } from '../../utils';
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
 
-    this.state = {
-      sellerInfoOpacity: 1,
-      sellerInfoHeight: initialSellerInfoHeight,
-    };
-
-    this.getGeolocation = this.getGeolocation.bind(this);
     this.fetchLocalListings = this.fetchLocalListings.bind(this);
-  }
-
-  getGeolocation() {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve([position.coords.latitude, position.coords.longitude]);
-        },
-        (error) => {
-          console.log(error);
-          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
-          reject(error.message);
-        },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-      );
-    });
+    this.clearLocalListings = this.clearLocalListings.bind(this);
   }
 
   componentWillMount() {
     this.fetchLocalListings().catch(console.log);
   }
 
+  componentWillUnmount() {
+    this.clearLocalListings();
+  }
+
+  clearLocalListings() {
+    if (this.geoQuery) {
+      this.geoQuery.cancel();
+    }
+
+    if (this.cancelGeoWatch) {
+      this.cancelGeoWatch();
+    }
+
+    this.props.clearLocalListings();
+  }
+
   fetchLocalListings() {
-    console.log('fetching local listings')
-    return this.getGeolocation()
-      .then((latlon) => loadListingByLocation(latlon, 20))
-      .then(this.props.setLocalListings);
+    console.log('fetching local listings');
+
+    clearNewListing();
+
+    return getGeolocation()
+      .then((location) => {
+        this.geoQuery =
+          listenToListingsByLocation(
+            [location.lat, location.lon],
+            20,
+            this.props.addLocalListing,
+            this.props.removeLocalListing);
+
+        watchGeolocation((newLocation) => {
+          if (this.geoQuery) {
+            this.cancelGeoWatch = this.geoQuery.updateCriteria({
+              center: [newLocation.lat, newLocation.lon],
+            });
+          }
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Alert.alert(error);
+      });
   }
 
   onGoNext() {
@@ -78,12 +97,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setLocalListings: (localListings) => {
-      dispatch(setLocalListings(localListings));
-    },
-    clearNewListingData: () => {
-      dispatch(clearNewListing());
-    },
+    addLocalListing: (newListing) => dispatch(addLocalListing(newListing)),
+    removeLocalListing: (listingId) => dispatch(removeLocalListing(listingId)),
+    clearLocalListings: () => dispatch(clearLocalListings()),
+    clearNewListingData: () => dispatch(clearNewListing()),
   };
 };
 

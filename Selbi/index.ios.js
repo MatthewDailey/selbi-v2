@@ -17,6 +17,7 @@ import NewListingFlow from './src/scenes/newListingFlow';
 import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
+import AddBankFlow from './src/scenes/addBankAccountFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -34,6 +35,8 @@ import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
+import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
+import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus }
@@ -60,6 +63,8 @@ const store = createStore(combineReducers({
   followFriend: followFriendReducer,
   friendsListings: friendsListingsReducer,
   user: userReducer,
+  addCreditCard: addCreditCardReducer,
+  addBank: addBankAccountReducer,
 }));
 
 // Listen for user listings and make sure to remove listener when
@@ -91,12 +96,10 @@ const storeUserData = (user) => {
   if (user) {
     unwatchUserPublicData = watchUserPublicData(user.uid,
       (publicDataSnapshot) => {
+        console.log('saw update to user');
         if (publicDataSnapshot.exists()) {
           const userPublicData = publicDataSnapshot.val();
-          store.dispatch(setUserData({
-            displayName: userPublicData.displayName,
-            username: userPublicData.username,
-          }));
+          store.dispatch(setUserData(userPublicData));
         }
       });
   } else {
@@ -210,6 +213,7 @@ routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (

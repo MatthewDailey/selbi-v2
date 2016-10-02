@@ -29,20 +29,6 @@ export default class ListingsComponent extends Component {
   }
 
   render() {
-    const getRefreshControl = () => {
-      if (this.props.refresh) {
-        return (
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-            colors={[colors.secondary]}
-            tintColor={colors.secondary}
-          />
-        );
-      }
-      return undefined;
-    };
-
     if (!this.props.listings) {
       return (
         <View style={styles.container}>
@@ -51,7 +37,7 @@ export default class ListingsComponent extends Component {
       );
     }
 
-    const RefreshButton = MKButton.button()
+    const RefreshButton = MKButton.plainFab()
       .withStyle({
         borderRadius: 20,
         margin: 20,
@@ -87,7 +73,6 @@ export default class ListingsComponent extends Component {
         <ListView
           enableEmptySections
           removeClippedSubviews={false}
-          refreshControl={getRefreshControl()}
           contentContainerStyle={{
             flexDirection: 'row',
             flexWrap: 'wrap',
@@ -109,6 +94,6 @@ export default class ListingsComponent extends Component {
 ListingsComponent.propTypes = {
   refresh: React.PropTypes.func,
   emptyMessage: React.PropTypes.string,
-  listings: React.PropTypes.arrayOf(React.PropTypes.object),
+  listings: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.array]),
   openDetailScene: React.PropTypes.func,
 };

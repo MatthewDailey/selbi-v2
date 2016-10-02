@@ -13,6 +13,7 @@ import PublishCompletedScene from './PublishCompleteScene';
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
 
 import EditListingFlow from '../editListingFlow';
+import AddBankFlow from '../addBankAccountFlow';
 
 const loginScene = {
   id: 'login-scene',
@@ -143,6 +144,10 @@ routeLinks[publishCompletedScene.id] = {
   next: {
     title: '',
     getRoute: () => EditListingFlow.firstScene,
+  },
+  addBank: {
+    title: '',
+    getRoute: () => AddBankFlow.firstScene,
   },
   home: {
     title: 'Done',

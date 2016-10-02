@@ -5,11 +5,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing, loadUserPublicData }
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing }
   from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
-import { setListingDistance, setListingDetailsSellerData } from '../reducers/ListingDetailReducer';
+import { setListingDistance, setListingDetailsSellerData, setListingData }
+  from '../reducers/ListingDetailReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles, { paddingSize } from '../../styles';
@@ -77,7 +78,9 @@ class DetailBottomButtons extends Component {
   }
 
   render() {
-    if (this.props.isSeller) {
+    const isSold = this.props.listingData.status === 'sold';
+
+    if (this.props.isSeller && !isSold) {
       const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
       delete bottomOverlayStyleMinusPadding.padding;
       return (
@@ -141,10 +144,10 @@ class DetailBottomButtons extends Component {
           >
             <View>
               <View style={{ flexDirection: 'row' }}>
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, flexDirection: 'column' }}>
                   <Title />
+                  <SellerName />
                 </View>
-                <SellerName />
                 <ListingDistance distanceString={this.props.listingDistance} />
               </View>
               <View style={styles.quarterPadded} />
@@ -155,17 +158,25 @@ class DetailBottomButtons extends Component {
                 />
               </View>
               <View style={styles.quarterPadded} />
+              <VisibilityWrapper isVisible={isSold}>
+                <Text style={{ flex: 1, fontSize: 20 }}>
+                  SOLD - ${this.props.listingData.price}
+                </Text>
+              </VisibilityWrapper>
             </View>
           </TouchableHighlight>
-          <View style={{ flexDirection: 'row' }}>
-            <ChatButton
-              isVisible={this.props.isChatButtonVisible}
-              onPress={this.props.openChat}
-            />
-            <BuyButton
-              price={this.props.listingData.price}
-            />
-          </View>
+          <VisibilityWrapper isVisible={!isSold}>
+            <View style={{ flexDirection: 'row' }}>
+              <ChatButton
+                isVisible={this.props.isChatButtonVisible}
+                onPress={this.props.openChat}
+              />
+              <BuyButton
+                price={this.props.listingData.price}
+                onPress={this.props.openBuy}
+              />
+            </View>
+          </VisibilityWrapper>
         </View>
       </View>
     );
@@ -180,6 +191,7 @@ DetailBottomButtons.propTypes = {
   isChatButtonVisible: React.PropTypes.bool.isRequired,
   openChat: React.PropTypes.func.isRequired,
   openEdit: React.PropTypes.func.isRequired,
+  openBuy: React.PropTypes.func.isRequired,
 };
 
 class ListingDetailScene extends RoutableScene {
@@ -203,6 +215,25 @@ class ListingDetailScene extends RoutableScene {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });
     });
+
+    this.unbindListingListener = listenToListing(
+      this.props.listingKey,
+      this.props.setListingDetailsData)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.unbindListingListener && nextProps.listingKey !== this.props.listingKey) {
+      this.unbindListingListener();
+      this.unbindListingListener = listenToListing(
+        this.props.listingKey,
+        this.props.setListingDetailsData);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unbindListingListener) {
+      this.unbindListingListener();
+    }
   }
 
   onGoNext(routeName) {
@@ -301,6 +332,7 @@ class ListingDetailScene extends RoutableScene {
               isChatButtonVisible={!!this.props.routeLinks.chat}
               openChat={() => this.goNext('chat')}
               openEdit={() => this.goNext('edit')}
+              openBuy={() => this.goNext('buy')}
             />
           </VisibilityWrapper>
         </Image>
@@ -331,6 +363,7 @@ const mapDispatchToProps = (dispatch) => {
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
+    setListingDetailsData: (listingData) => dispatch(setListingData(listingData)),
   };
 };
 

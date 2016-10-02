@@ -10,6 +10,10 @@ export default StyleSheet.create({
   flex: {
     flex: 1,
   },
+  row: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   container: {
     flex: 1,
     backgroundColor: colors.secondary,
@@ -105,10 +109,20 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  labelTextLeft: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
   friendlyTextLeft: {
     fontSize: 20,
     fontWeight: '300',
-    textAlign: 'center',
-    padding: paddingSize / 2,
+  },
+  friendlyTextLeftLarge: {
+    fontSize: 30,
+    fontWeight: '300',
+  },
+  friendlyTextLeftMed: {
+    fontSize: 25,
+    fontWeight: '300',
   },
 });

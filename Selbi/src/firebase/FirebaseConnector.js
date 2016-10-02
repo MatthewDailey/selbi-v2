@@ -115,6 +115,7 @@ function insertUserInDatabase(userDisplayName) {
     .ref('/users')
     .child(getUser().uid)
     .set({
+      email: getUser().email,
       userAgreementAccepted: false,
     });
 
@@ -590,7 +591,7 @@ export function loadListingByLocation(latlon, radiusKm) {
   });
 
   return new Promise((fulfill) => {
-    const listingsInArea = [];
+    const listingsInArea = {};
     const loadListingsPromises = [];
 
     geoQuery.on('key_entered', (listingId) => {
@@ -599,7 +600,7 @@ export function loadListingByLocation(latlon, radiusKm) {
         loadListingData(listingId)
           .then((snapshot) => {
             if (snapshot.exists()) {
-              listingsInArea.push(snapshot);
+              listingsInArea[snapshot.key] = snapshot;
             }
           }));
     });
@@ -616,6 +617,34 @@ export function loadListingByLocation(latlon, radiusKm) {
     });
   });
 }
+
+export function listenToListingsByLocation(latlon, radiusKm, enterHandler, exitHandler) {
+  const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
+
+  console.log('about to listen')
+  const geoQuery = geoListings.query({
+    center: latlon,
+    radius: radiusKm,
+  });
+
+  if (enterHandler) {
+    geoQuery.on('key_entered', (listingId) => {
+      loadListingData(listingId)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            enterHandler(snapshot);
+          }
+        });
+    });
+  }
+
+  if (exitHandler) {
+    geoQuery.on('key_exited', exitHandler);
+  }
+
+  return geoQuery;
+}
+
 
 export function loadLocationForListing(listingId) {
   const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
@@ -677,4 +706,251 @@ export function listenToListingsByStatus(status, callback) {
     .child(getUser().uid)
     .child(status)
     .off('value', callback);
+}
+
+function computeExpirationDate(expMonth, expYear) {
+  if (expMonth < 10) {
+    return `0${expMonth}-${expYear % 100}`;
+  }
+  return `${expMonth}-${expYear % 100}`;
+}
+
+function markUserHasPayment() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasPayment')
+    .set(true);
+}
+
+export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+
+  const createCustomerTask = {
+    uid: getUser().uid,
+    payload: {
+      source: stripeCreateCardResponse.id,
+      description: `${cardHolderName}'s Credit Card`,
+      email: getUser().email,
+    },
+    metadata: {
+      lastFour: stripeCreateCardResponse.card.last4,
+      expirationDate: computeExpirationDate(
+        stripeCreateCardResponse.card.exp_month,
+        stripeCreateCardResponse.card.exp_year),
+      cardBrand: stripeCreateCardResponse.card.brand,
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    const userPaymentRef = firebaseApp.database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('payment');
+
+    let isFirstLoadOfPayments = true;
+    const handlePaymentsUpdates = (paymentData) => {
+      if (isFirstLoadOfPayments) {
+        isFirstLoadOfPayments = false;
+
+        // Wait to enqueue until we know we're listening for updates to user status.
+        firebaseApp.database()
+          .ref('createCustomer/tasks')
+          .push()
+          .set(createCustomerTask);
+        return;
+      }
+
+      if (paymentData.exists()) {
+        if (paymentData.val().status === 'OK') {
+          markUserHasPayment()
+            .then(() => resolve(paymentData.val()))
+            .catch((error) => {
+              reject(error);
+              console.log(error);
+            });
+        } else {
+          reject(paymentData.val().status);
+        }
+      } else {
+        reject('An unknown error occured setting up payment data.');
+      }
+      userPaymentRef.off('value', handlePaymentsUpdates);
+    };
+
+    userPaymentRef.on('value', handlePaymentsUpdates);
+  });
+}
+
+function markUserHasMerchant() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .set(true);
+}
+
+export function enqueueCreateAccountRequest(
+  bankToken,
+  piiToken,
+  firstName,
+  lastName,
+  dob, // { day, month, year }
+  address, // { line1, line2, city, postal_code, state }
+  ip,
+  accountNumberLastFour,
+  routingNumber,
+  bankName) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  const createAccountTask = {
+    payload: {
+      external_account: bankToken,
+      email: getUser().email,
+      legal_entity: {
+        personal_id_number: piiToken,
+        first_name: firstName,
+        last_name: lastName,
+        dob,
+        address,
+      },
+      tos_acceptance: {
+        date: Math.floor(Date.now() / 1000),
+        ip,
+      },
+    },
+    uid: getUser().uid,
+    metadata: {
+      accountNumberLastFour,
+      routingNumber,
+      bankName,
+    },
+  };
+
+  const userMerchantRef = firebaseApp.database()
+    .ref('users')
+    .child(getUser().uid)
+    .child('merchant');
+
+  const clearUserPublicBankAccountData = () => firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .remove();
+
+  // Remove the merchant data.
+  return userMerchantRef
+    .remove()
+    .then(clearUserPublicBankAccountData)
+    .then(() => new Promise((resolve, reject) => {
+      let isFirstLoadOfMerchant = true;
+      const handleMerchantUpdates = (merchantData) => {
+        if (isFirstLoadOfMerchant) {
+          isFirstLoadOfMerchant = false;
+
+          // Wait to enqueue until we know we're listening for updates to user status.
+          firebaseApp.database()
+            .ref('createAccount/tasks')
+            .push()
+            .set(createAccountTask)
+            .catch((error) => {
+              console.log(error);
+              reject('An unknown error occured setting up merchant data.');
+              userMerchantRef.off('value', handleMerchantUpdates);
+            });
+          return;
+        }
+
+        if (merchantData.exists()) {
+          if (merchantData.val().status === 'OK') {
+            markUserHasMerchant()
+              .then(() => resolve(merchantData.val()))
+              .catch((error) => {
+                reject(error);
+                console.log(error);
+              });
+          } else {
+            reject(merchantData.val().status);
+          }
+        } else {
+          reject('An unknown error occured setting up merchant data.');
+        }
+        userMerchantRef.off('value', handleMerchantUpdates);
+      };
+      userMerchantRef.on('value', handleMerchantUpdates);
+    }));
+}
+
+export function purchaseListing(listingId) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  const awaitPurchaseResult = () => new Promise((resolve, reject) => {
+    const purchaseStatusRef = firebaseApp
+      .database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('purchases')
+      .child(listingId)
+      .child('status');
+    console.log('awaiting purchase  ')
+
+    const handlePurchaseUpdate = (statusSnapshot) => {
+      if (statusSnapshot.exists()) {
+        const status = statusSnapshot.val();
+        if (status === 'in-progress') {
+          return;
+        } else if (status === 'success') {
+          resolve();
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        } else {
+          reject(status);
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        }
+      }
+    };
+    purchaseStatusRef.on('value', handlePurchaseUpdate);
+  });
+
+  return firebaseApp
+    .database()
+    .ref('createPurchase/tasks')
+    .push()
+    .set({
+      listingId,
+      buyerUid: getUser().uid,
+    })
+    .then(awaitPurchaseResult);
+}
+
+/*
+ * listed for updates on a specific listing.
+ *
+ * @returns a function which will detach the listener.
+ */
+export function listenToListing(listingId, listener) {
+  const listenForValueIgnoreEmpty = (listingSnapshot) => {
+    if (listingSnapshot && listingSnapshot.exists()) {
+      listener(listingSnapshot.val());
+    }
+  };
+
+  firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .on('value', listenForValueIgnoreEmpty);
+
+  return () => firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .off('value', listenForValueIgnoreEmpty);
 }

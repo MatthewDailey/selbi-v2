@@ -6,6 +6,10 @@ export function isStringFloat(input) {
   return !!input.match(findFloatRegex);
 }
 
+export function isStringInt(input) {
+  const findFloatRegex = /^[0-9]*$/;
+  return !!input.match(findFloatRegex);
+}
 
 function toRadian(degree) {
   return (degree * Math.PI) / 180;
@@ -59,4 +63,14 @@ export function getGeolocation() {
   });
 }
 
+export function watchGeolocation(handler) {
+  const watchId = navigator.geolocation.watchPosition(
+    (position) => {
+      handler({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+    });
 
+  return () => navigator.geolocation.clearWatch(watchId);
+}
