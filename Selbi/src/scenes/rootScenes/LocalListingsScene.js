@@ -47,8 +47,8 @@ class ListingsScene extends RoutableScene {
   }
 
   clearLocalListings() {
-    if (this.detatchLocalListingListener) {
-      this.detatchLocalListingListener();
+    if (this.geoQuery) {
+      this.geoQuery.cancel();
     }
 
     this.props.clearLocalListings();
@@ -60,7 +60,7 @@ class ListingsScene extends RoutableScene {
     console.log('fetching local listings')
     return this.getGeolocation()
       .then((latlon) => {
-        this.detatchLocalListingListener =
+        this.geoQuery =
           listenToListingsByLocation(
             latlon,
             20,

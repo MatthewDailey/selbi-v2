@@ -641,9 +641,7 @@ export function listenToListingsByLocation(latlon, radiusKm, enterHandler, exitH
     geoQuery.on('key_exited', exitHandler);
   }
 
-  return () => {
-    geoQuery.cancel();
-  };
+  return geoQuery;
 }
 
 
