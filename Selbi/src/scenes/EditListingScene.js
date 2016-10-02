@@ -161,10 +161,10 @@ class EditListingScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly) {
+    if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
         .then((latlon) => {
-          console.log(latlon);
+          console.log('load for listing', latlon);
           if(latlon) {
             this.props.setLocation({
               lat: latlon[0],
@@ -172,7 +172,9 @@ class EditListingScene extends RoutableScene {
             });
           }
         });
+    }
 
+    if (this.state.renderPlaceholderOnly) {
       return (
         <View
           style={{

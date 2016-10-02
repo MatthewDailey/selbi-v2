@@ -8,7 +8,8 @@ import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
 import SellerInfoOverlay from '../../components/SellerInfoOverlay';
 
-import { setLocalListings, addLocalListing, clearLocalListings } from '../../reducers/LocalListingsReducer';
+import { addLocalListing, removeLocalListing, clearLocalListings }
+  from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
 
@@ -42,7 +43,7 @@ class ListingsScene extends RoutableScene {
   }
 
   componentWillUnmount() {
-    clearNewListing();
+    this.clearLocalListings();
   }
 
   clearLocalListings() {
@@ -60,7 +61,11 @@ class ListingsScene extends RoutableScene {
     return this.getGeolocation()
       .then((latlon) => {
         this.detatchLocalListingListener =
-          listenToListingsByLocation(latlon, 20, this.props.addLocalListing);
+          listenToListingsByLocation(
+            latlon,
+            20,
+            this.props.addLocalListing,
+            this.props.removeLocalListing);
       })
       .catch((error) => {
         console.log(error);
@@ -95,16 +100,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addLocalListing: (newListing) => {
-      dispatch(addLocalListing(newListing))
-    },
-    setLocalListings: (localListings) => {
-      dispatch(setLocalListings(localListings));
-    },
+    addLocalListing: (newListing) => dispatch(addLocalListing(newListing)),
+    removeLocalListing: (listingId) => dispatch(removeLocalListing(listingId)),
     clearLocalListings: () => dispatch(clearLocalListings()),
-    clearNewListingData: () => {
-      dispatch(clearNewListing());
-    },
+    clearNewListingData: () => dispatch(clearNewListing()),
   };
 };
 

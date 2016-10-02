@@ -618,7 +618,7 @@ export function loadListingByLocation(latlon, radiusKm) {
   });
 }
 
-export function listenToListingsByLocation(latlon, radiusKm, handler) {
+export function listenToListingsByLocation(latlon, radiusKm, enterHandler, exitHandler) {
   const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
 
   const geoQuery = geoListings.query({
@@ -626,14 +626,20 @@ export function listenToListingsByLocation(latlon, radiusKm, handler) {
     radius: radiusKm,
   });
 
-  geoQuery.on('key_entered', (listingId) => {
-    loadListingData(listingId)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          handler(snapshot);
-        }
-      });
-  });
+  if (enterHandler) {
+    geoQuery.on('key_entered', (listingId) => {
+      loadListingData(listingId)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            enterHandler(snapshot);
+          }
+        });
+    });
+  }
+
+  if (exitHandler) {
+    geoQuery.on('key_exited', exitHandler);
+  }
 
   return () => {
     geoQuery.cancel();
