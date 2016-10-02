@@ -29,20 +29,6 @@ export default class ListingsComponent extends Component {
   }
 
   render() {
-    const getRefreshControl = () => {
-      if (this.props.refresh) {
-        return (
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-            colors={[colors.secondary]}
-            tintColor={colors.secondary}
-          />
-        );
-      }
-      return undefined;
-    };
-
     if (!this.props.listings) {
       return (
         <View style={styles.container}>
@@ -87,7 +73,6 @@ export default class ListingsComponent extends Component {
         <ListView
           enableEmptySections
           removeClippedSubviews={false}
-          refreshControl={getRefreshControl()}
           contentContainerStyle={{
             flexDirection: 'row',
             flexWrap: 'wrap',
