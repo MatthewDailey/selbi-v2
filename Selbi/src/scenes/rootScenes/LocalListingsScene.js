@@ -12,8 +12,7 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-import { getGeolocation } from '../../utils';
-
+import { getGeolocation, watchGeolocation } from '../../utils';
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -36,13 +35,18 @@ class ListingsScene extends RoutableScene {
       this.geoQuery.cancel();
     }
 
+    if (this.cancelGeoWatch) {
+      this.cancelGeoWatch();
+    }
+
     this.props.clearLocalListings();
   }
 
   fetchLocalListings() {
+    console.log('fetching local listings');
+
     clearNewListing();
 
-    console.log('fetching local listings');
     return getGeolocation()
       .then((location) => {
         this.geoQuery =
@@ -51,6 +55,14 @@ class ListingsScene extends RoutableScene {
             20,
             this.props.addLocalListing,
             this.props.removeLocalListing);
+
+        watchGeolocation((newLocation) => {
+          if (this.geoQuery) {
+            this.cancelGeoWatch = this.geoQuery.updateCriteria({
+              center: [newLocation.lat, newLocation.lon],
+            });
+          }
+        });
       })
       .catch((error) => {
         console.log(error);

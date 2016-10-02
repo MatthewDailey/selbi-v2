@@ -63,4 +63,14 @@ export function getGeolocation() {
   });
 }
 
+export function watchGeolocation(handler) {
+  const watchId = navigator.geolocation.watchPosition(
+    (position) => {
+      handler({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+    });
 
+  return () => navigator.geolocation.clearWatch(watchId);
+}
