@@ -12,30 +12,15 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
+import { getGeolocation } from '../../utils';
+
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
 
-    this.getGeolocation = this.getGeolocation.bind(this);
     this.fetchLocalListings = this.fetchLocalListings.bind(this);
     this.clearLocalListings = this.clearLocalListings.bind(this);
-  }
-
-  getGeolocation() {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve([position.coords.latitude, position.coords.longitude]);
-        },
-        (error) => {
-          console.log(error);
-          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
-          reject(error.message);
-        },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-      );
-    });
   }
 
   componentWillMount() {
@@ -57,12 +42,12 @@ class ListingsScene extends RoutableScene {
   fetchLocalListings() {
     clearNewListing();
 
-    console.log('fetching local listings')
-    return this.getGeolocation()
-      .then((latlon) => {
+    console.log('fetching local listings');
+    return getGeolocation()
+      .then((location) => {
         this.geoQuery =
           listenToListingsByLocation(
-            latlon,
+            [location.lat, location.lon],
             20,
             this.props.addLocalListing,
             this.props.removeLocalListing);

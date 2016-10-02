@@ -621,6 +621,7 @@ export function loadListingByLocation(latlon, radiusKm) {
 export function listenToListingsByLocation(latlon, radiusKm, enterHandler, exitHandler) {
   const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
 
+  console.log('about to listen')
   const geoQuery = geoListings.query({
     center: latlon,
     radius: radiusKm,
