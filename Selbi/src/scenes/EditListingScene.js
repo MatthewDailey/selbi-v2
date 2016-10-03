@@ -5,6 +5,7 @@ import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import VisibilityWrapper from '../components/VisibilityWrapper';
 
 import {
   setNewListingTitle,
@@ -18,7 +19,7 @@ import RoutableScene from '../nav/RoutableScene';
 
 import { isStringFloat } from '../utils';
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
-import { loadLocationForListing } from '../firebase/FirebaseConnector';
+import { loadLocationForListing, changeListingStatus } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
@@ -50,6 +51,13 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
     marginTop: 10,
   })
   .withKeyboardType('numeric')
+  .build();
+
+const DeleteListingButton = MKButton.flatButton()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor(colors.secondary)
   .build();
 
 class DraggableAnnotationExample extends React.Component {
@@ -289,6 +297,11 @@ class EditListingScene extends RoutableScene {
             }}
           >
             <Text style={{ fontWeight: 'bold' }}>Listing Visibility</Text>
+            <VisibilityWrapper isVisible={this.props.listingStatus === 'inactive'}>
+              <Text style={{ color: colors.accent }}>
+                This listing has been deleted. Select 'Anyone Nearby' or 'Just Friends' and save to restore.
+              </Text>
+            </VisibilityWrapper>
             <View
               style={{
                 flex: 1,
@@ -317,6 +330,34 @@ class EditListingScene extends RoutableScene {
 
           <LocationComponent />
 
+          <View style={styles.padded} />
+
+          <VisibilityWrapper isVisible={this.props.listingStatus != 'inactive'}>
+            <DeleteListingButton
+              onPress={() => {
+                Alert.alert(`Delete this listing?`,
+                  `Are you sure you want to delete ${this.props.listingTitle}?`,
+                  [
+                    {
+                      text: 'Cancel'
+                    },
+                    {
+                      text: 'Delete',
+                      onPress: () => {
+                        this.setState({ storingUpdate: true }, () => {
+                          this.props.setStatus('inactive');
+                          changeListingStatus('inactive', this.props.listingKey)
+                            .then(() => this.setState({ storingUpdate: false }))
+                            .catch(() => this.setState({ storingUpdate: false }))
+                        });
+                      },
+                    }
+                  ]);
+              }}
+            >
+              <Text style={{ color: colors.accent }}>Delete Listing</Text>
+            </DeleteListingButton>
+          </VisibilityWrapper>
         </View>
         <SpinnerOverlay isVisible={this.state.storingUpdate} />
       </ScrollView>
