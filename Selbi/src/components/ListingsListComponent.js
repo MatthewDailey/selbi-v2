@@ -20,7 +20,7 @@ export default class ListingsComponent extends Component {
       })
       .build();
 
-    if (Object.keys(this.props.listings).length === 0) {
+    if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
       if (this.props.emptyView) {
         return <this.props.emptyView />;
       }
