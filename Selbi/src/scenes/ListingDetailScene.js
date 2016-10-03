@@ -229,7 +229,7 @@ class ListingDetailScene extends RoutableScene {
 
     this.unbindListingListener = listenToListing(
       this.props.listingKey,
-      this.props.setListingDetailsData)
+      this.props.setListingDetailsData);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -295,6 +295,10 @@ class ListingDetailScene extends RoutableScene {
   }
 
   render() {
+    if (!this.props.listingData) {
+      return <LoadingListingComponent />;
+    }
+
     if (!this.props.listingDistance) {
       this.loadAndStoreListingDistance();
     }
@@ -354,17 +358,24 @@ class ListingDetailScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-  return {
-    title: state.listingDetails.listingData.title,
+
+  const props = {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     listingDistance: state.listingDetails.listingDistance,
     sellerData: state.listingDetails.sellerData,
-    imageKey: imageStoreKey,
-    imageData: state.images[imageStoreKey],
+    imageKey: undefined,
+    imageData: undefined,
     buyerUid: state.listingDetails.buyerUid,
   };
+
+  if (state.listingDetails.listingData) {
+    const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
+    props['imageStoreKey'] = imageStoreKey;
+    props['imageData'] = state.images[imageStoreKey];
+  }
+
+  return props;
 };
 
 const mapDispatchToProps = (dispatch) => {

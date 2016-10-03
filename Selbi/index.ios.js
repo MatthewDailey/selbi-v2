@@ -24,6 +24,8 @@ import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
+
+import DeepLinkListener from './src/deeplinking/DeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
@@ -31,7 +33,7 @@ import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsPrivate, setMyListingsPublic, setMyListingsSold,
   clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
-import listingDetailReducer from './src/reducers/ListingDetailReducer';
+import listingDetailReducer, { setListingKey } from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
@@ -244,6 +246,22 @@ function renderMenu(navigator, closeMenu) {
   );
 }
 
+class OpenListingDeepLinkListener extends DeepLinkListener {
+  handleOpenURL(event) {
+    super.handleOpenURL(event)
+    console.log('oepnning url with update.', event);
+
+    const openListingUrlPrefix = `${config.domain}/listing/`
+    if (event.url.startsWith(openListingUrlPrefix)) {
+      const listingKey = event.url.replace(openListingUrlPrefix, '');
+      console.log('opening key: ', listingKey);
+      store.dispatch(setListingKey(listingKey));
+      this.props.navigator.immediatelyResetRouteStack(
+        [localListingScene, ListingPurchaseFlow.firstScene]);
+    }
+  }
+}
+
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -256,27 +274,11 @@ class NavApp extends Component {
       },
       5000);
     }
-
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        console.log('Initial url is: ', url);
-      } else {
-        console.log('No initial url.');
-      }
-    }).catch(err => console.error('An error occurred', err));
-
-    Linking.addEventListener('url', this._handleOpenURL);
   }
 
   componentWillUnmount() {
     clearInterval(this.refreshCode);
-    Linking.removeEventListener('url', this._handleOpenURL);
   }
-
-  _handleOpenURL(event) {
-    console.log('Opened url: ', event.url);
-  }
-
 
   render() {
     return (
@@ -285,6 +287,8 @@ class NavApp extends Component {
           initialRoute={localListingScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
+          renderDeepLinkListener={(navigator) =>
+            <OpenListingDeepLinkListener navigator={navigator} />}
         />
       </Provider>
     );
