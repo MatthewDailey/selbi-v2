@@ -80,9 +80,13 @@
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
 {
-  return [RCTLinkingManager application:application
-                   continueUserActivity:userActivity
-                     restorationHandler:restorationHandler];
+  BOOL handled = [[FIRDynamicLinks dynamicLinks]
+                  handleUniversalLink:userActivity.webpageURL
+                  completion:^(FIRDynamicLink * _Nullable dynamicLink, NSError * _Nullable error) {
+                    [RCTLinkingManager application:application openURL:dynamicLink.url
+                                        sourceApplication:nil annotation:nil];
+                  }];
+  return handled;
 }
 
 
