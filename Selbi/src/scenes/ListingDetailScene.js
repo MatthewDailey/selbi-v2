@@ -25,6 +25,8 @@ import { BuyButton, ChatButton, UpdateButton, ShareButton }
   from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
+import { getListingShareUrl } from '../deeplinking/Utilities';
+
 const detailBottomOverlayStyle = {
   flex: 1,
   opacity: 0.7,
@@ -49,7 +51,7 @@ function DescriptionText({ description, showFullDescription }) {
 
   if (showFullDescription && description) {
     return (
-      <Text style={{ flex: 1, fontSize: descriptionFontSize  }}>
+      <Text style={{ flex: 1, fontSize: descriptionFontSize }}>
         {description}
       </Text>
     );
@@ -99,7 +101,7 @@ class DetailBottomButtons extends Component {
         >
           <View style={bottomOverlayStyleMinusPadding}>
             <ShareButton
-              onPress={() => Share.open({ message: 'First share!', url: 'https://selbi.io' })
+              onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
                   .catch(console.log)}
             />
             <View style={styles.halfPadded} />
@@ -335,6 +337,7 @@ class ListingDetailScene extends RoutableScene {
           >
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
+              listingKey={this.props.listingKey}
               listingData={listingData}
               listingDistance={this.props.listingDistance}
               sellerData={this.props.sellerData}

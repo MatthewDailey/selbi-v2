@@ -8,4 +8,6 @@ export default {
   // codePushKey: 'XYU_wAvoNeTzW_UuGogZ5kImnomjVybu8pY2Z',
   // Note this key is to Nearprinter NOT Selbi.
   stripePublicKey: 'pk_test_jgbSMlxI62OBXiWH1ENa9o5U',
+  deeplinkDomain: 'https://k7cvz.app.goo.gl/',
+  domain: 'https://selbi-develop.appspot.com',
 };
