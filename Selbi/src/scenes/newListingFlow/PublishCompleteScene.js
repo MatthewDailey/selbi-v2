@@ -75,6 +75,7 @@ const mapStateToProps = (state) => {
   }
   return {
     visibleTo,
+    listingKey: state.newListing.listingId,
     hasBankAccount: state.user.hasBankAccount,
   };
 };
