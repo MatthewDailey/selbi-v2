@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { InteractionManager, Image, View, Text, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Share from 'react-native-share';
+
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
@@ -19,7 +21,8 @@ import RoutableScene from '../nav/RoutableScene';
 
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
-import { BuyButton, ChatButton, UpdateButton, ShareButton } from '../components/buttons/ListingDetailButtons';
+import { BuyButton, ChatButton, UpdateButton, ShareButton }
+  from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
 const detailBottomOverlayStyle = {
@@ -95,7 +98,10 @@ class DetailBottomButtons extends Component {
           }}
         >
           <View style={bottomOverlayStyleMinusPadding}>
-            <ShareButton onPress={() => console.log('pressed share')} />
+            <ShareButton
+              onPress={() => Share.open({ message: 'First share!', url: 'https://selbi.io' })
+                  .catch(console.log)}
+            />
             <View style={styles.halfPadded} />
             <UpdateButton onPress={this.props.openEdit} />
           </View>

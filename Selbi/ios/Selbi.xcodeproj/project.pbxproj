@@ -42,6 +42,7 @@
 		DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0667282BE293434AB7BC83C5 /* libz.tbd */; };
 		E0B8E5A3A37F48218D7B7B36 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 980B69C42E52474B807F3CD3 /* Octicons.ttf */; };
 		E26F7D6A1431C52D4F313CA0 /* libPods-Selbi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */; };
+		E6329A62B49C4583A13C7BAA /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F21C1A57D8C4AA0A3988565 /* libRNShare.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +172,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RCTCamera;
 		};
+		C9F48E5E1DA1F17600149D07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62011481A5C34C0185212C4A /* RNShare.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNShare;
+		};
 		C9FCB5F61D8A03CA0004EE34 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */;
@@ -200,9 +208,11 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Selbi/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		1D1E25F616184E54A362AE15 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		1F21C1A57D8C4AA0A3988565 /* libRNShare.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShare.a; sourceTree = "<group>"; };
 		28A775074970FFCDF4733F64 /* Pods-SelbiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.release.xcconfig"; sourceTree = "<group>"; };
 		36ADFD39724CADE4BCDA2732 /* Pods-Selbi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.release.xcconfig"; sourceTree = "<group>"; };
 		4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRMessaging.xcodeproj; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; };
+		62011481A5C34C0185212C4A /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Selbi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		684C996EC8AC448FBB143D3D /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		6B751A89A6E54F1CACFBB5BA /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
@@ -264,6 +274,7 @@
 				C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */,
 				DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */,
 				E26F7D6A1431C52D4F313CA0 /* libPods-Selbi.a in Frameworks */,
+				E6329A62B49C4583A13C7BAA /* libRNShare.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +389,7 @@
 				4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */,
 				FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */,
 				9FE7F209D93343C9895D3F8B /* CodePush.xcodeproj */,
+				62011481A5C34C0185212C4A /* RNShare.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -478,6 +490,14 @@
 			isa = PBXGroup;
 			children = (
 				C9DC96B21D66D4400012A155 /* libRCTCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C9F48E4A1DA1F17600149D07 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C9F48E5F1DA1F17600149D07 /* libRNShare.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -672,6 +692,10 @@
 					ProjectRef = B0AB3F9419A4458AAFE33DAD /* RNImageReader.xcodeproj */;
 				},
 				{
+					ProductGroup = C9F48E4A1DA1F17600149D07 /* Products */;
+					ProjectRef = 62011481A5C34C0185212C4A /* RNShare.xcodeproj */;
+				},
+				{
 					ProductGroup = C9B6BA861D6F94F100E29650 /* Products */;
 					ProjectRef = 6B751A89A6E54F1CACFBB5BA /* RNVectorIcons.xcodeproj */;
 				},
@@ -802,6 +826,13 @@
 			fileType = archive.ar;
 			path = libRCTCamera.a;
 			remoteRef = C9DC96B11D66D4400012A155 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C9F48E5F1DA1F17600149D07 /* libRNShare.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNShare.a;
+			remoteRef = C9F48E5E1DA1F17600149D07 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C9FCB5F71D8A03CA0004EE34 /* libRNFIRAnalytics.a */ = {
@@ -1001,7 +1032,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
 			};
@@ -1016,7 +1050,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
 			};
@@ -1047,6 +1084,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1090,6 +1128,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1154,6 +1193,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1201,6 +1241,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1248,6 +1289,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1280,6 +1322,7 @@
 					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1308,7 +1351,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
 			};
