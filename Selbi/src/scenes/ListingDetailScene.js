@@ -19,7 +19,7 @@ import RoutableScene from '../nav/RoutableScene';
 
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
-import { BuyButton, ChatButton, UpdateButton } from '../components/buttons/ListingDetailButtons';
+import { BuyButton, ChatButton, UpdateButton, ShareButton } from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
 const detailBottomOverlayStyle = {
@@ -83,6 +83,7 @@ class DetailBottomButtons extends Component {
     if (this.props.isSeller && !isSold) {
       const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
       delete bottomOverlayStyleMinusPadding.padding;
+      bottomOverlayStyleMinusPadding.backgroundColor = colors.transparent;
       return (
         <View
           style={{
@@ -94,6 +95,8 @@ class DetailBottomButtons extends Component {
           }}
         >
           <View style={bottomOverlayStyleMinusPadding}>
+            <ShareButton onPress={() => console.log('pressed share')} />
+            <View style={styles.halfPadded} />
             <UpdateButton onPress={this.props.openEdit} />
           </View>
         </View>

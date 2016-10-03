@@ -21,11 +21,26 @@ const Button = MKButton.button()
 export function UpdateButton({ onPress }) {
   return (
     <Button onPress={onPress}>
-      <Text style={buttonStyle}>Update Listing</Text>
+      <Text style={buttonStyle}>
+        <Icon name="pencil-square-o" size={buttonStyle.fontSize} /> Update Listing
+      </Text>
     </Button>
   );
 }
 UpdateButton.propTypes = {
+  onPress: React.PropTypes.func.isRequired,
+};
+
+export function ShareButton({ onPress }) {
+  return (
+    <Button onPress={onPress}>
+      <Text style={buttonStyle}>
+        <Icon name="share-square-o" size={buttonStyle.fontSize} /> Share
+      </Text>
+    </Button>
+  );
+}
+ShareButton.propTypes = {
   onPress: React.PropTypes.func.isRequired,
 };
 
