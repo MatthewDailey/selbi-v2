@@ -5,6 +5,8 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:k7cvz.app.goo.gl</string>
+		<string>applinks:d7ut5.app.goo.gl</string>
+		<string>applinks:m3z8m.app.goo.gl</string>
 	</array>
 </dict>
 </plist>

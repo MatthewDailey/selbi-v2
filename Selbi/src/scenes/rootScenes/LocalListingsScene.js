@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, Text } from 'react-native';
 
 import { listenToListingsByLocation } from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
@@ -13,6 +13,20 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
 import { getGeolocation, watchGeolocation } from '../../utils';
+
+import { MKSpinner } from 'react-native-material-kit';
+
+import styles from '../../../styles';
+import colors from '../../../colors';
+
+function EmptyView() {
+  return (
+    <View style={styles.paddedCenterContainerClear}>
+      <Text style={styles.friendlyText}>Searching for listings near you...</Text>
+      <MKSpinner strokeColor={colors.primary} />
+    </View>
+  );
+}
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -78,12 +92,14 @@ class ListingsScene extends RoutableScene {
     return (
       <ScrollView>
         <SellerInfoOverlay />
-        <ListingsListComponent
-          listings={this.props.listings}
-          emptyMessage={'Be the first to sell in your neighborhood!'}
-          refresh={this.fetchLocalListings}
-          openDetailScene={() => this.goNext('details')}
-        />
+        <View>
+          <ListingsListComponent
+            listings={this.props.listings}
+            emptyView={EmptyView}
+            refresh={this.fetchLocalListings}
+            openDetailScene={() => this.goNext('details')}
+          />
+        </View>
       </ScrollView>
     );
   }

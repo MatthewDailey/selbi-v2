@@ -5,7 +5,7 @@ const LL_ADD_LOCAL_LISTING = 'add-local-listing';
 const LL_CLEAR_LOCAL_LISTINGS = 'clear-local-listings';
 const LL_REMOVE_LOCAL_LISTING = 'remove-local-listing';
 
-export default function (localListingsState = null, action) {
+export default function (localListingsState = {}, action) {
   switch (getActionType(action)) {
     case LL_SET_LOCAL_LISTINGS:
       return action.localListings;
@@ -18,7 +18,7 @@ export default function (localListingsState = null, action) {
       delete copyOfStateForRemove[action.listingId];
       return copyOfStateForRemove;
     case LL_CLEAR_LOCAL_LISTINGS:
-      return null;
+      return {};
     default:
       return localListingsState;
   }
