@@ -35,20 +35,25 @@ export default class DrawerNavigator extends React.Component {
     return (
       <Navigator
         initialRoute={this.props.initialRoute}
-        renderScene={(route, navigator) =>
-          <Drawer
-            ref={(c) => {
-              this.drawer = c;
-            }}
-            content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
-            tapToClose
-            openDrawerOffset={0.2}
-            panOpenMask={0.1}
-          >
-            {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
-            {this.props.renderDeepLinkListener(navigator)}
-          </Drawer>
-        }
+        renderScene={(route, navigator) => {
+          if (navigator.getCurrentRoutes().length > 1) {
+            return route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu);
+          }
+          return (
+            <Drawer
+              ref={(c) => {
+                this.drawer = c;
+              }}
+              content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
+              tapToClose
+              openDrawerOffset={0.2}
+              panOpenMask={0.1}
+            >
+              {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
+              {this.props.renderDeepLinkListener(navigator)}
+            </Drawer>
+          );
+        }}
       />
     );
   }
