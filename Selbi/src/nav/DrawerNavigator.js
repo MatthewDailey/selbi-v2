@@ -46,6 +46,7 @@ export default class DrawerNavigator extends React.Component {
             panOpenMask={0.1}
           >
             {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
+            {this.props.renderDeepLinkListener(navigator)}
           </Drawer>
         }
       />

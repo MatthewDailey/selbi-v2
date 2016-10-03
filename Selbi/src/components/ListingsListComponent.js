@@ -9,46 +9,22 @@ import styles from '../../styles';
 import colors from '../../colors';
 
 export default class ListingsComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      refreshing: false,
-    };
-
-    this.onRefresh = this.onRefresh.bind(this);
-  }
-
-  onRefresh() {
-    this.setState({ refreshing: true });
-    this.props.refresh()
-      .then(() => {
-        this.setState({ refreshing: false });
-      })
-      .catch(console.log);
-  }
-
   render() {
-    if (!this.props.listings) {
-      return (
-        <View style={styles.container}>
-          <SpinnerOverlay isVisible message="" />
-        </View>
-      );
-    }
-
     const RefreshButton = MKButton.plainFab()
       .withStyle({
         borderRadius: 20,
         margin: 20,
       })
       .withOnPress(() => {
-        console.log('pressed that button')
-        this.onRefresh();
+        this.props.refresh();
       })
       .build();
 
-    if (this.props.listings.length === 0) {
+    if (Object.keys(this.props.listings).length === 0) {
+      if (this.props.emptyView) {
+        return <this.props.emptyView />;
+      }
+
       const getRefreshButton = () => {
         if (this.props.refresh) {
           return (
@@ -63,7 +39,6 @@ export default class ListingsComponent extends Component {
         <View style={styles.paddedCenterContainer}>
           <Text>{this.props.emptyMessage}</Text>
           {getRefreshButton()}
-          <SpinnerOverlay isVisible={this.state.refreshing} message="" />
         </View>
       );
     }
@@ -85,7 +60,6 @@ export default class ListingsComponent extends Component {
               openDetailScene={this.props.openDetailScene}
             />}
         />
-        <SpinnerOverlay isVisible={this.state.refreshing} message="" />
       </View>
     );
   }
@@ -93,6 +67,7 @@ export default class ListingsComponent extends Component {
 
 ListingsComponent.propTypes = {
   refresh: React.PropTypes.func,
+  emptyView: React.PropTypes.func,
   emptyMessage: React.PropTypes.string,
   listings: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.array]),
   openDetailScene: React.PropTypes.func,

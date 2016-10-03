@@ -4,12 +4,15 @@ const LD_SET_DETAILS = 'listing-details-set';
 const LD_SET_BUYER = 'listing-details-set-buyer';
 const LD_CLEAR_DETAILS = 'listing-details-clear';
 const LD_SET_LISTING_DATA = 'listing-details-set-data';
+const LD_SET_LISTING_KEY = 'listing-details-set-key';
 const LD_SET_LISTING_GEO = 'listing-details-set-geo';
 const LD_SET_SELLER_DATA = 'listing-details-set-seller';
 
 export default function (listingDetailsState = {}, action) {
   const listingDetails = Object.assign({}, listingDetailsState);
   switch (getActionType(action)) {
+    case LD_SET_LISTING_KEY:
+      return { listingKey: action.listingKey };
     case LD_SET_DETAILS:
       return Object.assign({}, action.data);
     case LD_SET_BUYER:
@@ -49,6 +52,13 @@ export function setListingData(listingData) {
   return {
     type: LD_SET_LISTING_DATA,
     data: listingData,
+  };
+}
+
+export function setListingKey(listingKey) {
+  return {
+    type: LD_SET_LISTING_KEY,
+    listingKey,
   };
 }
 

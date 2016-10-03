@@ -5,6 +5,7 @@ import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import VisibilityWrapper from '../components/VisibilityWrapper';
 
 import {
   setNewListingTitle,
@@ -18,7 +19,7 @@ import RoutableScene from '../nav/RoutableScene';
 
 import { isStringFloat } from '../utils';
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
-import { loadLocationForListing } from '../firebase/FirebaseConnector';
+import { loadLocationForListing, changeListingStatus } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
@@ -50,6 +51,13 @@ const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
     marginTop: 10,
   })
   .withKeyboardType('numeric')
+  .build();
+
+const DeleteListingButton = MKButton.flatButton()
+  .withStyle({
+    borderRadius: 5,
+  })
+  .withBackgroundColor(colors.secondary)
   .build();
 
 class DraggableAnnotationExample extends React.Component {
@@ -198,24 +206,16 @@ class EditListingScene extends RoutableScene {
     const imageContainerStyle = {
       height: 160,
       width: 160,
-      borderWidth: 1,
-      borderColor: colors.dark,
-      backgroundColor: `${colors.dark}22`,
-      margin: 4,
       alignItems: 'center',
       justifyContent: 'center',
     };
 
-    const getLocationComponent = () => {
-      if (this.props.listingLocation.lat && this.props.listingLocation.lon) {
+    const LocationComponent = () => {
+      if (this.props.listingLocation.lat && this.props.listingLocation.lon
+        && this.props.listingStatus === 'public') {
         return (
-          <View
-            style={{
-              paddingTop: 16,
-              paddingBottom: 16,
-            }}
-          >
-            <Text>Approximate Location: San Francisco</Text>
+          <View>
+            <Text style={{ fontWeight: 'bold' }}>Location</Text>
             <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
             <DraggableAnnotationExample
               region={{
@@ -229,7 +229,12 @@ class EditListingScene extends RoutableScene {
           </View>
         );
       } else {
-        return <Text>No location for this listing. Only public listings have an associated location.</Text>
+        return (
+          <View>
+            <Text style={{ fontWeight: 'bold' }}>Location</Text>
+            <Text>No location for this listing. Only public listings have an associated location.</Text>
+          </View>
+        );
       }
     };
 
@@ -238,38 +243,35 @@ class EditListingScene extends RoutableScene {
         <View style={styles.paddedContainer}>
           <View
             style={{
-              paddingTop: 16,
-              paddingBottom: 16,
+              flex: 1,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}
+            <MKButton
+              style={imageContainerStyle}
+              onPress={() => this.goNext('camera')}
             >
-              <MKButton
-                style={imageContainerStyle}
-                onPress={() => this.goNext('camera')}
+              <Image
+                key={this.props.imageKey}
+                source={{ uri: this.props.listingImageUri }}
+                resizeMode="cover"
+                style={{ height: imageContainerStyle.height, width: imageContainerStyle.width }}
+              />
+              <Text
+                style={{
+                  position: 'absolute',
+                  backgroundColor: colors.transparent,
+                  top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
+                  left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
+                }}
               >
-                <Image
-                  key={this.props.imageKey}
-                  source={{ uri: this.props.listingImageUri }}
-                  resizeMode="cover"
-                  style={{ height: imageContainerStyle.height - 2, width: imageContainerStyle.width - 2 }}/>
-                <Text
-                  style={{
-                    position: 'absolute',
-                    top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
-                    left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
-                  }}
-                >
-                  <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
-                </Text>
-              </MKButton>
-            </View>
+                <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
+              </Text>
+            </MKButton>
           </View>
+
+          <View style={styles.halfPadded} />
 
           <PriceInput
             value={this.props.listingPrice}
@@ -294,7 +296,12 @@ class EditListingScene extends RoutableScene {
               paddingBottom: 16,
             }}
           >
-            <Text>Listing Visibility</Text>
+            <Text style={{ fontWeight: 'bold' }}>Listing Visibility</Text>
+            <VisibilityWrapper isVisible={this.props.listingStatus === 'inactive'}>
+              <Text style={{ color: colors.accent }}>
+                This listing has been deleted. Select 'Anyone Nearby' or 'Just Friends' and save to restore.
+              </Text>
+            </VisibilityWrapper>
             <View
               style={{
                 flex: 1,
@@ -316,21 +323,41 @@ class EditListingScene extends RoutableScene {
                   group={this.radioGroup}
                   onPress={() => this.props.setStatus('private')}
                 />
-                <Text>Friends</Text>
-              </View>
-              <View style={styles.halfPadded}>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'sold'}
-                  group={this.radioGroup}
-                  onPress={() => this.props.setStatus('sold')}
-                />
-                <Text>Sold</Text>
+                <Text>Just Friends</Text>
               </View>
             </View>
           </View>
 
-          {getLocationComponent()}
+          <LocationComponent />
 
+          <View style={styles.padded} />
+
+          <VisibilityWrapper isVisible={this.props.listingStatus != 'inactive'}>
+            <DeleteListingButton
+              onPress={() => {
+                Alert.alert(`Delete this listing?`,
+                  `Are you sure you want to delete ${this.props.listingTitle}?`,
+                  [
+                    {
+                      text: 'Cancel'
+                    },
+                    {
+                      text: 'Delete',
+                      onPress: () => {
+                        this.setState({ storingUpdate: true }, () => {
+                          this.props.setStatus('inactive');
+                          changeListingStatus('inactive', this.props.listingKey)
+                            .then(() => this.setState({ storingUpdate: false }))
+                            .catch(() => this.setState({ storingUpdate: false }))
+                        });
+                      },
+                    }
+                  ]);
+              }}
+            >
+              <Text style={{ color: colors.accent }}>Delete Listing</Text>
+            </DeleteListingButton>
+          </VisibilityWrapper>
         </View>
         <SpinnerOverlay isVisible={this.state.storingUpdate} />
       </ScrollView>

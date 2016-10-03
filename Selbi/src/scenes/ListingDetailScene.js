@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { InteractionManager, Image, View, Text, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Share from 'react-native-share';
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
@@ -19,8 +20,11 @@ import RoutableScene from '../nav/RoutableScene';
 
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
-import { BuyButton, ChatButton, UpdateButton } from '../components/buttons/ListingDetailButtons';
+import { BuyButton, ChatButton, UpdateButton, ShareButton }
+  from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
+
+import { getListingShareUrl } from '../deeplinking/Utilities';
 
 const detailBottomOverlayStyle = {
   flex: 1,
@@ -46,7 +50,7 @@ function DescriptionText({ description, showFullDescription }) {
 
   if (showFullDescription && description) {
     return (
-      <Text style={{ flex: 1, fontSize: descriptionFontSize  }}>
+      <Text style={{ flex: 1, fontSize: descriptionFontSize }}>
         {description}
       </Text>
     );
@@ -83,6 +87,7 @@ class DetailBottomButtons extends Component {
     if (this.props.isSeller && !isSold) {
       const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
       delete bottomOverlayStyleMinusPadding.padding;
+      bottomOverlayStyleMinusPadding.backgroundColor = colors.transparent;
       return (
         <View
           style={{
@@ -94,6 +99,11 @@ class DetailBottomButtons extends Component {
           }}
         >
           <View style={bottomOverlayStyleMinusPadding}>
+            <ShareButton
+              onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
+                  .catch(console.log)}
+            />
+            <View style={styles.halfPadded} />
             <UpdateButton onPress={this.props.openEdit} />
           </View>
         </View>
@@ -184,6 +194,7 @@ class DetailBottomButtons extends Component {
 }
 
 DetailBottomButtons.propTypes = {
+  listingKey: React.PropTypes.string.isRequired,
   listingData: React.PropTypes.object.isRequired,
   listingDistance: React.PropTypes.string,
   sellerData: React.PropTypes.object,
@@ -218,11 +229,12 @@ class ListingDetailScene extends RoutableScene {
 
     this.unbindListingListener = listenToListing(
       this.props.listingKey,
-      this.props.setListingDetailsData)
+      this.props.setListingDetailsData);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.unbindListingListener && nextProps.listingKey !== this.props.listingKey) {
+    if (this.unbindListingListener &&
+      (nextProps.listingKey !== this.props.listingKey || !this.props.listingData)) {
       this.unbindListingListener();
       this.unbindListingListener = listenToListing(
         this.props.listingKey,
@@ -284,6 +296,10 @@ class ListingDetailScene extends RoutableScene {
   }
 
   render() {
+    if (!this.props.listingData) {
+      return <LoadingListingComponent />;
+    }
+
     if (!this.props.listingDistance) {
       this.loadAndStoreListingDistance();
     }
@@ -312,6 +328,7 @@ class ListingDetailScene extends RoutableScene {
         onPress={this.toggleShowExtraDetails}
       >
         <Image
+          key={this.props.imageKey}
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
@@ -326,6 +343,7 @@ class ListingDetailScene extends RoutableScene {
           >
             <DetailBottomButtons
               isSeller={!!getUser() && listingData.sellerId === getUser().uid}
+              listingKey={this.props.listingKey}
               listingData={listingData}
               listingDistance={this.props.listingDistance}
               sellerData={this.props.sellerData}
@@ -342,17 +360,23 @@ class ListingDetailScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-  return {
-    title: state.listingDetails.listingData.title,
+  const props = {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     listingDistance: state.listingDetails.listingDistance,
     sellerData: state.listingDetails.sellerData,
-    imageKey: imageStoreKey,
-    imageData: state.images[imageStoreKey],
+    imageKey: undefined,
+    imageData: undefined,
     buyerUid: state.listingDetails.buyerUid,
   };
+
+  if (state.listingDetails.listingData) {
+    const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
+    props.imageStoreKey = imageStoreKey;
+    props.imageData = state.images[imageStoreKey];
+  }
+
+  return props;
 };
 
 const mapDispatchToProps = (dispatch) => {

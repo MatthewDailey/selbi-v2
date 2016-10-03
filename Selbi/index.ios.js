@@ -24,6 +24,8 @@ import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
+
+import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
@@ -244,6 +246,16 @@ function renderMenu(navigator, closeMenu) {
   );
 }
 
+function renderDeepLinkListener(navigator) {
+  return (
+    <ListingLinkListener
+      navigator={navigator}
+      rootScene={localListingScene}
+      detailScene={ListingPurchaseFlow.firstScene}
+    />
+  );
+}
+
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -269,6 +281,7 @@ class NavApp extends Component {
           initialRoute={localListingScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
+          renderDeepLinkListener={renderDeepLinkListener}
         />
       </Provider>
     );
