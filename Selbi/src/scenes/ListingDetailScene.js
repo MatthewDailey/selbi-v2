@@ -7,7 +7,8 @@ import Share from 'react-native-share';
 
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing }
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing,
+  loadListingData }
   from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
@@ -233,7 +234,8 @@ class ListingDetailScene extends RoutableScene {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.unbindListingListener && nextProps.listingKey !== this.props.listingKey) {
+    if (this.unbindListingListener &&
+      (nextProps.listingKey !== this.props.listingKey || !this.props.listingData)) {
       this.unbindListingListener();
       this.unbindListingListener = listenToListing(
         this.props.listingKey,
@@ -327,6 +329,7 @@ class ListingDetailScene extends RoutableScene {
         onPress={this.toggleShowExtraDetails}
       >
         <Image
+          key={this.props.imageKey}
           source={{ uri: `data:image/png;base64,${imageData.base64}` }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
@@ -358,7 +361,6 @@ class ListingDetailScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-
   const props = {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
@@ -371,8 +373,8 @@ const mapStateToProps = (state) => {
 
   if (state.listingDetails.listingData) {
     const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-    props['imageStoreKey'] = imageStoreKey;
-    props['imageData'] = state.images[imageStoreKey];
+    props.imageStoreKey = imageStoreKey;
+    props.imageData = state.images[imageStoreKey];
   }
 
   return props;

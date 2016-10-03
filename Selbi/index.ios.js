@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, Linking } from 'react-native';
+import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
@@ -249,18 +249,45 @@ function renderMenu(navigator, closeMenu) {
 class OpenListingDeepLinkListener extends DeepLinkListener {
   handleOpenURL(event) {
     super.handleOpenURL(event)
-    console.log('oepnning url with update.', event);
 
-    const openListingUrlPrefix = `${config.domain}/listing/`
+    const openListingUrlPrefix = `${config.domain}/listing/`;
     if (event.url.startsWith(openListingUrlPrefix)) {
       const listingKey = event.url.replace(openListingUrlPrefix, '');
       console.log('opening key: ', listingKey);
-      store.dispatch(setListingKey(listingKey));
-      this.props.navigator.immediatelyResetRouteStack(
-        [localListingScene, ListingPurchaseFlow.firstScene]);
+
+
+      let containsDetailScene = false;
+
+      this.props.navigator.getCurrentRoutes().forEach((route) => {
+        if (route.id === ListingPurchaseFlow.firstScene.id) {
+          containsDetailScene = true;
+        }
+      });
+
+      if (containsDetailScene) {
+        this.props.navigator.popToRoute(ListingPurchaseFlow.firstScene);
+
+        if (this.props.currentListingKey !== listingKey) {
+          store.dispatch(setListingKey(listingKey));
+        }
+      } else {
+        store.dispatch(setListingKey(listingKey));
+        this.props.navigator.immediatelyResetRouteStack(
+          [localListingScene, ListingPurchaseFlow.firstScene]);
+      }
     }
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    currentListingKey: state.listingDetails.listingKey
+  };
+};
+
+const LinkListener = connect(
+  mapStateToProps,
+  undefined)(OpenListingDeepLinkListener);
 
 class NavApp extends Component {
   componentDidMount() {
@@ -288,7 +315,7 @@ class NavApp extends Component {
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
           renderDeepLinkListener={(navigator) =>
-            <OpenListingDeepLinkListener navigator={navigator} />}
+            <LinkListener navigator={navigator} />}
         />
       </Provider>
     );
