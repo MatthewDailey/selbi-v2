@@ -198,24 +198,16 @@ class EditListingScene extends RoutableScene {
     const imageContainerStyle = {
       height: 160,
       width: 160,
-      borderWidth: 1,
-      borderColor: colors.dark,
-      backgroundColor: `${colors.dark}22`,
-      margin: 4,
       alignItems: 'center',
       justifyContent: 'center',
     };
 
-    const getLocationComponent = () => {
-      if (this.props.listingLocation.lat && this.props.listingLocation.lon) {
+    const LocationComponent = () => {
+      if (this.props.listingLocation.lat && this.props.listingLocation.lon
+        && this.props.listingStatus === 'public') {
         return (
-          <View
-            style={{
-              paddingTop: 16,
-              paddingBottom: 16,
-            }}
-          >
-            <Text>Approximate Location: San Francisco</Text>
+          <View>
+            <Text style={{ fontWeight: 'bold' }}>Location</Text>
             <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
             <DraggableAnnotationExample
               region={{
@@ -229,7 +221,12 @@ class EditListingScene extends RoutableScene {
           </View>
         );
       } else {
-        return <Text>No location for this listing. Only public listings have an associated location.</Text>
+        return (
+          <View>
+            <Text style={{ fontWeight: 'bold' }}>Location</Text>
+            <Text>No location for this listing. Only public listings have an associated location.</Text>
+          </View>
+        );
       }
     };
 
@@ -238,38 +235,35 @@ class EditListingScene extends RoutableScene {
         <View style={styles.paddedContainer}>
           <View
             style={{
-              paddingTop: 16,
-              paddingBottom: 16,
+              flex: 1,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}
+            <MKButton
+              style={imageContainerStyle}
+              onPress={() => this.goNext('camera')}
             >
-              <MKButton
-                style={imageContainerStyle}
-                onPress={() => this.goNext('camera')}
+              <Image
+                key={this.props.imageKey}
+                source={{ uri: this.props.listingImageUri }}
+                resizeMode="cover"
+                style={{ height: imageContainerStyle.height, width: imageContainerStyle.width }}
+              />
+              <Text
+                style={{
+                  position: 'absolute',
+                  backgroundColor: colors.transparent,
+                  top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
+                  left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
+                }}
               >
-                <Image
-                  key={this.props.imageKey}
-                  source={{ uri: this.props.listingImageUri }}
-                  resizeMode="cover"
-                  style={{ height: imageContainerStyle.height - 2, width: imageContainerStyle.width - 2 }}/>
-                <Text
-                  style={{
-                    position: 'absolute',
-                    top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
-                    left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
-                  }}
-                >
-                  <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
-                </Text>
-              </MKButton>
-            </View>
+                <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
+              </Text>
+            </MKButton>
           </View>
+
+          <View style={styles.halfPadded} />
 
           <PriceInput
             value={this.props.listingPrice}
@@ -294,7 +288,7 @@ class EditListingScene extends RoutableScene {
               paddingBottom: 16,
             }}
           >
-            <Text>Listing Visibility</Text>
+            <Text style={{ fontWeight: 'bold' }}>Listing Visibility</Text>
             <View
               style={{
                 flex: 1,
@@ -316,20 +310,12 @@ class EditListingScene extends RoutableScene {
                   group={this.radioGroup}
                   onPress={() => this.props.setStatus('private')}
                 />
-                <Text>Friends</Text>
-              </View>
-              <View style={styles.halfPadded}>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'sold'}
-                  group={this.radioGroup}
-                  onPress={() => this.props.setStatus('sold')}
-                />
-                <Text>Sold</Text>
+                <Text>Just Friends</Text>
               </View>
             </View>
           </View>
 
-          {getLocationComponent()}
+          <LocationComponent />
 
         </View>
         <SpinnerOverlay isVisible={this.state.storingUpdate} />
