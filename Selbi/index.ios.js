@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
-import { Provider, connect } from 'react-redux';
+import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
 import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
@@ -25,7 +25,7 @@ import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
 
-import DeepLinkListener from './src/deeplinking/DeepLinkListener';
+import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
@@ -33,7 +33,7 @@ import localListingsReducer from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsPrivate, setMyListingsPublic, setMyListingsSold,
   clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
-import listingDetailReducer, { setListingKey } from './src/reducers/ListingDetailReducer';
+import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
@@ -246,48 +246,15 @@ function renderMenu(navigator, closeMenu) {
   );
 }
 
-class OpenListingDeepLinkListener extends DeepLinkListener {
-  handleOpenURL(event) {
-    super.handleOpenURL(event)
-
-    const openListingUrlPrefix = `${config.domain}/listing/`;
-    if (event.url.startsWith(openListingUrlPrefix)) {
-      const listingKey = event.url.replace(openListingUrlPrefix, '');
-      console.log('opening key: ', listingKey);
-
-
-      let containsDetailScene = false;
-
-      this.props.navigator.getCurrentRoutes().forEach((route) => {
-        if (route.id === ListingPurchaseFlow.firstScene.id) {
-          containsDetailScene = true;
-        }
-      });
-
-      if (containsDetailScene) {
-        this.props.navigator.popToRoute(ListingPurchaseFlow.firstScene);
-
-        if (this.props.currentListingKey !== listingKey) {
-          store.dispatch(setListingKey(listingKey));
-        }
-      } else {
-        store.dispatch(setListingKey(listingKey));
-        this.props.navigator.immediatelyResetRouteStack(
-          [localListingScene, ListingPurchaseFlow.firstScene]);
-      }
-    }
-  }
+function renderDeepLinkListener(navigator) {
+  return (
+    <ListingLinkListener
+      navigator={navigator}
+      rootScene={localListingScene}
+      detailScene={ListingPurchaseFlow.firstScene}
+    />
+  );
 }
-
-const mapStateToProps = (state) => {
-  return {
-    currentListingKey: state.listingDetails.listingKey
-  };
-};
-
-const LinkListener = connect(
-  mapStateToProps,
-  undefined)(OpenListingDeepLinkListener);
 
 class NavApp extends Component {
   componentDidMount() {
@@ -314,8 +281,7 @@ class NavApp extends Component {
           initialRoute={localListingScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
-          renderDeepLinkListener={(navigator) =>
-            <LinkListener navigator={navigator} />}
+          renderDeepLinkListener={renderDeepLinkListener}
         />
       </Provider>
     );
