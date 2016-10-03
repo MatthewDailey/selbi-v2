@@ -4,11 +4,9 @@ import { InteractionManager, Image, View, Text, TouchableHighlight } from 'react
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 
-
 import { distanceInMilesString, getGeolocation } from '../utils';
 
-import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing,
-  loadListingData }
+import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenToListing }
   from '../firebase/FirebaseConnector';
 
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
@@ -196,6 +194,7 @@ class DetailBottomButtons extends Component {
 }
 
 DetailBottomButtons.propTypes = {
+  listingKey: React.PropTypes.string.isRequired,
   listingData: React.PropTypes.object.isRequired,
   listingDistance: React.PropTypes.string,
   sellerData: React.PropTypes.object,
