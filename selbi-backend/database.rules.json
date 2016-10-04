@@ -11,6 +11,28 @@
       ".write" : false
     },
 
+    "userBulletins" : {
+      "$uid" :{
+        ".read" : "auth.uid === $uid",
+        ".write" : "auth.uid === $uid",
+        "$bullitenId" : {
+          ".validate" : "newData.hasChildren(['timestamp', 'type', 'status'])",
+          "timestamp" : {
+            ".validate" : "newData.isNumber()"
+          },
+          "type" : {
+            ".validate" : "newData.isString()"
+          },
+          "status" : {
+            ".validate" : "newData.val() === 'read' || newData.val() === 'unread'"
+          },
+          "payload" : {
+            ".validate" : true
+          }
+        }
+      }
+    },
+
     "messages": {
       "$listingId" : {
         "$buyerId" : {
