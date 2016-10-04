@@ -956,3 +956,26 @@ export function listenToListing(listingId, listener) {
     .child(listingId)
     .off('value', listenForValueIgnoreEmpty);
 }
+
+export function followListingSeller(listingId) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to follow another user');
+  }
+
+  return loadListingData(listingId)
+    .then((listingSnapshot) => {
+      if (listingSnapshot.exists()) {
+        return listingSnapshot.val();
+      }
+      return Promise.reject(`Unable to follow owner of ${listingId}. Listing does not exists`);
+    })
+    .then((listingData) => loadUserPublicData(listingData.sellerId))
+    .then((sellerPublicDataSnapshot) => {
+      if (sellerPublicDataSnapshot.exists()) {
+        return sellerPublicDataSnapshot.val();
+      }
+      return Promise.reject(`Unable to follow owner of ${listingId}.`
+        + ' Could not find seller username.');
+    })
+    .then((sellerPublicData) => addFriend(sellerPublicData.username));
+}

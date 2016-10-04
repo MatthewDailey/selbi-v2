@@ -29,7 +29,8 @@ import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
-import localListingsReducer from './src/reducers/LocalListingsReducer';
+import localListingsReducer, { addLocalListing, removeLocalListing }
+  from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsPrivate, setMyListingsPublic, setMyListingsSold,
   clearMyListings } from './src/reducers/MyListingsReducer';
 import imagesReducer from './src/reducers/ImagesReducer';
@@ -41,8 +42,10 @@ import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
-  addAuthStateChangeListener, listenToListingsByStatus }
+  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation }
   from './src/firebase/FirebaseConnector';
+
+import { getGeolocation, watchGeolocation } from './src/utils';
 
 import colors from './colors';
 import config from './config';
@@ -68,6 +71,32 @@ const store = createStore(combineReducers({
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
 }));
+
+function fetchLocalListings() {
+  console.log('fetching local listings');
+
+  return getGeolocation()
+    .then((location) => {
+      const geoQuery =
+        listenToListingsByLocation(
+          [location.lat, location.lon],
+          20,
+          (listing) => store.dispatch(addLocalListing(listing)),
+          (listingId) => store.dispatch(removeLocalListing(listingId)));
+
+      watchGeolocation((newLocation) => {
+        if (geoQuery) {
+          this.cancelGeoWatch = geoQuery.updateCriteria({
+            center: [newLocation.lat, newLocation.lon],
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+fetchLocalListings();
 
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {

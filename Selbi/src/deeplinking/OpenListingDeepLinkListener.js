@@ -6,6 +6,8 @@ import { parseListingUrl } from './Utilities';
 
 import { setListingKey } from '../reducers/ListingDetailReducer';
 
+import { followListingSeller } from '../firebase/FirebaseConnector';
+
 class OpenListingDeepLinkListener extends DeepLinkListener {
 
   isDetailSceneInStack() {
@@ -47,6 +49,10 @@ class OpenListingDeepLinkListener extends DeepLinkListener {
       } else {
         this.launchNewStackWithDetailScene(listingKey);
       }
+
+      followListingSeller(listingKey)
+        .then(() => console.log('Followed seller.'))
+        .catch((error) => console.log('Failed to follow seller.', error));
     }
   }
 }
