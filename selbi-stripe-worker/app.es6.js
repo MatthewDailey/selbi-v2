@@ -3,11 +3,15 @@ import firebase from 'firebase';
 import initializeStripe from 'stripe';
 
 import ServiceAccount from '@selbi/service-accounts';
+
 import CreateCustomerHandler from './src/CreateCustomerHandler';
 import CreateAccountHandler from './src/CreateAccountHandler';
 import CreatePurchaseHandler from './src/CreatePurchaseHandler';
 import MessageNotificationHandler from './src/MessageNotificationsHandler';
+import EventHandler from './src/EventHandler';
 import QueueListener from './src/QueueListener';
+
+import { eventHandlers } from './src/events';
 
 import { sendNotification } from './src/FcmConnector';
 
@@ -21,6 +25,10 @@ const stripe = initializeStripe(config.stripePrivateKey);
 const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFromEnvironment(),
   'serviceUser');
 const firebaseDb = serviceAccountApp.database();
+
+const eventQueueHandler = new EventHandler(firebaseDb, sendNotification);
+const eventQueueListener = new QueueListener('/events');
+eventQueueListener.start(firebaseDb, eventQueueHandler.getTaskHandler(eventHandlers));
 
 const createCustomerHandler = new CreateCustomerHandler(firebaseDb, stripe.customers);
 const createCustomerQueueListener = new QueueListener('/createCustomer');
@@ -45,7 +53,9 @@ process.on('SIGINT', () => {
     createCustomerQueueListener.shutdown(),
     createAccountQueueListener.shutdown(),
     messageNotificationQueueListener.shutdown(),
-    purchaseQueueListener.shutdown()])
+    purchaseQueueListener.shutdown(),
+    eventQueueListener.shutdown(),
+  ])
     .then(() => serviceAccountApp.delete())
     .then(() => console.log('Graceful shutdown of firebase connections complete.'))
     .then(() => process.exit(0))

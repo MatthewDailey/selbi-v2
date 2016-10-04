@@ -3,6 +3,6 @@ import AddBulletinForNewFollower from './AddBulletinForNewFollowerHandler';
 
 export default undefined;
 
-export const evenHandlers = [
+export const eventHandlers = [
   new AddBulletinForNewFollower(),
 ];
