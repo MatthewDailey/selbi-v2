@@ -3,13 +3,13 @@ import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 import { writeToQueueAndExpectHandled } from './QueueUtilities';
 
 const testEvent = {
-  uid: testUserUid,
+  owner: testUserUid,
   timestamp: 1,
   type: 'followed',
 };
 
 const testEventWithPayload = {
-  uid: testUserUid,
+  owner: testUserUid,
   timestamp: 1,
   type: 'followed',
   payload: 'a value',

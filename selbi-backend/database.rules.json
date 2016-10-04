@@ -18,7 +18,7 @@
         ".write": "auth.uid != null",
         ".indexOn": "_state",
         "$taskId": {
-          ".validate": "newData.hasChildren(['type', 'uid', 'timestamp']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
+          ".validate": "newData.hasChildren(['type', 'owner', 'timestamp']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
           "_state": {
             ".validate": "newData.isString()"
           },
@@ -57,7 +57,7 @@
           "type": {
             ".validate": "newData.isString()"
           },
-          "uid": {
+          "owner": {
             ".validate": "newData.isString()"
           },
           "timestamp": {
