@@ -1,6 +1,9 @@
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import dirtyChai from 'dirty-chai';
 import FirebaseTest, { testUserUid, expectUnableToStore, deepCopy }
   from '@selbi/firebase-test-resource';
+
+chai.use(dirtyChai);
 
 const firstUserBulletin = {
   timestamp: 1,
@@ -59,6 +62,52 @@ describe('/userBulletins', () => {
   it('can publish with payload', (done) => {
     pushTestUserBulletin(userBulletinWithPayload)
       .then(done)
+      .catch(done);
+  });
+
+  it('can load by timestamp order', (done) => {
+    let childCount = 0;
+
+    // Expect earliest first.
+    const checkTimestamps = (bulletinSnapshot) => {
+      expect(bulletinSnapshot.exists()).to.be.true();
+
+      if (childCount === 0) {
+        expect(bulletinSnapshot.val().timestamp).to.equal(firstUserBulletin.timestamp);
+      }
+
+      if (childCount === 1) {
+        expect(bulletinSnapshot.val().timestamp).to.equal(readUserBulletin.timestamp);
+      }
+
+      if (childCount === 2) {
+        expect(bulletinSnapshot.val().timestamp).to.equal(userBulletinWithPayload.timestamp);
+      }
+
+      childCount++;
+
+      if (childCount > 2) {
+        FirebaseTest.testUserApp.database()
+          .ref('userBulletins')
+          .child(testUserUid)
+          .orderByChild('timestamp')
+          .limitToFirst(3)
+          .off('child_added', checkTimestamps)
+        done();
+      }
+    };
+
+    const checkBulletins = () => FirebaseTest.testUserApp.database()
+      .ref('userBulletins')
+      .child(testUserUid)
+      .orderByChild('timestamp')
+      .limitToFirst(3)
+      .on('child_added', checkTimestamps);
+
+    pushTestUserBulletin(readUserBulletin)
+      .then(() => pushTestUserBulletin(userBulletinWithPayload))
+      .then(() => pushTestUserBulletin(firstUserBulletin))
+      .then(checkBulletins)
       .catch(done);
   });
 

@@ -15,6 +15,7 @@
       "$uid" :{
         ".read" : "auth.uid === $uid",
         ".write" : "auth.uid === $uid",
+        ".indexOn" : ["timestamp"],
         "$bullitenId" : {
           ".validate" : "newData.hasChildren(['timestamp', 'type', 'status'])",
           "timestamp" : {
