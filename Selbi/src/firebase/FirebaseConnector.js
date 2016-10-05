@@ -466,11 +466,19 @@ export function followUser(uid) {
     return Promise.reject('Must be signed in to follow another user.')
   }
 
-  return firebaseApp.database()
+  const addFollowingPromise = firebaseApp.database()
     .ref('following')
     .child(getUser().uid)
     .child(uid)
     .set(true);
+
+  const addFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .set(true);
+
+  return Promise.all([addFollowerPromise, addFollowingPromise]);
 }
 
 export function addFriendByUsername(friendUsername) {
