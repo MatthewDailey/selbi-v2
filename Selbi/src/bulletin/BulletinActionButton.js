@@ -13,12 +13,19 @@ const FlatButton = MKButton.flatButton()
   .withBackgroundColor(colors.white)
   .build();
 
-export default function BulletinActionButton() {
+export default function BulletinActionButton({ text, onPress }) {
   return (
     <View style={{ alignItems: 'flex-end' }}>
-      <FlatButton>
-        <Text style={bulletinStyles.actionButtonText}>Follow TJ <Icon name="arrow-right"/></Text>
+      <FlatButton onPress={onPress}>
+        <Text style={bulletinStyles.actionButtonText}>
+          {text} <Icon name="arrow-right" />
+        </Text>
       </FlatButton>
     </View>
   );
 }
+
+BulletinActionButton.propTypes = {
+  text: React.PropTypes.string.isRequired,
+  onPress: React.PropTypes.func,
+};

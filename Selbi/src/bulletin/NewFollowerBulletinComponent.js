@@ -12,7 +12,7 @@ export default function NewFollowerBulletin() {
       <Text ellipsizeMode="tail" numberOfLines={1} style={bulletinStyles.bulletinText}>
         😘 TJ (@tjpavlu) is now following you.
       </Text>
-      <BulletinActionButton />
+      <BulletinActionButton text="Follow TJ" onPress={() => console.log('clicked follow')} />
     </View>
   );
 }
