@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
+import ExpandingText from '../components/ExpandingText';
 
 import bulletinStyles from './bulletinStyles';
 
@@ -12,9 +13,9 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser })
 
   return (
     <View>
-      <Text ellipsizeMode="tail" numberOfLines={1} style={bulletinStyles.bulletinText}>
+      <ExpandingText style={bulletinStyles.bulletinText}>
         😘 {newFollowerDisplayName} (@{newFollowerUsername}) is now following you.
-      </Text>
+      </ExpandingText>
       <BulletinActionButton
         text={`Follow ${newFollowerDisplayName}`}
         onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
@@ -34,4 +35,4 @@ NewFollowerBulletin.propTypes = {
     }).isRequired,
   }).isRequired,
   followUser: React.PropTypes.func.isRequired,
-}
+};

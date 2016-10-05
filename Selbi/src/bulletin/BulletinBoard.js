@@ -144,7 +144,7 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
               payload: {
                 newFollowerPublicData: {
                   displayName: 'TJ Pavlu',
-                  username: 'tjpavlu',
+                  username: 'tjpavluhasasuperlongusernamethatcausesoverflow',
                 },
                 newFollowerUid: 'tj-uid',
               },
