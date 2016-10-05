@@ -205,9 +205,23 @@ export function createListing(titleInput,
     .child(newListingRef.key)
     .set(true);
 
+  const recordNewListingEvent = () => firebaseApp
+    .database()
+    .ref('events/tasks')
+    .push()
+    .set({
+      owner: uid,
+      timestamp: new Date().getTime(),
+      type: 'new-listing',
+      payload: {
+        listingId: newListingRef.key,
+      },
+    });
+
   return newListingRef
     .set(listing)
     .then(createUserListing)
+    .then(recordNewListingEvent)
     .then(() => Promise.resolve(newListingRef.key));
 }
 
