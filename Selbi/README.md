@@ -3,6 +3,20 @@ Selbi - Mobile App
 
 This package implements the Selbi mobile app in React Native
 
+Deep Links / Dynamic Links
+---------------------------
+
+We make use of the Firebase Dynamic links feature. We use universal links.
+
+Current uses of dynamic links:
+- Create a share link which opens directly to a listing and automatically causes clicker to follow
+the listing owner
+
+Links with some background:
+- [Firebase docs](https://firebase.google.com/docs/dynamic-links/ios)
+- [Facebook React Native deep link docs](https://facebook.github.io/react-native/docs/linking.html
+
+
 Build Process
 -------------
 
