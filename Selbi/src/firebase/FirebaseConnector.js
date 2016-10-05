@@ -15,7 +15,7 @@ export default undefined;
 const authStateChangeListeners = [];
 
 firebaseApp.auth().onAuthStateChanged((user) => {
-  console.log(`auth state changed --- signed in = ${user !== undefined}`);
+  console.log(`auth state changed --- signed in = ${!!user}`);
   authStateChangeListeners.forEach((listener) => listener(user));
 });
 
@@ -982,7 +982,7 @@ export function followListingSeller(listingId) {
 
 export function listenToBulletins(bulletinsHandler) {
   if (!getUser()) {
-    return () => {};
+    return undefined;
   }
 
   const handleSnapshot = (bulletinsSnapshot) => {
@@ -993,15 +993,20 @@ export function listenToBulletins(bulletinsHandler) {
     }
   };
 
+  // Fetch this before since we'll be signed out during call to returned unwatch method.
+  const uid = getUser().uid;
+
   firebaseApp
     .database()
     .ref('userBulletins')
-    .child(getUser().uid)
+    .child(uid)
     .on('value', handleSnapshot);
 
-  return () => firebaseApp
-    .database()
-    .ref('userBulletins')
-    .child(getUser().uid)
-    .off('value', handleSnapshot);
+  return () => {
+    firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(uid)
+      .off('value');
+  };
 }

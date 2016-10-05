@@ -144,7 +144,6 @@ const storeUserData = (user) => {
   if (user) {
     unwatchUserPublicData = watchUserPublicData(user.uid,
       (publicDataSnapshot) => {
-        console.log('saw update to user');
         if (publicDataSnapshot.exists()) {
           const userPublicData = publicDataSnapshot.val();
           store.dispatch(setUserData(userPublicData));
@@ -157,7 +156,7 @@ const storeUserData = (user) => {
     store.dispatch(clearUserData());
   }
 };
-addAuthStateChangeListener(storeUserData)
+addAuthStateChangeListener(storeUserData);
 
 const localListingScene = {
   id: 'listings-scene',
@@ -243,7 +242,7 @@ routeLinks[localListingScene.id] = {
 
 routeLinks[friendsListingScene.id] = {
   next: {
-    title: <Text><Icon name="user-plus" size={20}/></Text>,
+    title: <Text><Icon name="user-plus" size={20} /></Text>,
     getRoute: () => followFriendScene,
   },
   details: {

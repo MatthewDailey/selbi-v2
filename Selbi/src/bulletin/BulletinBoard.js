@@ -135,6 +135,7 @@ BulletinBoard.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    bulletins: state.bulletins,
     isSignedIn: !!state.user.username,
   };
 }
