@@ -9,16 +9,9 @@ import colors from '../../colors';
 
 import NewFollowerBulletin from './NewFollowerBulletin';
 
-const SignedInBulletinBoard = function SellerInfoOverlay() {
-  const FlatButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-    })
-    .withBackgroundColor(colors.white)
-    .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-    .build();
+const notificationDescriptionFontSize = 15;
 
-  const notificationDescriptionFontSize = 15;
+const SignedInBulletinBoard = function SellerInfoOverlay() {
 
   return (
     <View>
@@ -47,6 +40,7 @@ const SignedInBulletinBoard = function SellerInfoOverlay() {
                   username: 'tjpavluhasasuperlongusernamethatcausesoverflow',
                 },
                 newFollowerUid: 'tj-uid',
+                reciprocated: true,
               },
             }}
           />
@@ -70,18 +64,6 @@ const SignedInBulletinBoard = function SellerInfoOverlay() {
           <View style={{padding: 4}} />
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
-
-          <View style={{padding: 4}} />
-
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>...and 6 more notifications.</Text>
-
-          <View style={{padding: 4}} />
-
-          <View style={{alignItems: 'flex-end'}}>
-            <FlatButton>
-              <Text style={{ fontSize: notificationDescriptionFontSize + 2 }}>View all notifications <Icon name="arrow-right"/></Text>
-            </FlatButton>
-          </View>
 
         </View>
       </View>

@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
 import ExpandingText from '../components/ExpandingText';
+import VisibilityWrapper from '../components/VisibilityWrapper';
 
 import bulletinStyles from './bulletinStyles';
 
@@ -16,10 +17,12 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser })
       <ExpandingText style={bulletinStyles.bulletinText}>
         😘 {newFollowerDisplayName} (@{newFollowerUsername}) is now following you.
       </ExpandingText>
-      <BulletinActionButton
-        text={`Follow ${newFollowerDisplayName}`}
-        onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
-      />
+      <VisibilityWrapper isVisible={!newFollowerBulletin.payload.reciprocated}>
+        <BulletinActionButton
+          text={`Follow ${newFollowerDisplayName}`}
+          onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
+        />
+      </VisibilityWrapper>
     </View>
   );
 }
