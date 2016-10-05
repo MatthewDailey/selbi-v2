@@ -26,8 +26,8 @@ export default class NotifyFollowersOfNewListingHandler {
       },
     };
 
-    const setBulletingListingId = () => {
-      bulletin.listingId = data.payload.listingId;
+    const setBulletinListingId = () => {
+      bulletin.payload.listingId = data.payload.listingId;
       return Promise.resolve();
     };
 
@@ -87,7 +87,7 @@ export default class NotifyFollowersOfNewListingHandler {
     };
 
     return validateNewListingPayload(data.payload)
-      .then(setBulletingListingId)
+      .then(setBulletinListingId)
       .then(addSellerPublicDataToBulletin)
       .then(loadFollowers)
       .then((followers) => {

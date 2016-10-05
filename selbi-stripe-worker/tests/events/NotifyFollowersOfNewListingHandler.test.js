@@ -1,5 +1,6 @@
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
+import { spy } from 'sinon';
 
 import FirebaseTest, { testUserUid, minimalUserUid, deepCopy }
   from '@selbi/firebase-test-resource';
@@ -79,6 +80,13 @@ describe('events - NotifyFollowersOfNewListingHandler', () => {
           .database()
           .ref('userBulletins')
           .remove())
+        .then(() => FirebaseTest
+          .serviceAccountApp
+          .database()
+          .ref('followers')
+          .child(testUserUid)
+          .child(minimalUserUid)
+          .set(true))
         .then(done)
         .catch(done);
     });
@@ -94,7 +102,12 @@ describe('events - NotifyFollowersOfNewListingHandler', () => {
     });
 
     it('can handle valid input', (done) => {
-      handler.handle(validNewListingEvent, FirebaseTest.serviceAccountApp.database())
+      const sendNotificationSpy = spy();
+
+      handler.handle(
+        validNewListingEvent,
+        FirebaseTest.serviceAccountApp.database(),
+        sendNotificationSpy)
         .then(() => FirebaseTest
           .minimalUserApp
           .database()
@@ -109,8 +122,13 @@ describe('events - NotifyFollowersOfNewListingHandler', () => {
           const userBulletinKeys = Object.keys(userBulletins);
           expect(userBulletinKeys.length).to.equal(1);
 
-          expect(userBulletins[userBulletinKeys[0]].payload.newFollowerPublicData.username)
+          expect(userBulletins[userBulletinKeys[0]].payload.sellerPublicData.username)
             .to.equal('testuser');
+          expect(userBulletins[userBulletinKeys[0]].payload.listingId)
+            .to.equal(validNewListingEvent.payload.listingId);
+        })
+        .then(() => {
+          expect(sendNotificationSpy.called).to.be.true();
         })
         .then(done)
         .catch(done);
