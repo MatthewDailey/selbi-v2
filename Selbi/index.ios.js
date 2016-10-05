@@ -112,7 +112,7 @@ const listenForUserBulletins = (user) => {
     }
     store.dispatch(clearBulletins());
   }
-}
+};
 addAuthStateChangeListener(listenForUserBulletins);
 
 // Listen for user listings and make sure to remove listener when
@@ -212,6 +212,19 @@ const followFriendScene = {
   ),
 };
 
+const menuSignInScene = {
+  id: 'menu-sign-scene',
+  renderContent: withNavigatorProps(
+    <SignInOrRegisterScene
+      title=""
+      leftIs="back"
+      registerWithEmail={registerWithEmail}
+      signInWithEmail={signInWithEmail}
+      createUser={createUser}
+      goHomeOnComplete
+    />),
+}
+
 let routeLinks = {};
 
 // Link local listings to sell flow.
@@ -222,6 +235,9 @@ routeLinks[localListingScene.id] = {
   },
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
+  },
+  signIn: {
+    getRoute: () => menuSignInScene,
   },
 };
 
@@ -276,18 +292,7 @@ function renderMenu(navigator, closeMenu) {
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}
       loadUserPublicData={watchUserPublicData}
-      signInOrRegisterScene={{
-        id: 'menu-sign-scene',
-        renderContent: withNavigatorProps(
-          <SignInOrRegisterScene
-            title=""
-            leftIs="back"
-            registerWithEmail={registerWithEmail}
-            signInWithEmail={signInWithEmail}
-            createUser={createUser}
-            goHomeOnComplete
-          />),
-      }}
+      signInOrRegisterScene={menuSignInScene}
     />
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, Text, Alert } from 'react-native';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -8,108 +9,7 @@ import colors from '../../colors';
 
 import NewFollowerBulletin from './NewFollowerBulletin';
 
-const InactiveSellerInfo = function SellerInfoOverlay() {
-  const FlatButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-    })
-    .withBackgroundColor(colors.white)
-    .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-    .build();
-
-  return (
-    <View>
-      <View
-        style={{
-          margin: 8,
-          shadowOffset:{
-            width: 2,
-            height: 2,
-          },
-          shadowColor: 'black',
-          shadowOpacity: 1.0,
-        }}
-      >
-        <View style={styles.paddedContainer}>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={{flex: 1, alignItems: 'center' }}>
-              <Text
-                style={{
-                  color: colors.public,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                0
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.public }}>Public Listings</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
-              <Text
-                style={{
-                  color: colors.private,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                0
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.private }}>Private Listings</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'center'}}>
-              <Text
-                style={{
-                  color: colors.accent,
-                  fontSize: 20,
-                  fontWeight: '300',
-                  padding: 8,
-                }}
-              >
-                0
-              </Text>
-              <Text style={{ fontSize: 10, color: colors.accent }}>Notifications</Text>
-            </View>
-          </View>
-
-          <View style={{padding: 4}} />
-
-          <View style={{alignItems: 'flex-end'}}>
-            <FlatButton>
-              <Text>Try selling something <Icon name="arrow-right"/></Text>
-            </FlatButton>
-          </View>
-
-          <View style={{padding: 8}} />
-
-          <View style={{padding: 4}} />
-
-          <Text style={{ fontSize: 10 }}>No recent activity. You should add some friends or chat with a seller.</Text>
-
-          <View style={{padding: 4}} />
-
-          <View style={{alignItems: 'flex-end'}}>
-            <FlatButton>
-              <Text>Add some friends <Icon name="arrow-right"/></Text>
-            </FlatButton>
-          </View>
-
-          <View style={{padding: 4}} />
-
-          <View style={{alignItems: 'center'}}>
-            <FlatButton>
-              <Text><Icon name="arrow-down" /> Check out some cool listings <Icon name="arrow-down"/></Text>
-            </FlatButton>
-          </View>
-
-        </View>
-      </View>
-    </View>
-  );
-}
-
-const ActiveSellerInfo = function SellerInfoOverlay() {
+const SignedInBulletinBoard = function SellerInfoOverlay() {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
@@ -189,13 +89,13 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
   );
 }
 
-const SignedOutSellerInfo = function SellerInfoOverlay() {
+const SignedOutBulletinBoard = function SellerInfoOverlay({ signIn }) {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
     })
     .withBackgroundColor(colors.white)
-    .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
+    .withOnPress(signIn)
     .build();
 
   return (
@@ -212,11 +112,40 @@ const SignedOutSellerInfo = function SellerInfoOverlay() {
         }}
       >
         <FlatButton>
-          <Text style={styles.menuText}>Sign in <Icon name="sign-in" size={20}/></Text>
+          <Text style={styles.menuText}>Sign in <Icon name="sign-in" size={20} /></Text>
         </FlatButton>
       </View>
     </View>
   );
+};
+SignedOutBulletinBoard.propTypes = {
+  signIn: React.PropTypes.func.isRequired,
+};
+
+function BulletinBoard(props) {
+  if (props.isSignedIn) {
+    return <SignedInBulletinBoard {...props} />;
+  }
+  return <SignedOutBulletinBoard {...props} />;
+}
+BulletinBoard.propTypes = {
+  isSignedIn: React.PropTypes.bool.isRequired,
+  signIn: React.PropTypes.func.isRequired,
+};
+
+function mapStateToProps(state) {
+  return {
+    isSignedIn: !!state.user.username,
+  };
 }
 
-export default ActiveSellerInfo;
+function mapDispatchToProps(dispatch) {
+  return {
+
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BulletinBoard);
