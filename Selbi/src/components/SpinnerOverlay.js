@@ -7,7 +7,11 @@ import Dimensions from 'Dimensions';
 import styles from '../../styles';
 import colors from '../../colors';
 
-export default function SpinnerOverlay({ isVisible, message, backgroundColor = colors.dark }) {
+export default function SpinnerOverlay({
+  isVisible,
+  message,
+  backgroundColor = colors.dark,
+  fillParent = false }) {
   if (isVisible) {
     const { width, height } = Dimensions.get('window');
 
@@ -17,10 +21,33 @@ export default function SpinnerOverlay({ isVisible, message, backgroundColor = c
       left: 0,
       height,
       width,
+      backgroundColor: `${backgroundColor}aa`,
     };
 
-    if (backgroundColor) {
-      backgroundStyle.backgroundColor = `${backgroundColor}aa`;
+    if (fillParent) {
+      return (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            flex: 1,
+            backgroundColor: `${backgroundColor}aa`,
+          }}
+        >
+          <View style={styles.paddedCenterContainerClear}>
+            <MKSpinner strokeColor={colors.primary} />
+            <Text
+              color={colors.white}
+              style={styles.friendlyTextLight}
+            >
+              {message}
+            </Text>
+          </View>
+        </View>
+      );
     }
 
     return (
@@ -39,3 +66,10 @@ export default function SpinnerOverlay({ isVisible, message, backgroundColor = c
   }
   return <View />;
 }
+
+SpinnerOverlay.propTypes = {
+  isVisible: React.PropTypes.any,
+  message: React.PropTypes.node,
+  backgroundColor: React.PropTypes.string,
+  fillParent: React.PropTypes.bool,
+};

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Alert } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
+import { MKButton, MKSpinner } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../../styles';
@@ -9,76 +9,107 @@ import colors from '../../colors';
 
 import NewFollowerBulletin from './NewFollowerBulletin';
 
+import SpinnerOverlay from '../components/SpinnerOverlay';
+
 const notificationDescriptionFontSize = 15;
 
-const SignedInBulletinBoard = function SellerInfoOverlay(props) {
-  const getBulletins = () => {
-    const bulletins = [];
+const initialSignedInState = {
+  takingAction: false,
+  actionDescription: '',
+};
 
-    Object.keys(props.bulletins).forEach((bulletinKey) => {
-      const bulletin = props.bulletins[bulletinKey];
+class SignedInBulletinBoard extends Component {
+  constructor(props) {
+    super(props);
 
-      if (bulletin.status === 'unread') {
-        switch (bulletin.type) {
-          case 'follow':
-            bulletins.push(
-              <NewFollowerBulletin
-                key={bulletinKey}
-                followUser={(uid) => console.log(`follow ${uid}`)}
-                newFollowerBulletin={bulletin}
-              />
-            );
-            break;
-          default:
-            break;
-        }
-      }
+    this.state = initialSignedInState;
+  }
+
+  finishTakingAction() {
+    this.setState(initialSignedInState);
+  }
+
+  startTakingAction(actionDescription) {
+    this.setState({
+      takeAction: true,
+      actionDescription,
     });
+  }
 
-    return bulletins;
-  };
+  render() {
+    const getBulletins = () => {
+      const bulletins = [];
 
-  return (
-    <View>
-      <View
-        style={{
-          margin: 8,
-          shadowOffset:{
-            width: 2,
-            height: 2,
-          },
-          shadowColor: 'black',
-          shadowOpacity: 1.0,
-        }}
-      >
-        <View style={styles.paddedContainer}>
-          {getBulletins()}
+      Object.keys(this.props.bulletins).forEach((bulletinKey) => {
+        const bulletin = this.props.bulletins[bulletinKey];
 
-          <View style={{padding: 4}} />
+        if (bulletin.status === 'unread') {
+          switch (bulletin.type) {
+            case 'follow':
+              bulletins.push(
+                <NewFollowerBulletin
+                  key={bulletinKey}
+                  followUser={(uid) => console.log(`follow ${uid}`)}
+                  newFollowerBulletin={bulletin}
+                />
+              );
+              break;
+            default:
+              break;
+          }
+        }
+      });
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+      return bulletins;
+    };
 
-          <View style={{padding: 4}} />
+    return (
+      <View>
+        <View
+          style={{
+            margin: 8,
+            shadowOffset:{
+              width: 2,
+              height: 2,
+            },
+            shadowColor: 'black',
+            shadowOpacity: 1.0,
+          }}
+        >
+          <View style={styles.paddedContainer}>
+            {getBulletins()}
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
+            <View style={{padding: 4}} />
 
-          <View style={{padding: 4}} />
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🎁 Tommy added a new listing.</Text>
+            <View style={{padding: 4}} />
 
-          <View style={{padding: 4}} />
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>😘 TJ (@tjpavlu) is now following you.</Text>
+            <View style={{padding: 4}} />
 
-          <View style={{padding: 4}} />
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🎁 Tommy added a new listing.</Text>
 
-          <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
+            <View style={{padding: 4}} />
 
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>😘 TJ (@tjpavlu) is now following you.</Text>
+
+            <View style={{padding: 4}} />
+
+            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
+
+            <SpinnerOverlay isVisible fillParent />
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  }
 }
+SignedInBulletinBoard.propTypes = {
+  bulletins: React.PropTypes.object,
+};
+
 
 const SignedOutBulletinBoard = function SellerInfoOverlay({ signIn }) {
   const FlatButton = MKButton.flatButton()
