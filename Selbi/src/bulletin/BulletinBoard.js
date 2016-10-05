@@ -29,10 +29,17 @@ class SignedInBulletinBoard extends Component {
     this.setState(initialSignedInState);
   }
 
-  startTakingAction(actionDescription) {
+  startTakingAction(actionDescription, callback) {
     this.setState({
-      takeAction: true,
+      takingAction: true,
       actionDescription,
+    }, () => {
+      callback()
+        .then(() => this.finishTakingAction())
+        .catch((error) => {
+          this.finishTakingAction();
+          Alert.alert(error);
+        });
     });
   }
 
@@ -49,7 +56,18 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <NewFollowerBulletin
                   key={bulletinKey}
-                  followUser={(uid) => console.log(`follow ${uid}`)}
+                  followUser={(uid) => {
+                    this.startTakingAction(
+                      `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
+                      () => {
+                        return new Promise((resolve) => {
+                          setTimeout(() => {
+                            console.log(`follow ${uid}`);
+                            resolve();
+                          }, 5000);
+                        });
+                      });
+                  }}
                   newFollowerBulletin={bulletin}
                 />
               );
@@ -99,7 +117,11 @@ class SignedInBulletinBoard extends Component {
 
             <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
 
-            <SpinnerOverlay isVisible fillParent />
+            <SpinnerOverlay
+              isVisible={this.state.takingAction}
+              message={this.state.actionDescription}
+              fillParent
+            />
           </View>
         </View>
       </View>
