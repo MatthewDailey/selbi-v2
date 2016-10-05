@@ -5,7 +5,7 @@ import { View, ScrollView, Alert, Text } from 'react-native';
 import RoutableScene from '../../nav/RoutableScene';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
-import SellerInfoOverlay from '../../components/SellerInfoOverlay';
+import SellerInfoOverlay from '../../bulletin/SellerInfoOverlay';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';

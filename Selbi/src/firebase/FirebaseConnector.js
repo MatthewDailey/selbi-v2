@@ -979,3 +979,29 @@ export function followListingSeller(listingId) {
     })
     .then((sellerPublicData) => addFriend(sellerPublicData.username));
 }
+
+export function listenToBulletins(bulletinsHandler) {
+  if (!getUser()) {
+    return () => {};
+  }
+
+  const handleSnapshot = (bulletinsSnapshot) => {
+    if (bulletinsSnapshot.exists()) {
+      bulletinsHandler(bulletinsSnapshot.val());
+    } else {
+      bulletinsHandler({});
+    }
+  };
+
+  firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(getUser().uid)
+    .on('value', handleSnapshot);
+
+  return () => firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(getUser().uid)
+    .off('value', handleSnapshot);
+}

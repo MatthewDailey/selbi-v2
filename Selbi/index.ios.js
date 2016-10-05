@@ -40,9 +40,11 @@ import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
+import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
-  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation }
+  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
+  listenToBulletins }
   from './src/firebase/FirebaseConnector';
 
 import { getGeolocation, watchGeolocation } from './src/utils';
@@ -70,6 +72,7 @@ const store = createStore(combineReducers({
   user: userReducer,
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
+  bulletins: bulletinsReducer,
 }));
 
 function fetchLocalListings() {
@@ -98,6 +101,20 @@ function fetchLocalListings() {
 }
 fetchLocalListings();
 
+let unwatchUserBulletins;
+const listenForUserBulletins = (user) => {
+  if (user) {
+    unwatchUserBulletins = listenToBulletins(
+      (bulletins) => store.dispatch(setBulletins(bulletins)));
+  } else {
+    if (unwatchUserBulletins) {
+      unwatchUserBulletins();
+    }
+    store.dispatch(clearBulletins());
+  }
+}
+addAuthStateChangeListener(listenForUserBulletins);
+
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
   if (user) {
@@ -120,7 +137,7 @@ const recordUserForAnalytics = (user) => {
     Analytics.setUserId(null);
   }
 };
-addAuthStateChangeListener(recordUserForAnalytics)
+addAuthStateChangeListener(recordUserForAnalytics);
 
 let unwatchUserPublicData;
 const storeUserData = (user) => {
