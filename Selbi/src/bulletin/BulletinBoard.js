@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Alert } from 'react-native';
-import { MKButton, MKSpinner } from 'react-native-material-kit';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../../styles';
 import colors from '../../colors';
 
 import NewFollowerBulletin from './NewFollowerBulletin';
+import FriendPostedNewListingBulletin from './FriendPostedNewListingBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
@@ -74,6 +75,16 @@ class SignedInBulletinBoard extends Component {
                       );
                     }}
                     newFollowerBulletin={bulletin}
+                  />
+                </View>
+              );
+              break;
+            case 'friend-posted-new-listing':
+              bulletins.push(
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <FriendPostedNewListingBulletin
+                    followUser={() => console.log('pressed detail action')}
+                    bulletin={bulletin}
                   />
                 </View>
               );
