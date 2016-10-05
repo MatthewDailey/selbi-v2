@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles';
 import colors from '../../colors';
 
+import NewFollowerBulletinComponent from './NewFollowerBulletinComponent';
+
 const InactiveSellerInfo = function SellerInfoOverlay() {
   const FlatButton = MKButton.flatButton()
     .withStyle({
@@ -97,7 +99,7 @@ const InactiveSellerInfo = function SellerInfoOverlay() {
 
           <View style={{alignItems: 'center'}}>
             <FlatButton>
-              <Text><Icon name="arrow-down"/> Check out some cool listings <Icon name="arrow-down"/></Text>
+              <Text><Icon name="arrow-down" /> Check out some cool listings <Icon name="arrow-down"/></Text>
             </FlatButton>
           </View>
 
@@ -132,6 +134,10 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
         }}
       >
         <View style={styles.paddedContainer}>
+
+          <NewFollowerBulletinComponent />
+
+          <View style={{padding: 4}} />
 
           <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 
