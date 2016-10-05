@@ -26,6 +26,18 @@ export default class AddBulletinForNewFollower {
       },
     };
 
+    const checkIfAlreadyFollowing = () => {
+      return firebaseDb
+        .ref('following')
+        .child(data.payload.leader)
+        .child(data.owner)
+        .once('value')
+        .then((isLeaderAlreadyFollowingNewFollowerSnapshot) => {
+          bulletin.payload.reciprocated = isLeaderAlreadyFollowingNewFollowerSnapshot.exists()
+            && isLeaderAlreadyFollowingNewFollowerSnapshot.val();
+        });
+    };
+
     return validateFollowPayload(data.payload)
       .then(() => firebaseDb
         .ref('userPublicData')
@@ -40,6 +52,7 @@ export default class AddBulletinForNewFollower {
       .then((newFollowerPublicData) => {
         bulletin.payload.newFollowerPublicData = newFollowerPublicData;
       })
+      .then(checkIfAlreadyFollowing)
       .then(() => firebaseDb
         .ref('userBulletins')
         .child(data.payload.leader)
