@@ -771,6 +771,16 @@
       }
     },
 
+    "followers" : {
+      "$uid" : {
+        ".read": "auth.uid === $uid",
+        "$friendUid" : {
+          ".write": "auth.uid === $friendUid || auth.uid === $uid",
+          ".validate": "newData.isBoolean() && $uid != $friendUid"
+        }
+      }
+    },
+
     "usernames" : {
       ".read": true,
       "$username" : {
