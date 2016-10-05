@@ -135,7 +135,21 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
       >
         <View style={styles.paddedContainer}>
 
-          <NewFollowerBulletinComponent />
+          <NewFollowerBulletinComponent
+            followUser={(uid) => console.log(`follow ${uid}`)}
+            newFollowerBulletin={{
+              status: 'unread',
+              timestamp: 1,
+              type: 'follow',
+              payload: {
+                newFollowerPublicData: {
+                  displayName: 'TJ Pavlu',
+                  username: 'tjpavlu',
+                },
+                newFollowerUid: 'tj-uid',
+              },
+            }}
+          />
 
           <View style={{padding: 4}} />
 
