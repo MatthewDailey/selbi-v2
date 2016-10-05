@@ -17,6 +17,8 @@
 #import "RNFIRMessaging.h"
 #import "Firebase.h"
 
+@import FirebaseDynamicLinks;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
