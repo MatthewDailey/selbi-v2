@@ -11,7 +11,32 @@ import NewFollowerBulletin from './NewFollowerBulletin';
 
 const notificationDescriptionFontSize = 15;
 
-const SignedInBulletinBoard = function SellerInfoOverlay() {
+const SignedInBulletinBoard = function SellerInfoOverlay(props) {
+  const getBulletins = () => {
+    const bulletins = [];
+
+    Object.keys(props.bulletins).forEach((bulletinKey) => {
+      const bulletin = props.bulletins[bulletinKey];
+
+      if (bulletin.status === 'unread') {
+        switch (bulletin.type) {
+          case 'follow':
+            bulletins.push(
+              <NewFollowerBulletin
+                key={bulletinKey}
+                followUser={(uid) => console.log(`follow ${uid}`)}
+                newFollowerBulletin={bulletin}
+              />
+            );
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
+    return bulletins;
+  };
 
   return (
     <View>
@@ -27,23 +52,7 @@ const SignedInBulletinBoard = function SellerInfoOverlay() {
         }}
       >
         <View style={styles.paddedContainer}>
-
-          <NewFollowerBulletin
-            followUser={(uid) => console.log(`follow ${uid}`)}
-            newFollowerBulletin={{
-              status: 'unread',
-              timestamp: 1,
-              type: 'follow',
-              payload: {
-                newFollowerPublicData: {
-                  displayName: 'TJ Pavlu',
-                  username: 'tjpavluhasasuperlongusernamethatcausesoverflow',
-                },
-                newFollowerUid: 'tj-uid',
-                reciprocated: true,
-              },
-            }}
-          />
+          {getBulletins()}
 
           <View style={{padding: 4}} />
 
