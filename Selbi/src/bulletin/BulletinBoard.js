@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from '../../styles';
 import colors from '../../colors';
 
-import NewFollowerBulletinComponent from './NewFollowerBulletinComponent';
+import NewFollowerBulletin from './NewFollowerBulletin';
 
 const InactiveSellerInfo = function SellerInfoOverlay() {
   const FlatButton = MKButton.flatButton()
@@ -135,7 +135,7 @@ const ActiveSellerInfo = function SellerInfoOverlay() {
       >
         <View style={styles.paddedContainer}>
 
-          <NewFollowerBulletinComponent
+          <NewFollowerBulletin
             followUser={(uid) => console.log(`follow ${uid}`)}
             newFollowerBulletin={{
               status: 'unread',
