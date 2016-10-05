@@ -461,7 +461,19 @@ export function loadFriendsListings() {
     .then((listOfListingsLists) => [].concat.apply([], listOfListingsLists));
 }
 
-export function addFriend(friendUsername) {
+export function followUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to follow another user.')
+  }
+
+  return firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .set(true);
+}
+
+export function addFriendByUsername(friendUsername) {
   return firebaseApp.database()
     .ref('usernames')
     .child(friendUsername)
@@ -470,13 +482,9 @@ export function addFriend(friendUsername) {
       if (friendUsernameSnapshot.exists()) {
         return friendUsernameSnapshot.val();
       }
-      return Promise.reject();
+      return Promise.reject(`Unable to find user @${friendUsername}.`);
     })
-    .then((friendUid) => firebaseApp.database()
-      .ref('following')
-      .child(getUser().uid)
-      .child(friendUid)
-      .set(true));
+    .then(followUser);
 }
 
 export function loadAllUserChats() {
@@ -969,15 +977,7 @@ export function followListingSeller(listingId) {
       }
       return Promise.reject(`Unable to follow owner of ${listingId}. Listing does not exists`);
     })
-    .then((listingData) => loadUserPublicData(listingData.sellerId))
-    .then((sellerPublicDataSnapshot) => {
-      if (sellerPublicDataSnapshot.exists()) {
-        return sellerPublicDataSnapshot.val();
-      }
-      return Promise.reject(`Unable to follow owner of ${listingId}.`
-        + ' Could not find seller username.');
-    })
-    .then((sellerPublicData) => addFriend(sellerPublicData.username));
+    .then((listingData) => followUser(listingData.sellerId))
 }
 
 export function listenToBulletins(bulletinsHandler) {
@@ -1009,4 +1009,17 @@ export function listenToBulletins(bulletinsHandler) {
       .child(uid)
       .off('value');
   };
+}
+
+export function updateBulletin(bulletinId, updatedValue) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to update a bulletin.');
+  }
+
+  return firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(getUser().uid)
+    .child(bulletinId)
+    .update(updatedValue);
 }

@@ -11,6 +11,8 @@ import NewFollowerBulletin from './NewFollowerBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
+import { followUser, updateBulletin } from '../firebase/FirebaseConnector';
+
 const notificationDescriptionFontSize = 15;
 
 const initialSignedInState = {
@@ -54,22 +56,26 @@ class SignedInBulletinBoard extends Component {
           switch (bulletin.type) {
             case 'follow':
               bulletins.push(
-                <NewFollowerBulletin
-                  key={bulletinKey}
-                  followUser={(uid) => {
-                    this.startTakingAction(
-                      `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
-                      () => {
-                        return new Promise((resolve) => {
-                          setTimeout(() => {
-                            console.log(`follow ${uid}`);
-                            resolve();
-                          }, 5000);
-                        });
-                      });
-                  }}
-                  newFollowerBulletin={bulletin}
-                />
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <NewFollowerBulletin
+                    followUser={(uid) => {
+                      this.startTakingAction(
+                        `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
+                        () => followUser(uid)
+                          .then(() => {
+                            updateBulletin(bulletinKey, {
+                              status: 'read',
+                              payload: {
+                                ...bulletin.payload,
+                                reciprocated: true,
+                              },
+                            });
+                          })
+                      );
+                    }}
+                    newFollowerBulletin={bulletin}
+                  />
+                </View>
               );
               break;
             default:
@@ -96,8 +102,6 @@ class SignedInBulletinBoard extends Component {
         >
           <View style={styles.paddedContainer}>
             {getBulletins()}
-
-            <View style={{padding: 4}} />
 
             <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
 

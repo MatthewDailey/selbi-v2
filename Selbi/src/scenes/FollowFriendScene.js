@@ -6,7 +6,7 @@ import InputScene from './InputScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
 import { setPossibleFriendUsername } from '../reducers/FollowFriendReducer';
-import { addFriend } from '../firebase/FirebaseConnector';
+import { addFriendByUsername } from '../firebase/FirebaseConnector';
 
 import styles from '../../styles';
 
@@ -34,7 +34,7 @@ class FollowFriendScene extends InputScene {
         saving: true,
       });
 
-      addFriend(this.getUsernameFromInput())
+      addFriendByUsername(this.getUsernameFromInput())
         .then(() => {
           Alert.alert(`Added \'${this.props.inputValue}\' as a friend.`);
           this.props.navigator.pop();
