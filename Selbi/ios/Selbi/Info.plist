@@ -3,7 +3,9 @@
 <plist version="1.0">
   <dict>
     <key>NSCameraUsageDescription</key>
-    <string>This app uses the camera.</string>
+    <string>Selbi requires camera..</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Selbi requires access to your photos.</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
