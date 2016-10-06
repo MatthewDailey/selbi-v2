@@ -9,6 +9,7 @@ import colors from '../../colors';
 
 import NewFollowerBulletin from './NewFollowerBulletin';
 import FriendPostedNewListingBulletin from './FriendPostedNewListingBulletin';
+import AddBankAccountBulletin from './AddBankAccountBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
@@ -88,6 +89,15 @@ class SignedInBulletinBoard extends Component {
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     bulletin={bulletin}
+                  />
+                </View>
+              );
+              break;
+            case 'should-add-bank-account':
+              bulletins.push(
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <AddBankAccountBulletin
+                    addBankAccount={() => this.props.goNext('addBank')}
                   />
                 </View>
               );
