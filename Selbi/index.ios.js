@@ -238,6 +238,9 @@ routeLinks[localListingScene.id] = {
   signIn: {
     getRoute: () => menuSignInScene,
   },
+  addBank: {
+    getRoute: () => AddBankFlow.firstScene,
+  },
 };
 
 routeLinks[friendsListingScene.id] = {
