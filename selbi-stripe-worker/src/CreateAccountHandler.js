@@ -1,4 +1,8 @@
 
+import ClearShouldAddBankAccountHandler from './events/ClearShouldAddBankAccountHandler';
+
+const clearShouldAddBankAccountHandler = new ClearShouldAddBankAccountHandler();
+
 function validateData(data) {
   if (!data.uid) {
     return Promise.reject('Missing uid.');
@@ -121,6 +125,11 @@ class CreateCustomerHandler {
         .then(createStripeAccount)
         .then(storeStripeAccountInFirebase)
         .then(updateUserMerchantInfo)
+        .then(() => clearShouldAddBankAccountHandler.handle({
+          type: 'added-bank',
+          timestamp: new Date().getTime(),
+          owner: data.uid,
+        }, firebaseDb))
         .then(resolveCreateAccountTask)
         .catch(updateUserMerchantStatusAndReject);
     };

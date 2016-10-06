@@ -2,7 +2,7 @@
 const ADDED_BANK_EVENT = 'added-bank';
 
 
-export default class NotifyFollowersOfNewListingHandler {
+export default class ClearShouldAddBankAccountHandler {
   accept(data) {
     return data.type === ADDED_BANK_EVENT;
   }
@@ -22,7 +22,7 @@ export default class NotifyFollowersOfNewListingHandler {
     };
 
     const markShouldAddBankBulletinAsRead = (bulletins) => {
-      const updateShouldAddBankBulletins = []
+      const updateShouldAddBankBulletins = [];
       Object.keys(bulletins).forEach((key) => {
         if (bulletins[key].type === 'should-add-bank-account') {
           updateShouldAddBankBulletins.push(firebaseDb
