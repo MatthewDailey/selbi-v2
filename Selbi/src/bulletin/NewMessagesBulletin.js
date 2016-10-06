@@ -10,11 +10,7 @@ import { setListingKey, setBuyerUid } from '../reducers/ListingDetailReducer';
 
 import bulletinStyles from './bulletinStyles';
 
-function NewMessagesBulletin({
-    bulletin,
-    takeAction,
-    setDetailSceneListingKey,
-    setDetailSceneBuyerUid }) {
+function NewMessagesBulletin({ bulletin, takeAction }) {
   const messageOrMessages = bulletin.payload.count > 1 ? 'messages' : 'message';
 
   return (
@@ -24,11 +20,7 @@ function NewMessagesBulletin({
       </ExpandingText>
       <BulletinActionButton
         text="Read new messages"
-        onPress={() => {
-          setDetailSceneListingKey(bulletin.payload.chat.listingId);
-          setDetailSceneBuyerUid(bulletin.payload.chat.buyerUid);
-          takeAction();
-        }}
+        onPress={takeAction}
       />
     </View>
   );
@@ -50,8 +42,6 @@ NewMessagesBulletin.propTypes = {
     }).isRequired,
   }).isRequired,
   takeAction: React.PropTypes.func.isRequired,
-  setDetailSceneListingKey: React.PropTypes.func.isRequired,
-  setDetailSceneBuyerUid: React.PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => {

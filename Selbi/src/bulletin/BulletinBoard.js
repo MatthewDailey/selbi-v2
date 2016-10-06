@@ -14,7 +14,8 @@ import NewMessagesBulletin from './NewMessagesBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
-import { followUser, updateBulletin } from '../firebase/FirebaseConnector';
+import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
+import { followUser, updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
 
 const notificationDescriptionFontSize = 15;
 
@@ -40,10 +41,16 @@ class SignedInBulletinBoard extends Component {
       actionDescription,
     }, () => {
       callback()
-        .then(() => this.finishTakingAction())
+        .then((shouldHideSpinner) => {
+          // We don't want to update state if the component is not mounted.
+          if (shouldHideSpinner) {
+            this.finishTakingAction();
+          }
+        })
         .catch((error) => {
           this.finishTakingAction();
-          Alert.alert(error);
+          console.log(error);
+          Alert.alert('Oops! Something went wrong. We\'re on the case!');
         });
     });
   }
@@ -73,6 +80,7 @@ class SignedInBulletinBoard extends Component {
                                 reciprocated: true,
                               },
                             });
+                            return Promise.resolve(true);
                           })
                       );
                     }}
@@ -108,7 +116,23 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewMessagesBulletin
                     bulletin={bulletin}
-                    takeAction={() => this.props.goNext('chat')}
+                    takeAction={() => this.startTakingAction('Opening chat...',
+                      () => loadListingData(bulletin.payload.chat.listingId)
+                        .then((listingSnapshot) => {
+                          if (!listingSnapshot.exists()) {
+                            return Promise.reject('Unable to load listing.');
+                          }
+
+                          this.props.setListingDetailsForChat(
+                            bulletin.payload.chat.buyerUid,
+                            bulletin.payload.chat.listingId,
+                            listingSnapshot.val());
+                          this.props.goNext('chat');
+
+                          return Promise.resolve(false);
+                        })
+                        .then(() => updateBulletin(bulletinKey, { status: 'read' })))
+                    }
                   />
                 </View>
               );
@@ -137,13 +161,7 @@ class SignedInBulletinBoard extends Component {
         >
           <View style={styles.paddedContainer}>
             {getBulletins()}
-
-            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
-
-            <View style={{padding: 4}} />
-
-            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>💌 Jordan messaged you about your listing 'Awesome cup that has a long title'.</Text>
-
+            
             <View style={{padding: 4}} />
 
             <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
@@ -162,6 +180,7 @@ class SignedInBulletinBoard extends Component {
 SignedInBulletinBoard.propTypes = {
   bulletins: React.PropTypes.object,
   goNext: React.PropTypes.func.isRequired,
+  setListingDetailsForChat: React.PropTypes.func.isRequired,
 };
 
 
@@ -216,11 +235,18 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-
+    setListingDetailsForChat: (buyerUid, listingKey, listingData) => dispatch(
+      setBuyerAndListingDetails(
+        buyerUid,
+        {
+          key: listingKey,
+          data: listingData,
+        })
+    ),
   };
-}
+};
 
 export default connect(
   mapStateToProps,
