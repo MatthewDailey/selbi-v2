@@ -11,13 +11,12 @@ import NewFollowerBulletin from './NewFollowerBulletin';
 import FriendPostedNewListingBulletin from './FriendPostedNewListingBulletin';
 import AddBankAccountBulletin from './AddBankAccountBulletin';
 import NewMessagesBulletin from './NewMessagesBulletin';
+import EmptyBulletinBoardBulletin from './EmptyBulletinBoardBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
 import { followUser, updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
-
-const notificationDescriptionFontSize = 15;
 
 const initialSignedInState = {
   takingAction: false,
@@ -143,6 +142,14 @@ class SignedInBulletinBoard extends Component {
         }
       });
 
+      if (bulletins.length === 0) {
+        bulletins.push(
+          <View key={'no-bulletins'} style={{ paddingTop: 4, paddingBottom: 4 }}>
+            <EmptyBulletinBoardBulletin goNext={this.props.goNext} />
+          </View>
+        );
+      }
+
       return bulletins;
     };
 
@@ -161,11 +168,6 @@ class SignedInBulletinBoard extends Component {
         >
           <View style={styles.paddedContainer}>
             {getBulletins()}
-            
-            <View style={{padding: 4}} />
-
-            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
-
             <SpinnerOverlay
               isVisible={this.state.takingAction}
               message={this.state.actionDescription}

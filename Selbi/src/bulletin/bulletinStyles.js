@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../colors';
 
-const notificationDescriptionFontSize = 15;
+export const notificationDescriptionFontSize = 18;
 
 export default StyleSheet.create({
   bulletinText: {
