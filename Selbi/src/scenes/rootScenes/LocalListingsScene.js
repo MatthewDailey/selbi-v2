@@ -37,7 +37,7 @@ class ListingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ScrollView>
-        <BulletinBoard signIn={() => this.goNext('signIn')} />
+        <BulletinBoard goNext={this.goNext} />
         <View>
           <ListingsListComponent
             listings={this.props.listings}

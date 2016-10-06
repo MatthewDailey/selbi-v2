@@ -83,7 +83,10 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <FriendPostedNewListingBulletin
-                    followUser={() => console.log('pressed detail action')}
+                    openDetails={() => {
+                      this.props.goNext('details');
+                      updateBulletin(bulletinKey, { status: 'read' });
+                    }}
                     bulletin={bulletin}
                   />
                 </View>
@@ -122,14 +125,6 @@ class SignedInBulletinBoard extends Component {
 
             <View style={{padding: 4}} />
 
-            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🎁 Tommy added a new listing.</Text>
-
-            <View style={{padding: 4}} />
-
-            <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>😘 TJ (@tjpavlu) is now following you.</Text>
-
-            <View style={{padding: 4}} />
-
             <Text ellipsizeMode="tail" numberOfLines={1} style={{ fontSize: notificationDescriptionFontSize }}>🤑 Miron bought your listing 'massive cactus'.</Text>
 
             <SpinnerOverlay
@@ -145,16 +140,17 @@ class SignedInBulletinBoard extends Component {
 }
 SignedInBulletinBoard.propTypes = {
   bulletins: React.PropTypes.object,
+  goNext: React.PropTypes.func.isRequired,
 };
 
 
-const SignedOutBulletinBoard = function SellerInfoOverlay({ signIn }) {
+const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
     })
     .withBackgroundColor(colors.white)
-    .withOnPress(signIn)
+    .withOnPress(() => goNext('signIn'))
     .build();
 
   return (
@@ -178,7 +174,7 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ signIn }) {
   );
 };
 SignedOutBulletinBoard.propTypes = {
-  signIn: React.PropTypes.func.isRequired,
+  goNext: React.PropTypes.func.isRequired,
 };
 
 function BulletinBoard(props) {
@@ -189,7 +185,7 @@ function BulletinBoard(props) {
 }
 BulletinBoard.propTypes = {
   isSignedIn: React.PropTypes.bool.isRequired,
-  signIn: React.PropTypes.func.isRequired,
+  goNext: React.PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
