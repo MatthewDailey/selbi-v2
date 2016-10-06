@@ -43,6 +43,7 @@
 		E0B8E5A3A37F48218D7B7B36 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 980B69C42E52474B807F3CD3 /* Octicons.ttf */; };
 		E26F7D6A1431C52D4F313CA0 /* libPods-Selbi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */; };
 		E6329A62B49C4583A13C7BAA /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F21C1A57D8C4AA0A3988565 /* libRNShare.a */; };
+		F07DBB6AF93C4F25BCF65C64 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51F4A87F42F14B07BD188C9A /* libReactNativePermissions.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,6 +159,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RCTCamera;
 		};
+		C99FD2941DA6ABB9007998D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C00AEAF34474B8790ACB523 /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
 		C9B6BA8F1D6F94F200E29650 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 90BC9A4D812D402C885B7AAE /* RCTMaterialKit.xcodeproj */;
@@ -213,12 +221,14 @@
 		28A775074970FFCDF4733F64 /* Pods-SelbiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.release.xcconfig"; sourceTree = "<group>"; };
 		36ADFD39724CADE4BCDA2732 /* Pods-Selbi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.release.xcconfig"; sourceTree = "<group>"; };
 		4D58C2E9580C414CA073A327 /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRMessaging.xcodeproj; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; };
+		51F4A87F42F14B07BD188C9A /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
 		62011481A5C34C0185212C4A /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Selbi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		684C996EC8AC448FBB143D3D /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		6B751A89A6E54F1CACFBB5BA /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		7418462C9AA24201B5BCA37F /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7C00AEAF34474B8790ACB523 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		86DA0AAF0796407AB040EBAB /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		90BC9A4D812D402C885B7AAE /* RCTMaterialKit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTMaterialKit.xcodeproj; path = "../node_modules/react-native-material-kit/iOS/RCTMaterialKit.xcodeproj"; sourceTree = "<group>"; };
@@ -276,6 +286,7 @@
 				E26F7D6A1431C52D4F313CA0 /* libPods-Selbi.a in Frameworks */,
 				E6329A62B49C4583A13C7BAA /* libRNShare.a in Frameworks */,
 				67BCEFE9E6CF4A29933FBDA3 /* libRCTCamera.a in Frameworks */,
+				F07DBB6AF93C4F25BCF65C64 /* libReactNativePermissions.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +402,7 @@
 				9FE7F209D93343C9895D3F8B /* CodePush.xcodeproj */,
 				62011481A5C34C0185212C4A /* RNShare.xcodeproj */,
 				0863DBA1C581420698BD837E /* RCTCamera.xcodeproj */,
+				7C00AEAF34474B8790ACB523 /* ReactNativePermissions.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -475,6 +487,14 @@
 			isa = PBXGroup;
 			children = (
 				C99FD25F1DA6A967007998D7 /* libRCTCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C99FD2831DA6ABB9007998D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C99FD2951DA6ABB9007998D7 /* libReactNativePermissions.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -681,6 +701,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = C99FD2831DA6ABB9007998D7 /* Products */;
+					ProjectRef = 7C00AEAF34474B8790ACB523 /* ReactNativePermissions.xcodeproj */;
+				},
+				{
 					ProductGroup = C9FCB5E61D8A03CA0004EE34 /* Products */;
 					ProjectRef = FFD529EAD3314A3F8AAB3D5B /* RNFIRAnalytics.xcodeproj */;
 				},
@@ -813,6 +837,13 @@
 			fileType = archive.ar;
 			path = libRCTCamera.a;
 			remoteRef = C99FD25E1DA6A967007998D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C99FD2951DA6ABB9007998D7 /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = C99FD2941DA6ABB9007998D7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C9B6BA901D6F94F200E29650 /* libRCTMaterialKit.a */ = {
@@ -1036,6 +1067,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
@@ -1053,6 +1085,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1086,6 +1119,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1130,6 +1164,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1195,6 +1230,7 @@
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1243,6 +1279,7 @@
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1291,6 +1328,7 @@
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1324,6 +1362,7 @@
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1354,6 +1393,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

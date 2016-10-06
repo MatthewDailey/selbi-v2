@@ -306,6 +306,9 @@ function renderDeepLinkListener(navigator) {
   );
 }
 
+const Permissions = require('react-native-permissions');
+
+
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -318,6 +321,11 @@ class NavApp extends Component {
       },
       5000);
     }
+
+    Permissions.checkMultiplePermissions(['camera', 'photo'])
+      .then(response => {
+        console.log(response);
+      });
   }
 
   componentWillUnmount() {
