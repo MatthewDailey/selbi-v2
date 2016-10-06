@@ -222,7 +222,7 @@ const menuSignInScene = {
       createUser={createUser}
       goHomeOnComplete
     />),
-}
+};
 
 let routeLinks = {};
 
