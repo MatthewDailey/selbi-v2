@@ -359,7 +359,7 @@ export function createChatAsBuyer(listingId, sellerUid) {
   return Promise.all([promiseSetBuyerPoiner, promiseSetSellerPointer]);
 }
 
-function getListingTitle(listingId) {
+function getListingKeyAndData(listingId) {
   return loadListingData(listingId)
     .then((listingSnapShot) => {
       if (listingSnapShot.exists()) {
@@ -368,7 +368,7 @@ function getListingTitle(listingId) {
           listingData: listingSnapShot.val(),
         });
       } else {
-        throw new Error('could not find listing');
+        throw new Error(`could not find listing ${listingId}`);
       }
     })
     .catch((error) => {
@@ -389,13 +389,13 @@ function loadChatDetailsFromUserChats(userChatsData) {
 
     if (buyingData) {
       Object.keys(buyingData).forEach((listingId) => chatPromises.push(
-        getListingTitle(listingId)
-          .then((listingTitleData) => {
-            if (!listingTitleData) {
+        getListingKeyAndData(listingId)
+          .then((listingKeyAndData) => {
+            if (!listingKeyAndData) {
               return Promise.resolve(undefined);
             }
 
-            return Promise.resolve(Object.assign(listingTitleData, {
+            return Promise.resolve(Object.assign(listingKeyAndData, {
               buyerUid: getUser().uid,
               type: 'buying',
             }));
@@ -406,14 +406,14 @@ function loadChatDetailsFromUserChats(userChatsData) {
     if (sellingData) {
       Object.keys(sellingData).forEach((listingId) => {
         Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
-          getListingTitle(listingId)
-            .then((listingTitleData) => {
-              if (!listingTitleData) {
+          getListingKeyAndData(listingId)
+            .then((listingKeyAndData) => {
+              if (!listingKeyAndData) {
                 return Promise.resolve(undefined);
               }
 
-              return Promise.resolve(Object.assign(listingTitleData, {
-                buyerUid: buyerUid,
+              return Promise.resolve(Object.assign(listingKeyAndData, {
+                buyerUid,
                 type: 'selling',
               }));
             })
