@@ -241,6 +241,9 @@ routeLinks[localListingScene.id] = {
   addBank: {
     getRoute: () => AddBankFlow.firstScene,
   },
+  chat: {
+    getRoute: () => ChatFlow.firstScene,
+  }
 };
 
 routeLinks[friendsListingScene.id] = {

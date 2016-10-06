@@ -9,6 +9,7 @@ import VisibilityWrapper from '../components/VisibilityWrapper';
 import bulletinStyles from './bulletinStyles';
 
 export default function NewFollowerBulletin({ newFollowerBulletin, followUser }) {
+  console.log(newFollowerBulletin)
   const newFollowerDisplayName = newFollowerBulletin.payload.newFollowerPublicData.displayName;
   const newFollowerUsername = newFollowerBulletin.payload.newFollowerPublicData.username;
 

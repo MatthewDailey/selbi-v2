@@ -10,6 +10,7 @@ import colors from '../../colors';
 import NewFollowerBulletin from './NewFollowerBulletin';
 import FriendPostedNewListingBulletin from './FriendPostedNewListingBulletin';
 import AddBankAccountBulletin from './AddBankAccountBulletin';
+import NewMessagesBulletin from './NewMessagesBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
@@ -98,6 +99,16 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddBankAccountBulletin
                     addBankAccount={() => this.props.goNext('addBank')}
+                  />
+                </View>
+              );
+              break;
+            case 'new-message':
+              bulletins.push(
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <NewMessagesBulletin
+                    bulletin={bulletin}
+                    takeAction={() => this.props.goNext('chat')}
                   />
                 </View>
               );
