@@ -102,14 +102,16 @@ function changeListingStatusToSold(firebaseDb, listingId) {
  * notify.
  */
 class CreatePurchaseHandler {
-  constructor(firebaseDatabase, stripe) {
+  constructor(firebaseDatabase, stripe, sendNotification) {
     this.firebaseDb = firebaseDatabase;
     this.stripe = stripe;
+    this.sendNotification = sendNotification;
   }
 
   getTaskHandler() {
     const firebaseDb = this.firebaseDb;
     const stripe = this.stripe;
+    const sendNotification = this.sendNotification;
     return (data, progress, resolvePurchaseTask, rejectPurchaseTask) => {
       console.log(`Handling purchase of listing:${data.listingId} buyerUid:${data.buyerUid}`);
 
@@ -147,10 +149,10 @@ class CreatePurchaseHandler {
           .once('value')
           .then((buyerSnapshot) => {
             if (!buyerSnapshot.exists()) {
-              console.log('failed to load buyer account data')
+              console.log('failed to load buyer account data');
               return Promise.reject(`Unable to load buyer ${data.buyerUid} account info.`)
             }
-            console.log('loaded buyer account data', buyerSnapshot.val())
+            console.log('loaded buyer account data', buyerSnapshot.val());
             return buyerSnapshot.val();
           });
 
@@ -160,10 +162,10 @@ class CreatePurchaseHandler {
           .once('value')
           .then((sellerSnapshot) => {
             if (!sellerSnapshot.exists()) {
-              console.log('failed to load seller data')
+              console.log('failed to load seller data');
               return Promise.reject(`Unable to load seller ${listingData.sellerId} account info.`);
             }
-            console.log('loaded seller account data', sellerSnapshot.val())
+            console.log('loaded seller account data', sellerSnapshot.val());
             return sellerSnapshot.val();
           });
 
@@ -188,10 +190,10 @@ class CreatePurchaseHandler {
           .once('value')
           .then((buyerSnapshot) => {
             if (!buyerSnapshot.exists()) {
-              console.log('failed to laod buyer stripe account')
-              return Promise.reject(`Unable to load buyer ${data.buyerUid} stripe account.`)
+              console.log('failed to laod buyer stripe account');
+              return Promise.reject(`Unable to load buyer ${data.buyerUid} stripe account.`);
             }
-            console.log('loaded buyer stripe account data', buyerSnapshot.val())
+            console.log('loaded buyer stripe account data', buyerSnapshot.val());
             return buyerSnapshot.val();
           });
 
@@ -200,7 +202,7 @@ class CreatePurchaseHandler {
           const feeCents = priceCents * 0.15;
           const description = listingData.title;
 
-          loadBuyerAndSellerInfo()
+          return loadBuyerAndSellerInfo()
             .then((buyerAndSellerInfo) => {
               const buyerInfo = buyerAndSellerInfo[0];
               const sellerInfo = buyerAndSellerInfo[1];
@@ -215,14 +217,15 @@ class CreatePurchaseHandler {
 
               return Promise.all([
                 Promise.resolve(buyerInfo),
+                Promise.resolve(sellerInfo),
                 loadBuyerCustomerAccount(buyerInfo.payment.stripeCustomerPointer),
-                loadSellerMerchantAccount(sellerInfo.merchant.stripeAccountPointer)])
+                loadSellerMerchantAccount(sellerInfo.merchant.stripeAccountPointer)]);
             })
             .then((results) => {
-              console.log('Loaded all relevant data for charege', results);
               const buyerData = results[0];
-              const buyerCustomerAccount = results[1];
-              const sellerMerchantAccount = results[2];
+              const sellerData = results[1];
+              const buyerCustomerAccount = results[2];
+              const sellerMerchantAccount = results[3];
               return createCharge(
                 stripe,
                 priceCents,
@@ -230,19 +233,65 @@ class CreatePurchaseHandler {
                 description,
                 buyerData.email,
                 buyerCustomerAccount.id,
-                sellerMerchantAccount.id);
+                sellerMerchantAccount.id)
+                .then(() => {
+                  return Promise.resolve({
+                    listingData,
+                    buyerData,
+                    sellerData,
+                    priceCents,
+                    feeCents,
+                  });
+                });
             });
         };
 
-        const markListingAsSold = () => changeListingStatusToSold(firebaseDb, data.listingId);
+        const markListingAsSold = (priorResult) => {
+          return changeListingStatusToSold(firebaseDb, data.listingId)
+            .then(() => Promise.resolve(priorResult));
+        };
 
-        const sendSellerNotification = () => Promise.resolve('todo');
-
-        const markChargesSuccessful = () => {
+        const markChargesSuccessful = (priorResult) => {
           resolvePurchaseTask();
           const updateBuyerOnFailure = buyerPurchaseRef.child('status').set('success');
           const updateSellerOnFailure = sellerSaleRef.child('status').set('success');
-          return Promise.all([updateBuyerOnFailure, updateSellerOnFailure]);
+          return Promise.all([updateBuyerOnFailure, updateSellerOnFailure])
+            .then(() => Promise.resolve(priorResult));
+        };
+
+        const sendSellerNotification = (executeChargeResult) => {
+          return firebaseDb
+            .ref('userPublicData')
+            .child(data.buyerUid)
+            .once('value')
+            .then((buyerPublicInfoSnapshot) => {
+              if (buyerPublicInfoSnapshot.exists()) {
+                return Promise.resolve(buyerPublicInfoSnapshot.val());
+              }
+              return Promise.resolve({});
+            })
+            .then((buyerPublicInfo) => {
+              return firebaseDb
+                .ref('userBulletins')
+                .child(executeChargeResult.listingData.sellerId)
+                .push()
+                .set({
+                  type: 'purchase',
+                  timestamp: new Date().getTime(),
+                  status: 'unread',
+                  payload: {
+                    buyerDisplayName: buyerPublicInfo.displayName,
+                    listingTitle: executeChargeResult.listingData.title,
+                    priceCents: executeChargeResult.priceCents,
+                    feeCents: executeChargeResult.feeCents,
+                  },
+                });
+            })
+            .then(() => sendNotification(executeChargeResult.sellerData.fcmToken,
+              'Your listing was purchased! 🤑🤑🤑', // Emoji inline.
+              `Your listing ${executeChargeResult.listingData.title} was purchased for `
+                + `$${parseFloat(executeChargeResult.priceCents).toFixed(2)}.`
+            ));
         };
 
         return Promise.all([createPurchaseRecord, createSaleRecord])

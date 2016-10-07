@@ -42,7 +42,7 @@ const messageNotificationHandler = new MessageNotificationHandler(firebaseDb, se
 const messageNotificationQueueListener = new QueueListener('messageNotifications');
 messageNotificationQueueListener.start(firebaseDb, messageNotificationHandler.getTaskHandler());
 
-const purchaseHandler = new CreatePurchaseHandler(firebaseDb, stripe);
+const purchaseHandler = new CreatePurchaseHandler(firebaseDb, stripe, sendNotification);
 const purchaseQueueListener = new QueueListener('createPurchase');
 purchaseQueueListener.start(firebaseDb, purchaseHandler.getTaskHandler());
 
