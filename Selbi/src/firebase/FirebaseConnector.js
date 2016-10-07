@@ -37,6 +37,7 @@ export function setUserFcmToken(fcmToken) {
   if (!getUser()) {
     return Promise.reject('Not signed in.');
   }
+
   console.log('-----about to set fcmToken----------')
   console.log(fcmToken);
   return firebaseApp

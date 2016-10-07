@@ -44,8 +44,10 @@ import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/B
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins }
+  listenToBulletins, setUserFcmToken }
   from './src/firebase/FirebaseConnector';
+import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh }
+  from './src/firebase/FcmListener';
 
 import { getGeolocation, watchGeolocation } from './src/utils';
 
@@ -105,7 +107,10 @@ let unwatchUserBulletins;
 const listenForUserBulletins = (user) => {
   if (user) {
     unwatchUserBulletins = listenToBulletins(
-      (bulletins) => store.dispatch(setBulletins(bulletins)));
+      (bulletins) => {
+        // setBadgeNumber(Object.keys(bulletins).length);
+        store.dispatch(setBulletins(bulletins));
+      });
   } else {
     if (unwatchUserBulletins) {
       unwatchUserBulletins();
@@ -138,6 +143,15 @@ const recordUserForAnalytics = (user) => {
   }
 };
 addAuthStateChangeListener(recordUserForAnalytics);
+
+const listenForUserFcmToken = (user) => {
+  if (user) {
+    subscribeToFcmTokenRefresh(setUserFcmToken);
+  } else {
+    unsubscribeFromFcmTokenRefresh();
+  }
+}
+addAuthStateChangeListener(listenForUserFcmToken);
 
 let unwatchUserPublicData;
 const storeUserData = (user) => {
