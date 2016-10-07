@@ -13,11 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@selbi/firebase-test-resource": "^1.0.3",
+    "@selbi/firebase-test-resource": "^1.0.12",
     "@selbi/service-accounts": "^1.0.2",
     "babel-core": "^6.13.2",
     "babel-preset-es2015": "^6.13.2",
     "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
     "express": "^4.14.0",
     "fcm-node": "^1.0.14",
     "firebase": "^3.2.1",

@@ -17,6 +17,8 @@
 #import "RNFIRMessaging.h"
 #import "Firebase.h"
 
+@import FirebaseDynamicLinks;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -94,11 +96,6 @@
 {
      [[NSNotificationCenter defaultCenter] postNotificationName:FCMNotificationReceived object:self userInfo:notification];
      handler(UIBackgroundFetchResultNewData);
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-  application.applicationIconBadgeNumber = 0;
 }
 
 @end

@@ -99,7 +99,7 @@ class ChooseVisibilityScene extends RoutableScene {
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });
         console.log(error);
-        Alert.alert(error);
+        Alert.alert('Error adding bank, check the data and try again.');
       });
   }
 
@@ -115,7 +115,7 @@ class ChooseVisibilityScene extends RoutableScene {
         <View style={styles.halfPadded} />
 
         <Text>
-          <Text style={styles.labelTextLeft}>SSN or EIN: </Text>
+          <Text style={styles.labelTextLeft}>SSN: </Text>
           <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.ssn}</Text>
         </Text>
 

@@ -4,7 +4,7 @@ import { mdl, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import styles from '../../styles';
+import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
@@ -23,7 +23,7 @@ const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
   .withPlaceholder('Email')
   .withHighlightColor(colors.white)
   .withStyle({
-    height: 48,  // have to do it on iOSfd
+    height: 48,  // have to do it on iOS
     marginTop: 10,
   })
   .withKeyboardType('email-address')
@@ -47,17 +47,10 @@ const LastNameInput = mdl.Textfield.textfieldWithFloatingLabel()
   })
   .build();
 
-const GoogleButton = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-  .build();
-
 const FacebookButton = MKButton.button()
   .withStyle({
     borderRadius: 5,
+    padding: paddingSize,
   })
   .withBackgroundColor('#3b5998')
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
@@ -179,6 +172,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .button()
       .withStyle({
         borderRadius: 5,
+        padding: paddingSize,
       })
       .withBackgroundColor(colors.secondary)
       .withText(registerOrSignInType.asTitle)
@@ -239,11 +233,6 @@ export default class SignInOrRegisterScene extends RoutableScene {
           </Text>
         </FacebookButton>
         <View style={styles.halfPadded} />
-        <GoogleButton>
-          <Text style={{ color: 'grey' }}>
-            <Icon name="google" size={16} /> {`${registerOrSignInType.asSentence} with Google`}
-          </Text>
-        </GoogleButton>
         <View style={styles.padded} />
         <View
           style={{
@@ -252,11 +241,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           }}
         />
         <View style={styles.padded} />
-        <Text
-          style={{
-            textAlign: 'center',
-          }}
-        >
+        <Text style={styles.friendlyText}>
           {`${registerOrSignInType.asSentence} with email and password.`}
         </Text>
         {firstNameInputIfNecessary}
@@ -297,6 +282,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           tabBarUnderlineColor={colors.secondary}
           tabBarActiveTextColor={colors.secondary}
           style={styles.fullScreenContainer}
+          tabBarTextStyle={styles.friendlyText}
         >
           {this.getInnerView(TabTypes.signIn, this.signInWithEmailAndPassword)}
           {this.getInnerView(TabTypes.register, this.registerUserWithEmailAndPassword)}

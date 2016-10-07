@@ -1,18 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Alert, Text } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
+
+import { MKSpinner } from 'react-native-material-kit';
 
 import RoutableScene from '../../nav/RoutableScene';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
-import SellerInfoOverlay from '../../components/SellerInfoOverlay';
+import BulletinBoard from '../../bulletin/BulletinBoard';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
 
-import { MKSpinner } from 'react-native-material-kit';
+
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -35,7 +37,7 @@ class ListingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ScrollView>
-        <SellerInfoOverlay />
+        <BulletinBoard goNext={this.goNext} />
         <View>
           <ListingsListComponent
             listings={this.props.listings}

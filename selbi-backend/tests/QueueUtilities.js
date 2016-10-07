@@ -28,5 +28,6 @@ export function writeToQueueAndExpectHandled(firebaseUserApp, queuePath, testDat
     .database()
     .ref(`${queuePath}/tasks`)
     .push()
-    .set(testData);
+    .set(testData)
+    .catch(done);
 }

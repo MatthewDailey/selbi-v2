@@ -40,10 +40,14 @@ import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
+import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
-  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation }
+  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
+  listenToBulletins, setUserFcmToken }
   from './src/firebase/FirebaseConnector';
+import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh }
+  from './src/firebase/FcmListener';
 
 import { getGeolocation, watchGeolocation } from './src/utils';
 
@@ -70,6 +74,7 @@ const store = createStore(combineReducers({
   user: userReducer,
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
+  bulletins: bulletinsReducer,
 }));
 
 function fetchLocalListings() {
@@ -98,6 +103,23 @@ function fetchLocalListings() {
 }
 fetchLocalListings();
 
+let unwatchUserBulletins;
+const listenForUserBulletins = (user) => {
+  if (user) {
+    unwatchUserBulletins = listenToBulletins(
+      (bulletins) => {
+        // setBadgeNumber(Object.keys(bulletins).length);
+        store.dispatch(setBulletins(bulletins));
+      });
+  } else {
+    if (unwatchUserBulletins) {
+      unwatchUserBulletins();
+    }
+    store.dispatch(clearBulletins());
+  }
+};
+addAuthStateChangeListener(listenForUserBulletins);
+
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
   if (user) {
@@ -120,14 +142,22 @@ const recordUserForAnalytics = (user) => {
     Analytics.setUserId(null);
   }
 };
-addAuthStateChangeListener(recordUserForAnalytics)
+addAuthStateChangeListener(recordUserForAnalytics);
+
+const listenForUserFcmToken = (user) => {
+  if (user) {
+    subscribeToFcmTokenRefresh(setUserFcmToken);
+  } else {
+    unsubscribeFromFcmTokenRefresh();
+  }
+}
+addAuthStateChangeListener(listenForUserFcmToken);
 
 let unwatchUserPublicData;
 const storeUserData = (user) => {
   if (user) {
     unwatchUserPublicData = watchUserPublicData(user.uid,
       (publicDataSnapshot) => {
-        console.log('saw update to user');
         if (publicDataSnapshot.exists()) {
           const userPublicData = publicDataSnapshot.val();
           store.dispatch(setUserData(userPublicData));
@@ -140,7 +170,7 @@ const storeUserData = (user) => {
     store.dispatch(clearUserData());
   }
 };
-addAuthStateChangeListener(storeUserData)
+addAuthStateChangeListener(storeUserData);
 
 const localListingScene = {
   id: 'listings-scene',
@@ -195,6 +225,19 @@ const followFriendScene = {
   ),
 };
 
+const menuSignInScene = {
+  id: 'menu-sign-scene',
+  renderContent: withNavigatorProps(
+    <SignInOrRegisterScene
+      title=""
+      leftIs="back"
+      registerWithEmail={registerWithEmail}
+      signInWithEmail={signInWithEmail}
+      createUser={createUser}
+      goHomeOnComplete
+    />),
+};
+
 let routeLinks = {};
 
 // Link local listings to sell flow.
@@ -206,11 +249,20 @@ routeLinks[localListingScene.id] = {
   details: {
     getRoute: () => ListingPurchaseFlow.firstScene,
   },
+  signIn: {
+    getRoute: () => menuSignInScene,
+  },
+  addBank: {
+    getRoute: () => AddBankFlow.firstScene,
+  },
+  chat: {
+    getRoute: () => ChatFlow.firstScene,
+  }
 };
 
 routeLinks[friendsListingScene.id] = {
   next: {
-    title: <Text><Icon name="user-plus" size={20}/></Text>,
+    title: <Text><Icon name="user-plus" size={20} /></Text>,
     getRoute: () => followFriendScene,
   },
   details: {
@@ -259,18 +311,7 @@ function renderMenu(navigator, closeMenu) {
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}
       loadUserPublicData={watchUserPublicData}
-      signInOrRegisterScene={{
-        id: 'menu-sign-scene',
-        renderContent: withNavigatorProps(
-          <SignInOrRegisterScene
-            title=""
-            leftIs="back"
-            registerWithEmail={registerWithEmail}
-            signInWithEmail={signInWithEmail}
-            createUser={createUser}
-            goHomeOnComplete
-          />),
-      }}
+      signInOrRegisterScene={menuSignInScene}
     />
   );
 }
@@ -285,6 +326,9 @@ function renderDeepLinkListener(navigator) {
   );
 }
 
+const Permissions = require('react-native-permissions');
+
+
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -297,6 +341,11 @@ class NavApp extends Component {
       },
       5000);
     }
+
+    Permissions.checkMultiplePermissions(['camera', 'photo'])
+      .then(response => {
+        console.log(response);
+      });
   }
 
   componentWillUnmount() {

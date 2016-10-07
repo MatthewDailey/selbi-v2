@@ -15,7 +15,7 @@ export default undefined;
 const authStateChangeListeners = [];
 
 firebaseApp.auth().onAuthStateChanged((user) => {
-  console.log(`auth state changed --- signed in = ${user !== undefined}`);
+  console.log(`auth state changed --- signed in = ${!!user}`);
   authStateChangeListeners.forEach((listener) => listener(user));
 });
 
@@ -37,6 +37,7 @@ export function setUserFcmToken(fcmToken) {
   if (!getUser()) {
     return Promise.reject('Not signed in.');
   }
+
   console.log('-----about to set fcmToken----------')
   console.log(fcmToken);
   return firebaseApp
@@ -205,9 +206,23 @@ export function createListing(titleInput,
     .child(newListingRef.key)
     .set(true);
 
+  const recordNewListingEvent = () => firebaseApp
+    .database()
+    .ref('events/tasks')
+    .push()
+    .set({
+      owner: uid,
+      timestamp: new Date().getTime(),
+      type: 'new-listing',
+      payload: {
+        listingId: newListingRef.key,
+      },
+    });
+
   return newListingRef
     .set(listing)
     .then(createUserListing)
+    .then(recordNewListingEvent)
     .then(() => Promise.resolve(newListingRef.key));
 }
 
@@ -345,7 +360,7 @@ export function createChatAsBuyer(listingId, sellerUid) {
   return Promise.all([promiseSetBuyerPoiner, promiseSetSellerPointer]);
 }
 
-function getListingTitle(listingId) {
+function getListingKeyAndData(listingId) {
   return loadListingData(listingId)
     .then((listingSnapShot) => {
       if (listingSnapShot.exists()) {
@@ -354,7 +369,7 @@ function getListingTitle(listingId) {
           listingData: listingSnapShot.val(),
         });
       } else {
-        throw new Error('could not find listing');
+        throw new Error(`could not find listing ${listingId}`);
       }
     })
     .catch((error) => {
@@ -375,13 +390,13 @@ function loadChatDetailsFromUserChats(userChatsData) {
 
     if (buyingData) {
       Object.keys(buyingData).forEach((listingId) => chatPromises.push(
-        getListingTitle(listingId)
-          .then((listingTitleData) => {
-            if (!listingTitleData) {
+        getListingKeyAndData(listingId)
+          .then((listingKeyAndData) => {
+            if (!listingKeyAndData) {
               return Promise.resolve(undefined);
             }
 
-            return Promise.resolve(Object.assign(listingTitleData, {
+            return Promise.resolve(Object.assign(listingKeyAndData, {
               buyerUid: getUser().uid,
               type: 'buying',
             }));
@@ -392,14 +407,14 @@ function loadChatDetailsFromUserChats(userChatsData) {
     if (sellingData) {
       Object.keys(sellingData).forEach((listingId) => {
         Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
-          getListingTitle(listingId)
-            .then((listingTitleData) => {
-              if (!listingTitleData) {
+          getListingKeyAndData(listingId)
+            .then((listingKeyAndData) => {
+              if (!listingKeyAndData) {
                 return Promise.resolve(undefined);
               }
 
-              return Promise.resolve(Object.assign(listingTitleData, {
-                buyerUid: buyerUid,
+              return Promise.resolve(Object.assign(listingKeyAndData, {
+                buyerUid,
                 type: 'selling',
               }));
             })
@@ -461,7 +476,38 @@ export function loadFriendsListings() {
     .then((listOfListingsLists) => [].concat.apply([], listOfListingsLists));
 }
 
-export function addFriend(friendUsername) {
+export function followUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to follow another user.')
+  }
+
+  const addFollowingPromise = firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .set(true);
+
+  const addFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .set(true);
+
+  return Promise.all([addFollowerPromise, addFollowingPromise])
+    .then(firebaseApp.database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        type: 'follow',
+        timestamp: new Date().getTime(),
+        owner: getUser().uid,
+        payload: {
+          leader: uid,
+        },
+      }));
+}
+
+export function addFriendByUsername(friendUsername) {
   return firebaseApp.database()
     .ref('usernames')
     .child(friendUsername)
@@ -470,13 +516,9 @@ export function addFriend(friendUsername) {
       if (friendUsernameSnapshot.exists()) {
         return friendUsernameSnapshot.val();
       }
-      return Promise.reject();
+      return Promise.reject(`Unable to find user @${friendUsername}.`);
     })
-    .then((friendUid) => firebaseApp.database()
-      .ref('following')
-      .child(getUser().uid)
-      .child(friendUid)
-      .set(true));
+    .then(followUser);
 }
 
 export function loadAllUserChats() {
@@ -969,13 +1011,53 @@ export function followListingSeller(listingId) {
       }
       return Promise.reject(`Unable to follow owner of ${listingId}. Listing does not exists`);
     })
-    .then((listingData) => loadUserPublicData(listingData.sellerId))
-    .then((sellerPublicDataSnapshot) => {
-      if (sellerPublicDataSnapshot.exists()) {
-        return sellerPublicDataSnapshot.val();
+    .then((listingData) => {
+      if (getUser().uid !== listingData.sellerId) {
+        followUser(listingData.sellerId);
       }
-      return Promise.reject(`Unable to follow owner of ${listingId}.`
-        + ' Could not find seller username.');
-    })
-    .then((sellerPublicData) => addFriend(sellerPublicData.username));
+    });
+}
+
+export function listenToBulletins(bulletinsHandler) {
+  if (!getUser()) {
+    return undefined;
+  }
+
+  const handleSnapshot = (bulletinsSnapshot) => {
+    if (bulletinsSnapshot.exists()) {
+      bulletinsHandler(bulletinsSnapshot.val());
+    } else {
+      bulletinsHandler({});
+    }
+  };
+
+  // Fetch this before since we'll be signed out during call to returned unwatch method.
+  const uid = getUser().uid;
+
+  firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(uid)
+    .on('value', handleSnapshot);
+
+  return () => {
+    firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(uid)
+      .off('value');
+  };
+}
+
+export function updateBulletin(bulletinId, updatedValue) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to update a bulletin.');
+  }
+
+  return firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(getUser().uid)
+    .child(bulletinId)
+    .update(updatedValue);
 }
