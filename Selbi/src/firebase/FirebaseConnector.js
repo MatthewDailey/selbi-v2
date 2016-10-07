@@ -492,7 +492,18 @@ export function followUser(uid) {
     .child(getUser().uid)
     .set(true);
 
-  return Promise.all([addFollowerPromise, addFollowingPromise]);
+  return Promise.all([addFollowerPromise, addFollowingPromise])
+    .then(firebaseApp.database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        type: 'follow',
+        timestamp: new Date().getTime(),
+        owner: getUser().uid,
+        payload: {
+          leader: uid,
+        },
+      }));
 }
 
 export function addFriendByUsername(friendUsername) {
