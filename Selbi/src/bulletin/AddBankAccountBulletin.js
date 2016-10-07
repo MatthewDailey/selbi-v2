@@ -14,7 +14,7 @@ export default function AddBankAccountBulletin({ addBankAccount }) {
         💰 Get paid fast by setting up a way to receive payments.
       </ExpandingText>
       <BulletinActionButton
-        text="Connect Bank Account"
+        text="Connect bank account"
         onPress={addBankAccount}
       />
     </View>
