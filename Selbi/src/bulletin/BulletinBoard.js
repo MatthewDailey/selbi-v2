@@ -67,6 +67,7 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewFollowerBulletin
+                    gotIt={() => updateBulletin(bulletinKey, { status: 'read' })}
                     followUser={(uid) => {
                       this.startTakingAction(
                         `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,

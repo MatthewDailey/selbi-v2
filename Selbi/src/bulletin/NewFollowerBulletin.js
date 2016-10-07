@@ -8,7 +8,7 @@ import VisibilityWrapper from '../components/VisibilityWrapper';
 
 import bulletinStyles from './bulletinStyles';
 
-export default function NewFollowerBulletin({ newFollowerBulletin, followUser }) {
+export default function NewFollowerBulletin({ newFollowerBulletin, followUser, gotIt }) {
   console.log(newFollowerBulletin)
   const newFollowerDisplayName = newFollowerBulletin.payload.newFollowerPublicData.displayName;
   const newFollowerUsername = newFollowerBulletin.payload.newFollowerPublicData.username;
@@ -22,6 +22,12 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser })
         <BulletinActionButton
           text={`Follow ${newFollowerDisplayName}`}
           onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
+        />
+      </VisibilityWrapper>
+      <VisibilityWrapper isVisible={newFollowerBulletin.payload.reciprocated}>
+        <BulletinActionButton
+          text="Nice! Got it"
+          onPress={gotIt}
         />
       </VisibilityWrapper>
     </View>
@@ -39,4 +45,5 @@ NewFollowerBulletin.propTypes = {
     }).isRequired,
   }).isRequired,
   followUser: React.PropTypes.func.isRequired,
+  gotIt: React.PropTypes.func.isRequired,
 };
