@@ -11,6 +11,7 @@ import NewFollowerBulletin from './NewFollowerBulletin';
 import FriendPostedNewListingBulletin from './FriendPostedNewListingBulletin';
 import AddBankAccountBulletin from './AddBankAccountBulletin';
 import NewMessagesBulletin from './NewMessagesBulletin';
+import PurchaseBulletin from './PurchaseBulletin';
 import EmptyBulletinBoardBulletin from './EmptyBulletinBoardBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
@@ -133,6 +134,16 @@ class SignedInBulletinBoard extends Component {
                         })
                         .then(() => updateBulletin(bulletinKey, { status: 'read' })))
                     }
+                  />
+                </View>
+              );
+              break;
+            case 'purchase':
+              bulletins.push(
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <PurchaseBulletin
+                    bulletin={bulletin}
+                    gotIt={() => updateBulletin(bulletinKey, { status: 'read' })}
                   />
                 </View>
               );
