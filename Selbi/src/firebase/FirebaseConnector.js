@@ -1011,7 +1011,11 @@ export function followListingSeller(listingId) {
       }
       return Promise.reject(`Unable to follow owner of ${listingId}. Listing does not exists`);
     })
-    .then((listingData) => followUser(listingData.sellerId))
+    .then((listingData) => {
+      if (getUser().uid !== listingData.sellerId) {
+        followUser(listingData.sellerId);
+      }
+    });
 }
 
 export function listenToBulletins(bulletinsHandler) {
