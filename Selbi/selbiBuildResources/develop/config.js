@@ -6,8 +6,7 @@ export default {
     storageBucket: 'selbi-develop.appspot.com',
   },
   // codePushKey: 'XYU_wAvoNeTzW_UuGogZ5kImnomjVybu8pY2Z',
-  // Note this key is to Nearprinter NOT Selbi.
-  stripePublicKey: 'pk_test_jgbSMlxI62OBXiWH1ENa9o5U',
+  stripePublicKey: 'pk_test_pVgDzmnHbUaT9z8L7p5slTKB',
   deeplinkDomain: 'https://k7cvz.app.goo.gl/',
   domain: 'https://selbi-develop.appspot.com',
 };

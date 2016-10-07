@@ -99,7 +99,7 @@ class ChooseVisibilityScene extends RoutableScene {
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });
         console.log(error);
-        Alert.alert(error);
+        Alert.alert('Error adding bank, check the data and try again.');
       });
   }
 
