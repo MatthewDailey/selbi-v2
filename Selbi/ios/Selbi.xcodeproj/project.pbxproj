@@ -37,6 +37,7 @@
 		C941BBB71D90F95800250C9E /* libRNFIRAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9FCB5F71D8A03CA0004EE34 /* libRNFIRAnalytics.a */; };
 		C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C941BBE41D91121200250C9E /* libCodePush.a */; };
 		C97953081D66E3B500BCD992 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97952FE1D66E35200BCD992 /* libRCTCameraRoll.a */; };
+		C9B675031DA94E5300269064 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B674ED1DA94E3900269064 /* libAutoGrowTextInput.a */; };
 		C9FCB5D51D89C31B0004EE34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C9FCB5D41D89C31B0004EE34 /* GoogleService-Info.plist */; };
 		D731A994098E4CE2B5365F8B /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 684C996EC8AC448FBB143D3D /* EvilIcons.ttf */; };
 		DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0667282BE293434AB7BC83C5 /* libz.tbd */; };
@@ -174,6 +175,13 @@
 			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
 			remoteInfo = ReactNativePermissions;
 		};
+		C9B674EC1DA94E3900269064 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C9B674E81DA94E3900269064 /* AutoGrowTextInput.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D81C36501CDB667F00777FB9;
+			remoteInfo = AutoGrowTextInput;
+		};
 		C9B6BA8F1D6F94F200E29650 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 90BC9A4D812D402C885B7AAE /* RCTMaterialKit.xcodeproj */;
@@ -252,6 +260,7 @@
 		C93F5C4F1DA1A73B00CC2E35 /* Selbi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Selbi.entitlements; path = Selbi/Selbi.entitlements; sourceTree = "<group>"; };
 		C941BBB51D90F94B00250C9E /* libPods-Selbi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Selbi.a"; path = "../../../../Library/Developer/Xcode/DerivedData/Selbi-emjfnjvaxemzohamqvqxyrvoflib/Build/Products/Release-iphoneos/libPods-Selbi.a"; sourceTree = "<group>"; };
 		C97952F71D66E35100BCD992 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		C9B674E81DA94E3900269064 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
 		C9FCB5D41D89C31B0004EE34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Selbi/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SelbiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE6D76FCDDA32141DA733ADA /* Pods-Selbi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.debug.xcconfig"; sourceTree = "<group>"; };
@@ -290,6 +299,7 @@
 				C941BBB21D90F90700250C9E /* libRNVectorIcons.a in Frameworks */,
 				C941BBB31D90F91D00250C9E /* libRNImageReader.a in Frameworks */,
 				C941BBB71D90F95800250C9E /* libRNFIRAnalytics.a in Frameworks */,
+				C9B675031DA94E5300269064 /* libAutoGrowTextInput.a in Frameworks */,
 				C941BBB61D90F94B00250C9E /* libPods-Selbi.a in Frameworks */,
 				C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */,
 				DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */,
@@ -395,6 +405,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C9B674E81DA94E3900269064 /* AutoGrowTextInput.xcodeproj */,
 				C97952F71D66E35100BCD992 /* RCTCameraRoll.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -516,6 +527,14 @@
 			isa = PBXGroup;
 			children = (
 				C99FD2951DA6ABB9007998D7 /* libReactNativePermissions.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C9B674E91DA94E3900269064 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C9B674ED1DA94E3900269064 /* libAutoGrowTextInput.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -665,6 +684,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = C9B674E91DA94E3900269064 /* Products */;
+					ProjectRef = C9B674E81DA94E3900269064 /* AutoGrowTextInput.xcodeproj */;
+				},
 				{
 					ProductGroup = C941BBE01D91121200250C9E /* Products */;
 					ProjectRef = 9FE7F209D93343C9895D3F8B /* CodePush.xcodeproj */;
@@ -876,6 +899,13 @@
 			fileType = archive.ar;
 			path = libReactNativePermissions.a;
 			remoteRef = C99FD2941DA6ABB9007998D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C9B674ED1DA94E3900269064 /* libAutoGrowTextInput.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAutoGrowTextInput.a;
+			remoteRef = C9B674EC1DA94E3900269064 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C9B6BA901D6F94F200E29650 /* libRCTMaterialKit.a */ = {

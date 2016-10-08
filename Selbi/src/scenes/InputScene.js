@@ -1,6 +1,7 @@
 import React from 'react';
 import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import { isStringFloat, isStringInt } from '../utils';
 import styles, { paddingSize } from '../../styles';
@@ -70,7 +71,7 @@ export default class InputScene extends RoutableScene {
         return <View>{this.props.inputTitle}</View>;
       }
       return <Text style={styles.friendlyTextLeft}>{this.props.inputTitle}</Text>;
-    }
+    };
 
     return (
       <View style={styles.container}>
@@ -79,11 +80,14 @@ export default class InputScene extends RoutableScene {
             <InputTitle />
           </View>
           <View style={{ paddingLeft: paddingSize, paddingRight: paddingSize }}>
-            <TextInput
+            <AutoGrowingTextInput
               autoFocus
+              multiline
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
-              style={{ height: 48 }}
+              style={{
+                fontSize: 30,
+              }}
               value={this.props.inputValue}
               onChangeText={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
