@@ -36,7 +36,7 @@ const titleScene = {
       leftIs="back"
       rightIs="next"
       inputTitle="What do you want to title this listing?"
-      placeholder="Eg. 'Magic coffee table!'"
+      placeholder="Eg. 'Magic Table!'"
     />
   ),
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
 import { mdl, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -9,43 +9,11 @@ import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
-const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPassword(true)
-  .withPlaceholder('Password')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Email')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .withKeyboardType('email-address')
-  .build();
-
-const FirstNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('First Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const LastNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Last Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
+const inputStyle = {
+  height: 48,  // have to do it on iOS
+  marginTop: 10,
+  fontSize: 30,
+};
 
 const FacebookButton = MKButton.button()
   .withStyle({
@@ -206,14 +174,18 @@ export default class SignInOrRegisterScene extends RoutableScene {
     };
 
     const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <FirstNameInput
+      <TextInput
+        placeholder="First name"
+        style={inputStyle}
         onTextChange={(newText) => this.setState({ firstName: newText })}
         onFocus={scrollToFirstName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.LastNameInput.focus()}
       /> : <View />;
     const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <LastNameInput
+      <TextInput
+        placeholder="Last name"
+        style={inputStyle}
         ref="LastNameInput"
         onTextChange={(newText) => this.setState({ lastName: newText })}
         onFocus={scrollToLastName}
@@ -246,7 +218,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
         </Text>
         {firstNameInputIfNecessary}
         {lastNameInputIfNecessary}
-        <EmailInput
+        <TextInput
+          style={inputStyle}
+          placeholder="Email"
           ref="EmailInput"
           onChangeText={(newText) => {
             const stateAdditions = {};
@@ -257,8 +231,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
           returnKeyType="next"
           onSubmitEditing={() => this.refs.PasswordInput.focus()}
         />
-        <PasswordInput
+        <TextInput
+          style={inputStyle}
           ref="PasswordInput"
+          placeholder="Password"
+          password
           onChangeText={(newText) => {
             const stateAdditions = {};
             stateAdditions[passwordState(registerOrSignInType)] = newText;

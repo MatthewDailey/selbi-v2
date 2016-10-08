@@ -46,7 +46,7 @@ import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watch
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
   listenToBulletins, setUserFcmToken }
   from './src/firebase/FirebaseConnector';
-import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh }
+import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
 
 import { getGeolocation, watchGeolocation } from './src/utils';
@@ -108,7 +108,13 @@ const listenForUserBulletins = (user) => {
   if (user) {
     unwatchUserBulletins = listenToBulletins(
       (bulletins) => {
-        // setBadgeNumber(Object.keys(bulletins).length);
+        let unreadBulletinCount = 0;
+        Object.keys(bulletins).forEach((key) => {
+          if (bulletins[key].status === 'unread') {
+            unreadBulletinCount++;
+          }
+        });
+        setBadgeNumber(unreadBulletinCount);
         store.dispatch(setBulletins(bulletins));
       });
   } else {
@@ -327,7 +333,6 @@ function renderDeepLinkListener(navigator) {
 }
 
 const Permissions = require('react-native-permissions');
-
 
 class NavApp extends Component {
   componentDidMount() {
