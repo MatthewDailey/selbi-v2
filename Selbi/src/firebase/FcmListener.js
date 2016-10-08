@@ -7,6 +7,10 @@ export function setBadgeNumber(n) {
   FCM.setBadgeNumber(n);
 }
 
+this.notificationUnsubscribe = FCM.on('notification', (notif) => {
+  console.log('Received notification: ', notif);
+});
+
 let unsubscribeFromFcmToken;
 
 export function subscribeToFcmTokenRefresh(handler) {
