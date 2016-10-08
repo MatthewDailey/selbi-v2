@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import cl.json.RNSharePackage;
 import com.microsoft.codepush.react.CodePush;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeConfigPackage(),
             new RCTCameraPackage(),
             new RNSharePackage(),
             new CodePush(null, this, BuildConfig.DEBUG)
