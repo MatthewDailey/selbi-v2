@@ -37,6 +37,7 @@ PODS:
 DEPENDENCIES:
   - Firebase/DynamicLinks
   - Firebase/Messaging
+  - FirebaseAnalytics
 
 SPEC CHECKSUMS:
   Firebase: be473484f0d515e72ffd04acf22f981773c23e58
@@ -50,6 +51,6 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleUtilities: 8bbc733218aad26306f9d4a253823986110e3358
 
-PODFILE CHECKSUM: ef1ad91037ae56658223ea68c395dad8c710a64f
+PODFILE CHECKSUM: 6fe27f6bdca8c8d2b93a382b78e330e74cd0a1ab
 
 COCOAPODS: 1.0.1
