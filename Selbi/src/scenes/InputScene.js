@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractionManager, View, Text, Alert } from 'react-native';
+import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
 
 import { isStringFloat, isStringInt } from '../utils';
@@ -79,13 +79,13 @@ export default class InputScene extends RoutableScene {
             <InputTitle />
           </View>
           <View style={{ paddingLeft: paddingSize, paddingRight: paddingSize }}>
-            <MKTextField
+            <TextInput
               autoFocus
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
               style={{ height: 48 }}
               value={this.props.inputValue}
-              onTextChange={this.onInputTextChange}
+              onChangeText={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
               returnKeyType="done"
               onSubmitEditing={this.onSubmit}
