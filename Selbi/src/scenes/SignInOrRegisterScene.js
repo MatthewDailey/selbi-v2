@@ -12,45 +12,8 @@ import SpinnerOverlay from '../components/SpinnerOverlay';
 const inputStyle = {
   height: 48,  // have to do it on iOS
   marginTop: 10,
+  fontSize: 30,
 };
-
-const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPassword(true)
-  .withPlaceholder('Password')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Email')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .withKeyboardType('email-address')
-  .build();
-
-const FirstNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('First Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const LastNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Last Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
 
 const FacebookButton = MKButton.button()
   .withStyle({
