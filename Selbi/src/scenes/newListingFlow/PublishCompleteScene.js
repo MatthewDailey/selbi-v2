@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,9 +17,14 @@ import { getListingShareUrl } from '../../deeplinking/Utilities';
 import styles from '../../../styles';
 import colors from '../../../colors';
 
+const buttonTextStyle = {
+  fontSize: 20,
+};
+
 const Button = MKButton.button()
   .withStyle({
     borderRadius: 5,
+    padding: 8,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -27,7 +32,7 @@ const Button = MKButton.button()
 class PublishCompleteScene extends RoutableScene {
   renderWithNavBar() {
     return (
-      <View style={styles.paddedContainer}>
+      <ScrollView style={styles.paddedContainer}>
         <Text style={styles.friendlyText}>
           {`Your listing is visible and ready to sell to ${this.props.visibleTo}.`}
         </Text>
@@ -42,28 +47,28 @@ class PublishCompleteScene extends RoutableScene {
             onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
               .catch(console.log)}
           >
-            <Text><Icon name="share-square-o" /> Share</Text>
+            <Text style={buttonTextStyle}><Icon name="share-square-o" size={buttonTextStyle.fontSize} /> Share</Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
           <Button onPress={() => this.goNext()}>
-            <Text><Icon name="list" /> Add Details</Text>
+            <Text style={buttonTextStyle}><Icon name="list" size={buttonTextStyle.fontSize} /> Add Details</Text>
           </Button>
         </View>
 
         <VisibilityWrapper isVisible={!this.props.hasBankAccount}>
           <View>
             <Text style={styles.friendlyText}>
-              You should link your bank account so that users can pay you easily through Selbi.
+              You should link your bank account so that users can pay you easily.
             </Text>
             <View style={styles.halfPadded}>
               <Button onPress={() => this.goNext('addBank')}>
-                <Text><Icon name="university" /> Add Bank</Text>
+                <Text style={buttonTextStyle}><Icon name="university" size={buttonTextStyle.fontSize}/> Receive Payments</Text>
               </Button>
             </View>
           </View>
         </VisibilityWrapper>
-      </View>
+      </ScrollView>
     );
   }
 }

@@ -18,9 +18,14 @@ import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
 import styles from '../../../styles';
 import colors from '../../../colors';
 
+const buttonTextStyle = {
+  fontSize: 20,
+};
+
 const Button = MKButton.button()
   .withStyle({
     borderRadius: 5,
+    padding: 8,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -69,7 +74,7 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text><Icon name="users" size={16} />  My Friends</Text>
+            <Text style={buttonTextStyle}><Icon name="users" size={buttonTextStyle.fontSize} />  My Friends</Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
@@ -92,7 +97,7 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text><Icon name="globe" size={16} />  Anyone Nearby</Text>
+            <Text style={buttonTextStyle}><Icon name="globe" size={buttonTextStyle.fontSize} />  Anyone Nearby</Text>
           </Button>
         </View>
         <SpinnerOverlay isVisible={this.state.publishing} />
