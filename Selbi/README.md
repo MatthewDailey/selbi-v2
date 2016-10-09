@@ -96,6 +96,9 @@ the `--require tests/setup.js`. The `node_modules` to transpile are listed in `m
 
 This is cheifly necessary for the `react-native-material-kit` dependency.
 
+The entire additional run command is `--compilers js:babel-core/register --require tests/setup.js --require react-native-mock/mock`.
+
+
 Redux
 -----
 To manage data in a complex application we use

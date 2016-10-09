@@ -43,6 +43,8 @@ const modulesToCompile = [
   'react-native-material-kit',
   'react-native-vector-icons',
   'react-native-scrollable-tab-view',
+  'react-native-autogrow-textinput',
+  'react-native-fcm',
 ].map((moduleName) => new RegExp(`/node_modules/${moduleName}`));
 const rcPath = path.join(__dirname, '..', '.babelrc');
 const source = fs.readFileSync(rcPath).toString();
