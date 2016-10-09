@@ -33,7 +33,6 @@
     "react-native-firebase-analytics": "^1.0.4",
     "react-native-gifted-chat": "0.0.10",
     "react-native-material-kit": "^0.3.2",
-    "react-native-navbar": "^1.5.0",
     "react-native-permissions": "^0.2.5",
     "react-native-router-flux": "^3.35.0",
     "react-native-scrollable-tab-view": "^0.5.4",
