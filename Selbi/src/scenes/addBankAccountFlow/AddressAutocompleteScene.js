@@ -1,14 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-import RoutableScene from '../../nav/RoutableScene'
+import { setAddressLine1, setAddressCity, setAddressPostal, setAddressState }
+  from '../../reducers/AddBankAccountReducer';
+
+import RoutableScene from '../../nav/RoutableScene';
 
 import colors from '../../../colors';
 import config from '../../../config';
 import styles from '../../../styles';
 
-export default class AddressAutocompleteScene extends RoutableScene {
+class AddressAutocompleteScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <View style={styles.container}>
@@ -24,6 +28,7 @@ export default class AddressAutocompleteScene extends RoutableScene {
           onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
             console.log(data);
             console.log(details);
+            this.props.setAddress(details);
           }}
           getDefaultValue={() => {
             return ''; // text input default value
@@ -63,3 +68,39 @@ export default class AddressAutocompleteScene extends RoutableScene {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setAddress: (addressDetails) => {
+      let addressLine1 = ' ';
+
+      addressDetails.address_components.forEach((component) => {
+        if (component.types.includes('administrative_area_level_1')) {
+          dispatch(setAddressState(component.short_name));
+        }
+        if (component.types.includes('postal_code')) {
+          dispatch(setAddressPostal(component.long_name));
+        }
+        if (component.types.includes('locality')) {
+          dispatch(setAddressCity(component.long_name));
+        }
+        if (component.types.includes('street_number')) {
+          addressLine1 = component.long_name + addressLine1;
+        }
+        if (component.types.includes('route')) {
+          addressLine1 = addressLine1 + component.long_name;
+        }
+      });
+      dispatch(setAddressLine1(addressLine1));
+    }
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddressAutocompleteScene);
