@@ -3,6 +3,58 @@ function validateData(data) {
   return Promise.resolve();
 }
 
+function addOrUpdateMessagesBulletin(firebaseDb,
+                                     recipientUid,
+                                     buyerUid,
+                                     listingId,
+                                     listingTitle,
+                                     senderDisplayName) {
+  const bulletin = {
+    type: 'new-message',
+    timestamp: new Date().getTime(),
+    status: 'unread',
+    payload: {
+      count: 1,
+      chat: {
+        buyerUid,
+        listingId,
+      },
+      listingTitle,
+      senderDisplayName,
+    },
+  };
+  const newBulletinRef = firebaseDb.ref('userBulletins')
+    .child(recipientUid)
+    .push();
+
+  return firebaseDb.ref('userBulletins')
+    .child(recipientUid)
+    .transaction((currentBulletins) => {
+      let foundUnreadMessageFromSameSender = false;
+
+      const newBulletins = Object.assign({}, currentBulletins);
+
+      if (currentBulletins) {
+        Object.keys(currentBulletins).forEach((key) => {
+          if (currentBulletins[key].type === 'new-message'
+            && currentBulletins[key].status === 'unread'
+            && currentBulletins[key].payload.chat.buyerUid === buyerUid
+            && currentBulletins[key].payload.chat.listingId === listingId) {
+            foundUnreadMessageFromSameSender = true;
+            newBulletins[key].payload.count += 1;
+            newBulletins[key].timestamp = new Date().getTime();
+          }
+        });
+      }
+
+      if (!foundUnreadMessageFromSameSender) {
+        newBulletins[newBulletinRef.key] = bulletin;
+      }
+
+      return newBulletins;
+    });
+}
+
 export default class MessageNotificationsHandler {
   constructor(firebaseDb, sendNotification) {
     this.firebaseDb = firebaseDb;
@@ -99,16 +151,31 @@ export default class MessageNotificationsHandler {
                 return Promise.reject(`Unable to find fcmToken for user ${recipientId}`);
               });
 
+            const promiseRecipientId = Promise.resolve(recipientId);
             const promiseMessage = Promise.resolve(message.text);
             const promiseListingTitle = Promise.resolve(listing.title);
 
             return Promise.all([promiseRecipientFcmToken, promiseAuthorName, promiseMessage,
-              promiseListingTitle]);
+              promiseListingTitle, promiseRecipientId]);
           });
       };
 
       return validateData(data)
         .then(loadNotificationData)
+        .then((fcmTokenAndAuthorAndMessageAndListingTitle) => {
+          const recipientId = fcmTokenAndAuthorAndMessageAndListingTitle[4];
+          const authorName = fcmTokenAndAuthorAndMessageAndListingTitle[1];
+          const listingTitle = fcmTokenAndAuthorAndMessageAndListingTitle[3];
+
+          return addOrUpdateMessagesBulletin(
+              firebaseDb,
+              recipientId,
+              buyerId,
+              listingId,
+              listingTitle,
+              authorName)
+            .then(() => fcmTokenAndAuthorAndMessageAndListingTitle);
+        })
         .then((fcmTokenAndAuthorAndMessageAndListingTitle) => {
           const fcmToken = fcmTokenAndAuthorAndMessageAndListingTitle[0];
           const authorName = fcmTokenAndAuthorAndMessageAndListingTitle[1];

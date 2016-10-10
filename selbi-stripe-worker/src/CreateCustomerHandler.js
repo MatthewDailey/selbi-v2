@@ -82,6 +82,7 @@ class CreateCustomerHandler {
 
       function updateUserPaymentStatusAndReject(error) {
         rejectCreateCustomerTask(error);
+        console.log(error);
         return userRef()
           .child('payment')
           .set({

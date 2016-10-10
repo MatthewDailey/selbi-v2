@@ -24,6 +24,8 @@ export function sendNotification(targetFcmToken, title, body) {
     },
   };
 
+  console.log(' Sending message:', message);
+
   return new Promise((resolve, reject) => {
     fcm.send(message, (error, response) => {
       if (error) {

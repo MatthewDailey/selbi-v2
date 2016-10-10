@@ -3,6 +3,20 @@ Selbi - Mobile App
 
 This package implements the Selbi mobile app in React Native
 
+Deep Links / Dynamic Links
+---------------------------
+
+We make use of the Firebase Dynamic links feature. We use universal links.
+
+Current uses of dynamic links:
+- Create a share link which opens directly to a listing and automatically causes clicker to follow
+the listing owner
+
+Links with some background:
+- [Firebase docs](https://firebase.google.com/docs/dynamic-links/ios)
+- [Facebook React Native deep link docs](https://facebook.github.io/react-native/docs/linking.html
+
+
 Build Process
 -------------
 
@@ -30,6 +44,12 @@ We use schemes in XCode to manage deploying different version of the app.
 
 These can be built and deployed directly to test flight via `fastlane staging`.
 
+Feature Flags
+-------------
+
+We enable feature flags via `<root>/features.js`. Updates to this can be pushed using code push to
+ hot disable a feature if we need to turn off a feature quickly. An example of a feature we may
+ want to turn off is payments if we find a bug or security hole.
 
 Hot Updates
 -----------
@@ -37,17 +57,26 @@ Hot Updates
 For hot patching, we use [Code Push](https://microsoft.github.io/code-push/). To use this, you
 must install the code push cli.
 
+To push a JS-only update:
+- Go to `Selbi/`
+- Run `code-push release-react selbi ios -d <selbi stage> -m`. The stage is something like 'develop'
+or 'staging'. The `-m` means the update is mandatory.
+
 To test with test flight the steps are:
-0. Update build number and/or version in the Selbi 'General' header in XCode. As we iterate, we should
+- Go to `Selbi/ios`
+- Run `fastlane staging`. This will increment the build number and publish the app to test flight.
+
+[Deprecated] To test with test flight the steps are:
+- 0. Update build number and/or version in the Selbi 'General' header in XCode. As we iterate, we should
 only be updating the build number. Only update the version number for a new release.
-1. Set scheme to 'Staging'
-2. From `<repo root>/Selbi` run `cp Selbi/selbiBuildResources/stating/.env .`
-3. In XCode go to `Product` menu and hit `Archive`. This will build the archive and open the archive
+- 1. Set scheme to 'Staging'
+- 2. From `<repo root>/Selbi` run `cp Selbi/selbiBuildResources/stating/.env .`
+- 3. In XCode go to `Product` menu and hit `Archive`. This will build the archive and open the archive
 manager.
-4. Select the new version and click `Upload to App Store...`.
-5. Visit the [Itunes Connect Activity page](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/activity/ios/builds)
+- 4. Select the new version and click `Upload to App Store...`.
+- 5. Visit the [Itunes Connect Activity page](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/activity/ios/builds)
  and monitor to progress of the upload.
-6. Once the build upload is complete, go to the [Internal Testing](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/testflight/internal)
+- 6. Once the build upload is complete, go to the [Internal Testing](https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/ng/app/1156524902/testflight/internal)
 tab to choose a test version and notify testers.
 
 Testing
@@ -66,6 +95,9 @@ In addition, to transpile React Native modules for test, it's important that you
 the `--require tests/setup.js`. The `node_modules` to transpile are listed in `modulesToCompile`.
 
 This is cheifly necessary for the `react-native-material-kit` dependency.
+
+The entire additional run command is `--compilers js:babel-core/register --require tests/setup.js --require react-native-mock/mock`.
+
 
 Redux
 -----

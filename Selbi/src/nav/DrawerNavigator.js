@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigator } from 'react-native';
 
 import Drawer from 'react-native-drawer';
+import PermissionsWatcher from '../nav/PermissionsWatcher';
 
 /*
  * DrawerNavigator manages a graph of scenes and transitions between scenes while providing a
@@ -35,19 +36,27 @@ export default class DrawerNavigator extends React.Component {
     return (
       <Navigator
         initialRoute={this.props.initialRoute}
-        renderScene={(route, navigator) =>
-          <Drawer
-            ref={(c) => {
-              this.drawer = c;
-            }}
-            content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
-            tapToClose
-            openDrawerOffset={0.2}
-            panOpenMask={0.1}
-          >
-            {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
-          </Drawer>
-        }
+        renderScene={(route, navigator) => {
+          console.log('Rendering: ', route);
+          if (navigator.getCurrentRoutes().length > 1) {
+            return route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu);
+          }
+          return (
+            <Drawer
+              ref={(c) => {
+                this.drawer = c;
+              }}
+              content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
+              tapToClose
+              openDrawerOffset={0.2}
+              panOpenMask={0.1}
+            >
+              {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
+              {this.props.renderDeepLinkListener(navigator)}
+              <PermissionsWatcher />
+            </Drawer>
+          );
+        }}
       />
     );
   }

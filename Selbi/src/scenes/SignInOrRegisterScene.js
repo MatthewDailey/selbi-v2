@@ -1,63 +1,25 @@
 import React from 'react';
-import { ScrollView, View, Text, Alert } from 'react-native';
-import { mdl, MKButton } from 'react-native-material-kit';
+import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import styles from '../../styles';
+import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import { privacyPolicyScene, termsAndConditionsScene } from './legal';
 
-const PasswordInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPassword(true)
-  .withPlaceholder('Password')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const EmailInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Email')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOSfd
-    marginTop: 10,
-  })
-  .withKeyboardType('email-address')
-  .build();
-
-const FirstNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('First Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const LastNameInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Last Name')
-  .withHighlightColor(colors.white)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const GoogleButton = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
-  .build();
+const inputStyle = {
+  height: 48,  // have to do it on iOS
+  marginTop: 10,
+  fontSize: 30,
+};
 
 const FacebookButton = MKButton.button()
   .withStyle({
     borderRadius: 5,
+    padding: paddingSize,
   })
   .withBackgroundColor('#3b5998')
   .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
@@ -104,6 +66,18 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
+    this.registerOrSignInErrorHandler = this.registerOrSignInErrorHandler.bind(this);
+  }
+
+  registerOrSignInErrorHandler(error) {
+    console.log(error);
+    this.setState({ signingIn: false });
+
+    if (!!error && !!error.message) {
+      Alert.alert(error.message);
+    } else {
+      Alert.alert(`There was an error during ${this.props.signInOrRegisterType.asTitle}.`);
+    }
   }
 
   registerUserWithEmailAndPassword() {
@@ -117,7 +91,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       return Promise.resolve();
     }
 
-    this.setState({ signingIn: true })
+    this.setState({ signingIn: true });
 
     // TODO we should not need to sign in after registering. This is a hacky way to work
     // around the fact that updating user name can't be done until after the user is created
@@ -136,11 +110,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ signingIn: true });
-        Alert.alert('There was an error during registration.');
-      });
+      .catch(this.registerOrSignInErrorHandler);
   }
 
   signInWithEmailAndPassword() {
@@ -163,16 +133,17 @@ export default class SignInOrRegisterScene extends RoutableScene {
           this.goNext();
         }
       })
-      .catch((error) => {
-        console.log(error);
-        this.setState({ signingIn: false });
-        Alert.alert('There was an error during sign in.');
-      });
+      .catch(this.registerOrSignInErrorHandler);
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
     const SubmitButton = MKButton
-      .flatButton()
+      .button()
+      .withStyle({
+        borderRadius: 5,
+        padding: paddingSize,
+      })
+      .withBackgroundColor(colors.secondary)
       .withText(registerOrSignInType.asTitle)
       .withOnPress(() => {
         registerOrSignInMethod();
@@ -204,20 +175,43 @@ export default class SignInOrRegisterScene extends RoutableScene {
     };
 
     const firstNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <FirstNameInput
+      <TextInput
+        placeholder="First name"
+        style={inputStyle}
         onTextChange={(newText) => this.setState({ firstName: newText })}
         onFocus={scrollToFirstName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.LastNameInput.focus()}
       /> : <View />;
     const lastNameInputIfNecessary = registerOrSignInType === TabTypes.register ?
-      <LastNameInput
+      <TextInput
+        placeholder="Last name"
+        style={inputStyle}
         ref="LastNameInput"
         onTextChange={(newText) => this.setState({ lastName: newText })}
         onFocus={scrollToLastName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.EmailInput.focus()}
       /> : <View />;
+
+    const termsOfServiceViewIfNecessary = registerOrSignInType === TabTypes.register ?
+      <Text>
+        {'By registering you are agreeing to Selbi\'s '}
+        <Text
+          style={{ textDecorationLine: 'underline' }}
+          onPress={() => this.props.navigator.push(termsAndConditionsScene)}
+        >
+          terms and conditions
+        </Text>
+        {' as well as '}
+        <Text
+          style={{ textDecorationLine: 'underline' }}
+          onPress={() => this.props.navigator.push(privacyPolicyScene)}
+        >
+          privacy policy
+        </Text>.
+      </Text>
+      : <View />;
 
     return (
       <ScrollView
@@ -226,16 +220,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
         tabLabel={registerOrSignInType.asTitle}
       >
         <FacebookButton >
-          <Text style={{color: colors.white}}>
+          <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
         </FacebookButton>
         <View style={styles.halfPadded} />
-        <GoogleButton>
-          <Text style={{ color: 'grey' }}>
-            <Icon name="google" size={16} /> {`${registerOrSignInType.asSentence} with Google`}
-          </Text>
-        </GoogleButton>
         <View style={styles.padded} />
         <View
           style={{
@@ -244,16 +233,14 @@ export default class SignInOrRegisterScene extends RoutableScene {
           }}
         />
         <View style={styles.padded} />
-        <Text
-          style={{
-            textAlign: 'center',
-          }}
-        >
+        <Text style={styles.friendlyText}>
           {`${registerOrSignInType.asSentence} with email and password.`}
         </Text>
         {firstNameInputIfNecessary}
         {lastNameInputIfNecessary}
-        <EmailInput
+        <TextInput
+          style={inputStyle}
+          placeholder="Email"
           ref="EmailInput"
           onChangeText={(newText) => {
             const stateAdditions = {};
@@ -264,8 +251,11 @@ export default class SignInOrRegisterScene extends RoutableScene {
           returnKeyType="next"
           onSubmitEditing={() => this.refs.PasswordInput.focus()}
         />
-        <PasswordInput
+        <TextInput
+          style={inputStyle}
           ref="PasswordInput"
+          placeholder="Password"
+          password
           onChangeText={(newText) => {
             const stateAdditions = {};
             stateAdditions[passwordState(registerOrSignInType)] = newText;
@@ -277,6 +267,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
         />
         <View style={styles.padded} />
         <SubmitButton />
+        <View style={styles.halfPadded} />
+        {termsOfServiceViewIfNecessary}
       </ScrollView>
     );
   }
@@ -289,6 +281,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           tabBarUnderlineColor={colors.secondary}
           tabBarActiveTextColor={colors.secondary}
           style={styles.fullScreenContainer}
+          tabBarTextStyle={styles.friendlyText}
         >
           {this.getInnerView(TabTypes.signIn, this.signInWithEmailAndPassword)}
           {this.getInnerView(TabTypes.register, this.registerUserWithEmailAndPassword)}

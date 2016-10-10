@@ -1,14 +1,19 @@
 import React from 'react';
 
-import { registerWithEmail, signInWithEmail, getUser, createListing, createUser, publishImage }
+import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
 import { withNavigatorProps } from '../../nav/RoutableScene';
 import SimpleCamera from './CameraScene';
 import ApproveImageScene from './ApproveImageScene';
-import PublishScene from './PublishScene';
 import PriceInputScene from './PriceInputScene';
 import TitleInputScene from './TitleInputScene';
+import ChooseVisibilityScene from './ChooseVisibilityScene';
+import PublishCompletedScene from './PublishCompleteScene';
+
 import SignInOrRegisterScene from '../SignInOrRegisterScene';
+
+import EditListingFlow from '../editListingFlow';
+import AddBankFlow from '../addBankAccountFlow';
 
 const loginScene = {
   id: 'login-scene',
@@ -23,43 +28,31 @@ const loginScene = {
     />),
 };
 
-const publishScene = {
-  id: 'post-login',
-  renderContent: withNavigatorProps(
-    <PublishScene
-      title=""
-      rightIs="home"
-      createListing={createListing}
-      publishImage={publishImage}
-    />
-  ),
-};
-
 const titleScene = {
   id: 'title-scene',
   renderContent: withNavigatorProps(
     <TitleInputScene
-      title="Create Listing (3/3)"
+      title="Create Listing (3/4)"
       leftIs="back"
       rightIs="next"
-      inputTitle="What are you selling?"
-      placeholder="Eg. 'Magic coffee table!'"
+      inputTitle="What do you want to title this listing?"
+      placeholder="Eg. 'Magic Table!'"
     />
   ),
 };
 
 const cameraScene = {
-  id: 'b',
+  id: 'create-camera-scene',
   renderContent: withNavigatorProps(
     <SimpleCamera
-      title="Create Listing (1/3)"
+      title="Create Listing (1/4)"
       leftIs="back"
       rightIs="next"
     />),
 };
 
 const imageScene = {
-  id: 'c',
+  id: 'create-image-scene',
   renderContent: withNavigatorProps(
     <ApproveImageScene
       title=""
@@ -69,16 +62,37 @@ const imageScene = {
 };
 
 const priceInputScene = {
-  it: 'price-listing',
+  id: 'price-listing',
   renderContent: withNavigatorProps(
     <PriceInputScene
-      title="Create Listing (2/3)"
+      title="Create Listing (2/4)"
       leftIs="back"
       rightIs="next"
       inputTitle="How much do you want to sell for?"
       placeholder="USD"
       isNumeric
       floatingLabel
+    />
+  ),
+};
+
+const chooseVisibilityScene = {
+  id: 'choose-visibility',
+  renderContent: withNavigatorProps(
+    <ChooseVisibilityScene
+      title="Create Listing (4/4)"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
+const publishCompletedScene = {
+  id: 'publish-completed',
+  renderContent: withNavigatorProps(
+    <PublishCompletedScene
+      title="Success!"
+      rightIs="home"
     />
   ),
 };
@@ -105,10 +119,10 @@ routeLinks[priceInputScene.id] = {
 };
 routeLinks[titleScene.id] = {
   next: {
-    title: 'Post',
+    title: 'OK',
     getRoute: () => {
       if (getUser()) {
-        return publishScene;
+        return chooseVisibilityScene;
       }
       return loginScene;
     },
@@ -117,14 +131,29 @@ routeLinks[titleScene.id] = {
 routeLinks[loginScene.id] = {
   next: {
     title: '',
-    getRoute: () => publishScene,
+    getRoute: () => chooseVisibilityScene,
   },
 };
-routeLinks[publishScene.id] = {
+routeLinks[chooseVisibilityScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => publishCompletedScene,
+  },
+};
+routeLinks[publishCompletedScene.id] = {
+  next: {
+    title: '',
+    getRoute: () => EditListingFlow.firstScene,
+  },
+  addBank: {
+    title: '',
+    getRoute: () => AddBankFlow.firstScene,
+  },
   home: {
     title: 'Done',
   },
 };
+
 
 module.exports.routesLinks = routeLinks;
 module.exports.firstScene = cameraScene;

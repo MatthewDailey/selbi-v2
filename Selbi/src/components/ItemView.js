@@ -31,6 +31,12 @@ class ItemView extends Component {
               style={{
                 margin: 5,
                 color: 'white',
+                textShadowColor: colors.dark,
+                textShadowOffset: {
+                  width: 1,
+                  height: 1,
+                },
+                textShadowRadius: 2,
                 fontWeight: 'bold',
                 backgroundColor: 'transparent',
               }}

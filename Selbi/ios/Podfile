@@ -6,7 +6,9 @@ target 'Selbi' do
   # use_frameworks!
 
   # Pods for Selbi
+  pod 'FirebaseAnalytics'
   pod 'Firebase/Messaging'
+  pod 'Firebase/DynamicLinks'
 
   target 'SelbiTests' do
     inherit! :search_paths

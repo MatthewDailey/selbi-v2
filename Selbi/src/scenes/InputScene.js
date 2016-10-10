@@ -1,8 +1,10 @@
 import React from 'react';
-import { InteractionManager, View, Text, Alert } from 'react-native';
+import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
 import { MKTextField } from 'react-native-material-kit';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
-import styles from '../../styles';
+import { isStringFloat, isStringInt } from '../utils';
+import styles, { paddingSize } from '../../styles';
 import RoutableScene from '../nav/RoutableScene';
 
 export default class InputScene extends RoutableScene {
@@ -15,19 +17,30 @@ export default class InputScene extends RoutableScene {
   }
 
   shouldGoNext() {
-    if (!this.props.inputValue) {
+    if (!this.props.inputValue && this.props.allowEmpty) {
+      return true;
+    } else if (!this.props.inputValue) {
       Alert.alert('Must not be empty.');
       return false;
     } else if (this.props.isNumeric && isNaN(this.parseInputValue(this.props.inputValue))) {
       Alert.alert('Must be a number.');
+      return false;
+    } else if (this.props.validateInputOnSubmit
+        && !this.props.validateInputOnSubmit(this.props.inputValue)) {
+      Alert.alert(this.props.validateFormatSuggestion);
       return false;
     }
     return true;
   }
 
   parseInputValue(newText) {
-    if (this.props.isNumeric) {
-      return parseFloat(newText);
+    if (this.props.isNumeric && !this.props.isNumericString) {
+      if (this.props.isInt && isStringInt(newText)) {
+        return newText;
+      } else if (!this.props.isInt && isStringFloat(newText)) {
+        return newText;
+      }
+      return this.props.inputValue;
     }
     return newText;
   }
@@ -53,18 +66,30 @@ export default class InputScene extends RoutableScene {
       );
     }
 
+    const InputTitle = () => {
+      if (React.isValidElement(this.props.inputTitle)) {
+        return <View>{this.props.inputTitle}</View>;
+      }
+      return <Text style={styles.friendlyTextLeft}>{this.props.inputTitle}</Text>;
+    };
+
     return (
       <View style={styles.container}>
         <View style={styles.padded}>
-          <Text style={styles.padded}>{this.props.inputTitle}</Text>
           <View style={styles.padded}>
-            <MKTextField
+            <InputTitle />
+          </View>
+          <View style={{ paddingLeft: paddingSize, paddingRight: paddingSize }}>
+            <AutoGrowingTextInput
               autoFocus
+              multiline
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
-              style={{ height: 48 }}
+              style={{
+                fontSize: 30,
+              }}
               value={this.props.inputValue}
-              onTextChange={this.onInputTextChange}
+              onChangeText={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
               returnKeyType="done"
               onSubmitEditing={this.onSubmit}
@@ -74,5 +99,9 @@ export default class InputScene extends RoutableScene {
       </View>
     );
   }
+}
+
+InputScene.defaultProps = {
+  validateInputLive: () => true,
 }
 

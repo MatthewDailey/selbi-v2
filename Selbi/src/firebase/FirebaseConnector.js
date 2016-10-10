@@ -1,26 +1,21 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import Config from 'react-native-config';
 
 import { convertToUsername } from './FirebaseUtils';
+import config from '../../config';
 
-const developConfig = {
-  apiKey: Config.FIREBASE_API_KEY,
-  authDomain: Config.FIREBASE_AUTH_DOMAIN,
-  databaseURL: Config.FIREBASE_DATABASE_URL,
-  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
-};
+console.log('Initializing firebase', config.firebase);
 
 // Note that this also reloads user auth settings. Therefore, this must not be loaded lazily.
-const firebaseApp = firebase.initializeApp(developConfig);
+const firebaseApp = firebase.initializeApp(config.firebase);
 
 export default undefined;
 
 const authStateChangeListeners = [];
 
 firebaseApp.auth().onAuthStateChanged((user) => {
-  console.log(`auth state changed --- signed in = ${user !== undefined}`);
+  console.log(`auth state changed --- signed in = ${!!user}`);
   authStateChangeListeners.forEach((listener) => listener(user));
 });
 
@@ -42,6 +37,7 @@ export function setUserFcmToken(fcmToken) {
   if (!getUser()) {
     return Promise.reject('Not signed in.');
   }
+
   console.log('-----about to set fcmToken----------')
   console.log(fcmToken);
   return firebaseApp
@@ -120,6 +116,7 @@ function insertUserInDatabase(userDisplayName) {
     .ref('/users')
     .child(getUser().uid)
     .set({
+      email: getUser().email,
       userAgreementAccepted: false,
     });
 
@@ -209,9 +206,23 @@ export function createListing(titleInput,
     .child(newListingRef.key)
     .set(true);
 
+  const recordNewListingEvent = () => firebaseApp
+    .database()
+    .ref('events/tasks')
+    .push()
+    .set({
+      owner: uid,
+      timestamp: new Date().getTime(),
+      type: 'new-listing',
+      payload: {
+        listingId: newListingRef.key,
+      },
+    });
+
   return newListingRef
     .set(listing)
     .then(createUserListing)
+    .then(recordNewListingEvent)
     .then(() => Promise.resolve(newListingRef.key));
 }
 
@@ -349,7 +360,7 @@ export function createChatAsBuyer(listingId, sellerUid) {
   return Promise.all([promiseSetBuyerPoiner, promiseSetSellerPointer]);
 }
 
-function getListingTitle(listingId) {
+function getListingKeyAndData(listingId) {
   return loadListingData(listingId)
     .then((listingSnapShot) => {
       if (listingSnapShot.exists()) {
@@ -358,7 +369,7 @@ function getListingTitle(listingId) {
           listingData: listingSnapShot.val(),
         });
       } else {
-        throw new Error('could not find listing');
+        throw new Error(`could not find listing ${listingId}`);
       }
     })
     .catch((error) => {
@@ -379,13 +390,13 @@ function loadChatDetailsFromUserChats(userChatsData) {
 
     if (buyingData) {
       Object.keys(buyingData).forEach((listingId) => chatPromises.push(
-        getListingTitle(listingId)
-          .then((listingTitleData) => {
-            if (!listingTitleData) {
+        getListingKeyAndData(listingId)
+          .then((listingKeyAndData) => {
+            if (!listingKeyAndData) {
               return Promise.resolve(undefined);
             }
 
-            return Promise.resolve(Object.assign(listingTitleData, {
+            return Promise.resolve(Object.assign(listingKeyAndData, {
               buyerUid: getUser().uid,
               type: 'buying',
             }));
@@ -396,14 +407,14 @@ function loadChatDetailsFromUserChats(userChatsData) {
     if (sellingData) {
       Object.keys(sellingData).forEach((listingId) => {
         Object.keys(sellingData[listingId]).forEach((buyerUid) => chatPromises.push(
-          getListingTitle(listingId)
-            .then((listingTitleData) => {
-              if (!listingTitleData) {
+          getListingKeyAndData(listingId)
+            .then((listingKeyAndData) => {
+              if (!listingKeyAndData) {
                 return Promise.resolve(undefined);
               }
 
-              return Promise.resolve(Object.assign(listingTitleData, {
-                buyerUid: buyerUid,
+              return Promise.resolve(Object.assign(listingKeyAndData, {
+                buyerUid,
                 type: 'selling',
               }));
             })
@@ -465,7 +476,38 @@ export function loadFriendsListings() {
     .then((listOfListingsLists) => [].concat.apply([], listOfListingsLists));
 }
 
-export function addFriend(friendUsername) {
+export function followUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to follow another user.')
+  }
+
+  const addFollowingPromise = firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .set(true);
+
+  const addFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .set(true);
+
+  return Promise.all([addFollowerPromise, addFollowingPromise])
+    .then(firebaseApp.database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        type: 'follow',
+        timestamp: new Date().getTime(),
+        owner: getUser().uid,
+        payload: {
+          leader: uid,
+        },
+      }));
+}
+
+export function addFriendByUsername(friendUsername) {
   return firebaseApp.database()
     .ref('usernames')
     .child(friendUsername)
@@ -474,13 +516,9 @@ export function addFriend(friendUsername) {
       if (friendUsernameSnapshot.exists()) {
         return friendUsernameSnapshot.val();
       }
-      return Promise.reject();
+      return Promise.reject(`Unable to find user @${friendUsername}.`);
     })
-    .then((friendUid) => firebaseApp.database()
-      .ref('following')
-      .child(getUser().uid)
-      .child(friendUid)
-      .set(true));
+    .then(followUser);
 }
 
 export function loadAllUserChats() {
@@ -498,6 +536,20 @@ export function loadUserPublicData(uid) {
     .ref('userPublicData')
     .child(uid)
     .once('value');
+}
+
+export function watchUserPublicData(uid, handler) {
+  firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .on('value', handler);
+
+  return () => firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .off('value', handler);
 }
 
 /*
@@ -581,7 +633,7 @@ export function loadListingByLocation(latlon, radiusKm) {
   });
 
   return new Promise((fulfill) => {
-    const listingsInArea = [];
+    const listingsInArea = {};
     const loadListingsPromises = [];
 
     geoQuery.on('key_entered', (listingId) => {
@@ -590,7 +642,7 @@ export function loadListingByLocation(latlon, radiusKm) {
         loadListingData(listingId)
           .then((snapshot) => {
             if (snapshot.exists()) {
-              listingsInArea.push(snapshot);
+              listingsInArea[snapshot.key] = snapshot;
             }
           }));
     });
@@ -607,6 +659,36 @@ export function loadListingByLocation(latlon, radiusKm) {
     });
   });
 }
+
+export function listenToListingsByLocation(latlon,
+                                           radiusKm,
+                                           enterHandler,
+                                           exitHandler) {
+  const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
+
+  const geoQuery = geoListings.query({
+    center: latlon,
+    radius: radiusKm,
+  });
+
+  if (enterHandler) {
+    geoQuery.on('key_entered', (listingId) => {
+      loadListingData(listingId)
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            enterHandler(snapshot);
+          }
+        });
+    });
+  }
+
+  if (exitHandler) {
+    geoQuery.on('key_exited', exitHandler);
+  }
+
+  return geoQuery;
+}
+
 
 export function loadLocationForListing(listingId) {
   const geoListings = new GeoFire(firebaseApp.database().ref('/geolistings'));
@@ -668,4 +750,314 @@ export function listenToListingsByStatus(status, callback) {
     .child(getUser().uid)
     .child(status)
     .off('value', callback);
+}
+
+function computeExpirationDate(expMonth, expYear) {
+  if (expMonth < 10) {
+    return `0${expMonth}-${expYear % 100}`;
+  }
+  return `${expMonth}-${expYear % 100}`;
+}
+
+function markUserHasPayment() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasPayment')
+    .set(true);
+}
+
+export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+
+  const createCustomerTask = {
+    uid: getUser().uid,
+    payload: {
+      source: stripeCreateCardResponse.id,
+      description: `${cardHolderName}'s Credit Card`,
+      email: getUser().email,
+    },
+    metadata: {
+      lastFour: stripeCreateCardResponse.card.last4,
+      expirationDate: computeExpirationDate(
+        stripeCreateCardResponse.card.exp_month,
+        stripeCreateCardResponse.card.exp_year),
+      cardBrand: stripeCreateCardResponse.card.brand,
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    const userPaymentRef = firebaseApp.database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('payment');
+
+    let isFirstLoadOfPayments = true;
+    const handlePaymentsUpdates = (paymentData) => {
+      if (isFirstLoadOfPayments) {
+        isFirstLoadOfPayments = false;
+
+        // Wait to enqueue until we know we're listening for updates to user status.
+        firebaseApp.database()
+          .ref('createCustomer/tasks')
+          .push()
+          .set(createCustomerTask);
+        return;
+      }
+
+      if (paymentData.exists()) {
+        if (paymentData.val().status === 'OK') {
+          markUserHasPayment()
+            .then(() => resolve(paymentData.val()))
+            .catch((error) => {
+              reject(error);
+              console.log(error);
+            });
+        } else {
+          reject(paymentData.val().status);
+        }
+      } else {
+        reject('An unknown error occured setting up payment data.');
+      }
+      userPaymentRef.off('value', handlePaymentsUpdates);
+    };
+
+    userPaymentRef.on('value', handlePaymentsUpdates);
+  });
+}
+
+function markUserHasMerchant() {
+  // Note that this will fail if the user does not have any public data already.
+  return firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .set(true);
+}
+
+export function enqueueCreateAccountRequest(
+  bankToken,
+  piiToken,
+  firstName,
+  lastName,
+  dob, // { day, month, year }
+  address, // { line1, line2, city, postal_code, state }
+  ip,
+  accountNumberLastFour,
+  routingNumber,
+  bankName) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  const createAccountTask = {
+    payload: {
+      external_account: bankToken,
+      email: getUser().email,
+      legal_entity: {
+        personal_id_number: piiToken,
+        first_name: firstName,
+        last_name: lastName,
+        dob,
+        address,
+      },
+      tos_acceptance: {
+        date: Math.floor(Date.now() / 1000),
+        ip,
+      },
+    },
+    uid: getUser().uid,
+    metadata: {
+      accountNumberLastFour,
+      routingNumber,
+      bankName,
+    },
+  };
+
+  const userMerchantRef = firebaseApp.database()
+    .ref('users')
+    .child(getUser().uid)
+    .child('merchant');
+
+  const clearUserPublicBankAccountData = () => firebaseApp.database()
+    .ref('userPublicData')
+    .child(getUser().uid)
+    .child('hasBankAccount')
+    .remove();
+
+  // Remove the merchant data.
+  return userMerchantRef
+    .remove()
+    .then(clearUserPublicBankAccountData)
+    .then(() => new Promise((resolve, reject) => {
+      let isFirstLoadOfMerchant = true;
+      const handleMerchantUpdates = (merchantData) => {
+        if (isFirstLoadOfMerchant) {
+          isFirstLoadOfMerchant = false;
+
+          // Wait to enqueue until we know we're listening for updates to user status.
+          firebaseApp.database()
+            .ref('createAccount/tasks')
+            .push()
+            .set(createAccountTask)
+            .catch((error) => {
+              console.log(error);
+              reject('An unknown error occured setting up merchant data.');
+              userMerchantRef.off('value', handleMerchantUpdates);
+            });
+          return;
+        }
+
+        if (merchantData.exists()) {
+          if (merchantData.val().status === 'OK') {
+            markUserHasMerchant()
+              .then(() => resolve(merchantData.val()))
+              .catch((error) => {
+                reject(error);
+                console.log(error);
+              });
+          } else {
+            reject(merchantData.val().status);
+          }
+        } else {
+          reject('An unknown error occured setting up merchant data.');
+        }
+        userMerchantRef.off('value', handleMerchantUpdates);
+      };
+      userMerchantRef.on('value', handleMerchantUpdates);
+    }));
+}
+
+export function purchaseListing(listingId) {
+  if (!getUser()) {
+    return Promise.reject('Must sign in first.');
+  }
+
+  const awaitPurchaseResult = () => new Promise((resolve, reject) => {
+    const purchaseStatusRef = firebaseApp
+      .database()
+      .ref('users')
+      .child(getUser().uid)
+      .child('purchases')
+      .child(listingId)
+      .child('status');
+    console.log('awaiting purchase  ')
+
+    const handlePurchaseUpdate = (statusSnapshot) => {
+      if (statusSnapshot.exists()) {
+        const status = statusSnapshot.val();
+        if (status === 'in-progress') {
+          return;
+        } else if (status === 'success') {
+          resolve();
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        } else {
+          reject(status);
+          purchaseStatusRef.off('value', handlePurchaseUpdate);
+        }
+      }
+    };
+    purchaseStatusRef.on('value', handlePurchaseUpdate);
+  });
+
+  return firebaseApp
+    .database()
+    .ref('createPurchase/tasks')
+    .push()
+    .set({
+      listingId,
+      buyerUid: getUser().uid,
+    })
+    .then(awaitPurchaseResult);
+}
+
+/*
+ * listed for updates on a specific listing.
+ *
+ * @returns a function which will detach the listener.
+ */
+export function listenToListing(listingId, listener) {
+  const listenForValueIgnoreEmpty = (listingSnapshot) => {
+    if (listingSnapshot && listingSnapshot.exists()) {
+      listener(listingSnapshot.val());
+    }
+  };
+
+  firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .on('value', listenForValueIgnoreEmpty);
+
+  return () => firebaseApp
+    .database()
+    .ref('listings')
+    .child(listingId)
+    .off('value', listenForValueIgnoreEmpty);
+}
+
+export function followListingSeller(listingId) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to follow another user');
+  }
+
+  return loadListingData(listingId)
+    .then((listingSnapshot) => {
+      if (listingSnapshot.exists()) {
+        return listingSnapshot.val();
+      }
+      return Promise.reject(`Unable to follow owner of ${listingId}. Listing does not exists`);
+    })
+    .then((listingData) => {
+      if (getUser().uid !== listingData.sellerId) {
+        followUser(listingData.sellerId);
+      }
+    });
+}
+
+export function listenToBulletins(bulletinsHandler) {
+  if (!getUser()) {
+    return undefined;
+  }
+
+  const handleSnapshot = (bulletinsSnapshot) => {
+    if (bulletinsSnapshot.exists()) {
+      bulletinsHandler(bulletinsSnapshot.val());
+    } else {
+      bulletinsHandler({});
+    }
+  };
+
+  // Fetch this before since we'll be signed out during call to returned unwatch method.
+  const uid = getUser().uid;
+
+  firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(uid)
+    .on('value', handleSnapshot);
+
+  return () => {
+    firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(uid)
+      .off('value');
+  };
+}
+
+export function updateBulletin(bulletinId, updatedValue) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to update a bulletin.');
+  }
+
+  return firebaseApp
+    .database()
+    .ref('userBulletins')
+    .child(getUser().uid)
+    .child(bulletinId)
+    .update(updatedValue);
 }

@@ -7,6 +7,12 @@
 		"react/jsx-filename-extension": "off"
 	},
 	"globals": {
-		"navigator": true
-	}
+		"navigator": true,
+		"fetch": true
+	},
+	"parserOptions": {
+		"ecmaFeatures": {
+			"experimentalObjectRestSpread": true
+		}
+	},
 }

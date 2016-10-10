@@ -4,13 +4,41 @@ import { View } from 'react-native';
 import Camera from 'react-native-camera';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import colors from '../../../colors';
+import Permissions from 'react-native-permissions';
 import RoutableScene from '../../nav/RoutableScene';
+
 import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
+import { setSinglePermission } from '../../reducers/PermissionsReducer';
+
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import styles from '../../../styles';
+import colors from '../../../colors';
+
+const ColoredRaisedButton = MKButton
+  .accentColoredFab()
+  .build();
+
+function CameraButton({ takePicture }) {
+  return (
+    <View
+      style={{
+        bottom: 100,
+        height: 0,
+        alignSelf: 'center',
+      }}
+    >
+      <ColoredRaisedButton onPress={takePicture}>
+        <Icon name="camera" size={20} color={colors.secondary} />
+      </ColoredRaisedButton>
+    </View>
+  );
+}
+
+CameraButton.propTypes = {
+  takePicture: React.PropTypes.func.isRequired,
+};
 
 class CameraScene extends RoutableScene {
   constructor(props) {
@@ -18,6 +46,8 @@ class CameraScene extends RoutableScene {
     this.state = {
       capturing: false,
     };
+
+    this.takePicture = this.takePicture.bind(this);
   }
 
   toggleCapturing() {
@@ -26,64 +56,64 @@ class CameraScene extends RoutableScene {
     });
   }
 
+  takePicture() {
+    this.toggleCapturing();
+    this.camera.capture()
+      .then((data) => {
+        this.props.setNewListingImageLocalUri(data.path);
+        this.toggleCapturing();
+        this.goNext();
+      })
+      .catch(err => console.error(err));
+  }
+
   renderWithNavBar() {
-    const takePicture = () => {
-      this.toggleCapturing();
-      this.camera.capture()
-        .then((data) => {
-          this.props.setNewListingImageLocalUri(data.path);
-          this.toggleCapturing();
-          this.goNext();
-        })
-        .catch(err => console.error(err));
-    };
-
-    const getShutterButton = () => {
-      const ColoredRaisedButton = MKButton
-        .accentColoredFab()
-        .withOnPress(takePicture)
-        .build();
-
-      return (
-        <View
-          style={{
-            bottom: 50,
-          }}
-        >
-          <ColoredRaisedButton>
-            <Icon name="camera" size={20} color={colors.secondary} />
-          </ColoredRaisedButton>
-        </View>
-      );
-    };
-
+    if (!this.props.hasCameraAccess || !this.props.hasPhotoAccess) {
+      Permissions.requestPermission('camera')
+        .then(this.props.setCameraPermission);
+      Permissions.requestPermission('photo')
+        .then(this.props.setPhotoPermission);
+      return <OpenSettingsComponent missingPermission="camera and photo" />;
+    }
+    // Unclear why the subview in camara is needed. The camera preview would not show up properly
+    // without it.
     return (
       <View style={styles.container} >
         <Camera
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-          style={styles.cameraPreview}
+          captureAudio={false}
+          ref={(cam) => { this.camera = cam; }}
+          style={{ flex: 1 }}
           aspect={Camera.constants.Aspect.fill}
         >
-
-          {getShutterButton()}
+          <View />
         </Camera>
+        <CameraButton takePicture={this.takePicture} />
         <SpinnerOverlay isVisible={this.state.capturing} message="Capturing photo..." />
       </View>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    hasCameraAccess: state.permissions.camera === 'authorized',
+    hasPhotoAccess: state.permissions.photo === 'authorized',
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setNewListingImageLocalUri: (uri) => {
       dispatch(setNewListingImageLocalUri(uri));
     },
+    setCameraPermission: (permissionState) => dispatch(
+      setSinglePermission('camera', permissionState)),
+    setPhotoPermission: (permissionState) => dispatch(
+      setSinglePermission('photo', permissionState)),
   };
 };
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CameraScene);

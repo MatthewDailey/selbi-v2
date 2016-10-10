@@ -1,9 +1,19 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors';
 
-const paddingSize = 16;
+export const paddingSize = 16;
 
 export default StyleSheet.create({
+  separator: {
+    padding: 4,
+  },
+  flex: {
+    flex: 1,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   container: {
     flex: 1,
     backgroundColor: colors.secondary,
@@ -12,6 +22,11 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: colors.secondary,
     alignItems: 'center',
+  },
+  centerContainerClear: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paddedCenterContainer: {
     padding: paddingSize,
@@ -26,7 +41,6 @@ export default StyleSheet.create({
   },
   paddedCenterContainerWhite: {
     padding: paddingSize,
-    flex: 1,
     backgroundColor: colors.white,
     alignItems: 'center',
   },
@@ -47,15 +61,28 @@ export default StyleSheet.create({
   halfPadded: {
     padding: paddingSize / 2,
   },
+  quarterPadded: {
+    padding: paddingSize / 4,
+  },
   paddedContainer: {
     flex: 1,
     padding: paddingSize,
     backgroundColor: colors.secondary,
   },
+  paddedContainerClear: {
+    flex: 1,
+    padding: paddingSize,
+  },
   menuText: {
     fontSize: 20,
     fontWeight: '300',
     padding: paddingSize / 2,
+  },
+  greyedOutMenuText: {
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+    color: colors.greyedOut,
   },
   friendlyTextLight: {
     color: colors.white,
@@ -64,21 +91,38 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  friendlyTextLightLeftAlign: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: '300',
+    padding: paddingSize / 2,
+  },
+  friendlyHeaderLightLeftAlign: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: '400',
+    padding: paddingSize / 2,
+  },
   friendlyText: {
     fontSize: 20,
     fontWeight: '300',
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  labelTextLeft: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
   friendlyTextLeft: {
     fontSize: 20,
     fontWeight: '300',
-    textAlign: 'center',
-    padding: paddingSize / 2,
   },
-  cameraPreview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  }
+  friendlyTextLeftLarge: {
+    fontSize: 30,
+    fontWeight: '300',
+  },
+  friendlyTextLeftMed: {
+    fontSize: 25,
+    fontWeight: '300',
+  },
 });

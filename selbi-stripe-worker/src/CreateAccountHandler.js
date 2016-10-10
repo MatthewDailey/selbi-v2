@@ -1,4 +1,8 @@
 
+import ClearShouldAddBankAccountHandler from './events/ClearShouldAddBankAccountHandler';
+
+const clearShouldAddBankAccountHandler = new ClearShouldAddBankAccountHandler();
+
 function validateData(data) {
   if (!data.uid) {
     return Promise.reject('Missing uid.');
@@ -65,18 +69,24 @@ function validateData(data) {
 class CreateCustomerHandler {
   constructor(firebaseDatabase, stripeAccountsApi) {
     this.firebaseDb = firebaseDatabase;
-    this.stripeAccountsApi = stripeAccountsApi;
+    this.stripe = stripeAccountsApi;
   }
 
   getTaskHandler() {
     const firebaseDb = this.firebaseDb;
-    const stripeAccountsApi = this.stripeAccountsApi;
+    const stripeAccountsApi = this.stripe;
     return (data, progress, resolveCreateAccountTask, rejectCreateAccountTask) => {
       console.log(`Handling createAccout uid:${data.uid}`);
 
       const userRef = () => firebaseDb
         .ref('users')
         .child(data.uid);
+
+      const addManditoryFields = () => {
+        data.payload.managed = true;
+        data.payload.country = 'US';
+        data.payload.legal_entity.type = 'individual';
+      }
 
       const createStripeAccount = () => new Promise((resolve, reject) => {
         stripeAccountsApi.create(data.payload, (err, account) => {
@@ -101,6 +111,7 @@ class CreateCustomerHandler {
         });
 
       const updateUserMerchantStatusAndReject = (error) => {
+        console.log(error)
         rejectCreateAccountTask(error);
         return userRef()
           .child('merchant')
@@ -110,9 +121,15 @@ class CreateCustomerHandler {
           .then(() => Promise.reject(error));
       };
       return validateData(data)
+        .then(addManditoryFields)
         .then(createStripeAccount)
         .then(storeStripeAccountInFirebase)
         .then(updateUserMerchantInfo)
+        .then(() => clearShouldAddBankAccountHandler.handle({
+          type: 'added-bank',
+          timestamp: new Date().getTime(),
+          owner: data.uid,
+        }, firebaseDb))
         .then(resolveCreateAccountTask)
         .catch(updateUserMerchantStatusAndReject);
     };

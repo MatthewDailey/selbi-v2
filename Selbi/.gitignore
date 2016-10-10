@@ -46,4 +46,7 @@ android/keystores/debug.keystore
 ios/Selbi/GoogleService-Info.plist
 
 # Javascript config
-.env
+config.js
+
+# Build artifacts
+ios/Selbi.app.dSYM.zip

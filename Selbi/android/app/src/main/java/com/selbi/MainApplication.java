@@ -4,8 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.microsoft.codepush.react.CodePush;
+import com.evollu.react.fcm.FIRMessagingPackage;
+import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import cl.json.RNSharePackage;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -26,8 +29,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new CodePush(null, this, BuildConfig.DEBUG),
-            new RCTCameraPackage()
+            new FIRMessagingPackage(),
+            new ReactNativeConfigPackage(),
+            new RCTCameraPackage(),
+            new RNSharePackage(),
+            new CodePush(null, this, BuildConfig.DEBUG)
       );
     }
   };

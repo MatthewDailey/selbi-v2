@@ -71,11 +71,12 @@ describe('Create Account', function() {
       },
       uid: testUserUid,
       metadata: {
-        accountNumberLastFour: 4444,
-        routingNumber: 325181028,
+        accountNumberLastFour: '4444',
+        routingNumber: '325181028',
         bankName: 'WSECU',
       },
     };
+
     writeToQueueAndExpectHandled(FirebaseTest.testUserApp, testData, done);
   });
 

@@ -15,6 +15,7 @@ const NL_CLEAR_DATA = 'new-listing-clear-data';
 class NewListing extends Immutable.Record({
   status: 'inactive',
   price: undefined,
+  priceString: undefined,
   title: undefined,
   listingId: undefined,
   description: '',
@@ -31,7 +32,8 @@ export default function (futureListingState = new NewListing(), action) {
     case NL_SET_LISTING_ID:
       return futureListingState.merge({ listingId: action.listingId });
     case NL_SET_PRICE:
-      return futureListingState.merge({ price: action.price });
+      return futureListingState.merge({ price: parseFloat(action.price),
+        priceString: action.price });
     case NL_SET_TITLE:
       return futureListingState.merge({ title: action.title });
     case NL_SET_DESCRIPTION:
@@ -66,6 +68,7 @@ export function setFromExistingListing(imageKey, imageData, listingKey, listingD
       title: listingData.title,
       description: listingData.description,
       price: listingData.price,
+      priceString: listingData.price.toString(),
       status: listingData.status,
     },
   };
@@ -131,5 +134,5 @@ export function setNewListingImageLocalUri(imageLocalUri) {
 export function clearNewListing() {
   return {
     type: NL_CLEAR_DATA,
-  }
+  };
 }
