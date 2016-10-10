@@ -1,9 +1,14 @@
 import React from 'react';
-import PrivacyPolicyScene from './PrivacyPolicyScene';
+import SelbiWebScene from './SelbiWebScene';
 
 export default undefined;
 
 export const privacyPolicyScene = {
   id: 'privacy-policy-scene',
-  renderContent: () => <PrivacyPolicyScene leftIs="back" />,
+  renderContent: () => <SelbiWebScene endpoint="privacy" leftIs="back" />,
+};
+
+export const termsAndConditionsScene = {
+  id: 'terms-and-conditions-scene',
+  renderContent: () => <SelbiWebScene endpoint="terms-and-conditions" leftIs="back" />,
 };
