@@ -5,12 +5,15 @@ import Camera from 'react-native-camera';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
+
 import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
+
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import styles from '../../../styles';
+import colors from '../../../colors';
 
 const ColoredRaisedButton = MKButton
   .accentColoredFab()
@@ -64,6 +67,9 @@ class CameraScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    if (!this.props.hasCameraAccess || !this.props.hasPhotoAccess) {
+      return <OpenSettingsComponent missingPermission="camera and photo" />;
+    }
     // Unclear why the subview in camara is needed. The camera preview would not show up properly
     // without it.
     return (
@@ -83,6 +89,13 @@ class CameraScene extends RoutableScene {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    hasCameraAccess: state.permissions.camera === 'authorized',
+    hasPhotoAccess: state.permissions.photo === 'authorized',
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setNewListingImageLocalUri: (uri) => {
@@ -92,6 +105,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CameraScene);

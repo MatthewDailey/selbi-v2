@@ -24,8 +24,6 @@ import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
-import { privacyPolicyScene } from './src/scenes/legal';
-
 import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
@@ -42,6 +40,7 @@ import userReducer, { setUserData, clearUserData } from './src/reducers/UserRedu
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
+import permissionsReducer from './src/reducers/PermissionsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
@@ -76,31 +75,37 @@ const store = createStore(combineReducers({
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
+  permissions: permissionsReducer,
 }));
 
+let startedListeningForLocalListings = false;
 function fetchLocalListings() {
   console.log('fetching local listings');
 
-  return getGeolocation()
-    .then((location) => {
-      const geoQuery =
-        listenToListingsByLocation(
-          [location.lat, location.lon],
-          20,
-          (listing) => store.dispatch(addLocalListing(listing)),
-          (listingId) => store.dispatch(removeLocalListing(listingId)));
+  if (!startedListeningForLocalListings) {
+    getGeolocation()
+      .then((location) => {
+        const geoQuery =
+          listenToListingsByLocation(
+            [location.lat, location.lon],
+            20,
+            (listing) => store.dispatch(addLocalListing(listing)),
+            (listingId) => store.dispatch(removeLocalListing(listingId)));
 
-      watchGeolocation((newLocation) => {
-        if (geoQuery) {
-          this.cancelGeoWatch = geoQuery.updateCriteria({
-            center: [newLocation.lat, newLocation.lon],
-          });
-        }
+        watchGeolocation((newLocation) => {
+          if (geoQuery) {
+            this.cancelGeoWatch = geoQuery.updateCriteria({
+              center: [newLocation.lat, newLocation.lon],
+            });
+          }
+        });
+      })
+      .then(() => startedListeningForLocalListings = true)
+      .catch((error) => {
+        startedListeningForLocalListings = false;
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }
 }
 fetchLocalListings();
 
@@ -186,6 +191,7 @@ const localListingScene = {
       title="Local Listings"
       leftIs="menu"
       rightIs="next"
+      startWatchingLocalListings={fetchLocalListings}
     />),
 };
 
@@ -333,8 +339,6 @@ function renderDeepLinkListener(navigator) {
   );
 }
 
-const Permissions = require('react-native-permissions');
-
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -347,11 +351,6 @@ class NavApp extends Component {
       },
       5000);
     }
-
-    Permissions.checkMultiplePermissions(['camera', 'photo'])
-      .then(response => {
-        console.log(response);
-      });
   }
 
   componentWillUnmount() {
