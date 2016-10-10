@@ -26,13 +26,8 @@ class AddressAutocompleteScene extends RoutableScene {
           listViewDisplayed="auto"    // true/false/undefined
           fetchDetails
           onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-            console.log(data);
-            console.log(details);
             this.props.setAddress(details);
             this.goNext();
-          }}
-          getDefaultValue={() => {
-            return ''; // text input default value
           }}
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
@@ -103,5 +98,5 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(AddressAutocompleteScene);

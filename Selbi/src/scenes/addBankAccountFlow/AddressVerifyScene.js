@@ -34,6 +34,27 @@ class AddressVerifyScene extends RoutableScene {
     });
   }
 
+  shouldGoNext() {
+    if (!this.props.line1) {
+      Alert.alert('Address must have line 1.');
+      return false;
+    }
+    if (!this.props.city) {
+      Alert.alert('Address must have city.');
+      return false;
+    }
+    if (!this.props.state) {
+      Alert.alert('Address must have state.');
+      return false;
+    }
+    if (!this.props.postal) {
+      Alert.alert('Address must have postal code.');
+      return false;
+    }
+
+    return true;
+  }
+
   renderWithNavBar() {
     if (this.state.renderPlaceholderOnly) {
       return (
