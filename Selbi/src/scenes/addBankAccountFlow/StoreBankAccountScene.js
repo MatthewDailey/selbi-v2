@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import { stripeServiceAgreementScene } from '../legal';
 
 import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
 import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
@@ -105,7 +106,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
   renderWithNavBar() {
     return (
-      <View style={styles.paddedContainer}>
+      <ScrollView style={styles.paddedContainer}>
 
         <Text>
           <Text style={styles.labelTextLeft}>Account Owner: </Text>
@@ -157,16 +158,35 @@ class ChooseVisibilityScene extends RoutableScene {
 
         <View style={styles.padded} />
 
+        <Text>
+          Selbi takes a 15% service fee on your sold items. Posting will always be free.
+        </Text>
+
+        <View style={styles.padded} />
+
         <Button onPress={this.createAccount}>
-          <Text><Icon name="university" /> Add Bank Account</Text>
+          <Text style={styles.padded}><Icon name="university" /> Add Bank Account</Text>
         </Button>
+
+        <View style={styles.halfPadded} />
+
+        <Text>
+          {'By submitting your account information, you agree to the '}
+          <Text
+            style={{ textDecorationLine: 'underline' }}
+            onPress={() => this.props.navigator.push(stripeServiceAgreementScene)}
+          >
+            Stripe Connected Account Agreement
+          </Text>
+          {'.'}
+        </Text>
 
         <SpinnerOverlay
           isVisible={this.state.publishStatus === PublishStatus.storingToStripe
             || this.state.publishStatus === PublishStatus.storingToFirebase}
           message={this.state.publishStatus}
         />
-      </View>
+      </ScrollView>
     );
   }
 }

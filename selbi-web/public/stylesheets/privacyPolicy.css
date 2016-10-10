@@ -1,0 +1,28 @@
+body {
+  min-height: 2000px;
+  padding-top: 30px;
+  background:#FAFAFA;
+}
+
+.navbar {
+	background:#d1d1d1;
+}
+
+.navbar-brand {
+	font-size: 28px;
+}
+
+img.selbi-logo {
+	margin-top: -7px;
+	height: 35px;
+}
+
+.page-header h1 {
+	text-align: center;
+}
+
+p.lead {
+	font-size: 16px;
+	color: #9b9b9b;
+	font-family: Helvetica,Arial,sans-serif;
+}

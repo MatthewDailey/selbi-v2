@@ -43,8 +43,29 @@ export default class NotifyFollowersOfNewListingHandler {
         return firebaseDb
           .ref('userBulletins')
           .child(data.owner)
-          .push()
-          .set(bulletin);
+          .once('value')
+          .then((userBulletinsSnapshop) => {
+            let alreadyHasShouldAddBankBulletin = false;
+            if (userBulletinsSnapshop && userBulletinsSnapshop.exists()) {
+              const userBulletins = userBulletinsSnapshop.val();
+              Object.keys(userBulletins).forEach((userBulletinKey) => {
+                if (userBulletins[userBulletinKey].type === 'should-add-bank-account') {
+                  alreadyHasShouldAddBankBulletin = true;
+                }
+              });
+            }
+            return Promise.resolve(alreadyHasShouldAddBankBulletin);
+          })
+          .then((alreadyHasShouldAddBankBulletin) => {
+            if (!alreadyHasShouldAddBankBulletin) {
+              return firebaseDb
+                .ref('userBulletins')
+                .child(data.owner)
+                .push()
+                .set(bulletin);
+            }
+            return Promise.resolve();
+          });
       }
       return Promise.resolve();
     };

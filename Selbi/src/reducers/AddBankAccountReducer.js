@@ -4,7 +4,7 @@ import { getActionType } from './ActionUtils';
 const BA_CLEAR = 'clear-bank-account-entry';
 const BA_SET_LEGAL_NAME = 'bank-account-set-legal-name';
 
-const BA_SET_DOB = "bank-account-set-dob";
+const BA_SET_DOB = 'bank-account-set-dob';
 
 const BA_SET_ADDRESS_LINE1 = 'bank-account-set-address-line1';
 const BA_SET_ADDRESS_LINE2 = 'bank-account-set-address-line2';
