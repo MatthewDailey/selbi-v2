@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -106,7 +106,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
   renderWithNavBar() {
     return (
-      <View style={styles.paddedContainer}>
+      <ScrollView style={styles.paddedContainer}>
 
         <Text>
           <Text style={styles.labelTextLeft}>Account Owner: </Text>
@@ -186,7 +186,7 @@ class ChooseVisibilityScene extends RoutableScene {
             || this.state.publishStatus === PublishStatus.storingToFirebase}
           message={this.state.publishStatus}
         />
-      </View>
+      </ScrollView>
     );
   }
 }
