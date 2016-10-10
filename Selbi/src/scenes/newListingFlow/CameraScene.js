@@ -7,8 +7,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
-import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import styles from '../../../styles';
 
@@ -64,6 +64,9 @@ class CameraScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    if (!this.props.hasCameraAccess) {
+      return <OpenSettingsComponent missingPermission="camera" />;
+    }
     // Unclear why the subview in camara is needed. The camera preview would not show up properly
     // without it.
     return (
@@ -83,6 +86,12 @@ class CameraScene extends RoutableScene {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    hasCameraAccess: state.permissions.camera === 'authorized',
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     setNewListingImageLocalUri: (uri) => {
@@ -92,6 +101,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CameraScene);
