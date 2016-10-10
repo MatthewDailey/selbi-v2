@@ -3,8 +3,6 @@ import React from 'react';
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
 import LegalNameInputScene from './LegalNameInputScene';
-import { Line1InputScene, Line2InputScene, CityInputScene, PostalInputScene, StateInputScene }
-  from './AddressInputScenes';
 import RoutingNumberInputScene from './RoutingNumberInputScene';
 import AccountNumberInputScene from './AccountNumberInputScene';
 import SsnInputScene from './SsnInputScene';
@@ -151,4 +149,4 @@ routeLinks[ssnInput.id] = {
 };
 
 module.exports.routeLinks = routeLinks;
-module.exports.firstScene = legalNameInput;
+module.exports.firstScene = storeAccountScene;
