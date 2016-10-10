@@ -335,6 +335,13 @@ function renderDeepLinkListener(navigator) {
 
 const Permissions = require('react-native-permissions');
 
+import AddressAutoCompleteScene from './src/scenes/addBankAccountFlow/AddressAutocompleteScene'
+const autocompleteScene = {
+  id: 'address-autocomplete',
+  renderContent: withNavigatorProps(<AddressAutoCompleteScene title="Enter Address" />),
+}
+
+
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -362,7 +369,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={localListingScene}
+          initialRoute={autocompleteScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
           renderDeepLinkListener={renderDeepLinkListener}
