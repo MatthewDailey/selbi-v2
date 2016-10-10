@@ -3,6 +3,7 @@ import { Alert, View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Permissions from 'react-native-permissions';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
@@ -44,7 +45,19 @@ class ChooseVisibilityScene extends RoutableScene {
   handleError(message) {
     this.setState({ publishing: false });
     console.log(message);
-    Alert.alert(`Failed to post listing. ${message}`);
+
+    if (message === 'location permission error') {
+      Alert.alert(
+        'Can we access your location?',
+        'We need access to show your listing to nearby buyers.',
+        [
+          { text: 'Cancel', onPress: () => console.log('permission denied'), style: 'cancel' },
+          { text: 'Open Settings', onPress: Permissions.openSettings },
+        ]
+      );
+    } else {
+      Alert.alert(`Failed to post listing. ${message}`);
+    }
   }
 
   handleSuccess() {

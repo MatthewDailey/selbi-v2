@@ -53,7 +53,7 @@ export function getGeolocation() {
       (error) => {
         // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
         if (error.code === 1) {
-          reject('Please grant Selbi permission to use your location.');
+          reject('location permission error');
         } else {
           reject('Unable to read your location. Give it another shot in a sec.');
         }
