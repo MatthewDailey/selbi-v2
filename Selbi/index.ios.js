@@ -173,6 +173,8 @@ const storeUserData = (user) => {
         if (publicDataSnapshot.exists()) {
           const userPublicData = publicDataSnapshot.val();
           store.dispatch(setUserData(userPublicData));
+        } else {
+          store.dispatch(clearUserData());
         }
       });
   } else {

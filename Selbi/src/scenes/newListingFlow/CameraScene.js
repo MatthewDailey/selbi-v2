@@ -4,10 +4,11 @@ import { View } from 'react-native';
 import Camera from 'react-native-camera';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import Permissions from 'react-native-permissions';
 import RoutableScene from '../../nav/RoutableScene';
 
 import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
+import { setSinglePermission } from '../../reducers/PermissionsReducer';
 
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
@@ -68,6 +69,10 @@ class CameraScene extends RoutableScene {
 
   renderWithNavBar() {
     if (!this.props.hasCameraAccess || !this.props.hasPhotoAccess) {
+      Permissions.requestPermission('camera')
+        .then(this.props.setCameraPermission);
+      Permissions.requestPermission('photo')
+        .then(this.props.setPhotoPermission);
       return <OpenSettingsComponent missingPermission="camera and photo" />;
     }
     // Unclear why the subview in camara is needed. The camera preview would not show up properly
@@ -101,6 +106,10 @@ const mapDispatchToProps = (dispatch) => {
     setNewListingImageLocalUri: (uri) => {
       dispatch(setNewListingImageLocalUri(uri));
     },
+    setCameraPermission: (permissionState) => dispatch(
+      setSinglePermission('camera', permissionState)),
+    setPhotoPermission: (permissionState) => dispatch(
+      setSinglePermission('photo', permissionState)),
   };
 };
 

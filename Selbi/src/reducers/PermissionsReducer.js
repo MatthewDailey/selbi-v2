@@ -1,6 +1,7 @@
 import { getActionType } from './ActionUtils';
 
 const PERMISSIONS_SET_DATA = 'set-permissions-data';
+const PERMISSIONS_SET_SINGLE = 'set-permissions-single';
 const PERMISSIONS_CLEAR_DATA = 'clear-permissions-data';
 
 const undeterminedPerms = {
@@ -12,8 +13,11 @@ const undeterminedPerms = {
 export default function (priorState = undeterminedPerms, action) {
   switch (getActionType(action)) {
     case PERMISSIONS_SET_DATA:
-      console.log(action);
       return Object.assign({}, action.data);
+    case PERMISSIONS_SET_SINGLE:
+      const newState = Object.assign({}, priorState);
+      newState[action.key] = action.value;
+      return newState;
     case PERMISSIONS_CLEAR_DATA:
       return undeterminedPerms;
     default:
@@ -25,6 +29,14 @@ export function setPermissionsData(data) {
   return {
     type: PERMISSIONS_SET_DATA,
     data,
+  };
+}
+
+export function setSinglePermission(key, value) {
+  return {
+    type: PERMISSIONS_SET_SINGLE,
+    key,
+    value,
   };
 }
 
