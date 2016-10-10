@@ -29,6 +29,7 @@ class AddressAutocompleteScene extends RoutableScene {
             console.log(data);
             console.log(details);
             this.props.setAddress(details);
+            this.goNext();
           }}
           getDefaultValue={() => {
             return ''; // text input default value

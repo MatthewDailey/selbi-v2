@@ -10,12 +10,14 @@ import AccountNumberInputScene from './AccountNumberInputScene';
 import SsnInputScene from './SsnInputScene';
 import StoreBankAccountScene from './StoreBankAccountScene';
 import DateOfBirthPickerScene from './DateOfBirthPickerScene';
+import AddressAutocompleteScene from './AddressAutocompleteScene';
+import AddressVerifyScene from './AddressVerifyScene';
 
 const legalNameInput = {
   id: 'bank-legal-name-input',
   renderContent: withNavigatorProps(
     <LegalNameInputScene
-      title="Add Bank (1/10)"
+      title="Add Bank (1/6)"
       leftIs="back"
       rightIs="next"
     />),
@@ -25,64 +27,31 @@ const dobPicker = {
   id: 'bank-legal-dob-picker',
   renderContent: withNavigatorProps(
     <DateOfBirthPickerScene
-      title="Add Bank (2/10)"
+      title="Add Bank (2/6)"
       leftIs="back"
       rightIs="next"
     />
   ),
 };
 
-const addressLine1Input = {
-  id: 'bank-addres-line1',
+
+const addressAutocompleteScene = {
+  id: 'address-autocomplete',
   renderContent: withNavigatorProps(
-    <Line1InputScene
-      title="Add Bank (3/10)"
+    <AddressAutocompleteScene
+      title="Add Bank (3/6)"
       leftIs="back"
-      rightIs="next"
     />
   ),
 };
 
-const addressLine2Input = {
-  id: 'bank-addres-line2',
+const addressVerifyScene = {
+  id: 'address-verify-scene',
   renderContent: withNavigatorProps(
-    <Line2InputScene
-      title="Add Bank (4/10)"
-      leftIs="back"
+    <AddressVerifyScene
+      title=""
       rightIs="next"
-    />
-  ),
-};
-
-const addressCityInput = {
-  id: 'bank-address-city',
-  renderContent: withNavigatorProps(
-    <CityInputScene
-      title="Add Bank (5/10)"
       leftIs="back"
-      rightIs="next"
-    />
-  ),
-};
-
-const addressStateInput = {
-  id: 'bank-address-state',
-  renderContent: withNavigatorProps(
-    <StateInputScene
-      title="Add Bank (6/10)"
-      leftIs="back"
-      rightIs="next"
-    />
-  ),
-};
-
-const addressPostalInput = {
-  id: 'bank-address-postal',
-  renderContent: withNavigatorProps(
-    <PostalInputScene
-      title="Add Bank (7/10)"
-      leftIs="back"
-      rightIs="next"
     />
   ),
 };
@@ -91,7 +60,7 @@ const routingNumberInput = {
   id: 'bank-routing-number',
   renderContent: withNavigatorProps(
     <RoutingNumberInputScene
-      title="Add Bank (8/10)"
+      title="Add Bank (4/6)"
       leftIs="back"
       rightIs="next"
     />
@@ -102,7 +71,7 @@ const accountNumberInput = {
   id: 'bank-account-number',
   renderContent: withNavigatorProps(
     <AccountNumberInputScene
-      title="Add Bank (9/10)"
+      title="Add Bank (5/6)"
       leftIs="back"
       rightIs="next"
     />
@@ -113,7 +82,7 @@ const ssnInput = {
   id: 'bank-ssn-input',
   renderContent: withNavigatorProps(
     <SsnInputScene
-      title="Add Bank (10/10)"
+      title="Add Bank (6/6)"
       leftIs="back"
       rightIs="next"
     />
@@ -128,7 +97,7 @@ const storeAccountScene = {
       leftIs="back"
     />
   ),
-}
+};
 
 const routeLinks = {};
 
@@ -142,46 +111,23 @@ routeLinks[legalNameInput.id] = {
 routeLinks[dobPicker.id] = {
   next: {
     title: 'OK',
-    getRoute: () => addressLine1Input,
+    getRoute: () => addressAutocompleteScene,
   },
 };
 
-routeLinks[addressLine1Input.id] = {
+routeLinks[addressAutocompleteScene.id] = {
   next: {
-    title: 'OK',
-    getRoute: () => addressLine2Input,
+    title: '',
+    getRoute: () => addressVerifyScene,
   },
 };
 
-routeLinks[addressLine2Input.id] = {
+routeLinks[addressVerifyScene.id] = {
   next: {
-    title: 'OK',
-    getRoute: () => addressCityInput,
-  },
-};
-
-routeLinks[addressCityInput.id] = {
-  next: {
-    title: 'OK',
-    getRoute: () => addressStateInput,
-  },
-};
-
-routeLinks[addressStateInput.id] = {
-  next: {
-    title: 'OK',
-    getRoute: () => addressPostalInput,
-  },
-};
-
-routeLinks[addressPostalInput.id] = {
-  next: {
-    title: 'OK',
+    title: 'Approve Address',
     getRoute: () => routingNumberInput,
   },
 };
-
-
 
 routeLinks[routingNumberInput.id] = {
   next: {
