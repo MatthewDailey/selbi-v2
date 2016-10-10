@@ -193,6 +193,25 @@ export default class SignInOrRegisterScene extends RoutableScene {
         onSubmitEditing={() => this.refs.EmailInput.focus()}
       /> : <View />;
 
+    const termsOfServiceViewIfNecessary = registerOrSignInType === TabTypes.register ?
+      <Text>
+        {'By registering you are agreeing to Selbi\'s '}
+        <Text
+          style={{ textDecorationLine: 'underline' }}
+          onPress={() => this.goNext('termsAndConditions')}
+        >
+          terms and conditions
+        </Text>
+        {' as well as '}
+        <Text
+          style={{ textDecorationLine: 'underline' }}
+          onPress={() => this.goNext('privacyPolicy')}
+        >
+          privacy policy
+        </Text>.
+      </Text>
+      : <View />;
+
     return (
       <ScrollView
         ref={(r) => this[scrollViewRef(registerOrSignInType)] = r}
@@ -247,6 +266,8 @@ export default class SignInOrRegisterScene extends RoutableScene {
         />
         <View style={styles.padded} />
         <SubmitButton />
+        <View style={styles.halfPadded} />
+        {termsOfServiceViewIfNecessary}
       </ScrollView>
     );
   }

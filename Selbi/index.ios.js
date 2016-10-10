@@ -362,7 +362,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={privacyPolicyScene}
+          initialRoute={localListingScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
           renderDeepLinkListener={renderDeepLinkListener}
