@@ -24,8 +24,6 @@ import ChatListScene from './src/scenes/rootScenes/ChatListScene';
 import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
-import { privacyPolicyScene } from './src/scenes/legal';
-
 import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
@@ -42,6 +40,7 @@ import userReducer, { setUserData, clearUserData } from './src/reducers/UserRedu
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
+import permissionsReducer from './src/reducers/PermissionsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
@@ -76,6 +75,7 @@ const store = createStore(combineReducers({
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
+  permissions: permissionsReducer,
 }));
 
 function fetchLocalListings() {
@@ -333,8 +333,6 @@ function renderDeepLinkListener(navigator) {
   );
 }
 
-const Permissions = require('react-native-permissions');
-
 class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
@@ -347,11 +345,6 @@ class NavApp extends Component {
       },
       5000);
     }
-
-    Permissions.checkMultiplePermissions(['camera', 'photo'])
-      .then(response => {
-        console.log(response);
-      });
   }
 
   componentWillUnmount() {

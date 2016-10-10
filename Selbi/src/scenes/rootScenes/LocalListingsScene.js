@@ -8,6 +8,7 @@ import RoutableScene from '../../nav/RoutableScene';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
+import PermissionsWatcher from '../../nav/PermissionsWatcher';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
@@ -38,13 +39,12 @@ class ListingsScene extends RoutableScene {
     return (
       <ScrollView>
         <BulletinBoard goNext={this.goNext} />
-        <View>
-          <ListingsListComponent
-            listings={this.props.listings}
-            emptyView={EmptyView}
-            openDetailScene={() => this.goNext('details')}
-          />
-        </View>
+        <ListingsListComponent
+          listings={this.props.listings}
+          emptyView={EmptyView}
+          openDetailScene={() => this.goNext('details')}
+        />
+        <PermissionsWatcher />
       </ScrollView>
     );
   }
@@ -53,6 +53,7 @@ class ListingsScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     listings: state.localListings,
+    hasLocationPermission: state.permissions.location === 'authorized',
   };
 };
 
