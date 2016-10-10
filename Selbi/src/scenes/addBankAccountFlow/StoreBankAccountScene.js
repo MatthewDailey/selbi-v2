@@ -158,6 +158,12 @@ class ChooseVisibilityScene extends RoutableScene {
 
         <View style={styles.padded} />
 
+        <Text>
+          Selbi takes a 15% service fee on your sold items. Posting will always be free.
+        </Text>
+
+        <View style={styles.padded} />
+
         <Button onPress={this.createAccount}>
           <Text style={styles.padded}><Icon name="university" /> Add Bank Account</Text>
         </Button>
