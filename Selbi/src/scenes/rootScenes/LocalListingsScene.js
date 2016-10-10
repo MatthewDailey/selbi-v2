@@ -8,7 +8,6 @@ import RoutableScene from '../../nav/RoutableScene';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
-import PermissionsWatcher from '../../nav/PermissionsWatcher';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
@@ -44,7 +43,6 @@ class ListingsScene extends RoutableScene {
           emptyView={EmptyView}
           openDetailScene={() => this.goNext('details')}
         />
-        <PermissionsWatcher />
       </ScrollView>
     );
   }

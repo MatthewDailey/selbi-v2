@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigator } from 'react-native';
 
 import Drawer from 'react-native-drawer';
+import PermissionsWatcher from '../../nav/PermissionsWatcher';
 
 /*
  * DrawerNavigator manages a graph of scenes and transitions between scenes while providing a
@@ -52,6 +53,7 @@ export default class DrawerNavigator extends React.Component {
             >
               {route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu)}
               {this.props.renderDeepLinkListener(navigator)}
+              <PermissionsWatcher />
             </Drawer>
           );
         }}
