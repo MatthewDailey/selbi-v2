@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
-import { mdl, MKButton } from 'react-native-material-kit';
+import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
@@ -8,6 +8,7 @@ import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import { privacyPolicyScene, termsAndConditionsScene } from './legal';
 
 const inputStyle = {
   height: 48,  // have to do it on iOS
@@ -198,14 +199,14 @@ export default class SignInOrRegisterScene extends RoutableScene {
         {'By registering you are agreeing to Selbi\'s '}
         <Text
           style={{ textDecorationLine: 'underline' }}
-          onPress={() => this.goNext('termsAndConditions')}
+          onPress={() => this.props.navigator.push(termsAndConditionsScene)}
         >
           terms and conditions
         </Text>
         {' as well as '}
         <Text
           style={{ textDecorationLine: 'underline' }}
-          onPress={() => this.goNext('privacyPolicy')}
+          onPress={() => this.props.navigator.push(privacyPolicyScene)}
         >
           privacy policy
         </Text>.
