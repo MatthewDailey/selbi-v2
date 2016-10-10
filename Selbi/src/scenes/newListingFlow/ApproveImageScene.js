@@ -5,6 +5,8 @@ import { Image } from 'react-native';
 import RoutableScene from '../../nav/RoutableScene';
 import { setNewListingImageDimensions } from '../../reducers/NewListingReducer';
 
+import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
+
 import styles from '../../../styles';
 
 class ApproveImageScene extends RoutableScene {
