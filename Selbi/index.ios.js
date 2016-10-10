@@ -78,29 +78,34 @@ const store = createStore(combineReducers({
   permissions: permissionsReducer,
 }));
 
+let startedListeningForLocalListings = false;
 function fetchLocalListings() {
   console.log('fetching local listings');
 
-  return getGeolocation()
-    .then((location) => {
-      const geoQuery =
-        listenToListingsByLocation(
-          [location.lat, location.lon],
-          20,
-          (listing) => store.dispatch(addLocalListing(listing)),
-          (listingId) => store.dispatch(removeLocalListing(listingId)));
+  if (!startedListeningForLocalListings) {
+    getGeolocation()
+      .then((location) => {
+        const geoQuery =
+          listenToListingsByLocation(
+            [location.lat, location.lon],
+            20,
+            (listing) => store.dispatch(addLocalListing(listing)),
+            (listingId) => store.dispatch(removeLocalListing(listingId)));
 
-      watchGeolocation((newLocation) => {
-        if (geoQuery) {
-          this.cancelGeoWatch = geoQuery.updateCriteria({
-            center: [newLocation.lat, newLocation.lon],
-          });
-        }
+        watchGeolocation((newLocation) => {
+          if (geoQuery) {
+            this.cancelGeoWatch = geoQuery.updateCriteria({
+              center: [newLocation.lat, newLocation.lon],
+            });
+          }
+        });
+      })
+      .then(() => startedListeningForLocalListings = true)
+      .catch((error) => {
+        startedListeningForLocalListings = false;
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  }
 }
 fetchLocalListings();
 
@@ -186,6 +191,7 @@ const localListingScene = {
       title="Local Listings"
       leftIs="menu"
       rightIs="next"
+      startWatchingLocalListings={fetchLocalListings}
     />),
 };
 

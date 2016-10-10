@@ -28,7 +28,6 @@ function EmptyView() {
 }
 
 class ListingsScene extends RoutableScene {
-
   onGoNext() {
     this.props.clearNewListingData();
   }
@@ -37,6 +36,8 @@ class ListingsScene extends RoutableScene {
     if (this.props.locationPermissionDenied) {
       return <OpenSettingsComponent missingPermission="location" />;
     }
+
+    this.props.startWatchingLocalListings();
 
     return (
       <ListingsListComponent
