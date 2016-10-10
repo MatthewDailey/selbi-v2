@@ -5,6 +5,7 @@ import { View, ScrollView, Text } from 'react-native';
 import { MKSpinner } from 'react-native-material-kit';
 
 import RoutableScene from '../../nav/RoutableScene';
+import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
@@ -12,8 +13,6 @@ import BulletinBoard from '../../bulletin/BulletinBoard';
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
-
-
 
 
 import styles from '../../../styles';
@@ -34,15 +33,25 @@ class ListingsScene extends RoutableScene {
     this.props.clearNewListingData();
   }
 
+  getLocalListingsView() {
+    if (this.props.locationPermissionDenied) {
+      return <OpenSettingsComponent missingPermission="location" />;
+    }
+
+    return (
+      <ListingsListComponent
+        listings={this.props.listings}
+        emptyView={EmptyView}
+        openDetailScene={() => this.goNext('details')}
+      />
+    );
+  }
+
   renderWithNavBar() {
     return (
       <ScrollView>
         <BulletinBoard goNext={this.goNext} />
-        <ListingsListComponent
-          listings={this.props.listings}
-          emptyView={EmptyView}
-          openDetailScene={() => this.goNext('details')}
-        />
+        {this.getLocalListingsView()}
       </ScrollView>
     );
   }
@@ -51,7 +60,7 @@ class ListingsScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     listings: state.localListings,
-    hasLocationPermission: state.permissions.location === 'authorized',
+    locationPermissionDenied: state.permissions.location === 'denied',
   };
 };
 
