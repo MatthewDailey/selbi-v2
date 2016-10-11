@@ -2,7 +2,6 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
-import BankIntroScene from './BankIntroScene';
 import LegalNameInputScene from './LegalNameInputScene';
 import RoutingNumberInputScene from './RoutingNumberInputScene';
 import AccountNumberInputScene from './AccountNumberInputScene';
@@ -11,6 +10,7 @@ import StoreBankAccountScene from './StoreBankAccountScene';
 import DateOfBirthPickerScene from './DateOfBirthPickerScene';
 import AddressAutocompleteScene from './AddressAutocompleteScene';
 import AddressVerifyScene from './AddressVerifyScene';
+import AddEmailScene from './AddBankEmailScene';
 
 const titleString = 'Add Bank';
 
@@ -90,6 +90,17 @@ const ssnInput = {
   ),
 };
 
+const emailInput = {
+  id: 'bank-email-input',
+  renderContent: withNavigatorProps(
+    <AddEmailScene
+      title="Check Email"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+}
+
 const storeAccountScene = {
   id: 'bank-store-account',
   renderContent: withNavigatorProps(
@@ -101,6 +112,13 @@ const storeAccountScene = {
 };
 
 const routeLinks = {};
+
+routeLinks[emailInput.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => legalNameInput,
+  },
+}
 
 routeLinks[legalNameInput.id] = {
   next: {
@@ -148,8 +166,8 @@ routeLinks[ssnInput.id] = {
   next: {
     title: 'OK',
     getRoute: () => storeAccountScene,
-  }
+  },
 };
 
 module.exports.routeLinks = routeLinks;
-module.exports.firstScene = legalNameInput;
+module.exports.firstScene = emailInput;

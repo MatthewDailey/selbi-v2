@@ -38,28 +38,32 @@ class CreditCardInputScene extends RoutableScene {
   submit() {
     if (this.props.creditCardData.valid) {
       this.setState({ status: AddCreditCardStatus.gettingKey });
+      console.log(this.props.creditCardData)
       createPaymentSource(
-        this.props.creditCardData.values.number,
-        this.props.creditCardData.values.expiry.substring(0, 2),
-        this.props.creditCardData.values.expiry.substring(3, 5),
-        this.props.creditCardData.values.cvc)
+        this.props.creditCardData.values.get('number'),
+        this.props.creditCardData.values.get('expiry').substring(0, 2),
+        this.props.creditCardData.values.get('expiry').substring(3, 5),
+        this.props.creditCardData.values.get('cvc'))
         .then((result) => {
           if (result.error) {
             return Promise.reject(result);
           }
           this.setState({ status: AddCreditCardStatus.creatingAccount });
-          return enqueueCreateCustomerRequest(this.props.creditCardData.values.name, result);
+          return enqueueCreateCustomerRequest(
+            this.props.creditCardData.values.name,
+            this.props.creditCardData.email,
+            result);
         })
         .then(() => {
           this.setState({ status: AddCreditCardStatus.success });
           this.props.clearCreditCardData();
           Alert.alert('Sucessfully added payment method.');
-          this.goBack();
+          this.goReturn();
         })
         .catch((error) => {
           this.setState({ status: AddCreditCardStatus.failure });
           // TODO: Add more specific error based on failure type.
-          Alert.alert('Failed to added payment method.');
+          Alert.alert(`Failed to added payment method. ${error.error.message}`);
           console.log(error);
         });
     } else {

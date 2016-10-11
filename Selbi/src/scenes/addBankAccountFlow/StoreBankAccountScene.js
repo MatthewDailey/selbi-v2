@@ -80,6 +80,7 @@ class ChooseVisibilityScene extends RoutableScene {
           lastName,
           dob,
           address,
+          this.props.bankAccount.email,
           bankTokenResponse.client_ip,
           bankTokenResponse.bank_account.last4,
           bankTokenResponse.bank_account.routing_number,

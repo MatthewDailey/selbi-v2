@@ -1,6 +1,7 @@
 package com.selbi;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.evollu.react.fa.FIRAnalyticsPackage;

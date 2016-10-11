@@ -29,6 +29,10 @@ export function createPaymentSource(cardNumber,
                                     cardExpMonth,
                                     cardExpYear,
                                     cardCvc) {
+  console.log(`card[number]=${cardNumber}&` +
+    `card[exp_month]=${cardExpMonth}&` +
+    `card[exp_year]=${cardExpYear}&` +
+    `card[cvc]=${cardCvc}`)
   return fetch('https://api.stripe.com/v1/tokens', {
     method: 'POST',
     body:

@@ -1,6 +1,5 @@
 import React from 'react';
 import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
-import { MKTextField } from 'react-native-material-kit';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import { isStringFloat, isStringInt } from '../utils';

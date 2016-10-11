@@ -1,7 +1,8 @@
 import React from 'react';
 import { InteractionManager, ScrollView, View, Text, Image, MapView, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
+import { MKRadioButton, MKButton } from 'react-native-material-kit';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
@@ -24,34 +25,6 @@ import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
-
-const TitleInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Title')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOSfd
-    marginTop: 10,
-  })
-  .build();
-
-const DescriptionInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Description (Optional)')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Price (USD)')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .withKeyboardType('numeric')
-  .build();
 
 const DeleteListingButton = MKButton.flatButton()
   .withStyle({
@@ -273,21 +246,31 @@ class EditListingScene extends RoutableScene {
 
           <View style={styles.halfPadded} />
 
-          <PriceInput
+          <Text style={{ fontWeight: 'bold' }}>Price (USD)</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Price"
+            keyboardType="numeric"
             value={this.props.listingPrice}
-            onTextChange={(newText) => {
+            onChangeText={(newText) => {
               if (isStringFloat(newText)) {
                 this.props.setPrice(newText)
               }
             }}
           />
-          <TitleInput
+          <Text style={{ fontWeight: 'bold' }}>Title</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Title"
             value={this.props.listingTitle}
-            onTextChange={(newText) => this.props.setTitle(newText)}
+            onChangeText={(newText) => this.props.setTitle(newText)}
           />
-          <DescriptionInput
+          <Text style={{ fontWeight: 'bold' }}>Description</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Description"
             value={this.props.listingDescription}
-            onTextChange={(newText) => this.props.setDescription(newText)}
+            onChangeText={(newText) => this.props.setDescription(newText)}
           />
 
           <View

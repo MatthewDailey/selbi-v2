@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 import { getActionType } from './ActionUtils';
 
 const CC_SET_DATA = 'set-credit-card-number';
+const CC_SET_EMAIL = 'set-credot-card-email';
 const CC_CLEAR = 'clear-credit-card';
 
 export const AddCreditCardStatus = {
@@ -29,12 +30,15 @@ class AddCreditCardData extends Immutable.Record({
     name: 'incomplete',
     postalCode: 'incomplete',
   },
+  email: undefined,
 }) {}
 
 export default function (addCreditCardState = new AddCreditCardData(), action) {
   switch (getActionType(action)) {
     case CC_SET_DATA:
-      return new AddCreditCardData(action.data);
+      return addCreditCardState.merge(action.data);
+    case CC_SET_EMAIL:
+      return addCreditCardState.merge({ email: action.email });
     default:
       return addCreditCardState;
   }
@@ -45,6 +49,13 @@ export function setCreditCard(data) {
     type: CC_SET_DATA,
     data,
   };
+}
+
+export function setCreditCardEmail(email) {
+  return {
+    type: CC_SET_EMAIL,
+    email,
+  }
 }
 
 export function clearCreditCard() {

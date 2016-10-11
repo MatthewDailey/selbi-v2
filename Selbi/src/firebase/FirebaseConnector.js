@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
+import {LoginManager, AccessToken } from 'react-native-fbsdk';
+
 
 import { convertToUsername } from './FirebaseUtils';
 import config from '../../config';
@@ -123,6 +125,26 @@ function insertUserInDatabase(userDisplayName) {
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
 }
 
+export function signInWithFacebook() {
+  const auth = firebase.auth();
+  const provider = firebase.auth.FacebookAuthProvider;
+
+  return LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
+    .then(loginResult => {
+      console.log('log in returned');
+      console.log(loginResult);
+
+      if (loginResult.isCancelled) {
+        return Promise.reject('User cancelled sign in.');
+      }
+      return AccessToken.getCurrentAccessToken();
+    })
+    .then(accessTokenData => {
+      const credential = provider.credential(accessTokenData.accessToken);
+      return auth.signInWithCredential(credential);
+    });
+}
+
 export function signInWithEmail(email, password) {
   return firebaseApp
     .auth()
@@ -153,13 +175,20 @@ export function signOut() {
 }
 
 
-export function createUser(firstName, lastName) {
-  const userDisplayName = `${firstName} ${lastName}`;
-  return getUser()
-    .updateProfile({
-      displayName: userDisplayName,
+export function createUser(displayName, email) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to store user details.');
+  }
+
+  return getUser().updateProfile({ displayName })
+    .then(() => getUser().updateEmail(email))
+    .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
+    .then((userSnapshot) => {
+      if (!userSnapshot || !userSnapshot.exists()) {
+        return insertUserInDatabase(displayName);
+      }
+      return Promise.resolve();
     })
-    .then(() => insertUserInDatabase(userDisplayName));
 }
 
 export function publishImage(base64, heightInput, widthInput) {
@@ -768,7 +797,7 @@ function markUserHasPayment() {
     .set(true);
 }
 
-export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+export function enqueueCreateCustomerRequest(cardHolderName, email, stripeCreateCardResponse) {
   if (!getUser()) {
     return Promise.reject('Must be signed in.');
   }
@@ -778,7 +807,7 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
     payload: {
       source: stripeCreateCardResponse.id,
       description: `${cardHolderName}'s Credit Card`,
-      email: getUser().email,
+      email,
     },
     metadata: {
       lastFour: stripeCreateCardResponse.card.last4,
@@ -845,6 +874,7 @@ export function enqueueCreateAccountRequest(
   lastName,
   dob, // { day, month, year }
   address, // { line1, line2, city, postal_code, state }
+  email,
   ip,
   accountNumberLastFour,
   routingNumber,
@@ -856,7 +886,7 @@ export function enqueueCreateAccountRequest(
   const createAccountTask = {
     payload: {
       external_account: bankToken,
-      email: getUser().email,
+      email,
       legal_entity: {
         ssn_last_4: ssnLast4,
         first_name: firstName,
@@ -876,6 +906,8 @@ export function enqueueCreateAccountRequest(
       bankName,
     },
   };
+
+  console.log(createAccountTask);
 
   const userMerchantRef = firebaseApp.database()
     .ref('users')
