@@ -25,8 +25,6 @@ export default class ListingsComponent extends Component {
       );
     }
 
-    console.log('called render of listings list component');
-
     const RefreshButton = MKButton.plainFab()
       .withStyle({
         borderRadius: 20,
