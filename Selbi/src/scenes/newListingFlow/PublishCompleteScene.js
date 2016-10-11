@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -39,9 +39,6 @@ class PublishCompleteScene extends RoutableScene {
         <Text style={styles.friendlyText}>
           <Icon name="smile-o" size={30} />
         </Text>
-        <Text style={styles.friendlyText}>
-          To sell faster, we recommend adding more details and sharing with friends.
-        </Text>
         <View style={styles.halfPadded}>
           <Button
             onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
@@ -58,13 +55,13 @@ class PublishCompleteScene extends RoutableScene {
 
         <VisibilityWrapper isVisible={!this.props.hasBankAccount}>
           <View>
-            <Text style={styles.friendlyText}>
-              You should link your bank account so that users can pay you easily.
-            </Text>
             <View style={styles.halfPadded}>
               <Button onPress={() => this.goNext('addBank')}>
                 <Text style={buttonTextStyle}><Icon name="university" size={buttonTextStyle.fontSize}/> Receive Payments</Text>
               </Button>
+            </View>
+            <View style={styles.centerContainer}>
+              <Image source={require('../../../images/powered_by_stripe@3x.png')} />
             </View>
           </View>
         </VisibilityWrapper>

@@ -840,7 +840,7 @@ function markUserHasMerchant() {
 
 export function enqueueCreateAccountRequest(
   bankToken,
-  piiToken,
+  ssnLast4,
   firstName,
   lastName,
   dob, // { day, month, year }
@@ -858,7 +858,7 @@ export function enqueueCreateAccountRequest(
       external_account: bankToken,
       email: getUser().email,
       legal_entity: {
-        personal_id_number: piiToken,
+        ssn_last_4: ssnLast4,
         first_name: firstName,
         last_name: lastName,
         dob,

@@ -1,16 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, View, Text } from 'react-native';
+import { Alert, View, Text, Image } from 'react-native';
 import { MKButton } from 'react-native-material-kit';
 import { CreditCardInput } from 'react-native-credit-card-input';
 
-import { setCreditCard, clearCreditCard, AddCreditCardStatus } from '../../reducers/AddCreditCardReducer';
+import { setCreditCard, clearCreditCard, AddCreditCardStatus }
+  from '../../reducers/AddCreditCardReducer';
 
 import { createPaymentSource } from '../../stripe/StripeConnector';
 import { enqueueCreateCustomerRequest } from '../../firebase/FirebaseConnector';
 
-
-import { paddingSize } from '../../../styles';
+import styles, { paddingSize } from '../../../styles';
 import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
@@ -83,6 +83,9 @@ class CreditCardInputScene extends RoutableScene {
         <VisibilityWrapper isVisible={this.props.creditCardData.valid}>
           <Button onPress={this.submit}><Text>Submit</Text></Button>
         </VisibilityWrapper>
+        <View style={[styles.halfPadded, styles.centerContainer]}>
+          <Image source={require('../../../images/powered_by_stripe@3x.png')} />
+        </View>
         <SpinnerOverlay
           isVisible={this.state.status === AddCreditCardStatus.creatingAccount
             || this.state.status === AddCreditCardStatus.gettingKey}
