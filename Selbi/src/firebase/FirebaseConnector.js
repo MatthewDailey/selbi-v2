@@ -129,28 +129,21 @@ export function signInWithFacebook() {
   const auth = firebase.auth();
   const provider = firebase.auth.FacebookAuthProvider;
 
-  LoginManager.logInWithReadPermissions(['public_profile'])
+  return LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
     .then(loginResult => {
-      console.log('log in returned')
-      console.log(loginResult)
+      console.log('log in returned');
+      console.log(loginResult);
 
       if (loginResult.isCancelled) {
         console.log('user canceled');
         return;
       }
-      AccessToken.getCurrentAccessToken()
-        .then(accessTokenData => {
-          const credential = provider.credential(accessTokenData.accessToken);
-          return auth.signInWithCredential(credential);
-        })
-        .then(credData => {
-          console.log(credData);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      return AccessToken.getCurrentAccessToken();
+    })
+    .then(accessTokenData => {
+      const credential = provider.credential(accessTokenData.accessToken);
+      return auth.signInWithCredential(credential);
     });
-
 }
 
 export function signInWithEmail(email, password) {
@@ -183,13 +176,22 @@ export function signOut() {
 }
 
 
-export function createUser(firstName, lastName) {
-  const userDisplayName = `${firstName} ${lastName}`;
+export function createUser(displayName) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to store user details.');
+  }
+
   return getUser()
     .updateProfile({
-      displayName: userDisplayName,
+      displayName
     })
-    .then(() => insertUserInDatabase(userDisplayName));
+    .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
+    .then((userSnapshot) => {
+      if (!userSnapshot || !userSnapshot.exists()) {
+        return insertUserInDatabase(displayName);
+      }
+      return Promise.resolve();
+    })
 }
 
 export function publishImage(base64, heightInput, widthInput) {

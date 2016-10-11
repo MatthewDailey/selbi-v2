@@ -24,7 +24,6 @@ const FacebookButton = MKButton.button()
     borderRadius: 5,
     padding: paddingSize,
   })
-  .withOnPress(signInWithFacebook)
   .withBackgroundColor('#3b5998')
   .build();
 
@@ -70,6 +69,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
     this.registerOrSignInErrorHandler = this.registerOrSignInErrorHandler.bind(this);
+    this.registerOrSignInSuccessHandler = this.registerOrSignInSuccessHandler.bind(this);
   }
 
   registerOrSignInErrorHandler(error) {
@@ -100,20 +100,24 @@ export default class SignInOrRegisterScene extends RoutableScene {
     // around the fact that updating user name can't be done until after the user is created
     // but user updates don't trigger onAuthStateChanged events.
     return this.props.registerWithEmail(email, password)
-      .then(() => this.props.createUser(firstName, lastName))
+      .then(() => this.props.createUser(`${firstName} ${lastName}`))
       .then(() => this.props.signInWithEmail(email, password))
-      .then((user) => {
-        if (this.props.onSignedIn) {
-          this.props.onSignedIn(user);
-        }
-
-        if (this.props.goHomeOnComplete) {
-          this.goHome();
-        } else {
-          this.goNext();
-        }
-      })
+      .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
+  }
+
+  registerOrSignInSuccessHandler(user) {
+    if (this.props.onSignedIn) {
+      this.props.onSignedIn(user);
+    }
+
+    if (this.props.goHomeOnComplete) {
+      this.goHome();
+    } else if (this.props.goBackOnComplete) {
+      this.goBack();
+    } else {
+      this.goNext();
+    }
   }
 
   signInWithEmailAndPassword() {
@@ -123,19 +127,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
     this.setState({ signingIn: true });
 
     return this.props.signInWithEmail(email, password)
-      .then((user) => {
-        if (this.props.onSignedIn) {
-          this.props.onSignedIn(user);
-        }
-
-        if (this.props.goHomeOnComplete) {
-          this.goHome();
-        } else if (this.props.goBackOnComplete) {
-          this.goBack();
-        } else {
-          this.goNext();
-        }
-      })
+      .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
   }
 
@@ -222,7 +214,14 @@ export default class SignInOrRegisterScene extends RoutableScene {
         style={styles.paddedFullScreenContainer}
         tabLabel={registerOrSignInType.asTitle}
       >
-        <FacebookButton>
+        <FacebookButton
+          onPress={() => signInWithFacebook()
+            // We only use one provider (facebook).
+            .then((user) => this.props.createUser(user.providerData[0].displayName))
+            .then(this.registerOrSignInSuccessHandler)
+            .catch(this.registerOrSignInErrorHandler)
+          }
+        >
           <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
