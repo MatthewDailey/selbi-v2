@@ -12,18 +12,7 @@ import DateOfBirthPickerScene from './DateOfBirthPickerScene';
 import AddressAutocompleteScene from './AddressAutocompleteScene';
 import AddressVerifyScene from './AddressVerifyScene';
 
-const titleString = 'Receive Payments';
-
-const bankIntroScene = {
-  id: 'bank-intro-scene',
-  renderContent: withNavigatorProps(
-    <BankIntroScene
-      title={titleString}
-      rightIs="next"
-      leftIs="back"
-    />
-  ),
-};
+const titleString = 'Add Bank';
 
 const legalNameInput = {
   id: 'bank-legal-name-input',
@@ -113,13 +102,6 @@ const storeAccountScene = {
 
 const routeLinks = {};
 
-routeLinks[bankIntroScene.id] = {
-  next: {
-    title: 'OK',
-    getRoute: () => legalNameInput,
-  },
-};
-
 routeLinks[legalNameInput.id] = {
   next: {
     title: 'OK',
@@ -170,4 +152,4 @@ routeLinks[ssnInput.id] = {
 };
 
 module.exports.routeLinks = routeLinks;
-module.exports.firstScene = bankIntroScene;
+module.exports.firstScene = legalNameInput;
