@@ -6,13 +6,13 @@ import { getUser } from '../../firebase/FirebaseConnector';
 
 const mapStateToProps = (state) => {
   let email = state.addBank.email;
-  if (!email && getUser()) {
+  if (email === undefined && getUser()) {
     email = getUser().email;
   }
 
   return {
     inputValue: email,
-    inputTitle: 'Is this the correct email?',
+    inputTitle: 'What email would you like to receive payment notifications?',
     placeholder: 'Email',
   };
 };
