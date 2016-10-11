@@ -21,6 +21,8 @@
 #import "RNFIRMessaging.h"
 #import "Firebase.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 @import FirebaseDynamicLinks;
 
 
@@ -33,6 +35,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+  
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
@@ -150,6 +154,11 @@
                                         sourceApplication:nil annotation:nil];
                   }];
   return handled;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  // For debugging purposes.
+  [FBSDKAppEvents activateApp];
 }
 
 @end

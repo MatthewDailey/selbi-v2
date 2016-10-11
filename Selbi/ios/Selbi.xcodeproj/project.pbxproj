@@ -28,6 +28,11 @@
 		91B3DA80055043C3A51B28DB /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB936554B4504A9E9F54D2EC /* Entypo.ttf */; };
 		A248620265864E7A7479F5C6 /* libPods-SelbiTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */; };
 		B4F128EF4D5740B7AEC5E933 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95752F99C8ED47CFB13F332C /* Foundation.ttf */; };
+		C93756F41DAD537F003DE6B0 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C93756E31DAD51B3003DE6B0 /* libRCTFBSDK.a */; };
+		C93756F61DAD570F003DE6B0 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C93756F51DAD570F003DE6B0 /* Bolts.framework */; };
+		C93756F81DAD5722003DE6B0 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C93756F71DAD5722003DE6B0 /* FBSDKCoreKit.framework */; };
+		C93756FA1DAD5751003DE6B0 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C93756F91DAD5751003DE6B0 /* FBSDKLoginKit.framework */; };
+		C93756FC1DAD575A003DE6B0 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C93756FB1DAD575A003DE6B0 /* FBSDKShareKit.framework */; };
 		C941BBB11D90F8CE00250C9E /* libRCTMaterialKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B6BA901D6F94F200E29650 /* libRCTMaterialKit.a */; };
 		C941BBB21D90F90700250C9E /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B6BA9A1D6F94F200E29650 /* libRNVectorIcons.a */; };
 		C941BBB31D90F91D00250C9E /* libRNImageReader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C908551B1D6FBE6B001DF443 /* libRNImageReader.a */; };
@@ -132,6 +137,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNImageReader;
 		};
+		C93756E21DAD51B3003DE6B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53F99693F6F94DD490197A0B /* RCTFBSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9350E0F11CE3B0920041D815;
+			remoteInfo = RCTFBSDK;
+		};
 		C941BBE31D91121200250C9E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9FE7F209D93343C9895D3F8B /* CodePush.xcodeproj */;
@@ -227,6 +239,7 @@
 		1D1E25F616184E54A362AE15 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		28A775074970FFCDF4733F64 /* Pods-SelbiTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.release.xcconfig"; sourceTree = "<group>"; };
 		36ADFD39724CADE4BCDA2732 /* Pods-Selbi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.release.xcconfig"; sourceTree = "<group>"; };
+		53F99693F6F94DD490197A0B /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		62011481A5C34C0185212C4A /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Selbi.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		684C996EC8AC448FBB143D3D /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -243,6 +256,10 @@
 		B0AB3F9419A4458AAFE33DAD /* RNImageReader.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNImageReader.xcodeproj; path = "../node_modules/@selbi/react-native-image-reader/ios/RNImageReader.xcodeproj"; sourceTree = "<group>"; };
 		B15D5AD572E844DC913C6FF5 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		BBD6E67E99E146F3B0619B81 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		C93756F51DAD570F003DE6B0 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../../Documents/FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
+		C93756F71DAD5722003DE6B0 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C93756F91DAD5751003DE6B0 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		C93756FB1DAD575A003DE6B0 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		C93F5C4F1DA1A73B00CC2E35 /* Selbi.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Selbi.entitlements; path = Selbi/Selbi.entitlements; sourceTree = "<group>"; };
 		C941BBB51D90F94B00250C9E /* libPods-Selbi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Selbi.a"; path = "../../../../Library/Developer/Xcode/DerivedData/Selbi-emjfnjvaxemzohamqvqxyrvoflib/Build/Products/Release-iphoneos/libPods-Selbi.a"; sourceTree = "<group>"; };
 		C97952F71D66E35100BCD992 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
@@ -277,15 +294,19 @@
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
+				C93756F61DAD570F003DE6B0 /* Bolts.framework in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				C941BBB11D90F8CE00250C9E /* libRCTMaterialKit.a in Frameworks */,
 				C941BBB21D90F90700250C9E /* libRNVectorIcons.a in Frameworks */,
+				C93756FC1DAD575A003DE6B0 /* FBSDKShareKit.framework in Frameworks */,
 				C941BBB31D90F91D00250C9E /* libRNImageReader.a in Frameworks */,
 				C941BBB71D90F95800250C9E /* libRNFIRAnalytics.a in Frameworks */,
+				C93756F81DAD5722003DE6B0 /* FBSDKCoreKit.framework in Frameworks */,
 				C9B675031DA94E5300269064 /* libAutoGrowTextInput.a in Frameworks */,
+				C93756FA1DAD5751003DE6B0 /* FBSDKLoginKit.framework in Frameworks */,
 				C941BBB61D90F94B00250C9E /* libPods-Selbi.a in Frameworks */,
 				C941BC1D1D919B6000250C9E /* libCodePush.a in Frameworks */,
 				DAE612F3EF9D41DFAAF32083 /* libz.tbd in Frameworks */,
@@ -294,6 +315,7 @@
 				C9FBBD0C1DAC66AF003B486F /* libReactNativePermissions.a in Frameworks */,
 				C9FBBD231DAC66F6003B486F /* libRNFIRMessaging.a in Frameworks */,
 				C9FBBD381DAC6706003B486F /* libRCTCamera.a in Frameworks */,
+				C93756F41DAD537F003DE6B0 /* libRCTFBSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +433,7 @@
 				7C00AEAF34474B8790ACB523 /* ReactNativePermissions.xcodeproj */,
 				05CA1FD987F64DC38AA1C5A6 /* RNFIRMessaging.xcodeproj */,
 				B15D5AD572E844DC913C6FF5 /* RCTCamera.xcodeproj */,
+				53F99693F6F94DD490197A0B /* RCTFBSDK.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -463,6 +486,14 @@
 			isa = PBXGroup;
 			children = (
 				C908551B1D6FBE6B001DF443 /* libRNImageReader.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C93756DA1DAD51B3003DE6B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C93756E31DAD51B3003DE6B0 /* libRCTFBSDK.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -565,6 +596,10 @@
 		EC3B89B0A145B582B36A9701 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C93756FB1DAD575A003DE6B0 /* FBSDKShareKit.framework */,
+				C93756F91DAD5751003DE6B0 /* FBSDKLoginKit.framework */,
+				C93756F71DAD5722003DE6B0 /* FBSDKCoreKit.framework */,
+				C93756F51DAD570F003DE6B0 /* Bolts.framework */,
 				C941BBB51D90F94B00250C9E /* libPods-Selbi.a */,
 				658DDCEA40D921DEB93B8623 /* libPods-Selbi.a */,
 				E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */,
@@ -680,6 +715,10 @@
 				{
 					ProductGroup = C97952F81D66E35100BCD992 /* Products */;
 					ProjectRef = C97952F71D66E35100BCD992 /* RCTCameraRoll.xcodeproj */;
+				},
+				{
+					ProductGroup = C93756DA1DAD51B3003DE6B0 /* Products */;
+					ProjectRef = 53F99693F6F94DD490197A0B /* RCTFBSDK.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -830,6 +869,13 @@
 			fileType = archive.ar;
 			path = libRNImageReader.a;
 			remoteRef = C908551A1D6FBE6B001DF443 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C93756E31DAD51B3003DE6B0 /* libRCTFBSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTFBSDK.a;
+			remoteRef = C93756E21DAD51B3003DE6B0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C941BBE41D91121200250C9E /* libCodePush.a */ = {
@@ -1092,7 +1138,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
@@ -1108,7 +1157,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
@@ -1128,6 +1180,19 @@
 				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseCore/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseDynamicLinks/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseMessaging/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleIPhoneUtilities/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleInterchangeUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleSymbolUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleUtilities/Frameworks/frameworks\"",
+					"\"$(SRCROOT)/FacebookSDK",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1145,6 +1210,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1178,6 +1244,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseCore/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseDynamicLinks/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseMessaging/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleIPhoneUtilities/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleInterchangeUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleSymbolUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleUtilities/Frameworks/frameworks\"",
+					"\"$(SRCROOT)/FacebookSDK",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1195,6 +1274,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1268,6 +1348,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -1321,6 +1402,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1374,6 +1456,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1394,6 +1477,19 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseCore/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseDynamicLinks/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseMessaging/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleIPhoneUtilities/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleInterchangeUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleSymbolUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleUtilities/Frameworks/frameworks\"",
+					"\"$(SRCROOT)/FacebookSDK",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1411,6 +1507,7 @@
 					"$(SRCROOT)/../node_modules/react-native-permissions/**",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 				);
 				INFOPLIST_FILE = Selbi/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1441,7 +1538,10 @@
 				INFOPLIST_FILE = SelbiTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
