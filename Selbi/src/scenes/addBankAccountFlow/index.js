@@ -10,7 +10,7 @@ import StoreBankAccountScene from './StoreBankAccountScene';
 import DateOfBirthPickerScene from './DateOfBirthPickerScene';
 import AddressAutocompleteScene from './AddressAutocompleteScene';
 import AddressVerifyScene from './AddressVerifyScene';
-import AddEmailScene from './AddEmailScene';
+import AddEmailScene from './AddBankEmailScene';
 
 const titleString = 'Add Bank';
 

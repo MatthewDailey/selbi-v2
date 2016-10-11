@@ -797,7 +797,7 @@ function markUserHasPayment() {
     .set(true);
 }
 
-export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+export function enqueueCreateCustomerRequest(cardHolderName, email, stripeCreateCardResponse) {
   if (!getUser()) {
     return Promise.reject('Must be signed in.');
   }
@@ -807,7 +807,7 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
     payload: {
       source: stripeCreateCardResponse.id,
       description: `${cardHolderName}'s Credit Card`,
-      email: getUser().email,
+      email,
     },
     metadata: {
       lastFour: stripeCreateCardResponse.card.last4,

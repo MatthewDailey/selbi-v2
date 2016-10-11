@@ -11,6 +11,7 @@ import ListingDetailScene from '../ListingDetailScene';
 import ReceiptScene from './ReceiptScene';
 import CreditCardInputScene from './CreditCardInputScene';
 import CompletedPurchaseScene from './CompletedPurchaseScene';
+import AddEmailScene from './AddCreditCardEmailScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
@@ -31,6 +32,16 @@ const chatFromReceiptScene = {
 const listingDetailScene = {
   id: 'listing-detail-scene',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
+};
+
+const addEmailScene = {
+  id: 'credit-card-email-input',
+  renderContent: withNavigatorProps(
+    <AddEmailScene
+      leftIs="back"
+      rightIs="next"
+      title="Add Credit Card (1/2)"
+    />),
 };
 
 const receiptScene = {
@@ -87,7 +98,7 @@ const creditCardInputScene = {
   id: 'credit-card-input-scene',
   renderContent: withNavigatorProps(
     <CreditCardInputScene
-      title="Add Credit Card"
+      title="Add Credit Card (2/2)"
       leftIs="back"
     />),
 };
@@ -101,7 +112,7 @@ const completedPurchaseScene = {
       rightIs="home"
     />
   ),
-}
+};
 
 
 const routeLinks = {};
@@ -112,12 +123,25 @@ routeLinks[chatFromDetailScene.id] = {
   },
 };
 
+routeLinks[addEmailScene.id] = {
+  next: {
+    title: 'OK',
+    getRoute: () => creditCardInputScene,
+  },
+};
+
+routeLinks[creditCardInputScene.id] = {
+  return: {
+    getRoute: () => receiptScene,
+  },
+};
+
 routeLinks[receiptScene.id] = {
   back: {
     getRoute: () => listingDetailScene,
   },
   addPayment: {
-    getRoute: () => creditCardInputScene,
+    getRoute: () => addEmailScene,
   },
   chat: {
     getRoute: () => chatFromReceiptScene,
@@ -169,7 +193,7 @@ routeLinks[completedPurchaseScene.id] = {
   back: {
     getRoute: () => listingDetailScene,
   },
-}
+};
 
 module.exports.routesLinks = routeLinks;
 module.exports.firstScene = listingDetailScene;
