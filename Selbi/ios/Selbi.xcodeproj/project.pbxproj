@@ -634,6 +634,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = L3LVTK8RFF;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1123,9 +1124,10 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 25;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 28;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1158,7 +1160,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.selbi.app;
 				PRODUCT_NAME = Selbi;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4302e9c1-d31b-4a18-9830-48b90ad89b15";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: io.selbi.app";
 				SELBI_STAGE = develop;
 			};
 			name = Debug;
@@ -1172,8 +1175,9 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 25;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 28;
+				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1206,7 +1210,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.selbi.app;
 				PRODUCT_NAME = Selbi;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4302e9c1-d31b-4a18-9830-48b90ad89b15";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: io.selbi.app";
 				SELBI_STAGE = production;
 			};
 			name = Release;
@@ -1386,8 +1391,9 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 25;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 28;
+				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1420,7 +1426,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.selbi.app;
 				PRODUCT_NAME = Selbi;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4302e9c1-d31b-4a18-9830-48b90ad89b15";
+				PROVISIONING_PROFILE_SPECIFIER = "XC iOS: io.selbi.app";
 				SELBI_STAGE = staging;
 			};
 			name = Staging;
