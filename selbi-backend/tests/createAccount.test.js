@@ -62,7 +62,7 @@ describe('Create Account', function() {
             postal_code: '94103',
             state: 'CA',
           },
-          personal_id_number: 'stripeSsnToken',
+          ssn_last_4: '0000',
         },
         tos_acceptance: {
           date: Date.now() / 1000,
@@ -132,7 +132,7 @@ describe('Create Account', function() {
               postal_code: '94103',
               state: 'CA',
             },
-            personal_id_number: 'stripeSsnToken',
+            ssn_last_4: '0000',
           },
           tos_acceptance: {
             date: Date.now() / 1000,
@@ -179,7 +179,7 @@ describe('Create Account', function() {
             postal_code: '94103',
             state: 'CA',
           },
-          personal_id_number: 'stripeSsnToken',
+          ssn_last_4: '0000',
         },
         tos_acceptance: {
           date: Date.now() / 1000,

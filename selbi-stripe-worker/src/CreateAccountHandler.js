@@ -32,8 +32,8 @@ function validateData(data) {
     return Promise.reject('Missing payload.legal_entity.address.postal_code');
   } else if (!data.payload.legal_entity.address.state) {
     return Promise.reject('Missing payload.legal_entity.address.state');
-  } else if (!data.payload.legal_entity.personal_id_number) {
-    return Promise.reject('Missing payload.legal_entity.personal_id_number');
+  } else if (!data.payload.legal_entity.ssn_last_4) {
+    return Promise.reject('Missing payload.legal_entity.ssn_last_4');
   } else if (!data.payload.tos_acceptance) {
     return Promise.reject('Missing payload.tos_acceptance');
   } else if (!data.payload.tos_acceptance.date) {

@@ -318,7 +318,9 @@
           // Stores exactly the data we can modify and pass to Stripe.
           "payload": {
             ".validate" : "newData.hasChildren(['external_account', 'email', 'legal_entity', 'tos_acceptance'])",
-
+            "$other" : {
+              ".validate": false
+            },
             // Token returned to client from the Stripe Connect API in exchange for bank account.
             "external_account": {
               ".validate": "newData.isString()"
@@ -327,8 +329,11 @@
               ".validate": "newData.isString()"
             },
             "legal_entity": {
-              // Token returned to client from Stripe Connect API in exchange for SSN.
-              "personal_id_number": {
+              ".validate": "newData.hasChildren(['ssn_last_4', 'first_name', 'last_name', 'dob', 'address'])",
+              "$other" : {
+                ".validate": false
+              },
+              "ssn_last_4": {
                 // Token
                 ".validate": "newData.isString()"
               },
