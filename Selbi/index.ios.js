@@ -88,7 +88,7 @@ function fetchLocalListings() {
         const geoQuery =
           listenToListingsByLocation(
             [location.lat, location.lon],
-            20,
+            200,
             (listing) => store.dispatch(addLocalListing(listing)),
             (listingId) => store.dispatch(removeLocalListing(listingId)));
 
@@ -98,6 +98,7 @@ function fetchLocalListings() {
               center: [newLocation.lat, newLocation.lon],
             });
           }
+
         });
       })
       .then(() => startedListeningForLocalListings = true)

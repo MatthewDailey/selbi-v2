@@ -38,9 +38,6 @@ export default class DrawerNavigator extends React.Component {
         initialRoute={this.props.initialRoute}
         renderScene={(route, navigator) => {
           console.log('Rendering: ', route);
-          if (navigator.getCurrentRoutes().length > 1) {
-            return route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu);
-          }
           return (
             <Drawer
               ref={(c) => {

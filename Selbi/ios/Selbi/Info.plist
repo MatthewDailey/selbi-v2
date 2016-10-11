@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>NSCalendarsUsageDescription</key>
+    <string>A library of Selbi requires this, you can deny it.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>A library of Selbi requires this, you can deny it.</string>
     <key>NSCameraUsageDescription</key>
-    <string>Selbi requires camera..</string>
+    <string>Selbi requires camera.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Selbi requires access to your photos.</string>
     <key>CFBundleDevelopmentRegion</key>
@@ -36,7 +40,7 @@
       </dict>
     </array>
     <key>CFBundleVersion</key>
-    <string>11</string>
+    <string>28</string>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
     <key>LSRequiresIPhoneOS</key>

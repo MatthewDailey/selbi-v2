@@ -26,7 +26,6 @@
     "react-native-autogrow-textinput": "^2.1.1",
     "react-native-camera": "git+https://github.com/ibussieres/react-native-camera.git#issue-fix-ios10sim-crash",
     "react-native-code-push": "^1.13.6-beta",
-    "react-native-config": "^0.1.0",
     "react-native-credit-card-input": "^0.2.4",
     "react-native-drawer": "^2.2.6",
     "react-native-fcm": "^2.3.0",
