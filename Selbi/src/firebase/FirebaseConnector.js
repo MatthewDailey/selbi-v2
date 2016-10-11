@@ -135,8 +135,7 @@ export function signInWithFacebook() {
       console.log(loginResult);
 
       if (loginResult.isCancelled) {
-        console.log('user canceled');
-        return;
+        return Promise.reject('User cancelled sign in.');
       }
       return AccessToken.getCurrentAccessToken();
     })
@@ -176,15 +175,13 @@ export function signOut() {
 }
 
 
-export function createUser(displayName) {
+export function createUser(displayName, email) {
   if (!getUser()) {
     return Promise.reject('Must be signed in to store user details.');
   }
 
-  return getUser()
-    .updateProfile({
-      displayName
-    })
+  return getUser().updateProfile({ displayName })
+    .then(() => getUser().updateEmail(email))
     .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
     .then((userSnapshot) => {
       if (!userSnapshot || !userSnapshot.exists()) {
@@ -908,6 +905,8 @@ export function enqueueCreateAccountRequest(
       bankName,
     },
   };
+
+  console.log(createAccountTask);
 
   const userMerchantRef = firebaseApp.database()
     .ref('users')
