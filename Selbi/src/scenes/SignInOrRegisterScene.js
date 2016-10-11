@@ -215,18 +215,20 @@ export default class SignInOrRegisterScene extends RoutableScene {
         tabLabel={registerOrSignInType.asTitle}
       >
         <FacebookButton
-          onPress={() => signInWithFacebook()
-            .then((user) => {
-              console.log(user.providerData[0]);
-              return Promise.resolve(user)
-            })
-            // We only use one provider (facebook).
-            .then((user) => this.props.createUser(
-              user.providerData[0].displayName,
-              user.providerData[0].email))
-            .then(this.registerOrSignInSuccessHandler)
-            .catch(this.registerOrSignInErrorHandler)
-          }
+          onPress={() => {
+            this.setState({ signingIn: true });
+            signInWithFacebook()
+              .then((user) => {
+                console.log(user.providerData[0]);
+                return Promise.resolve(user);
+              })
+              // We only use one provider (facebook).
+              .then((user) => this.props.createUser(
+                user.providerData[0].displayName,
+                user.providerData[0].email))
+              .then(this.registerOrSignInSuccessHandler)
+              .catch(this.registerOrSignInErrorHandler);
+          }}
         >
           <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
