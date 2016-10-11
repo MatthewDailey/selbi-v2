@@ -173,7 +173,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       <TextInput
         placeholder="First name"
         style={inputStyle}
-        onTextChange={(newText) => this.setState({ firstName: newText })}
+        onChangeText={(newText) => this.setState({ firstName: newText })}
         onFocus={scrollToFirstName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.LastNameInput.focus()}
@@ -183,7 +183,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         placeholder="Last name"
         style={inputStyle}
         ref="LastNameInput"
-        onTextChange={(newText) => this.setState({ lastName: newText })}
+        onChangeText={(newText) => this.setState({ lastName: newText })}
         onFocus={scrollToLastName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.EmailInput.focus()}
