@@ -1,15 +1,32 @@
 import React, { Component } from 'react';
-import { View, ListView, RefreshControl, Text } from 'react-native';
+import { View, ListView, Text, InteractionManager } from 'react-native';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ItemView from './ItemView';
-import SpinnerOverlay from './SpinnerOverlay';
 import styles from '../../styles';
-import colors from '../../colors';
 
 export default class ListingsComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { renderPlaceholderOnly: true };
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ renderPlaceholderOnly: false });
+    });
+  }
+
   render() {
+    if (this.state.renderPlaceholderOnly) {
+      return (
+        <View style={styles.container} />
+      );
+    }
+
+    console.log('called render of listings list component');
+
     const RefreshButton = MKButton.plainFab()
       .withStyle({
         borderRadius: 20,
