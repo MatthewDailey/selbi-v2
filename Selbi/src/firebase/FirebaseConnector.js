@@ -874,6 +874,7 @@ export function enqueueCreateAccountRequest(
   lastName,
   dob, // { day, month, year }
   address, // { line1, line2, city, postal_code, state }
+  email,
   ip,
   accountNumberLastFour,
   routingNumber,
@@ -885,7 +886,7 @@ export function enqueueCreateAccountRequest(
   const createAccountTask = {
     payload: {
       external_account: bankToken,
-      email: getUser().email,
+      email,
       legal_entity: {
         ssn_last_4: ssnLast4,
         first_name: firstName,
