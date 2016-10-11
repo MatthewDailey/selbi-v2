@@ -140,13 +140,21 @@
 - (BOOL)application:(UIApplication *)app
             openURL:(NSURL *)url
             options:(NSDictionary<NSString *, id> *)options {
-  return [self application:app openURL:url sourceApplication:nil annotation:@{}];
+  BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:app
+                                                                openURL:url
+                                                      sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                                             annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+                  ];
+
+  
+  return handled || [self application:app openURL:url sourceApplication:nil annotation:@{}];
 }
 
 // Only if your app is using [Universal Links](https://developer.apple.com/library/prerelease/ios/documentation/General/Conceptual/AppSearch/UniversalLinks.html).
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler
 {
+  
   BOOL handled = [[FIRDynamicLinks dynamicLinks]
                   handleUniversalLink:userActivity.webpageURL
                   completion:^(FIRDynamicLink * _Nullable dynamicLink, NSError * _Nullable error) {

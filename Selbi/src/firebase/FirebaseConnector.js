@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
+import {LoginManager, AccessToken } from 'react-native-fbsdk';
+
 
 import { convertToUsername } from './FirebaseUtils';
 import config from '../../config';
@@ -121,6 +123,34 @@ function insertUserInDatabase(userDisplayName) {
     });
 
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
+}
+
+export function signInWithFacebook() {
+  const auth = firebase.auth();
+  const provider = firebase.auth.FacebookAuthProvider;
+
+  LoginManager.logInWithReadPermissions(['public_profile'])
+    .then(loginResult => {
+      console.log('log in returned')
+      console.log(loginResult)
+
+      if (loginResult.isCancelled) {
+        console.log('user canceled');
+        return;
+      }
+      AccessToken.getCurrentAccessToken()
+        .then(accessTokenData => {
+          const credential = provider.credential(accessTokenData.accessToken);
+          return auth.signInWithCredential(credential);
+        })
+        .then(credData => {
+          console.log(credData);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+
 }
 
 export function signInWithEmail(email, password) {

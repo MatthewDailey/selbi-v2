@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
+
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -9,6 +10,8 @@ import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 import { privacyPolicyScene, termsAndConditionsScene } from './legal';
+
+import { signInWithFacebook } from '../firebase/FirebaseConnector';
 
 const inputStyle = {
   height: 48,  // have to do it on iOS
@@ -21,8 +24,8 @@ const FacebookButton = MKButton.button()
     borderRadius: 5,
     padding: paddingSize,
   })
+  .withOnPress(signInWithFacebook)
   .withBackgroundColor('#3b5998')
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 // Visible for tests.
@@ -219,7 +222,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         style={styles.paddedFullScreenContainer}
         tabLabel={registerOrSignInType.asTitle}
       >
-        <FacebookButton >
+        <FacebookButton>
           <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
