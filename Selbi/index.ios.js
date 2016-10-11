@@ -98,6 +98,7 @@ function fetchLocalListings() {
               center: [newLocation.lat, newLocation.lon],
             });
           }
+
         });
       })
       .then(() => startedListeningForLocalListings = true)
