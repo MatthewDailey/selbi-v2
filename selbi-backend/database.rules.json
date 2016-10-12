@@ -11,6 +11,26 @@
       ".write" : false
     },
 
+    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    "phoneVerification" : {
+      // Only visible to service workers. Schema is here for convenience.
+      ".read": "auth.admin === true",
+      ".write": "auth.admin === true",
+      "$phoneNumber" : {
+        ".validate": "newData.isString()"
+      }
+    },
+
+    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    "phoneToUser" : {
+      ".read": "auth.uid != null",
+      ".write": "auth.admin === true",
+      "$phoneNumber" : {
+        // UID => successful verification, empty => awaiting verification, non-UID => error.
+        ".validate": "newData.isString()"
+      }
+    },
+
     "events": {
       "tasks": {
         // Auth'd users can write, only service account can read.
