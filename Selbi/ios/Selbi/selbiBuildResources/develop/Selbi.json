@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "selbi-develop",
+  "private_key_id": "5b4d084d9fe0a09dabfbff139b71220ba669444d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDnm5xCHZFxp+lQ\nObMNoFfQWDOfHzHEpvoqWEiLzhJ1E3U/tGtac/L2IEmLCUId5l1bkpS5rxNXJ5TJ\nqkB8rS1TU2/8OGQ6+WUSY2eTrRmEkMeCkvbqnpioeAQ+UuMLUPlMXkMS8MYtlqYU\nAJY+Zgvnn7t/svJbWGxz10HgOj2G1CT764uXg6+O3ywRDSJZMW0AfB1qiDp/MoS2\nw/bJ2waIi6Tn/Y153gPEqy98faF2m/Kh/1GA0ncZgRQwIuYOxKuDnW8mvIlY0udc\n+K2o5VCUaQqntnWWJGHj2S0v67bWWtQAyJANgZOY6CI93Y2EbTN+3LryQleOT9g0\nZ22kfHPJAgMBAAECggEARsS0fTs9qsXMs5e9z0cULfQVaeSFN3px7ChnmlhQKXfV\nlq6RMuVE8tGwxwwAKNSv6AAk84u8VCAjBW/BHpdnxxMyn5W3gpGbwX+gMW5t4qS+\nYXZ4ff4R1UA+w7Bd8aI/Wode5VWuqFVkz63SOqTBtHeJOh66kRC2qrq2RUZmcGCj\nUY9IBuqB790y5hWsAu3CFMk2UJfn5ry+/cW8/TaDXcpxYvzgViOI74+ONKpC8odI\ntSDmJGsyRAF6gd7P+sV1dF8NveHCGaYHPgPCSek9JeCA40VSi4FQlW3XO5UvtDRm\naLT/6ZxHmHEwWqiv9WDOucwt9b0gJRFkK1f56T8fkQKBgQD01FrDD8C0aSBvLIn+\n0SJyyoyVE71dbI8HZPoNw1+3Jch2m/GU/mjTMt+SgtmLy9CwyGtStqZSBGKuWQuZ\n5bWMZqyes+SajPsXwA5/Wk8/DF+rHjzLWXm4ozyneJ7qoMENoq0ME5BqB/g/jMsE\njvDUd8KERbiM8IUKEu77E0DPrQKBgQDyLNMtD7M4YM41pZhFAVFgoRmxZ17YVaGj\nqjgf1L7T8H0O6CLjY3AwsjWYf3iMFpX7st+FEatMevJc82qTFCOI4+RSpFL0IoEV\n6WbLrrcdSozIe+IWU/yKqdtY6ldah2Q6QN1+CWiC54nsOwLuO6xPWMfcrO73N6Qa\n3SNXTxaIDQKBgQCjGzogS8VZK9RE3IpOretiSFiiFJWKwQEErxv7wVZqAIztn/Sx\nC1Cwq2rRA8WE4dL1g4AkibSCXZOUjZQyAhwSHnEQBc7du+CoMPY3l+XFniu6J5ne\n64wxGucUt0JAE7qpp9/bdMk4KnkTdWvnbIc7NVHspzpNAwvO61A1Ct2ZvQKBgQCc\nyvbCovqXEt4Pj7IhYzQLyuH2oQWgLPjlHO0Pds9CKt7dCuCjthrJ/GeE32rt0CW0\n+1+KKSFt99/43ERxC0XieCG4e9mVZM2MoTvDvc+isESr/MEpUaEdKdHxJHAAFc6H\nhL2iv3ah4kTC5IYGNi5ehQ2JS5HAD485MVmTSoo89QKBgQDY9nkXD930tf2xI6L1\nx0l9dwa6MBSgThvMPwjSIz4hJhDYgoYCSc3DjhzkLBwfHO8ZYSh2+ZFYyuMexNzN\nzjpC9fTSQh26NQPOhHroBZL63C0pt9LCNIMY4FerPRP+uB5yBUT3LPDfNhmwDEZf\nu1zQa0QGbLFqQndPxtF1SZXSsw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "symbol-upload-service-account@selbi-develop.iam.gserviceaccount.com",
+  "client_id": "114674847182741869275",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/symbol-upload-service-account%40selbi-develop.iam.gserviceaccount.com"
+}
