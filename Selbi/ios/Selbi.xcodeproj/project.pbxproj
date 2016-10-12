@@ -644,6 +644,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				BF1388B3927BE977BF963C9E /* [CP] Embed Pods Frameworks */,
 				F0436B95253DB2DF2BD5F0E6 /* [CP] Copy Pods Resources */,
+				C93757BF1DADFC8F003DE6B0 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1036,6 +1037,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Selbi/Pods-Selbi-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C93757BF1DADFC8F003DE6B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/myfile",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file\n# Develop id:\nGOOGLE_APP_ID=1:699453567940:ios:22fe21a4b12bba0a\n\nif [ \"$SELBI_STAGE\" = \"staging\" ]; then\n    GOOGLE_APP_ID=1:186442987461:ios:22fe21a4b12bba0a\nfi\n\nif [ \"$SELBI_STAGE\" = \"production\" ]; then\n    GOOGLE_APP_ID=1:983312482100:ios:22fe21a4b12bba0a\nfi\n\n# Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym \"${SRCROOT}/Selbi/selbiBuildResources/$SELBI_STAGE/selbi-crash-report-upload.json\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C97C6FF51D90687300793D40 /* ShellScript */ = {

@@ -9,6 +9,7 @@ target 'Selbi' do
   pod 'FirebaseAnalytics'
   pod 'Firebase/Messaging'
   pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Crash'
 
   target 'SelbiTests' do
     inherit! :search_paths
