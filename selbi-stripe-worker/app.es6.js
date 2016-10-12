@@ -14,6 +14,7 @@ import QueueListener from './src/QueueListener';
 import { eventHandlers } from './src/events';
 
 import { sendNotification } from './src/FcmConnector';
+import { sendSms } from './src/sms/TwillioConnector';
 
 import config from './config';
 
@@ -26,7 +27,7 @@ const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFr
   'serviceUser');
 const firebaseDb = serviceAccountApp.database();
 
-const eventQueueHandler = new EventHandler(firebaseDb, sendNotification);
+const eventQueueHandler = new EventHandler(firebaseDb, sendNotification, sendSms);
 const eventQueueListener = new QueueListener('/events');
 eventQueueListener.start(firebaseDb, eventQueueHandler.getTaskHandler(eventHandlers));
 
