@@ -16,6 +16,7 @@ import { getListingShareUrl } from '../../deeplinking/Utilities';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { reportButtonPress, reportShare } from '../../SelbiAnalytics';
 
 const buttonTextStyle = {
   fontSize: 20,
@@ -41,14 +42,21 @@ class PublishCompleteScene extends RoutableScene {
         </Text>
         <View style={styles.halfPadded}>
           <Button
-            onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
-              .catch(console.log)}
+            onPress={() => {
+              reportButtonPress('publish_complete_share');
+              reportShare(this.props.listingKey);
+              Share.open({ url: getListingShareUrl(this.props.listingKey) })
+                .catch(console.log);
+            }}
           >
             <Text style={buttonTextStyle}><Icon name="share-square-o" size={buttonTextStyle.fontSize} /> Share</Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
-          <Button onPress={() => this.goNext()}>
+          <Button onPress={() => {
+            reportButtonPress('publish_complete_add_details');
+            this.goNext();
+          }}>
             <Text style={buttonTextStyle}><Icon name="list" size={buttonTextStyle.fontSize} /> Add Details</Text>
           </Button>
         </View>
@@ -56,7 +64,10 @@ class PublishCompleteScene extends RoutableScene {
         <VisibilityWrapper isVisible={!this.props.hasBankAccount}>
           <View>
             <View style={styles.halfPadded}>
-              <Button onPress={() => this.goNext('addBank')}>
+              <Button onPress={() => {
+                reportButtonPress('publish_complete_add_bank');
+                this.goNext('addBank');
+              }}>
                 <Text style={buttonTextStyle}><Icon name="university" size={buttonTextStyle.fontSize}/> Receive Payments</Text>
               </Button>
             </View>
