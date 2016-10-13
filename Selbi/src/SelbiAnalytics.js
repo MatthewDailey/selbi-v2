@@ -77,3 +77,6 @@ export function setUserAddedPhone(hasAddedPhone) {
   Analytics.setUserProperty('has_added_bank', `${hasAddedPhone}`);
 }
 
+export function reportError(type, params) {
+  Analytics.logEvent(`error_${type}`, params);
+}
