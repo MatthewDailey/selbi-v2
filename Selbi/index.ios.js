@@ -201,7 +201,7 @@ const storeUserData = (user) => {
 addAuthStateChangeListener(storeUserData);
 
 const localListingScene = {
-  id: 'listings-scene',
+  id: 'local_listings_scene',
   renderContent: withNavigatorProps(
     <LocalListingScene
       title="Local Listings"
@@ -212,7 +212,7 @@ const localListingScene = {
 };
 
 const myListingsScene = {
-  id: 'my-listings-scene',
+  id: 'my_listings_scene',
   renderContent: withNavigatorProps(
     <MyListingsScene
       title="My Listings"
@@ -223,7 +223,7 @@ const myListingsScene = {
 };
 
 const chatListScene = {
-  id: 'chat-list-scene',
+  id: 'chat_list_scene',
   renderContent: withNavigatorProps(
     <ChatListScene
       title="Chats"
@@ -233,7 +233,7 @@ const chatListScene = {
 };
 
 const friendsListingScene = {
-  id: 'friends-listings',
+  id: 'friends_listings_scene',
   renderContent: withNavigatorProps(
     <FriendsListingsScene
       title="Friends' Listings"
@@ -244,7 +244,7 @@ const friendsListingScene = {
 };
 
 const followFriendScene = {
-  id: 'follow-friend',
+  id: 'follow_friend_scene',
   renderContent: withNavigatorProps(
     <FollowFriendScene
       title=""
@@ -255,7 +255,7 @@ const followFriendScene = {
 };
 
 const menuSignInScene = {
-  id: 'menu-sign-scene',
+  id: 'menu_sign_in_scene',
   renderContent: withNavigatorProps(
     <SignInOrRegisterScene
       title=""

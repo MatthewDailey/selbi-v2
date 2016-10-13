@@ -45,9 +45,9 @@ export function reportPurchase(price) {
 }
 
 export function reportOpenScene(sceneName, params) {
-  Analytics.log(`open_${sceneName}`, params);
+  Analytics.logEvent(`open_${sceneName}`, params);
 }
 
 export function reportButtonPress(buttonName, params) {
-  Analytics.log(`press_${buttonName}`, params);
+  Analytics.logEvent(`press_${buttonName}`, params);
 }
