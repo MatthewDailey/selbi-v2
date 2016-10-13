@@ -50,7 +50,6 @@ class DraggableAnnotationExample extends React.Component {
       draggable: true,
       onDragStateChange: (event) => {
         if (event.state === 'idle') {
-          console.log(event);
           this.setState({
             annotations: [this.createAnnotation(event.longitude, event.latitude)],
           });
@@ -59,7 +58,6 @@ class DraggableAnnotationExample extends React.Component {
             lon: event.longitude,
           });
         }
-        console.log('Drag state: ' + event.state);
       },
     };
   };
@@ -150,7 +148,6 @@ class EditListingScene extends RoutableScene {
     if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
         .then((latlon) => {
-          console.log('load for listing', latlon);
           if(latlon) {
             this.props.setLocation({
               lat: latlon[0],
