@@ -9,6 +9,7 @@ import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewM
   createChatAsBuyer } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
+import { reportSendMessage } from '../SelbiAnalytics';
 
 class ChatScene extends RoutableScene {
   constructor(props) {
@@ -101,12 +102,16 @@ class ChatScene extends RoutableScene {
   }
 
   onSend(messages = []) {
+    let isFirstMessageForAnalytics = false;
     if (this.state.messages.length === 0 && this.props.buyerUid === getUser().uid) {
+      isFirstMessageForAnalytics = true;
       createChatAsBuyer(this.props.listingKey, this.props.listingData.sellerId);
     }
 
     messages.forEach((message) =>
       sendMessage(this.props.listingKey, this.props.buyerUid, message.text));
+
+    reportSendMessage(getUser().uid, isFirstMessageForAnalytics);
   }
 
   renderWithNavBar() {
