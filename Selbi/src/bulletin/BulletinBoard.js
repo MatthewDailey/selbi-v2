@@ -20,6 +20,8 @@ import SpinnerOverlay from '../components/SpinnerOverlay';
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
 import { followUser, updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
 
+import { reportButtonPress } from '../SelbiAnalytics';
+
 const initialSignedInState = {
   takingAction: false,
   actionDescription: '',
@@ -69,8 +71,12 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewFollowerBulletin
-                    gotIt={() => updateBulletin(bulletinKey, { status: 'read' })}
+                    gotIt={() => {
+                      reportButtonPress('bulletin_acknowledge_follow');
+                      updateBulletin(bulletinKey, { status: 'read' });
+                    }}
                     followUser={(uid) => {
+                      reportButtonPress('bulletin_follow_back');
                       this.startTakingAction(
                         `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
                         () => followUser(uid)
@@ -96,6 +102,7 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <FriendPostedNewListingBulletin
                     openDetails={() => {
+                      reportButtonPress('bulletin_friends_new_listing_details');
                       this.props.goNext('details');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
@@ -108,7 +115,10 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddBankAccountBulletin
-                    addBankAccount={() => this.props.goNext('addBank')}
+                    addBankAccount={() => {
+                      reportButtonPress('bulletin_add_bank');
+                      this.props.goNext('addBank');
+                    }}
                   />
                 </View>
               );
@@ -117,7 +127,10 @@ class SignedInBulletinBoard extends Component {
               bulletins.push(
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddPhoneBulleting
-                    takeAction={() => this.props.goNext('addPhone')}
+                    takeAction={() => {
+                      reportButtonPress('bulletin_add_phone');
+                      this.props.goNext('addPhone');
+                    }}
                   />
                 </View>
               );
@@ -127,23 +140,25 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewMessagesBulletin
                     bulletin={bulletin}
-                    takeAction={() => this.startTakingAction('Opening chat...',
-                      () => loadListingData(bulletin.payload.chat.listingId)
-                        .then((listingSnapshot) => {
-                          if (!listingSnapshot.exists()) {
-                            return Promise.reject('Unable to load listing.');
-                          }
+                    takeAction={() => {
+                      reportButtonPress('bulletin_new_message');
+                      this.startTakingAction('Opening chat...',
+                        () => loadListingData(bulletin.payload.chat.listingId)
+                          .then((listingSnapshot) => {
+                            if (!listingSnapshot.exists()) {
+                              return Promise.reject('Unable to load listing.');
+                            }
 
-                          this.props.setListingDetailsForChat(
-                            bulletin.payload.chat.buyerUid,
-                            bulletin.payload.chat.listingId,
-                            listingSnapshot.val());
-                          this.props.goNext('chat');
+                            this.props.setListingDetailsForChat(
+                              bulletin.payload.chat.buyerUid,
+                              bulletin.payload.chat.listingId,
+                              listingSnapshot.val());
+                            this.props.goNext('chat');
 
-                          return Promise.resolve(false);
-                        })
-                        .then(() => updateBulletin(bulletinKey, { status: 'read' })))
-                    }
+                            return Promise.resolve(false);
+                          })
+                          .then(() => updateBulletin(bulletinKey, { status: 'read' })))
+                    }}
                   />
                 </View>
               );
@@ -153,7 +168,10 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <PurchaseBulletin
                     bulletin={bulletin}
-                    gotIt={() => updateBulletin(bulletinKey, { status: 'read' })}
+                    gotIt={() => {
+                      reportButtonPress('bulletin_acknowledge_purchase');
+                      updateBulletin(bulletinKey, { status: 'read' })
+                    }}
                   />
                 </View>
               );
@@ -214,7 +232,10 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
       borderRadius: 5,
     })
     .withBackgroundColor(colors.white)
-    .withOnPress(() => goNext('signIn'))
+    .withOnPress(() => {
+      reportButtonPress('bulletin_sign_in');
+      goNext('signIn');
+    })
     .build();
 
   return (
