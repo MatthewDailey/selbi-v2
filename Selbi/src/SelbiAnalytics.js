@@ -45,6 +45,10 @@ export function reportPurchase(price, listingId) {
   });
 }
 
+export function reportEvent(title, params) {
+  Analytics.logEvent(title, params);
+}
+
 export function reportOpenScene(sceneName, params) {
   Analytics.logEvent(`open_${sceneName}`, params);
 }
