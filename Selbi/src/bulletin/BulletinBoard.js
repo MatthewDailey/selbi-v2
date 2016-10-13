@@ -60,14 +60,6 @@ class SignedInBulletinBoard extends Component {
     const getBulletins = () => {
       const bulletins = [];
 
-      bulletins.push(
-        <View key={'temp'} style={{ paddingTop: 4, paddingBottom: 4 }}>
-          <AddPhoneBulleting
-            takeAction={() => this.props.goNext('addPhone')}
-          />
-        </View>
-      );
-
       Object.keys(this.props.bulletins).forEach((bulletinKey) => {
         const bulletin = this.props.bulletins[bulletinKey];
 
@@ -117,6 +109,15 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddBankAccountBulletin
                     addBankAccount={() => this.props.goNext('addBank')}
+                  />
+                </View>
+              );
+              break;
+            case 'should-add-phone':
+              bulletins.push(
+                <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
+                  <AddPhoneBulleting
+                    takeAction={() => this.props.goNext('addPhone')}
                   />
                 </View>
               );
