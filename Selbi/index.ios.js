@@ -122,6 +122,7 @@ const listenForUserBulletins = (user) => {
       (bulletins) => {
         // TODO: Super hack to add bulletin. Should add 'sign-in' event.
         let hasAddPhoneBulletin = false;
+        let hasReadAddPhoneBulletin = false;
         let unreadBulletinCount = 0;
         Object.keys(bulletins).forEach((key) => {
           if (bulletins[key].status === 'unread') {
@@ -130,11 +131,14 @@ const listenForUserBulletins = (user) => {
 
           if (bulletins[key].type === 'should-add-phone') {
             hasAddPhoneBulletin = true;
+            hasReadAddPhoneBulletin = bulletins[key].status === 'read';
           }
         });
-        if (!hasAddPhoneBulletin) {
+        if (hasAddPhoneBulletin) {
+          setUserAddedPhone(hasReadAddPhoneBulletin);
+        } else {
           createShouldAddPhoneBulletin();
-          // setUserAddedPhone(false);
+          setUserAddedPhone(false);
         }
 
         setBadgeNumber(unreadBulletinCount);
