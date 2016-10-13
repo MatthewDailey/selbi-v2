@@ -2,6 +2,8 @@ import React from 'react';
 import { Navigator } from 'react-native';
 
 import Drawer from 'react-native-drawer';
+
+import { reportOpenScene } from '../SelbiAnalytics';
 import PermissionsWatcher from '../nav/PermissionsWatcher';
 
 /*
@@ -36,11 +38,9 @@ export default class DrawerNavigator extends React.Component {
     return (
       <Navigator
         initialRoute={this.props.initialRoute}
+        onDidFocus={(route) => reportOpenScene(route.id)}
         renderScene={(route, navigator) => {
           console.log('Rendering: ', route);
-          if (navigator.getCurrentRoutes().length > 1) {
-            return route.renderContent(navigator, this.props.routeLinks[route.id], this.openMenu);
-          }
           return (
             <Drawer
               ref={(c) => {

@@ -8,8 +8,9 @@ chai.use(dirtyChai);
 
 const mockFirebaseDb = {};
 const mockSendNotification = () => {};
+const mockSendSms = () => {};
 
-const handler = new EventHandler(mockFirebaseDb, mockSendNotification);
+const handler = new EventHandler(mockFirebaseDb, mockSendNotification, mockSendSms);
 
 describe('EventHandler', () => {
   it('resolves task if no handlers', (done) => {
@@ -95,7 +96,8 @@ describe('EventHandler', () => {
     const mockData = {};
     handler.getTaskHandler([mockHandler])(mockData, spy(), spy(), spy())
       .then(() => expect(
-        handleSpy.calledWithExactly(mockData, mockFirebaseDb, mockSendNotification)).to.be.true())
+        handleSpy.calledWithExactly(mockData, mockFirebaseDb, mockSendNotification, mockSendSms))
+          .to.be.true())
       .then(() => done())
       .catch(done);
   });

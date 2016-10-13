@@ -11,6 +11,26 @@
       ".write" : false
     },
 
+    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    "phoneVerification" : {
+      // Only visible to service workers. Schema is here for convenience.
+      ".read": "auth.admin === true",
+      ".write": "auth.admin === true",
+      "$phoneNumber" : {
+        ".validate": "newData.isString()"
+      }
+    },
+
+    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    "phoneToUser" : {
+      ".read": "auth.uid != null",
+      ".write": "auth.admin === true",
+      "$phoneNumber" : {
+        // UID => successful verification, empty => awaiting verification, non-UID => error.
+        ".validate": "newData.isString()"
+      }
+    },
+
     "events": {
       "tasks": {
         // Auth'd users can write, only service account can read.
@@ -318,7 +338,9 @@
           // Stores exactly the data we can modify and pass to Stripe.
           "payload": {
             ".validate" : "newData.hasChildren(['external_account', 'email', 'legal_entity', 'tos_acceptance'])",
-
+            "$other" : {
+              ".validate": false
+            },
             // Token returned to client from the Stripe Connect API in exchange for bank account.
             "external_account": {
               ".validate": "newData.isString()"
@@ -327,8 +349,11 @@
               ".validate": "newData.isString()"
             },
             "legal_entity": {
-              // Token returned to client from Stripe Connect API in exchange for SSN.
-              "personal_id_number": {
+              ".validate": "newData.hasChildren(['ssn_last_4', 'first_name', 'last_name', 'dob', 'address'])",
+              "$other" : {
+                ".validate": false
+              },
+              "ssn_last_4": {
                 // Token
                 ".validate": "newData.isString()"
               },

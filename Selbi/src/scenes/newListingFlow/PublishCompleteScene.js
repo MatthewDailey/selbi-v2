@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,6 +16,7 @@ import { getListingShareUrl } from '../../deeplinking/Utilities';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { reportButtonPress, reportShare } from '../../SelbiAnalytics';
 
 const buttonTextStyle = {
   fontSize: 20,
@@ -39,32 +40,39 @@ class PublishCompleteScene extends RoutableScene {
         <Text style={styles.friendlyText}>
           <Icon name="smile-o" size={30} />
         </Text>
-        <Text style={styles.friendlyText}>
-          To sell faster, we recommend adding more details and sharing with friends.
-        </Text>
         <View style={styles.halfPadded}>
           <Button
-            onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
-              .catch(console.log)}
+            onPress={() => {
+              reportButtonPress('publish_complete_share');
+              reportShare(this.props.listingKey);
+              Share.open({ url: getListingShareUrl(this.props.listingKey) })
+                .catch(console.log);
+            }}
           >
             <Text style={buttonTextStyle}><Icon name="share-square-o" size={buttonTextStyle.fontSize} /> Share</Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
-          <Button onPress={() => this.goNext()}>
+          <Button onPress={() => {
+            reportButtonPress('publish_complete_add_details');
+            this.goNext();
+          }}>
             <Text style={buttonTextStyle}><Icon name="list" size={buttonTextStyle.fontSize} /> Add Details</Text>
           </Button>
         </View>
 
         <VisibilityWrapper isVisible={!this.props.hasBankAccount}>
           <View>
-            <Text style={styles.friendlyText}>
-              You should link your bank account so that users can pay you easily.
-            </Text>
             <View style={styles.halfPadded}>
-              <Button onPress={() => this.goNext('addBank')}>
+              <Button onPress={() => {
+                reportButtonPress('publish_complete_add_bank');
+                this.goNext('addBank');
+              }}>
                 <Text style={buttonTextStyle}><Icon name="university" size={buttonTextStyle.fontSize}/> Receive Payments</Text>
               </Button>
+            </View>
+            <View style={styles.centerContainer}>
+              <Image source={require('../../../images/powered_by_stripe@3x.png')} />
             </View>
           </View>
         </VisibilityWrapper>

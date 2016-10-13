@@ -1,7 +1,8 @@
 import React from 'react';
 import { InteractionManager, ScrollView, View, Text, Image, MapView, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { mdl, MKRadioButton, MKButton } from 'react-native-material-kit';
+import { MKRadioButton, MKButton } from 'react-native-material-kit';
+import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
@@ -24,34 +25,7 @@ import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
-
-const TitleInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Title')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOSfd
-    marginTop: 10,
-  })
-  .build();
-
-const DescriptionInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Description (Optional)')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .build();
-
-const PriceInput = mdl.Textfield.textfieldWithFloatingLabel()
-  .withPlaceholder('Price (USD)')
-  .withHighlightColor(colors.dark)
-  .withStyle({
-    height: 48,  // have to do it on iOS
-    marginTop: 10,
-  })
-  .withKeyboardType('numeric')
-  .build();
+import { reportButtonPress, reportEvent, reportError } from '../SelbiAnalytics';
 
 const DeleteListingButton = MKButton.flatButton()
   .withStyle({
@@ -76,7 +50,6 @@ class DraggableAnnotationExample extends React.Component {
       draggable: true,
       onDragStateChange: (event) => {
         if (event.state === 'idle') {
-          console.log(event);
           this.setState({
             annotations: [this.createAnnotation(event.longitude, event.latitude)],
           });
@@ -85,7 +58,6 @@ class DraggableAnnotationExample extends React.Component {
             lon: event.longitude,
           });
         }
-        console.log('Drag state: ' + event.state);
       },
     };
   };
@@ -141,8 +113,12 @@ class EditListingScene extends RoutableScene {
 
     updateListingFromStoreAndLoadResult(this.props.listingKey, this.props.fullListingData)
       .then((updatedSnapshot) => this.props.setDetails(updatedSnapshot.val()))
-      .then(() => this.goBack())
+      .then(() => {
+        reportEvent('update_listing', { listing_id: this.props.listingKey });
+        this.goBack()
+      })
       .catch((error) => {
+        reportError('update_listing_error', { error });
         console.log(error);
         this.setState({ storingUpdate: false });
         Alert.alert(`There was an error updating your listing. ${error.message}`);
@@ -172,7 +148,6 @@ class EditListingScene extends RoutableScene {
     if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
         .then((latlon) => {
-          console.log('load for listing', latlon);
           if(latlon) {
             this.props.setLocation({
               lat: latlon[0],
@@ -273,21 +248,31 @@ class EditListingScene extends RoutableScene {
 
           <View style={styles.halfPadded} />
 
-          <PriceInput
+          <Text style={{ fontWeight: 'bold' }}>Price (USD)</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Price"
+            keyboardType="numeric"
             value={this.props.listingPrice}
-            onTextChange={(newText) => {
+            onChangeText={(newText) => {
               if (isStringFloat(newText)) {
                 this.props.setPrice(newText)
               }
             }}
           />
-          <TitleInput
+          <Text style={{ fontWeight: 'bold' }}>Title</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Title"
             value={this.props.listingTitle}
-            onTextChange={(newText) => this.props.setTitle(newText)}
+            onChangeText={(newText) => this.props.setTitle(newText)}
           />
-          <DescriptionInput
+          <Text style={{ fontWeight: 'bold' }}>Description</Text>
+          <AutoGrowingTextInput
+            style={styles.friendlyTextLeft}
+            placeholder="Description"
             value={this.props.listingDescription}
-            onTextChange={(newText) => this.props.setDescription(newText)}
+            onChangeText={(newText) => this.props.setDescription(newText)}
           />
 
           <View
@@ -335,6 +320,7 @@ class EditListingScene extends RoutableScene {
           <VisibilityWrapper isVisible={this.props.listingStatus != 'inactive'}>
             <DeleteListingButton
               onPress={() => {
+                reportButtonPress('delete_listing_initial');
                 Alert.alert(`Delete this listing?`,
                   `Are you sure you want to delete ${this.props.listingTitle}?`,
                   [
@@ -347,7 +333,10 @@ class EditListingScene extends RoutableScene {
                         this.setState({ storingUpdate: true }, () => {
                           this.props.setStatus('inactive');
                           changeListingStatus('inactive', this.props.listingKey)
-                            .then(() => this.setState({ storingUpdate: false }))
+                            .then(() => {
+                              reportEvent('deleted_listing', { listing_id: this.props.listingKey });
+                              this.setState({ storingUpdate: false });
+                            })
                             .catch(() => this.setState({ storingUpdate: false }))
                         });
                       },

@@ -1,6 +1,8 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
+import {LoginManager, AccessToken } from 'react-native-fbsdk';
+
 
 import { convertToUsername } from './FirebaseUtils';
 import config from '../../config';
@@ -123,6 +125,26 @@ function insertUserInDatabase(userDisplayName) {
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
 }
 
+export function signInWithFacebook() {
+  const auth = firebase.auth();
+  const provider = firebase.auth.FacebookAuthProvider;
+
+  return LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
+    .then(loginResult => {
+      console.log('log in returned');
+      console.log(loginResult);
+
+      if (loginResult.isCancelled) {
+        return Promise.reject('User cancelled sign in.');
+      }
+      return AccessToken.getCurrentAccessToken();
+    })
+    .then(accessTokenData => {
+      const credential = provider.credential(accessTokenData.accessToken);
+      return auth.signInWithCredential(credential);
+    });
+}
+
 export function signInWithEmail(email, password) {
   return firebaseApp
     .auth()
@@ -153,13 +175,20 @@ export function signOut() {
 }
 
 
-export function createUser(firstName, lastName) {
-  const userDisplayName = `${firstName} ${lastName}`;
-  return getUser()
-    .updateProfile({
-      displayName: userDisplayName,
+export function createUser(displayName, email) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to store user details.');
+  }
+
+  return getUser().updateProfile({ displayName })
+    .then(() => getUser().updateEmail(email))
+    .then(() => firebaseApp.database().ref('users').child(getUser().uid).once('value'))
+    .then((userSnapshot) => {
+      if (!userSnapshot || !userSnapshot.exists()) {
+        return insertUserInDatabase(displayName);
+      }
+      return Promise.resolve();
     })
-    .then(() => insertUserInDatabase(userDisplayName));
 }
 
 export function publishImage(base64, heightInput, widthInput) {
@@ -538,6 +567,25 @@ export function loadUserPublicData(uid) {
     .once('value');
 }
 
+export function watchUserData(handler) {
+  const uid = getUser().uid;
+  const callbackForOff = firebaseApp
+    .database()
+    .ref('users')
+    .child(uid)
+    .on('value', (userSnapshot) => {
+      if (userSnapshot.exists()) {
+        handler(userSnapshot.val());
+      }
+    });
+
+  return () => firebaseApp
+    .database()
+    .ref('users')
+    .child(uid)
+    .off('value', callbackForOff);
+}
+
 export function watchUserPublicData(uid, handler) {
   firebaseApp
     .database()
@@ -768,7 +816,7 @@ function markUserHasPayment() {
     .set(true);
 }
 
-export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardResponse) {
+export function enqueueCreateCustomerRequest(cardHolderName, email, stripeCreateCardResponse) {
   if (!getUser()) {
     return Promise.reject('Must be signed in.');
   }
@@ -778,7 +826,7 @@ export function enqueueCreateCustomerRequest(cardHolderName, stripeCreateCardRes
     payload: {
       source: stripeCreateCardResponse.id,
       description: `${cardHolderName}'s Credit Card`,
-      email: getUser().email,
+      email,
     },
     metadata: {
       lastFour: stripeCreateCardResponse.card.last4,
@@ -840,11 +888,12 @@ function markUserHasMerchant() {
 
 export function enqueueCreateAccountRequest(
   bankToken,
-  piiToken,
+  ssnLast4,
   firstName,
   lastName,
   dob, // { day, month, year }
   address, // { line1, line2, city, postal_code, state }
+  email,
   ip,
   accountNumberLastFour,
   routingNumber,
@@ -856,9 +905,9 @@ export function enqueueCreateAccountRequest(
   const createAccountTask = {
     payload: {
       external_account: bankToken,
-      email: getUser().email,
+      email,
       legal_entity: {
-        personal_id_number: piiToken,
+        ssn_last_4: ssnLast4,
         first_name: firstName,
         last_name: lastName,
         dob,
@@ -876,6 +925,8 @@ export function enqueueCreateAccountRequest(
       bankName,
     },
   };
+
+  console.log(createAccountTask);
 
   const userMerchantRef = firebaseApp.database()
     .ref('users')
@@ -1061,3 +1112,117 @@ export function updateBulletin(bulletinId, updatedValue) {
     .child(bulletinId)
     .update(updatedValue);
 }
+
+function requireSignedIn() {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+  return Promise.resolve();
+}
+
+export function enqueuePhoneNumber(phoneNumber) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'add-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+        },
+      }));
+}
+
+export function enqueuePhoneCode(phoneNumber, code) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'verify-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+          code,
+        },
+      }));
+}
+
+export function awaitPhoneVerification(phoneNumber) {
+  return requireSignedIn()
+    .then(() => {
+      const uid = getUser().uid;
+
+      return new Promise((resolve, reject) => {
+        const phoneToUserRef = firebaseApp
+          .database()
+          .ref('phoneToUser')
+          .child(phoneNumber);
+
+        const cbForOff = phoneToUserRef.on('value', (phoneToUserSnapShot) => {
+          if (phoneToUserSnapShot.exists()) {
+            if (uid === phoneToUserSnapShot.val()) {
+              resolve();
+            } else {
+              reject(phoneToUserSnapShot.val());
+            }
+            phoneToUserRef.off('value', cbForOff);
+          }
+        });
+      });
+    });
+}
+
+function hasWhiteSpace(s) {
+  return /\s/g.test(s);
+}
+
+export function followPhoneNumbers(phoneNumbers) {
+  console.log('About to follow phone number: ', phoneNumbers)
+  return requireSignedIn()
+    .then(() => {
+      const followPhonesPromises = [];
+
+      phoneNumbers.forEach((phone) => {
+        followPhonesPromises.push(
+          firebaseApp
+            .database()
+            .ref('phoneToUser')
+            .child(phone)
+            .once('value')
+            .then((phoneToUserSnapshot) => {
+              if (phoneToUserSnapshot.exists() && !hasWhiteSpace(phoneToUserSnapshot.val())) {
+                console.log('found value fro phone', phone, phoneToUserSnapshot.val());
+                return followUser(phoneToUserSnapshot.val())
+                  .then(() => Promise.resolve(1));
+              }
+              console.log('no value for phone', phone);
+              return Promise.resolve(0);
+            }));
+      });
+
+      return Promise.all(followPhonesPromises);
+    })
+    .then((results) => results.reduce((a, b) => a + b, 0));
+}
+
+export function createShouldAddPhoneBulletin() {
+  requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(getUser().uid)
+      .child('shouldAddPhoneBulletin')
+      .set({
+        type: 'should-add-phone',
+        status: 'unread',
+        timestamp: new Date().getTime(),
+        payload: {},
+      }));
+}
+

@@ -9,11 +9,13 @@ import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import { stripeServiceAgreementScene } from '../legal';
 
-import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
+import { createBankToken } from '../../stripe/StripeConnector';
 import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
 
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
+
+import { reportAddBankInfo, reportError } from '../../SelbiAnalytics';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -46,18 +48,12 @@ class ChooseVisibilityScene extends RoutableScene {
   createAccount() {
     this.setState({ publishStatus: PublishStatus.storingToStripe });
 
-    const piiPromise = createPiiToken(this.props.bankAccount.ssn);
-    const bankPromise = createBankToken(
+    createBankToken(
       this.props.bankAccount.legalName,
       this.props.bankAccount.routingNumber,
-      this.props.bankAccount.accountNumber);
-
-    Promise.all([piiPromise, bankPromise])
-      .then((piiAndBankTokens) => {
+      this.props.bankAccount.accountNumber)
+      .then((bankTokenResponse) => {
         this.setState({ publishStatus: PublishStatus.storingToFirebase });
-
-        const piiTokenResponse = piiAndBankTokens[0];
-        const bankTokenResponse = piiAndBankTokens[1];
 
         const fullName = this.props.bankAccount.legalName;
         const firstName = fullName.substr(0, fullName.indexOf(' '));
@@ -81,24 +77,27 @@ class ChooseVisibilityScene extends RoutableScene {
 
         return enqueueCreateAccountRequest(
           bankTokenResponse.id,
-          piiTokenResponse.id,
+          this.props.bankAccount.ssn,
           firstName,
           lastName,
           dob,
           address,
-          piiTokenResponse.client_ip,
+          this.props.bankAccount.email,
+          bankTokenResponse.client_ip,
           bankTokenResponse.bank_account.last4,
           bankTokenResponse.bank_account.routing_number,
           bankTokenResponse.bank_account.bank_name);
       })
       .then((result) => {
         this.setState({ publishStatus: PublishStatus.success });
+        reportAddBankInfo();
         console.log(result);
         Alert.alert('Successfully added the bank account!');
         this.goHome();
       })
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });
+        reportError('add_bank', { error });
         console.log(error);
         Alert.alert('Error adding bank, check the data and try again.');
       });
@@ -106,86 +105,87 @@ class ChooseVisibilityScene extends RoutableScene {
 
   renderWithNavBar() {
     return (
-      <ScrollView style={styles.paddedContainer}>
+      <ScrollView>
+        <View style={styles.paddedContainer}>
+          <Text>
+            <Text style={styles.labelTextLeft}>Account Owner: </Text>
+            <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.legalName}</Text>
+          </Text>
 
-        <Text>
-          <Text style={styles.labelTextLeft}>Account Owner: </Text>
-          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.legalName}</Text>
-        </Text>
+          <View style={styles.halfPadded} />
 
-        <View style={styles.halfPadded} />
+          <Text>
+            <Text style={styles.labelTextLeft}>SSN Last 4: </Text>
+            <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.ssn}</Text>
+          </Text>
 
-        <Text>
-          <Text style={styles.labelTextLeft}>SSN: </Text>
-          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.ssn}</Text>
-        </Text>
+          <View style={styles.halfPadded} />
 
-        <View style={styles.halfPadded} />
+          <Text>
+            <Text style={styles.labelTextLeft}>Date of birth: </Text>
+            <Text style={styles.friendlyTextLeft}>
+              {`${this.props.bankAccount.dobMonth}/`
+              + `${this.props.bankAccount.dobDay}/${this.props.bankAccount.dobYear}`}
+            </Text>
+          </Text>
 
-        <Text>
-          <Text style={styles.labelTextLeft}>Date of birth: </Text>
+          <View style={styles.halfPadded} />
+
+          <Text style={styles.labelTextLeft}>Address:</Text>
+          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressLine1}</Text>
+          <VisibilityWrapper isVisible={!!this.props.bankAccount.addressLine2}>
+            <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressLine2}</Text>
+          </VisibilityWrapper>
           <Text style={styles.friendlyTextLeft}>
-            {`${this.props.bankAccount.dobMonth}/`
-            + `${this.props.bankAccount.dobDay}/${this.props.bankAccount.dobYear}`}
+            {this.props.bankAccount.addressCity} {this.props.bankAccount.addressState}
           </Text>
-        </Text>
+          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressPostalCode}</Text>
 
-        <View style={styles.halfPadded} />
+          <View style={styles.halfPadded} />
 
-        <Text style={styles.labelTextLeft}>Address:</Text>
-        <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressLine1}</Text>
-        <VisibilityWrapper isVisible={!!this.props.bankAccount.addressLine2}>
-          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressLine2}</Text>
-        </VisibilityWrapper>
-        <Text style={styles.friendlyTextLeft}>
-          {this.props.bankAccount.addressCity} {this.props.bankAccount.addressState}
-        </Text>
-        <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.addressPostalCode}</Text>
-
-        <View style={styles.halfPadded} />
-
-        <Text>
-          <Text style={styles.labelTextLeft}>Routing Number: </Text>
-          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.routingNumber}</Text>
-        </Text>
-
-        <View style={styles.halfPadded} />
-
-        <Text>
-          <Text style={styles.labelTextLeft}>Account Number: </Text>
-          <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.accountNumber}</Text>
-        </Text>
-
-        <View style={styles.padded} />
-
-        <Text>
-          Selbi takes a 15% service fee on your sold items. Posting will always be free.
-        </Text>
-
-        <View style={styles.padded} />
-
-        <Button onPress={this.createAccount}>
-          <Text style={styles.padded}><Icon name="university" /> Add Bank Account</Text>
-        </Button>
-
-        <View style={styles.halfPadded} />
-
-        <Text>
-          {'By submitting your account information, you agree to the '}
-          <Text
-            style={{ textDecorationLine: 'underline' }}
-            onPress={() => this.props.navigator.push(stripeServiceAgreementScene)}
-          >
-            Stripe Connected Account Agreement
+          <Text>
+            <Text style={styles.labelTextLeft}>Routing Number: </Text>
+            <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.routingNumber}</Text>
           </Text>
-          {'.'}
-        </Text>
 
-        <SpinnerOverlay
-          isVisible={this.state.publishStatus === PublishStatus.storingToStripe
-            || this.state.publishStatus === PublishStatus.storingToFirebase}
-          message={this.state.publishStatus}
-        />
+          <View style={styles.halfPadded} />
+
+          <Text>
+            <Text style={styles.labelTextLeft}>Account Number: </Text>
+            <Text style={styles.friendlyTextLeft}>{this.props.bankAccount.accountNumber}</Text>
+          </Text>
+
+          <View style={styles.padded} />
+
+          <Text>
+            Selbi takes a 15% service fee on your sold items. Posting will always be free.
+          </Text>
+
+          <View style={styles.padded} />
+
+          <Button onPress={this.createAccount}>
+            <Text style={styles.padded}><Icon name="university" /> Submit</Text>
+          </Button>
+
+          <View style={styles.halfPadded} />
+
+          <Text>
+            {'By submitting your account information, you agree to the '}
+            <Text
+              style={{ textDecorationLine: 'underline' }}
+              onPress={() => this.props.navigator.push(stripeServiceAgreementScene)}
+            >
+              Stripe Connected Account Agreement
+            </Text>
+            {'.'}
+          </Text>
+
+          <SpinnerOverlay
+            isVisible={this.state.publishStatus === PublishStatus.storingToStripe
+              || this.state.publishStatus === PublishStatus.storingToFirebase}
+            message={this.state.publishStatus}
+          />
+        </View>
       </ScrollView>
     );
   }

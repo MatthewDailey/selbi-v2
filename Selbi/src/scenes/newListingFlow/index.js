@@ -16,7 +16,7 @@ import EditListingFlow from '../editListingFlow';
 import AddBankFlow from '../addBankAccountFlow';
 
 const loginScene = {
-  id: 'login-scene',
+  id: 'signin_to_post_scene',
   renderContent: withNavigatorProps(
     <SignInOrRegisterScene
       title="Wait! One more thing."
@@ -29,7 +29,7 @@ const loginScene = {
 };
 
 const titleScene = {
-  id: 'title-scene',
+  id: 'input_new_listing_title_scene',
   renderContent: withNavigatorProps(
     <TitleInputScene
       title="Create Listing (3/4)"
@@ -42,7 +42,7 @@ const titleScene = {
 };
 
 const cameraScene = {
-  id: 'create-camera-scene',
+  id: 'new_listing_camera_scene',
   renderContent: withNavigatorProps(
     <SimpleCamera
       title="Create Listing (1/4)"
@@ -52,7 +52,7 @@ const cameraScene = {
 };
 
 const imageScene = {
-  id: 'create-image-scene',
+  id: 'new_listing_approve_image_scene',
   renderContent: withNavigatorProps(
     <ApproveImageScene
       title=""
@@ -62,7 +62,7 @@ const imageScene = {
 };
 
 const priceInputScene = {
-  id: 'price-listing',
+  id: 'input_new_listing_price_scene',
   renderContent: withNavigatorProps(
     <PriceInputScene
       title="Create Listing (2/4)"
@@ -77,7 +77,7 @@ const priceInputScene = {
 };
 
 const chooseVisibilityScene = {
-  id: 'choose-visibility',
+  id: 'new_listing_choose_visibility_scene',
   renderContent: withNavigatorProps(
     <ChooseVisibilityScene
       title="Create Listing (4/4)"
@@ -88,7 +88,7 @@ const chooseVisibilityScene = {
 };
 
 const publishCompletedScene = {
-  id: 'publish-completed',
+  id: 'new_listing_publish_completed_scene',
   renderContent: withNavigatorProps(
     <PublishCompletedScene
       title="Success!"

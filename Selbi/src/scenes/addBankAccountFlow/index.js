@@ -2,7 +2,6 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
-import BankIntroScene from './BankIntroScene';
 import LegalNameInputScene from './LegalNameInputScene';
 import RoutingNumberInputScene from './RoutingNumberInputScene';
 import AccountNumberInputScene from './AccountNumberInputScene';
@@ -11,22 +10,12 @@ import StoreBankAccountScene from './StoreBankAccountScene';
 import DateOfBirthPickerScene from './DateOfBirthPickerScene';
 import AddressAutocompleteScene from './AddressAutocompleteScene';
 import AddressVerifyScene from './AddressVerifyScene';
+import AddEmailScene from './AddBankEmailScene';
 
-const titleString = 'Receive Payments';
-
-const bankIntroScene = {
-  id: 'bank-intro-scene',
-  renderContent: withNavigatorProps(
-    <BankIntroScene
-      title={titleString}
-      rightIs="next"
-      leftIs="back"
-    />
-  ),
-};
+const titleString = 'Add Bank';
 
 const legalNameInput = {
-  id: 'bank-legal-name-input',
+  id: 'input_bank_legal_name_scene',
   renderContent: withNavigatorProps(
     <LegalNameInputScene
       title={`${titleString} (1/6)`}
@@ -36,7 +25,7 @@ const legalNameInput = {
 };
 
 const dobPicker = {
-  id: 'bank-legal-dob-picker',
+  id: 'input_bank_dob_scene',
   renderContent: withNavigatorProps(
     <DateOfBirthPickerScene
       title={`${titleString} (2/6)`}
@@ -48,7 +37,7 @@ const dobPicker = {
 
 
 const addressAutocompleteScene = {
-  id: 'address-autocomplete',
+  id: 'input_bank_address_scene',
   renderContent: withNavigatorProps(
     <AddressAutocompleteScene
       title={`${titleString} (3/6)`}
@@ -58,7 +47,7 @@ const addressAutocompleteScene = {
 };
 
 const addressVerifyScene = {
-  id: 'address-verify-scene',
+  id: 'input_address_verify_scene',
   renderContent: withNavigatorProps(
     <AddressVerifyScene
       title=""
@@ -69,7 +58,7 @@ const addressVerifyScene = {
 };
 
 const routingNumberInput = {
-  id: 'bank-routing-number',
+  id: 'input_bank_routing_number_scene',
   renderContent: withNavigatorProps(
     <RoutingNumberInputScene
       title={`${titleString} (4/6)`}
@@ -80,7 +69,7 @@ const routingNumberInput = {
 };
 
 const accountNumberInput = {
-  id: 'bank-account-number',
+  id: 'input_bank_account_number_scene',
   renderContent: withNavigatorProps(
     <AccountNumberInputScene
       title={`${titleString} (5/6)`}
@@ -91,7 +80,7 @@ const accountNumberInput = {
 };
 
 const ssnInput = {
-  id: 'bank-ssn-input',
+  id: 'input_bank_ssn_scene',
   renderContent: withNavigatorProps(
     <SsnInputScene
       title={`${titleString} (6/6)`}
@@ -101,8 +90,19 @@ const ssnInput = {
   ),
 };
 
+const emailInput = {
+  id: 'input_bank_email_scene',
+  renderContent: withNavigatorProps(
+    <AddEmailScene
+      title="Check Email"
+      leftIs="back"
+      rightIs="next"
+    />
+  ),
+};
+
 const storeAccountScene = {
-  id: 'bank-store-account',
+  id: 'bank_submit_scene',
   renderContent: withNavigatorProps(
     <StoreBankAccountScene
       title="Review Account Details"
@@ -113,7 +113,7 @@ const storeAccountScene = {
 
 const routeLinks = {};
 
-routeLinks[bankIntroScene.id] = {
+routeLinks[emailInput.id] = {
   next: {
     title: 'OK',
     getRoute: () => legalNameInput,
@@ -166,8 +166,8 @@ routeLinks[ssnInput.id] = {
   next: {
     title: 'OK',
     getRoute: () => storeAccountScene,
-  }
+  },
 };
 
 module.exports.routeLinks = routeLinks;
-module.exports.firstScene = bankIntroScene;
+module.exports.firstScene = emailInput;

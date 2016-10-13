@@ -24,6 +24,8 @@ import { BuyButton, ChatButton, UpdateButton, ShareButton }
   from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
+import { reportButtonPress } from '../SelbiAnalytics';
+
 import { getListingShareUrl } from '../deeplinking/Utilities';
 
 const detailBottomOverlayStyle = {
@@ -348,9 +350,18 @@ class ListingDetailScene extends RoutableScene {
               listingDistance={this.props.listingDistance}
               sellerData={this.props.sellerData}
               isChatButtonVisible={!!this.props.routeLinks.chat}
-              openChat={() => this.goNext('chat')}
-              openEdit={() => this.goNext('edit')}
-              openBuy={() => this.goNext('buy')}
+              openChat={() => {
+                reportButtonPress('listing_details_chat');
+                this.goNext('chat');
+              }}
+              openEdit={() => {
+                reportButtonPress('listing_details_edit');
+                this.goNext('edit');
+              }}
+              openBuy={() => {
+                reportButtonPress('listing_details_buy');
+                this.goNext('buy');
+              }}
             />
           </VisibilityWrapper>
         </Image>

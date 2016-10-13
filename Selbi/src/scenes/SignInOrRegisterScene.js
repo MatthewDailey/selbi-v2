@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
+
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -9,6 +10,10 @@ import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 import { privacyPolicyScene, termsAndConditionsScene } from './legal';
+
+import { signInWithFacebook } from '../firebase/FirebaseConnector';
+
+import { reportSignIn } from '../SelbiAnalytics';
 
 const inputStyle = {
   height: 48,  // have to do it on iOS
@@ -22,7 +27,6 @@ const FacebookButton = MKButton.button()
     padding: paddingSize,
   })
   .withBackgroundColor('#3b5998')
-  .withOnPress(() => Alert.alert('Sorry, not yet supported.'))
   .build();
 
 // Visible for tests.
@@ -67,6 +71,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
     this.signInWithEmailAndPassword = this.signInWithEmailAndPassword.bind(this);
     this.registerUserWithEmailAndPassword = this.registerUserWithEmailAndPassword.bind(this);
     this.registerOrSignInErrorHandler = this.registerOrSignInErrorHandler.bind(this);
+    this.registerOrSignInSuccessHandler = this.registerOrSignInSuccessHandler.bind(this);
   }
 
   registerOrSignInErrorHandler(error) {
@@ -97,20 +102,28 @@ export default class SignInOrRegisterScene extends RoutableScene {
     // around the fact that updating user name can't be done until after the user is created
     // but user updates don't trigger onAuthStateChanged events.
     return this.props.registerWithEmail(email, password)
-      .then(() => this.props.createUser(firstName, lastName))
+      .then(() => this.props.createUser(`${firstName} ${lastName}`, email))
       .then(() => this.props.signInWithEmail(email, password))
       .then((user) => {
-        if (this.props.onSignedIn) {
-          this.props.onSignedIn(user);
-        }
-
-        if (this.props.goHomeOnComplete) {
-          this.goHome();
-        } else {
-          this.goNext();
-        }
+        reportSignIn('email', user.uid);
+        return Promise.resolve(user);
       })
+      .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
+  }
+
+  registerOrSignInSuccessHandler(user) {
+    if (this.props.onSignedIn) {
+      this.props.onSignedIn(user);
+    }
+
+    if (this.props.goHomeOnComplete) {
+      this.goHome();
+    } else if (this.props.goBackOnComplete) {
+      this.goBack();
+    } else {
+      this.goNext();
+    }
   }
 
   signInWithEmailAndPassword() {
@@ -121,18 +134,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
 
     return this.props.signInWithEmail(email, password)
       .then((user) => {
-        if (this.props.onSignedIn) {
-          this.props.onSignedIn(user);
-        }
-
-        if (this.props.goHomeOnComplete) {
-          this.goHome();
-        } else if (this.props.goBackOnComplete) {
-          this.goBack();
-        } else {
-          this.goNext();
-        }
+        reportSignIn('email', user.uid);
+        return Promise.resolve(user);
       })
+      .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
   }
 
@@ -178,7 +183,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
       <TextInput
         placeholder="First name"
         style={inputStyle}
-        onTextChange={(newText) => this.setState({ firstName: newText })}
+        onChangeText={(newText) => this.setState({ firstName: newText })}
         onFocus={scrollToFirstName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.LastNameInput.focus()}
@@ -188,7 +193,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         placeholder="Last name"
         style={inputStyle}
         ref="LastNameInput"
-        onTextChange={(newText) => this.setState({ lastName: newText })}
+        onChangeText={(newText) => this.setState({ lastName: newText })}
         onFocus={scrollToLastName}
         returnKeyType="next"
         onSubmitEditing={() => this.refs.EmailInput.focus()}
@@ -219,7 +224,22 @@ export default class SignInOrRegisterScene extends RoutableScene {
         style={styles.paddedFullScreenContainer}
         tabLabel={registerOrSignInType.asTitle}
       >
-        <FacebookButton >
+        <FacebookButton
+          onPress={() => {
+            this.setState({ signingIn: true });
+            signInWithFacebook()
+              .then((user) => {
+                reportSignIn('facebook', user.uid);
+                return Promise.resolve(user);
+              })
+              // We only use one provider (facebook).
+              .then((user) => this.props.createUser(
+                user.providerData[0].displayName,
+                user.providerData[0].email))
+              .then(this.registerOrSignInSuccessHandler)
+              .catch(this.registerOrSignInErrorHandler);
+          }}
+        >
           <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>

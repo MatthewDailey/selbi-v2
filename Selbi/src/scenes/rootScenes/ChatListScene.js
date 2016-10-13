@@ -79,9 +79,6 @@ class ChatListScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <View tabLabel="All" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.allChats)}
-        </View>
         <View tabLabel="Buying" style={styles.container}>
           {this.getChatListComponentForChats(this.state.buyingChats)}
         </View>

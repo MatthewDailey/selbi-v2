@@ -16,6 +16,7 @@ import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { reportPurchase, reportButtonPress } from '../../SelbiAnalytics';
 
 
 const FlatButton = MKButton.flatButton()
@@ -126,7 +127,10 @@ class ListingReceiptScene extends RoutableScene {
             <CheckBox
               checked={this.props.sellerData.hasBankAccount}
               title="Seller accepts Pay with Selbi"
-              takeAction={() => this.goNext('chat')}
+              takeAction={() => {
+                reportButtonPress('request_seller_accept_payment');
+                this.goNext('chat');
+              }}
               actionText="RequestSeller accept Pay with Selbi"
             />
           </View>
@@ -134,7 +138,10 @@ class ListingReceiptScene extends RoutableScene {
             <CheckBox
               checked={this.props.hasPaymentMethod}
               title="Payment method set up"
-              takeAction={() => this.goNext('addPayment')}
+              takeAction={() => {
+                reportButtonPress('add_payment');
+                this.goNext('addPayment');
+              }}
               actionText="Add a credit card"
             />
           </View>
@@ -145,8 +152,10 @@ class ListingReceiptScene extends RoutableScene {
             <Button
               onPress={() => {
                 this.setState({ purchasing: true }, () => {
+                  reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
                   purchaseListing(this.props.listingKey)
                     .then(() => {
+                      reportPurchase(this.props.listingData.price, this.props.listingKey);
                       this.setState({ purchasing: false });
                       this.goNext();
                     })

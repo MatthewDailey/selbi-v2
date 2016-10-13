@@ -6,6 +6,8 @@ const BA_SET_LEGAL_NAME = 'bank-account-set-legal-name';
 
 const BA_SET_DOB = 'bank-account-set-dob';
 
+const BA_SET_EMAIL = 'bank-account-set-email';
+
 const BA_SET_ADDRESS_LINE1 = 'bank-account-set-address-line1';
 const BA_SET_ADDRESS_LINE2 = 'bank-account-set-address-line2';
 const BA_SET_ADDRESS_CITY = 'bank-account-set-address-city';
@@ -30,6 +32,7 @@ class AddBankAccountData extends Immutable.Record({
   routingNumber: undefined,
   accountNumber: undefined,
   ssn: undefined,
+  email: undefined,
 }) {}
 
 export default function (previousState = new AddBankAccountData(), action) {
@@ -45,6 +48,11 @@ export default function (previousState = new AddBankAccountData(), action) {
         dobMonth: action.dob.month,
         dobDay: action.dob.day,
         dobYear: action.dob.year,
+      });
+
+    case BA_SET_EMAIL:
+      return previousState.merge({
+        email: action.email,
       });
 
     case BA_SET_ADDRESS_LINE1:
@@ -88,6 +96,13 @@ export function setDob(dob) {
   return {
     type: BA_SET_DOB,
     dob,
+  };
+}
+
+export function setEmail(email) {
+  return {
+    type: BA_SET_EMAIL,
+    email,
   };
 }
 

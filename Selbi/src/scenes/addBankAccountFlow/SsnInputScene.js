@@ -8,10 +8,10 @@ const mapStateToProps = (state) => {
     isNumeric: true,
     isNumericString: true,
     inputValue: state.addBank.ssn,
-    inputTitle: 'What is the bank account owner\'s SSN?',
-    placeholder: '000000000',
-    validateInputOnSubmit: (input) => (input.length === 9),
-    validateFormatSuggestion: 'Input must be a 9 digit SSN or EIN.',
+    inputTitle: 'What are the last 4 digits of the bank account owner\'s SSN?',
+    placeholder: '0000',
+    validateInputOnSubmit: (input) => (input.length === 4),
+    validateFormatSuggestion: 'Input must be a 4 digits.',
   };
 };
 

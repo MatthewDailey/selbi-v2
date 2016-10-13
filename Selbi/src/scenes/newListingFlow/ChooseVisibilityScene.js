@@ -19,6 +19,8 @@ import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
 import styles from '../../../styles';
 import colors from '../../../colors';
 
+import { reportButtonPress } from '../../SelbiAnalytics';
+
 const buttonTextStyle = {
   fontSize: 20,
 };
@@ -73,6 +75,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <Button
             onPress={
               () => {
+                reportButtonPress('choose_visibility_private');
                 this.setState({ publishing: true })
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
@@ -94,6 +97,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <Button
             onPress={
               () => {
+                reportButtonPress('choose_visibility_public');
                 this.setState({ publishing: true })
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
