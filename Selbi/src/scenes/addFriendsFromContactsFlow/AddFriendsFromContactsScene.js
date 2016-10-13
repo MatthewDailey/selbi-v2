@@ -3,14 +3,12 @@ import { connect } from 'react-redux';
 import { InteractionManager, View, Text } from 'react-native';
 
 import { MKButton } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { awaitPhoneVerification } from '../../firebase/FirebaseConnector';
-import { normalizePhoneNumber } from './utils';
+import { awaitPhoneVerification, followPhoneNumbers } from '../../firebase/FirebaseConnector';
+import { normalizePhoneNumber, loadAllContactsPhoneNumber } from './utils';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
-import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles, { paddingSize } from '../../../styles';
 
@@ -23,33 +21,88 @@ const SubmitButton = MKButton
   .withText('Follow Contacts')
   .build();
 
+function VerifiedCodeComponent({ followContacts }) {
+  return (
+    <View sylte={styles.paddedCenterContainer}>
+      <Text style={styles.friendlyText}>
+        Successfully verified your phone!
+      </Text>
+      <View style={styles.halfPadded} />
+      <Text style={styles.friendlyText}>
+        Follow people in your contact book to see what your friends are selling.
+      </Text>
+      <View style={styles.halfPadded} />
+      <SubmitButton onPress={followContacts} />
+    </View>
+  );
+}
+
+function AddedFriendsComponent({ numFriends }) {
+  return (
+    <View sylte={styles.paddedCenterContainer}>
+      <Text style={styles.friendlyText}>
+        Added {numFriends} friend from your phone book.
+      </Text>
+      <View style={styles.halfPadded} />
+      <Text style={styles.friendlyText}>
+        Your contacts will also be able to follow you based on your phone number.
+      </Text>
+    </View>
+  );
+}
+
+function FailureComponent({ message }) {
+  return (
+    <View sylte={styles.paddedCenterContainer}>
+      <Text style={styles.friendlyText}>
+        {message}
+      </Text>
+    </View>
+  );
+}
+
 class AddFriendsFromContactsScene extends RoutableScene {
   constructor(props) {
     super(props);
+    this.addFriendsFromPhoneBook = this.addFriendsFromPhoneBook.bind(this);
 
     this.state = {
-      message: '',
-      awaitingCodeVerification: true,
-      verificationSuccess: false,
+      view: <SpinnerOverlay message="Waiting for code verification..." />,
       renderPlaceholderOnly: true,
     };
+  }
+
+  addFriendsFromPhoneBook() {
+    const success = (numFriends) => this.setState({
+      view: <AddedFriendsComponent numFriends={numFriends} />,
+    });
+
+    const error = (error) => this.setState({
+      view: <FailureComponent message={error} />,
+    });
+
+    this.setState({
+      view: <SpinnerOverlay message="Adding friends from contacts..." />,
+    }, () => {
+      loadAllContactsPhoneNumber()
+        .then(followPhoneNumbers)
+        .then(success)
+        .catch(error);
+    });
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });
-      awaitPhoneVerification(this.props.phoneNumber)
+      awaitPhoneVerification(normalizePhoneNumber(this.props.phoneNumber))
         .then(() => {
           this.setState({
-            awaitingCodeVerification: false,
-            verificationSuccess: true,
-            message: 'Successfully verified your phone!',
+            view: <VerifiedCodeComponent followContacts={this.addFriendsFromPhoneBook} />,
           });
         })
         .catch((error) => {
           this.setState({
-            awaitingCodeVerification: false,
-            message: `Failed to verified your phone. ${error}`,
+            view: <FailureComponent message={`Failed to verified your phone. ${error}`} />,
           });
         });
     });
@@ -58,20 +111,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <View style={styles.paddedContainer}>
-        <Text style={styles.friendlyText}>{this.state.message}</Text>
-
-        <VisibilityWrapper isVisible={this.state.verificationSuccess}>
-          <View sylte={styles.paddedCenterContainer}>
-            <Text style={styles.friendlyText}>
-              Follow people in your contact book to see what your friends are selling.
-            </Text>
-            <SubmitButton />
-          </View>
-        </VisibilityWrapper>
-        <SpinnerOverlay
-          isVisible={this.state.awaitingCodeVerification}
-          message="Waiting for code verification"
-        />
+        {this.state.view}
       </View>
     );
   }
@@ -79,7 +119,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
 
 function mapStateToProps(state) {
   return {
-    phoneNumber: normalizePhoneNumber(state.addPhone.number),
+    phoneNumber: state.addPhone.number,
   };
 }
 

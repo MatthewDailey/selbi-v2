@@ -60,5 +60,5 @@ routeLinks[addFriendsScene.id] = {
   },
 };
 
-module.exports.firstScene = phoneNumberScene;
+module.exports.firstScene = addFriendsScene;
 module.exports.routeLinks = routeLinks;
