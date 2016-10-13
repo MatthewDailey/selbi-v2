@@ -4,7 +4,7 @@ import { InteractionManager, View, Text } from 'react-native';
 
 import { MKButton } from 'react-native-material-kit';
 
-import { awaitPhoneVerification, followPhoneNumbers } from '../../firebase/FirebaseConnector';
+import { awaitPhoneVerification, followPhoneNumbers, updateBulletin } from '../../firebase/FirebaseConnector';
 import { normalizePhoneNumber, loadAllContactsPhoneNumber } from './utils';
 
 import RoutableScene from '../../nav/RoutableScene';
@@ -73,9 +73,17 @@ class AddFriendsFromContactsScene extends RoutableScene {
   }
 
   addFriendsFromPhoneBook() {
-    const success = (numFriends) => this.setState({
-      view: <AddedFriendsComponent numFriends={numFriends} />,
-    });
+    const success = (numFriends) => {
+      this.setState({
+        view: <AddedFriendsComponent numFriends={numFriends} />,
+      });
+
+      Object.keys(this.props.bulletins).forEach((key) => {
+        if (this.props.bulletins[key].type === 'should-add-phone') {
+          updateBulletin(key, { status: 'read' });
+        }
+      });
+    };
 
     const error = (error) => this.setState({
       view: <FailureComponent message={error} />,
@@ -120,6 +128,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
 function mapStateToProps(state) {
   return {
     phoneNumber: state.addPhone.number,
+    bulletins: state.bulletins,
   };
 }
 
