@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 
 import InputScene from '../InputScene';
 import { setPhoneNumber } from '../../reducers/AddFriendsFromContactsReducer';
+import { enqueuePhoneNumber } from '../../firebase/FirebaseConnector';
 
 const mapStateToProps = (state) => {
   return {
@@ -25,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class EnterPhoneNumberScene extends InputScene {
   onGoNext() {
-    // TODO: Enqueue phone number for SMS.
+    enqueuePhoneNumber(this.props.inputValue);
   }
 }
 

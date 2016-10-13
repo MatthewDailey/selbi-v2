@@ -2,12 +2,14 @@ import { connect } from 'react-redux';
 
 import InputScene from '../InputScene';
 import { setPhoneCode } from '../../reducers/AddFriendsFromContactsReducer';
+import { enqueuePhoneCode } from '../../firebase/FirebaseConnector';
 
 const mapStateToProps = (state) => {
   return {
     isNumeric: true,
     isNumericString: true,
     inputValue: state.addPhone.code,
+    phoneNumber: state.addPhone.number,
     inputTitle: 'What is the 4 digit code we sent you?',
     placeholder: '1234',
     validateInputOnSubmit: (input) => (input.length === 4),
@@ -25,11 +27,11 @@ const mapDispatchToProps = (dispatch) => {
 
 class EnterPhoneCodeScene extends InputScene {
   onGoNext() {
-    // TODO: enqueue verification code attempt.
+    enqueuePhoneCode(this.props.phoneNumber, this.props.inputValue);
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InputScene);
+)(EnterPhoneCodeScene);

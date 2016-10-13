@@ -1129,7 +1129,7 @@ export function enqueuePhoneCode(phoneNumber, code) {
         timestamp: new Date().getTime(),
         payload: {
           phoneNumber,
-          conde,
-        }
+          code,
+        },
       }));
 }
