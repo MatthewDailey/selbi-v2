@@ -86,8 +86,6 @@ const store = createStore(combineReducers({
 
 let startedListeningForLocalListings = false;
 function fetchLocalListings() {
-  console.log('fetching local listings');
-
   if (!startedListeningForLocalListings) {
     getGeolocation()
       .then((location) => {
