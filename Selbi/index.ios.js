@@ -41,6 +41,7 @@ import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
 import permissionsReducer from './src/reducers/PermissionsReducer';
+import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
@@ -76,6 +77,7 @@ const store = createStore(combineReducers({
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
   permissions: permissionsReducer,
+  addPhone: addPhoneReducer,
 }));
 
 let startedListeningForLocalListings = false;
