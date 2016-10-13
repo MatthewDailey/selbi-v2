@@ -45,7 +45,7 @@ import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin }
+  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -55,7 +55,9 @@ import { getGeolocation, watchGeolocation } from './src/utils';
 import colors from './colors';
 import config from './config';
 
-import Analytics from './src/SelbiAnalytics';
+import Analytics, { setUserAddedBank, setUserAddedCreditCard, setUserAddedPhone,
+  setUserNumItemsPurchased, setUserNumItemsSold, setUserNumItemsListed }
+  from './src/SelbiAnalytics';
 
 // Necessary for code-push to not error out.
 const RCTLog = require('RCTLog');
@@ -132,6 +134,7 @@ const listenForUserBulletins = (user) => {
         });
         if (!hasAddPhoneBulletin) {
           createShouldAddPhoneBulletin();
+          setUserAddedPhone(false);
         }
 
         setBadgeNumber(unreadBulletinCount);
@@ -145,6 +148,48 @@ const listenForUserBulletins = (user) => {
   }
 };
 addAuthStateChangeListener(listenForUserBulletins);
+
+let unwatchUserForAnalytics;
+const listenForUserAnalytics = (user) => {
+  if (user) {
+    unwatchUserForAnalytics = watchUserData((userData) => {
+      if (userData.payments && userData.payments.status === 'OK') {
+        setUserAddedCreditCard(true);
+      } else {
+        setUserAddedCreditCard(false);
+      }
+
+      if (userData.merchant && userData.merchant.state === 'OK') {
+        setUserAddedBank(true);
+      } else {
+        setUserAddedBank(false);
+      }
+
+      let saleCount = 0;
+      if (userData.sales) {
+        Object.keys(userData.sales).forEach((key) => {
+          if (userData.sales[key].status === 'success') {
+            saleCount++;
+          }
+        });
+      }
+      setUserNumItemsSold(saleCount);
+
+      let purchaseCount = 0;
+      if (userData.purchases) {
+        Object.keys(userData.purchases).forEach((key) => {
+          if (userData.purchases[key].status === 'success') {
+            purchaseCount++;
+          }
+        });
+      }
+      setUserNumItemsSold(purchaseCount);
+    });
+  } else if (unwatchUserForAnalytics) {
+    unwatchUserForAnalytics();
+  }
+};
+addAuthStateChangeListener(listenForUserAnalytics);
 
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
