@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigator } from 'react-native';
 
 import Drawer from 'react-native-drawer';
+
 import PermissionsWatcher from '../nav/PermissionsWatcher';
 
 /*

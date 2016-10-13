@@ -3,7 +3,6 @@ import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
-import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -55,6 +54,8 @@ import { getGeolocation, watchGeolocation } from './src/utils';
 
 import colors from './colors';
 import config from './config';
+
+import Analytics from './src/SelbiAnalytics';
 
 // Necessary for code-push to not error out.
 const RCTLog = require('RCTLog');
