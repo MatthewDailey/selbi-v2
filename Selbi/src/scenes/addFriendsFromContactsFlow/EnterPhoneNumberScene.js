@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import InputScene from '../InputScene';
 import { setPhoneNumber } from '../../reducers/AddFriendsFromContactsReducer';
 import { enqueuePhoneNumber } from '../../firebase/FirebaseConnector';
+import { normalizePhoneNumber } from './utils';
 
 const mapStateToProps = (state) => {
   return {
@@ -26,7 +27,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class EnterPhoneNumberScene extends InputScene {
   onGoNext() {
-    enqueuePhoneNumber(`+1${this.props.inputValue}`);
+    enqueuePhoneNumber(normalizePhoneNumber(this.props.inputValue));
   }
 }
 

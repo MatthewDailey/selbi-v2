@@ -1113,7 +1113,7 @@ export function enqueuePhoneNumber(phoneNumber) {
         timestamp: new Date().getTime(),
         payload: {
           phoneNumber,
-        }
+        },
       }));
 }
 
@@ -1132,4 +1132,29 @@ export function enqueuePhoneCode(phoneNumber, code) {
           code,
         },
       }));
+}
+
+export function awaitPhoneVerification(phoneNumber) {
+  return requireSignedIn()
+    .then(() => {
+      const uid = getUser().uid;
+
+      return new Promise((resolve, reject) => {
+        const phoneToUserRef = firebaseApp
+          .database()
+          .ref('phoneToUser')
+          .child(phoneNumber);
+
+        const cbForOff = phoneToUserRef.on('value', (phoneToUserSnapShot) => {
+          if (phoneToUserSnapShot.exists()) {
+            if (uid === phoneToUserSnapShot.val()) {
+              resolve();
+            } else {
+              reject(phoneToUserSnapShot.val());
+            }
+            phoneToUserRef.off('value', cbForOff);
+          }
+        });
+      });
+    });
 }
