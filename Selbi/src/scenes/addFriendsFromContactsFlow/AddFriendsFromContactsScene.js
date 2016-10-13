@@ -67,7 +67,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
     this.addFriendsFromPhoneBook = this.addFriendsFromPhoneBook.bind(this);
 
     this.state = {
-      view: <SpinnerOverlay message="Waiting for code verification..." />,
+      view: <SpinnerOverlay isVisible message="Waiting for code verification..." />,
       renderPlaceholderOnly: true,
     };
   }
