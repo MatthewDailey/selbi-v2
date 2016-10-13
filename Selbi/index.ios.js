@@ -134,7 +134,7 @@ const listenForUserBulletins = (user) => {
         });
         if (!hasAddPhoneBulletin) {
           createShouldAddPhoneBulletin();
-          setUserAddedPhone(false);
+          // setUserAddedPhone(false);
         }
 
         setBadgeNumber(unreadBulletinCount);
