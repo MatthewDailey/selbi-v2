@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class EnterPhoneNumberScene extends InputScene {
   onGoNext() {
-    enqueuePhoneNumber(this.props.inputValue);
+    enqueuePhoneNumber(`+1${this.props.inputValue}`);
   }
 }
 
