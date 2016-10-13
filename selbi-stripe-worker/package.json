@@ -26,7 +26,8 @@
     "geofire": "^4.1.1",
     "mocha": "^3.0.2",
     "sinon": "^1.17.5",
-    "stripe": "^4.9.0"
+    "stripe": "^4.9.0",
+    "twilio": "^2.11.0"
   },
   "devDependencies": {
     "eslint": "^3.3.0",

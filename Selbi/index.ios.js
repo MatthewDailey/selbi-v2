@@ -18,6 +18,7 @@ import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
 import AddBankFlow from './src/scenes/addBankAccountFlow';
+import AddPhoneFlow from './src/scenes/addFriendsFromContactsFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -41,10 +42,11 @@ import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
 import permissionsReducer from './src/reducers/PermissionsReducer';
+import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins, setUserFcmToken }
+  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -76,6 +78,7 @@ const store = createStore(combineReducers({
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
   permissions: permissionsReducer,
+  addPhone: addPhoneReducer,
 }));
 
 let startedListeningForLocalListings = false;
@@ -98,7 +101,6 @@ function fetchLocalListings() {
               center: [newLocation.lat, newLocation.lon],
             });
           }
-
         });
       })
       .then(() => startedListeningForLocalListings = true)
@@ -115,12 +117,22 @@ const listenForUserBulletins = (user) => {
   if (user) {
     unwatchUserBulletins = listenToBulletins(
       (bulletins) => {
+        // TODO: Super hack to add bulletin. Should add 'sign-in' event.
+        let hasAddPhoneBulletin = false;
         let unreadBulletinCount = 0;
         Object.keys(bulletins).forEach((key) => {
           if (bulletins[key].status === 'unread') {
             unreadBulletinCount++;
           }
+
+          if (bulletins[key].type === 'should-add-phone') {
+            hasAddPhoneBulletin = true;
+          }
         });
+        if (!hasAddPhoneBulletin) {
+          createShouldAddPhoneBulletin();
+        }
+
         setBadgeNumber(unreadBulletinCount);
         store.dispatch(setBulletins(bulletins));
       });
@@ -271,9 +283,12 @@ routeLinks[localListingScene.id] = {
   addBank: {
     getRoute: () => AddBankFlow.firstScene,
   },
+  addPhone: {
+    getRoute: () => AddPhoneFlow.firstScene,
+  },
   chat: {
     getRoute: () => ChatFlow.firstScene,
-  }
+  },
 };
 
 routeLinks[friendsListingScene.id] = {
@@ -313,6 +328,7 @@ routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, AddPhoneFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (

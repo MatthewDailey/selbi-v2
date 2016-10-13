@@ -1093,3 +1093,117 @@ export function updateBulletin(bulletinId, updatedValue) {
     .child(bulletinId)
     .update(updatedValue);
 }
+
+function requireSignedIn() {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+  return Promise.resolve();
+}
+
+export function enqueuePhoneNumber(phoneNumber) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'add-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+        },
+      }));
+}
+
+export function enqueuePhoneCode(phoneNumber, code) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'verify-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+          code,
+        },
+      }));
+}
+
+export function awaitPhoneVerification(phoneNumber) {
+  return requireSignedIn()
+    .then(() => {
+      const uid = getUser().uid;
+
+      return new Promise((resolve, reject) => {
+        const phoneToUserRef = firebaseApp
+          .database()
+          .ref('phoneToUser')
+          .child(phoneNumber);
+
+        const cbForOff = phoneToUserRef.on('value', (phoneToUserSnapShot) => {
+          if (phoneToUserSnapShot.exists()) {
+            if (uid === phoneToUserSnapShot.val()) {
+              resolve();
+            } else {
+              reject(phoneToUserSnapShot.val());
+            }
+            phoneToUserRef.off('value', cbForOff);
+          }
+        });
+      });
+    });
+}
+
+function hasWhiteSpace(s) {
+  return /\s/g.test(s);
+}
+
+export function followPhoneNumbers(phoneNumbers) {
+  console.log('About to follow phone number: ', phoneNumbers)
+  return requireSignedIn()
+    .then(() => {
+      const followPhonesPromises = [];
+
+      phoneNumbers.forEach((phone) => {
+        followPhonesPromises.push(
+          firebaseApp
+            .database()
+            .ref('phoneToUser')
+            .child(phone)
+            .once('value')
+            .then((phoneToUserSnapshot) => {
+              if (phoneToUserSnapshot.exists() && !hasWhiteSpace(phoneToUserSnapshot.val())) {
+                console.log('found value fro phone', phone, phoneToUserSnapshot.val());
+                return followUser(phoneToUserSnapshot.val())
+                  .then(() => Promise.resolve(1));
+              }
+              console.log('no value for phone', phone);
+              return Promise.resolve(0);
+            }));
+      });
+
+      return Promise.all(followPhonesPromises);
+    })
+    .then((results) => results.reduce((a, b) => a + b, 0));
+}
+
+export function createShouldAddPhoneBulletin() {
+  requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(getUser().uid)
+      .push()
+      .set({
+        type: 'should-add-phone',
+        status: 'unread',
+        timestamp: new Date().getTime(),
+        payload: {},
+      }));
+}
+
