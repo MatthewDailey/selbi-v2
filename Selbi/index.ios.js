@@ -18,6 +18,7 @@ import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
 import AddBankFlow from './src/scenes/addBankAccountFlow';
+import AddPhoneFlow from './src/scenes/addFriendsFromContactsFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -315,6 +316,7 @@ routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, AddPhoneFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -366,7 +368,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={localListingScene}
+          initialRoute={AddPhoneFlow.firstScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
           renderDeepLinkListener={renderDeepLinkListener}
