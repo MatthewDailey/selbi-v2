@@ -22,6 +22,17 @@ export function reportAddPaymentInfo() {
   Analytics.logEvent('add_payment_info');
 }
 
+export function reportSendMessage(senderUid, isFirst = false) {
+  const params = {
+    is_first: isFirst,
+    sender_uid: senderUid,
+  };
+  if (isFirst) {
+    Analytics.logEvent('sent_message_first', params);
+  }
+  Analytics.logEvent('sent_message', params);
+}
+
 export function reportPurchase(price, listingId) {
   const value = 0.15 * price;
 
