@@ -274,9 +274,12 @@ routeLinks[localListingScene.id] = {
   addBank: {
     getRoute: () => AddBankFlow.firstScene,
   },
+  addPhone: {
+    getRoute: () => AddPhoneFlow.firstScene,
+  },
   chat: {
     getRoute: () => ChatFlow.firstScene,
-  }
+  },
 };
 
 routeLinks[friendsListingScene.id] = {
@@ -368,7 +371,7 @@ class NavApp extends Component {
     return (
       <Provider store={store}>
         <DrawerNavigator
-          initialRoute={AddPhoneFlow.firstScene}
+          initialRoute={localListingScene}
           routeLinks={routeLinks}
           renderMenuWithNavigator={renderMenu}
           renderDeepLinkListener={renderDeepLinkListener}

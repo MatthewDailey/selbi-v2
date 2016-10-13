@@ -13,6 +13,7 @@ import AddBankAccountBulletin from './AddBankAccountBulletin';
 import NewMessagesBulletin from './NewMessagesBulletin';
 import PurchaseBulletin from './PurchaseBulletin';
 import EmptyBulletinBoardBulletin from './EmptyBulletinBoardBulletin';
+import AddPhoneBulleting from './AddPhoneBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
@@ -58,6 +59,14 @@ class SignedInBulletinBoard extends Component {
   render() {
     const getBulletins = () => {
       const bulletins = [];
+
+      bulletins.push(
+        <View key={'temp'} style={{ paddingTop: 4, paddingBottom: 4 }}>
+          <AddPhoneBulleting
+            takeAction={() => this.props.goNext('addPhone')}
+          />
+        </View>
+      );
 
       Object.keys(this.props.bulletins).forEach((bulletinKey) => {
         const bulletin = this.props.bulletins[bulletinKey];
