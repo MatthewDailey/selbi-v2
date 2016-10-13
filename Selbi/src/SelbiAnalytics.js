@@ -22,18 +22,6 @@ export function reportAddPaymentInfo() {
   Analytics.logEvent('add_payment_info');
 }
 
-export function reportViewItem(listingId) {
-  Analytics.logEvent('view_item', {
-    item_id: listingId
-  });
-}
-
-export function reportViewItemList(category) {
-  Analytics.logEvent('view_item_list', {
-    item_category: category,
-  });
-}
-
 export function reportPurchase(price, listingId) {
   const value = 0.15 * price;
 
@@ -52,3 +40,28 @@ export function reportOpenScene(sceneName, params) {
 export function reportButtonPress(buttonName, params) {
   Analytics.logEvent(`press_${buttonName}`, params);
 }
+
+export function setUserNumItemsSold(numItemsSold) {
+  Analytics.setUserProperty('num_listings_sold', numItemsSold);
+}
+
+export function setUserNumItemsListed(numItemsListed) {
+  Analytics.setUserProperty('num_listings_listed', numItemsListed);
+}
+
+export function setUserNumItemsPurchased(numItemsListed) {
+  Analytics.setUserProperty('num_listings_listed', numItemsListed);
+}
+
+export function setUserAddedBank(hasAddedBank) {
+  Analytics.setUserProperty('has_added_bank', hasAddedBank);
+}
+
+export function setUserAddedCreditCard(hasAddedCreditCard) {
+  Analytics.setUserProperty('has_added_credit_card', hasAddedCreditCard);
+}
+
+export function setUserAddedPhone(hasAddedPhone) {
+  Analytics.setUserProperty('has_added_bank', hasAddedPhone);
+}
+
