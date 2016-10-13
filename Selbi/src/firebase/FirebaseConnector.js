@@ -1198,7 +1198,7 @@ export function createShouldAddPhoneBulletin() {
       .database()
       .ref('userBulletins')
       .child(getUser().uid)
-      .push()
+      .child('shouldAddPhoneBulletin')
       .set({
         type: 'should-add-phone',
         status: 'unread',
