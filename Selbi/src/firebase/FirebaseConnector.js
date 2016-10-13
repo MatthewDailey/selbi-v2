@@ -1093,3 +1093,43 @@ export function updateBulletin(bulletinId, updatedValue) {
     .child(bulletinId)
     .update(updatedValue);
 }
+
+function requireSignedIn() {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+  return Promise.resolve();
+}
+
+export function enqueuePhoneNumber(phoneNumber) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'add-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+        }
+      }));
+}
+
+export function enqueuePhoneCode(phoneNumber, code) {
+  return requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: getUser().uid,
+        type: 'verify-phone',
+        timestamp: new Date().getTime(),
+        payload: {
+          phoneNumber,
+          conde,
+        }
+      }));
+}
