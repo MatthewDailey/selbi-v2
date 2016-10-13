@@ -56,7 +56,7 @@ import colors from './colors';
 import config from './config';
 
 import Analytics, { setUserAddedBank, setUserAddedCreditCard, setUserAddedPhone,
-  setUserNumItemsPurchased, setUserNumItemsSold, setUserNumItemsListed }
+  setUserNumItemsPurchased, setUserNumItemsSold, setUserNumPrivateItems, setUserNumPublicItems }
   from './src/SelbiAnalytics';
 
 // Necessary for code-push to not error out.
@@ -169,16 +169,6 @@ const listenForUserAnalytics = (user) => {
         setUserAddedBank(false);
       }
 
-      let saleCount = 0;
-      if (userData.sales) {
-        Object.keys(userData.sales).forEach((key) => {
-          if (userData.sales[key].status === 'success') {
-            saleCount++;
-          }
-        });
-      }
-      setUserNumItemsSold(saleCount);
-
       let purchaseCount = 0;
       if (userData.purchases) {
         Object.keys(userData.purchases).forEach((key) => {
@@ -199,11 +189,20 @@ addAuthStateChangeListener(listenForUserAnalytics);
 const listenForUserListings = (user) => {
   if (user) {
     listenToListingsByStatus('public',
-      (listings) => store.dispatch(setMyListingsPublic(listings)));
+      (listings) => {
+        setUserNumPublicItems(listings.length);
+        store.dispatch(setMyListingsPublic(listings))
+      });
     listenToListingsByStatus('private',
-      (listings) => store.dispatch(setMyListingsPrivate(listings)));
+      (listings) => {
+        setUserNumPrivateItems(listings.length);
+        store.dispatch(setMyListingsPrivate(listings))
+      });
     listenToListingsByStatus('sold',
-      (listings) => store.dispatch(setMyListingsSold(listings)));
+      (listings) => {
+        setUserNumItemsSold(listings.length);
+        store.dispatch(setMyListingsSold(listings))
+      });
   } else {
     store.dispatch(clearMyListings());
   }
@@ -225,7 +224,7 @@ const listenForUserFcmToken = (user) => {
   } else {
     unsubscribeFromFcmTokenRefresh();
   }
-}
+};
 addAuthStateChangeListener(listenForUserFcmToken);
 
 let unwatchUserPublicData;

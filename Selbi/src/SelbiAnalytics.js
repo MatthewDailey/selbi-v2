@@ -57,12 +57,16 @@ export function setUserNumItemsSold(numItemsSold) {
   Analytics.setUserProperty('num_listings_sold', `${numItemsSold}`);
 }
 
-export function setUserNumItemsListed(numItemsListed) {
-  Analytics.setUserProperty('num_listings_listed', `${numItemsListed}`);
+export function setUserNumPublicItems(numItemsListed) {
+  Analytics.setUserProperty('num_listings_listed_public', `${numItemsListed}`);
+}
+
+export function setUserNumPrivateItems(numItemsListed) {
+  Analytics.setUserProperty('num_listings_listed_private', `${numItemsListed}`);
 }
 
 export function setUserNumItemsPurchased(numItemsListed) {
-  Analytics.setUserProperty('num_listings_listed', `${numItemsListed}`);
+  Analytics.setUserProperty('num_listings_purchased', `${numItemsListed}`);
 }
 
 export function setUserAddedBank(hasAddedBank) {
