@@ -9,7 +9,7 @@ import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import { stripeServiceAgreementScene } from '../legal';
 
-import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
+import { createBankToken } from '../../stripe/StripeConnector';
 import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
 
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
@@ -160,7 +160,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <View style={styles.padded} />
 
           <Button onPress={this.createAccount}>
-            <Text style={styles.padded}><Icon name="university" /> Add Bank Account</Text>
+            <Text style={styles.padded}><Icon name="university" /> Submit</Text>
           </Button>
 
           <View style={styles.halfPadded} />
