@@ -75,6 +75,7 @@ class Menu extends Component {
     };
 
     const signInOrRegister = () => {
+      reportButtonPress('menu_sign_in');
       this.props.navigator.push(this.props.signInOrRegisterScene);
       this.props.closeMenu();
     };
@@ -105,6 +106,7 @@ class Menu extends Component {
       <View style={{ flex: 1, justifyContent: 'flex-end' }} >
         <MenuItem
           onPress={() => {
+            reportButtonPress('menu_sign_out');
             this.props.signOut();
             setSceneAndCloseMenu(this.props.localListingScene);
           }}

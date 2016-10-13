@@ -5,6 +5,8 @@ import ChatListItem from './ChatListItem';
 
 import styles from '../../styles';
 
+import { reportButtonPress } from '../SelbiAnalytics';
+
 export default class ChatListComponent extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +46,10 @@ export default class ChatListComponent extends Component {
           <ChatListItem
             chatTitle={data.listingData.title}
             chatType={data.type}
-            openChatScene={() => this.props.openChatScene(data)}
+            openChatScene={() => {
+              reportButtonPress(`chat_list_open_chat_${data.type}`);
+              this.props.openChatScene(data);
+            }}
           />)}
       />
     );

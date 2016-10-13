@@ -13,10 +13,10 @@ import BulletinBoard from '../../bulletin/BulletinBoard';
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
-import { reportButtonPress } from '../../SelbiAnalytics';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { reportButtonPress } from '../../SelbiAnalytics';
 
 function EmptyView() {
   return (
