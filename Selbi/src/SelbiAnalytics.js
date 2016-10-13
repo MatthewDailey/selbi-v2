@@ -34,12 +34,13 @@ export function reportViewItemList(category) {
   });
 }
 
-export function reportPurchase(price) {
+export function reportPurchase(price, listingId) {
   const value = 0.15 * price;
 
   Analytics.logEvent('ecommerce_purchase', {
     value,
     price,
+    listing_id: listingId,
     currency: 'USD',
   });
 }
