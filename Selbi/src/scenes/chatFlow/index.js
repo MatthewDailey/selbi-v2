@@ -6,12 +6,12 @@ import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
 
 const chatScene = {
-  id: 'chat-scene',
+  id: 'chat_scene',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="next" />),
 };
 
 const detailScene = {
-  id: 'chat-detail-scene',
+  id: 'chat_listing_detail_scene',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" />),
 };
 

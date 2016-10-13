@@ -3,7 +3,6 @@ import { AppRegistry, Text } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { setTheme } from 'react-native-material-kit';
-import Analytics from 'react-native-firebase-analytics';
 import codePush from 'react-native-code-push';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -46,7 +45,7 @@ import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin }
+  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -55,6 +54,10 @@ import { getGeolocation, watchGeolocation } from './src/utils';
 
 import colors from './colors';
 import config from './config';
+
+import Analytics, { setUserAddedBank, setUserAddedCreditCard, setUserAddedPhone,
+  setUserNumItemsPurchased, setUserNumItemsSold, setUserNumPrivateItems, setUserNumPublicItems }
+  from './src/SelbiAnalytics';
 
 // Necessary for code-push to not error out.
 const RCTLog = require('RCTLog');
@@ -83,8 +86,6 @@ const store = createStore(combineReducers({
 
 let startedListeningForLocalListings = false;
 function fetchLocalListings() {
-  console.log('fetching local listings');
-
   if (!startedListeningForLocalListings) {
     getGeolocation()
       .then((location) => {
@@ -119,6 +120,7 @@ const listenForUserBulletins = (user) => {
       (bulletins) => {
         // TODO: Super hack to add bulletin. Should add 'sign-in' event.
         let hasAddPhoneBulletin = false;
+        let hasReadAddPhoneBulletin = false;
         let unreadBulletinCount = 0;
         Object.keys(bulletins).forEach((key) => {
           if (bulletins[key].status === 'unread') {
@@ -127,10 +129,14 @@ const listenForUserBulletins = (user) => {
 
           if (bulletins[key].type === 'should-add-phone') {
             hasAddPhoneBulletin = true;
+            hasReadAddPhoneBulletin = bulletins[key].status === 'read';
           }
         });
-        if (!hasAddPhoneBulletin) {
+        if (hasAddPhoneBulletin) {
+          setUserAddedPhone(hasReadAddPhoneBulletin);
+        } else {
           createShouldAddPhoneBulletin();
+          setUserAddedPhone(false);
         }
 
         setBadgeNumber(unreadBulletinCount);
@@ -145,15 +151,56 @@ const listenForUserBulletins = (user) => {
 };
 addAuthStateChangeListener(listenForUserBulletins);
 
+let unwatchUserForAnalytics;
+const listenForUserAnalytics = (user) => {
+  if (user) {
+    unwatchUserForAnalytics = watchUserData((userData) => {
+      if (userData.payments && userData.payments.status === 'OK') {
+        setUserAddedCreditCard(true);
+      } else {
+        setUserAddedCreditCard(false);
+      }
+
+      if (userData.merchant && userData.merchant.state === 'OK') {
+        setUserAddedBank(true);
+      } else {
+        setUserAddedBank(false);
+      }
+
+      let purchaseCount = 0;
+      if (userData.purchases) {
+        Object.keys(userData.purchases).forEach((key) => {
+          if (userData.purchases[key].status === 'success') {
+            purchaseCount++;
+          }
+        });
+      }
+      setUserNumItemsPurchased(purchaseCount);
+    });
+  } else if (unwatchUserForAnalytics) {
+    unwatchUserForAnalytics();
+  }
+};
+addAuthStateChangeListener(listenForUserAnalytics);
+
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
   if (user) {
     listenToListingsByStatus('public',
-      (listings) => store.dispatch(setMyListingsPublic(listings)));
+      (listings) => {
+        setUserNumPublicItems(listings.length);
+        store.dispatch(setMyListingsPublic(listings))
+      });
     listenToListingsByStatus('private',
-      (listings) => store.dispatch(setMyListingsPrivate(listings)));
+      (listings) => {
+        setUserNumPrivateItems(listings.length);
+        store.dispatch(setMyListingsPrivate(listings))
+      });
     listenToListingsByStatus('sold',
-      (listings) => store.dispatch(setMyListingsSold(listings)));
+      (listings) => {
+        setUserNumItemsSold(listings.length);
+        store.dispatch(setMyListingsSold(listings))
+      });
   } else {
     store.dispatch(clearMyListings());
   }
@@ -175,7 +222,7 @@ const listenForUserFcmToken = (user) => {
   } else {
     unsubscribeFromFcmTokenRefresh();
   }
-}
+};
 addAuthStateChangeListener(listenForUserFcmToken);
 
 let unwatchUserPublicData;
@@ -200,7 +247,7 @@ const storeUserData = (user) => {
 addAuthStateChangeListener(storeUserData);
 
 const localListingScene = {
-  id: 'listings-scene',
+  id: 'local_listings_scene',
   renderContent: withNavigatorProps(
     <LocalListingScene
       title="Local Listings"
@@ -211,7 +258,7 @@ const localListingScene = {
 };
 
 const myListingsScene = {
-  id: 'my-listings-scene',
+  id: 'my_listings_scene',
   renderContent: withNavigatorProps(
     <MyListingsScene
       title="My Listings"
@@ -222,7 +269,7 @@ const myListingsScene = {
 };
 
 const chatListScene = {
-  id: 'chat-list-scene',
+  id: 'chat_list_scene',
   renderContent: withNavigatorProps(
     <ChatListScene
       title="Chats"
@@ -232,7 +279,7 @@ const chatListScene = {
 };
 
 const friendsListingScene = {
-  id: 'friends-listings',
+  id: 'friends_listings_scene',
   renderContent: withNavigatorProps(
     <FriendsListingsScene
       title="Friends' Listings"
@@ -243,7 +290,7 @@ const friendsListingScene = {
 };
 
 const followFriendScene = {
-  id: 'follow-friend',
+  id: 'follow_friend_scene',
   renderContent: withNavigatorProps(
     <FollowFriendScene
       title=""
@@ -254,7 +301,7 @@ const followFriendScene = {
 };
 
 const menuSignInScene = {
-  id: 'menu-sign-scene',
+  id: 'menu_sign_in_scene',
   renderContent: withNavigatorProps(
     <SignInOrRegisterScene
       title=""
@@ -344,6 +391,7 @@ function renderMenu(navigator, closeMenu) {
       followFriendScene={followFriendScene}
       loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={menuSignInScene}
+      sellScene={NewListingFlow.firstScene}
     />
   );
 }

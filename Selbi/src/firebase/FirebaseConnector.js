@@ -567,6 +567,25 @@ export function loadUserPublicData(uid) {
     .once('value');
 }
 
+export function watchUserData(handler) {
+  const uid = getUser().uid;
+  const callbackForOff = firebaseApp
+    .database()
+    .ref('users')
+    .child(uid)
+    .on('value', (userSnapshot) => {
+      if (userSnapshot.exists()) {
+        handler(userSnapshot.val());
+      }
+    });
+
+  return () => firebaseApp
+    .database()
+    .ref('users')
+    .child(uid)
+    .off('value', callbackForOff);
+}
+
 export function watchUserPublicData(uid, handler) {
   firebaseApp
     .database()
@@ -1198,7 +1217,7 @@ export function createShouldAddPhoneBulletin() {
       .database()
       .ref('userBulletins')
       .child(getUser().uid)
-      .push()
+      .child('shouldAddPhoneBulletin')
       .set({
         type: 'should-add-phone',
         status: 'unread',

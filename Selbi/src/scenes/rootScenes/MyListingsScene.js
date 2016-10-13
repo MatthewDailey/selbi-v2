@@ -10,6 +10,7 @@ import { clearNewListing } from '../../reducers/NewListingReducer';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { reportButtonPress } from '../../SelbiAnalytics';
 
 class MyListingsScene extends RoutableScene {
   constructor(props) {
@@ -48,21 +49,30 @@ class MyListingsScene extends RoutableScene {
           <ListingsListComponent
             listings={this.props.public}
             emptyMessage="You have no public listings."
-            openDetailScene={() => this.goNext('details')}
+            openDetailScene={() => {
+              reportButtonPress('my_listings_public_open_detail');
+              this.goNext('details');
+            }}
           />
         </View>
         <View tabLabel="Friends Only" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.private}
             emptyMessage="You have no private listings."
-            openDetailScene={() => this.goNext('details')}
+            openDetailScene={() => {
+              reportButtonPress('my_listings_private_open_detail');
+              this.goNext('details');
+            }}
           />
         </View>
         <View tabLabel="Sold" style={styles.fullScreenContainer}>
           <ListingsListComponent
             listings={this.props.sold}
             emptyMessage="You have not sold any listings."
-            openDetailScene={() => this.goNext('details')}
+            openDetailScene={() => {
+              reportButtonPress('my_listings_sold_open_detail');
+              this.goNext('details');
+            }}
           />
         </View>
       </ScrollableTabView>

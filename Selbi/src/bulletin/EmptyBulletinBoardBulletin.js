@@ -6,14 +6,21 @@ import BulletinActionButton from './BulletinActionButton';
 
 import bulletinStyles, { notificationDescriptionFontSize } from './bulletinStyles';
 
+import { reportButtonPress } from '../SelbiAnalytics';
+
 export default function EmptyBulletinBoardBulletin({ goNext }) {
   return (
     <View>
       <Text style={bulletinStyles.bulletinText}>
         😇 You have no new notifications.
       </Text>
-      <BulletinActionButton text="Sell something" onPress={() => goNext()} />
-      <BulletinActionButton text="View all notifications" onPress={() => goNext('notifications')} />
+      <BulletinActionButton
+        text="Sell something"
+        onPress={() => {
+          reportButtonPress('bulletin_empty_sell_something');
+          goNext();
+        }}
+      />
       <View
         style={{
           paddingTop: 8,

@@ -16,6 +16,8 @@ import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 
+import { reportAddPaymentInfo, reportError } from '../../SelbiAnalytics';
+
 const Button = MKButton.button()
  .withStyle({
    borderRadius: 5,
@@ -38,7 +40,6 @@ class CreditCardInputScene extends RoutableScene {
   submit() {
     if (this.props.creditCardData.valid) {
       this.setState({ status: AddCreditCardStatus.gettingKey });
-      console.log(this.props.creditCardData)
       createPaymentSource(
         this.props.creditCardData.values.get('number'),
         this.props.creditCardData.values.get('expiry').substring(0, 2),
@@ -57,11 +58,13 @@ class CreditCardInputScene extends RoutableScene {
         .then(() => {
           this.setState({ status: AddCreditCardStatus.success });
           this.props.clearCreditCardData();
+          reportAddPaymentInfo();
           Alert.alert('Sucessfully added payment method.');
           this.goReturn();
         })
         .catch((error) => {
           this.setState({ status: AddCreditCardStatus.failure });
+          reportError('add_credit_card', { error });
           // TODO: Add more specific error based on failure type.
           Alert.alert(`Failed to added payment method. ${error.error.message}`);
           console.log(error);

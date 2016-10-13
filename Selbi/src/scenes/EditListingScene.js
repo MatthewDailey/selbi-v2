@@ -25,6 +25,7 @@ import { setListingData } from '../reducers/ListingDetailReducer';
 
 import styles from '../../styles';
 import colors from '../../colors';
+import { reportButtonPress, reportEvent, reportError } from '../SelbiAnalytics';
 
 const DeleteListingButton = MKButton.flatButton()
   .withStyle({
@@ -49,7 +50,6 @@ class DraggableAnnotationExample extends React.Component {
       draggable: true,
       onDragStateChange: (event) => {
         if (event.state === 'idle') {
-          console.log(event);
           this.setState({
             annotations: [this.createAnnotation(event.longitude, event.latitude)],
           });
@@ -58,7 +58,6 @@ class DraggableAnnotationExample extends React.Component {
             lon: event.longitude,
           });
         }
-        console.log('Drag state: ' + event.state);
       },
     };
   };
@@ -114,8 +113,12 @@ class EditListingScene extends RoutableScene {
 
     updateListingFromStoreAndLoadResult(this.props.listingKey, this.props.fullListingData)
       .then((updatedSnapshot) => this.props.setDetails(updatedSnapshot.val()))
-      .then(() => this.goBack())
+      .then(() => {
+        reportEvent('update_listing', { listing_id: this.props.listingKey });
+        this.goBack()
+      })
       .catch((error) => {
+        reportError('update_listing_error', { error });
         console.log(error);
         this.setState({ storingUpdate: false });
         Alert.alert(`There was an error updating your listing. ${error.message}`);
@@ -145,7 +148,6 @@ class EditListingScene extends RoutableScene {
     if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
         .then((latlon) => {
-          console.log('load for listing', latlon);
           if(latlon) {
             this.props.setLocation({
               lat: latlon[0],
@@ -318,6 +320,7 @@ class EditListingScene extends RoutableScene {
           <VisibilityWrapper isVisible={this.props.listingStatus != 'inactive'}>
             <DeleteListingButton
               onPress={() => {
+                reportButtonPress('delete_listing_initial');
                 Alert.alert(`Delete this listing?`,
                   `Are you sure you want to delete ${this.props.listingTitle}?`,
                   [
@@ -330,7 +333,10 @@ class EditListingScene extends RoutableScene {
                         this.setState({ storingUpdate: true }, () => {
                           this.props.setStatus('inactive');
                           changeListingStatus('inactive', this.props.listingKey)
-                            .then(() => this.setState({ storingUpdate: false }))
+                            .then(() => {
+                              reportEvent('deleted_listing', { listing_id: this.props.listingKey });
+                              this.setState({ storingUpdate: false });
+                            })
                             .catch(() => this.setState({ storingUpdate: false }))
                         });
                       },

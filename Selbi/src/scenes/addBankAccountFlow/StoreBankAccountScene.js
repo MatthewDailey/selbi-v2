@@ -9,11 +9,13 @@ import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import { stripeServiceAgreementScene } from '../legal';
 
-import { createBankToken, createPiiToken } from '../../stripe/StripeConnector';
+import { createBankToken } from '../../stripe/StripeConnector';
 import { enqueueCreateAccountRequest } from '../../firebase/FirebaseConnector';
 
 import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewListing }
   from '../../reducers/NewListingReducer';
+
+import { reportAddBankInfo, reportError } from '../../SelbiAnalytics';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -88,12 +90,14 @@ class ChooseVisibilityScene extends RoutableScene {
       })
       .then((result) => {
         this.setState({ publishStatus: PublishStatus.success });
+        reportAddBankInfo();
         console.log(result);
         Alert.alert('Successfully added the bank account!');
         this.goHome();
       })
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });
+        reportError('add_bank', { error });
         console.log(error);
         Alert.alert('Error adding bank, check the data and try again.');
       });
@@ -160,7 +164,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <View style={styles.padded} />
 
           <Button onPress={this.createAccount}>
-            <Text style={styles.padded}><Icon name="university" /> Add Bank Account</Text>
+            <Text style={styles.padded}><Icon name="university" /> Submit</Text>
           </Button>
 
           <View style={styles.halfPadded} />
