@@ -183,7 +183,7 @@ const listenForUserAnalytics = (user) => {
           }
         });
       }
-      setUserNumItemsSold(purchaseCount);
+      setUserNumItemsPurchased(purchaseCount);
     });
   } else if (unwatchUserForAnalytics) {
     unwatchUserForAnalytics();

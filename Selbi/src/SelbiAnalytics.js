@@ -8,9 +8,10 @@ export function reportShare(listingId) {
   });
 }
 
-export function reportSignUp(method) {
-  Analytics.logEvent('sign_up', {
+export function reportSignIn(method, uid) {
+  Analytics.logEvent('sign_in', {
     method,
+    uid,
   });
 }
 

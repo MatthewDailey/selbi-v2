@@ -13,6 +13,8 @@ import { privacyPolicyScene, termsAndConditionsScene } from './legal';
 
 import { signInWithFacebook } from '../firebase/FirebaseConnector';
 
+import { reportSignIn } from '../SelbiAnalytics';
+
 const inputStyle = {
   height: 48,  // have to do it on iOS
   marginTop: 10,
@@ -102,6 +104,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
     return this.props.registerWithEmail(email, password)
       .then(() => this.props.createUser(`${firstName} ${lastName}`, email))
       .then(() => this.props.signInWithEmail(email, password))
+      .then((user) => {
+        reportSignIn('email', user.uid);
+        return Promise.resolve(user);
+      })
       .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
   }
@@ -127,6 +133,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
     this.setState({ signingIn: true });
 
     return this.props.signInWithEmail(email, password)
+      .then((user) => {
+        reportSignIn('email', user.uid);
+        return Promise.resolve(user);
+      })
       .then(this.registerOrSignInSuccessHandler)
       .catch(this.registerOrSignInErrorHandler);
   }
@@ -219,7 +229,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
             this.setState({ signingIn: true });
             signInWithFacebook()
               .then((user) => {
-                console.log(user.providerData[0]);
+                reportSignIn('facebook', user.uid);
                 return Promise.resolve(user);
               })
               // We only use one provider (facebook).
