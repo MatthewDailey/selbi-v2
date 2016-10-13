@@ -1192,3 +1192,18 @@ export function followPhoneNumbers(phoneNumbers) {
     .then((results) => results.reduce((a, b) => a + b, 0));
 }
 
+export function createShouldAddPhoneBulletin() {
+  requireSignedIn()
+    .then(() => firebaseApp
+      .database()
+      .ref('userBulletins')
+      .child(getUser().uid)
+      .push()
+      .set({
+        type: 'should-add-phone',
+        status: 'unread',
+        timestamp: new Date().getTime(),
+        payload: {},
+      }));
+}
+

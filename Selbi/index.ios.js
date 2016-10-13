@@ -46,7 +46,7 @@ import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins, setUserFcmToken }
+  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -101,7 +101,6 @@ function fetchLocalListings() {
               center: [newLocation.lat, newLocation.lon],
             });
           }
-
         });
       })
       .then(() => startedListeningForLocalListings = true)
@@ -118,12 +117,22 @@ const listenForUserBulletins = (user) => {
   if (user) {
     unwatchUserBulletins = listenToBulletins(
       (bulletins) => {
+        // TODO: Super hack to add bulletin. Should add 'sign-in' event.
+        let hasAddPhoneBulletin = false;
         let unreadBulletinCount = 0;
         Object.keys(bulletins).forEach((key) => {
           if (bulletins[key].status === 'unread') {
             unreadBulletinCount++;
           }
+
+          if (bulletins[key].type === 'should-add-phone') {
+            hasAddPhoneBulletin = true;
+          }
         });
+        if (!hasAddPhoneBulletin) {
+          createShouldAddPhoneBulletin();
+        }
+
         setBadgeNumber(unreadBulletinCount);
         store.dispatch(setBulletins(bulletins));
       });
