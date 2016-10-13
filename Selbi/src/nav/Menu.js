@@ -141,6 +141,14 @@ class Menu extends Component {
         <Divider />
 
         <MenuItem
+          onPress={() => pushSceneAndCloseMenu(this.props.sellScene)}
+          icon={<Icon name="money" size={iconSize} />}
+          title="Sell Something"
+        />
+
+        <Divider />
+
+        <MenuItem
           onPress={() => setSceneAndCloseMenu(this.props.localListingScene)}
           icon={<Icon name="map-marker" size={iconSize} />}
           title="Local Listings"
@@ -176,24 +184,6 @@ class Menu extends Component {
           title="Follow a Friend"
         />
 
-        <Divider />
-
-        <MenuItem
-          shouldGreyOut={isSignedOut()}
-          onPress={ifSignedIn(notImplemented)}
-          icon={<Icon name="bell-o" size={iconSize} />}
-          title="Notifications"
-        />
-
-        <Divider />
-
-        <MenuItem
-          shouldGreyOut={isSignedOut()}
-          onPress={ifSignedIn(notImplemented)}
-          icon={<Icon name="gear" size={iconSize} />}
-          title="Settings"
-        />
-
         {getFooter()}
       </View>
     );
@@ -212,7 +202,8 @@ Menu.propTypes = {
   chatListScene: React.PropTypes.object.isRequired,
   followFriendScene: React.PropTypes.object.isRequired,
   signInOrRegisterScene: React.PropTypes.object.isRequired,
-}
+  sellScene: React.PropTypes.object.isRequired,
+};
 
 export default connect(
   (state) => {

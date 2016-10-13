@@ -344,6 +344,7 @@ function renderMenu(navigator, closeMenu) {
       followFriendScene={followFriendScene}
       loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={menuSignInScene}
+      sellScene={NewListingFlow.firstScene}
     />
   );
 }
