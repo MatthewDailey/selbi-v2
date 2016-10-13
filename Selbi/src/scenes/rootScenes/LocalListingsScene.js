@@ -13,7 +13,7 @@ import BulletinBoard from '../../bulletin/BulletinBoard';
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
-
+import { reportButtonPress } from '../../SelbiAnalytics';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -43,7 +43,10 @@ class ListingsScene extends RoutableScene {
       <ListingsListComponent
         listings={this.props.listings}
         emptyView={EmptyView}
-        openDetailScene={() => this.goNext('details')}
+        openDetailScene={() => {
+          reportButtonPress('local_listing_open_details');
+          this.goNext('details');
+        }}
       />
     );
   }

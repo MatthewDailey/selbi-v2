@@ -8,6 +8,8 @@ import ListingsListComponent from '../../components/ListingsListComponent';
 import { setFriendsListings } from '../../reducers/FriendsListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
+import { reportButtonPress } from '../../SelbiAnalytics';
+
 class ListingsScene extends RoutableScene {
   constructor(props) {
     super(props);
@@ -33,7 +35,10 @@ class ListingsScene extends RoutableScene {
         emptyMessage="None of your friends have a listing for sale."
         listings={this.props.listings}
         refresh={this.fetchListings}
-        openDetailScene={() => this.goNext('details')}
+        openDetailScene={() => {
+          reportButtonPress('friends_listings_open_detail');
+          this.goNext('details');
+        }}
       />
     );
   }
