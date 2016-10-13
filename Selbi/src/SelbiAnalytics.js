@@ -58,19 +58,19 @@ export function reportButtonPress(buttonName, params) {
 }
 
 export function setUserNumItemsSold(numItemsSold) {
-  Analytics.setUserProperty('num_listings_sold', `${numItemsSold}`);
+  Analytics.setUserProperty('n_listings_sold', `${numItemsSold}`);
 }
 
 export function setUserNumPublicItems(numItemsListed) {
-  Analytics.setUserProperty('num_listings_listed_public', `${numItemsListed}`);
+  Analytics.setUserProperty('n_listings_public', `${numItemsListed}`);
 }
 
 export function setUserNumPrivateItems(numItemsListed) {
-  Analytics.setUserProperty('num_listings_listed_private', `${numItemsListed}`);
+  Analytics.setUserProperty('n_listings_private', `${numItemsListed}`);
 }
 
 export function setUserNumItemsPurchased(numItemsListed) {
-  Analytics.setUserProperty('num_listings_purchased', `${numItemsListed}`);
+  Analytics.setUserProperty('n_purchases', `${numItemsListed}`);
 }
 
 export function setUserAddedBank(hasAddedBank) {
@@ -78,7 +78,7 @@ export function setUserAddedBank(hasAddedBank) {
 }
 
 export function setUserAddedCreditCard(hasAddedCreditCard) {
-  Analytics.setUserProperty('has_added_credit_card', `${hasAddedCreditCard}`);
+  Analytics.setUserProperty('has_added_cc', `${hasAddedCreditCard}`);
 }
 
 export function setUserAddedPhone(hasAddedPhone) {
