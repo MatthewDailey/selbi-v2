@@ -9,10 +9,7 @@ import flattenStyle from 'flattenStyle';
 import styles from '../../styles';
 import colors from '../../colors';
 
-
-function notImplemented() {
-  Alert.alert('Not yet supported.');
-}
+import { reportButtonPress } from '../SelbiAnalytics';
 
 function Divider() {
   return (
@@ -141,7 +138,10 @@ class Menu extends Component {
         <Divider />
 
         <MenuItem
-          onPress={() => pushSceneAndCloseMenu(this.props.sellScene)}
+          onPress={() => {
+            reportButtonPress('menu_sell_something');
+            pushSceneAndCloseMenu(this.props.sellScene);
+          }}
           icon={<Icon name="money" size={iconSize} />}
           title="Sell Something"
         />
@@ -149,13 +149,21 @@ class Menu extends Component {
         <Divider />
 
         <MenuItem
-          onPress={() => setSceneAndCloseMenu(this.props.localListingScene)}
+          onPress={() => {
+            reportButtonPress('menu_local_listings');
+            setSceneAndCloseMenu(this.props.localListingScene);
+          }}
           icon={<Icon name="map-marker" size={iconSize} />}
           title="Local Listings"
         />
         <MenuItem
           shouldGreyOut={isSignedOut()}
-          onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene)}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_friends_listings');
+            }
+            ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene);
+          }}
           icon={<Icon name="users" size={iconSize} />}
           title="Friends' Listings"
         />
@@ -164,13 +172,23 @@ class Menu extends Component {
 
         <MenuItem
           shouldGreyOut={isSignedOut()}
-          onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.myListingScene)}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_my_listings');
+            }
+            ifSignedIn(setSceneAndCloseMenu)(this.props.myListingScene);
+          }}
           icon={<Icon name="gift" size={iconSize} />}
           title="My Listings"
         />
         <MenuItem
           shouldGreyOut={isSignedOut()}
-          onPress={() => ifSignedIn(setSceneAndCloseMenu)(this.props.chatListScene)}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_chats');
+            }
+            ifSignedIn(setSceneAndCloseMenu)(this.props.chatListScene);
+          }}
           icon={<Icon name="commenting-o" size={iconSize} />}
           title="Chats"
         />
@@ -179,7 +197,12 @@ class Menu extends Component {
 
         <MenuItem
           shouldGreyOut={isSignedOut()}
-          onPress={() => ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene)}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_follow_friend');
+            }
+            ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene);
+          }}
           icon={<Icon name="user-plus" size={iconSize} />}
           title="Follow a Friend"
         />
