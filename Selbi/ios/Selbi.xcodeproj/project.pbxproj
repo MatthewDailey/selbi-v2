@@ -1223,7 +1223,7 @@
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1288,7 +1288,7 @@
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1521,7 +1521,7 @@
 				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = L3LVTK8RFF;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
