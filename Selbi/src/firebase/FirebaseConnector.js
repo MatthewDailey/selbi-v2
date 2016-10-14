@@ -361,6 +361,10 @@ export function loadListingData(listingId) {
 }
 
 export function loadImage(imageId) {
+  if (!imageId) {
+    return Promise.reject('imageId must be non-null');
+  }
+
   return firebaseApp
     .database()
     .ref('/images')

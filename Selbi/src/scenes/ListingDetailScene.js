@@ -311,9 +311,11 @@ class ListingDetailScene extends RoutableScene {
     }
 
     if (this.state.renderPlaceholderOnly || !this.props.imageData) {
-      if (!this.props.imageData) {
-        loadImage(this.props.imageKey).then((imageSnapshot) =>
-          this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
+      if (!this.props.imageData && this.props.imageKey) {
+        loadImage(this.props.imageKey)
+          .then((imageSnapshot) =>
+            this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()))
+          .catch((error) => console.log('Failure loading image in ListingDetailScene', error));
       }
 
       return <LoadingListingComponent />;
@@ -383,7 +385,7 @@ const mapStateToProps = (state) => {
 
   if (state.listingDetails.listingData) {
     const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-    props.imageStoreKey = imageStoreKey;
+    props.imageKey = imageStoreKey;
     props.imageData = state.images[imageStoreKey];
   }
 
