@@ -19,6 +19,8 @@ export function sendNotification(targetFcmToken, title, body) {
     notification: {
       title,
       body,
+      priority: 'high',
+      show_in_foreground: true,
       badge: '1',
       sound: 'Default',
     },

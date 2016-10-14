@@ -7,8 +7,9 @@ export function normalizePhoneNumber(number) {
     .replace(/-/g, '')
     .replace(/\(/g, '')
     .replace(/\)/g, '')
-    .replace(/\s/g, '');
-  return `+1${cleanedNumber}`;
+    .replace(/\s/g, '')
+    .replace(/\+1/g, '');
+  return cleanedNumber;
 }
 
 export function loadAllContactsPhoneNumber() {

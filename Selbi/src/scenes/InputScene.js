@@ -90,7 +90,6 @@ export default class InputScene extends RoutableScene {
               value={this.props.inputValue}
               onChangeText={this.onInputTextChange}
               keyboardType={this.props.isNumeric ? 'numeric' : undefined}
-              returnKeyType="done"
               onSubmitEditing={this.onSubmit}
             />
           </View>

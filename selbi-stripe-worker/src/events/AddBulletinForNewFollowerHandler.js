@@ -16,7 +16,7 @@ export default class AddBulletinForNewFollower {
     return data.type === FOLLOW_EVENT_TYPE;
   }
 
-  handle(data, firebaseDb) {
+  handle(data, firebaseDb, sendNotification) {
     const bulletin = {
       type: FOLLOW_EVENT_TYPE,
       status: 'unread',
@@ -38,6 +38,27 @@ export default class AddBulletinForNewFollower {
         });
     };
 
+    const loadUserPrivateInfo = (uid) => {
+      return firebaseDb
+        .ref('users')
+        .child(uid)
+        .once('value')
+        .then((userSnapshot) => {
+          if (!userSnapshot.exists()) {
+            return Promise.reject(
+              `Could not find user /users/${uid}`);
+          }
+          return Promise.resolve(userSnapshot.val());
+        });
+    };
+
+    const sendNotificationToLeader = () =>
+      loadUserPrivateInfo(data.payload.leader)
+        .then((userData) => sendNotification(
+          userData.fcmToken,
+          'You have a new follower!',
+          `${bulletin.payload.newFollowerPublicData.displayName} just followed you.`));
+
     return validateFollowPayload(data.payload)
       .then(() => firebaseDb
         .ref('userPublicData')
@@ -52,6 +73,7 @@ export default class AddBulletinForNewFollower {
       .then((newFollowerPublicData) => {
         bulletin.payload.newFollowerPublicData = newFollowerPublicData;
       })
+      .then(sendNotificationToLeader)
       .then(checkIfAlreadyFollowing)
       .then(() => firebaseDb
         .ref('userBulletins')
