@@ -269,6 +269,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           }}
           onFocus={scrollToEmail}
           returnKeyType="next"
+          keyboardType="email-address"
           onSubmitEditing={() => this.refs.PasswordInput.focus()}
         />
         <TextInput

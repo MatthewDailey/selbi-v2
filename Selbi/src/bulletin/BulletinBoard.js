@@ -44,11 +44,9 @@ class SignedInBulletinBoard extends Component {
       actionDescription,
     }, () => {
       callback()
-        .then((shouldHideSpinner) => {
+        .then(() => {
           // We don't want to update state if the component is not mounted.
-          if (shouldHideSpinner) {
-            this.finishTakingAction();
-          }
+          this.finishTakingAction();
         })
         .catch((error) => {
           this.finishTakingAction();
@@ -88,7 +86,6 @@ class SignedInBulletinBoard extends Component {
                                 reciprocated: true,
                               },
                             });
-                            return Promise.resolve(true);
                           })
                       );
                     }}
@@ -154,10 +151,8 @@ class SignedInBulletinBoard extends Component {
                               bulletin.payload.chat.listingId,
                               listingSnapshot.val());
                             this.props.goNext('chat');
-
-                            return Promise.resolve(false);
                           })
-                          .then(() => updateBulletin(bulletinKey, { status: 'read' })))
+                          .then(() => updateBulletin(bulletinKey, { status: 'read' })));
                     }}
                   />
                 </View>

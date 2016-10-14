@@ -3,7 +3,7 @@ import FirebaseTest, { minimalUserUid, expectUnableToStore }
 
 import { expect } from 'chai';
 
-const testPhoneNumber = '+12064379006';
+const testPhoneNumber = '2064379006';
 
 describe('/phoneToUser', () => {
   beforeEach((done) => {
