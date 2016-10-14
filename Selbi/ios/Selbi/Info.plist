@@ -2,16 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSContactsUsageDescription</key>
-	<string>Selbi needs contacts access to find friends.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>A library of Selbi requires this, you can deny it.</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>A library of Selbi requires this, you can deny it.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Selbi requires camera.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Selbi requires access to your photos.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -25,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.2</string>
+	<string>1.0.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -42,10 +32,14 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>32</string>
 	<key>FacebookAppID</key>
 	<string>981851575271233</string>
 	<key>FacebookDisplayName</key>
 	<string>Selbi</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -53,10 +47,6 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>32</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -70,8 +60,18 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>A library of Selbi requires this, you can deny it.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>A library of Selbi requires this, you can deny it.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Selbi requires camera.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Selbi needs contacts access to find friends.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Selbi requires access to your photos.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
