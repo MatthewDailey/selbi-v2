@@ -54,7 +54,7 @@
 		<string>fbshareextension</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>30</string>
+	<string>32</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
