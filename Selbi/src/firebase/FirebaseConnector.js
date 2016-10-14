@@ -1173,7 +1173,12 @@ export function awaitPhoneVerification(phoneNumber) {
             if (uid === phoneToUserSnapShot.val()) {
               resolve();
             } else {
-              reject(phoneToUserSnapShot.val());
+              const errorVal = phoneToUserSnapShot.val();
+              if (errorVal) {
+                reject(errorVal);
+              } else {
+                reject('Failed to store phone to user mapping.');
+              }
             }
             phoneToUserRef.off('value', cbForOff);
           }
@@ -1187,7 +1192,7 @@ function hasWhiteSpace(s) {
 }
 
 export function followPhoneNumbers(phoneNumbers) {
-  console.log('About to follow phone number: ', phoneNumbers)
+  console.log('About to follow phone number: ', phoneNumbers);
   return requireSignedIn()
     .then(() => {
       const followPhonesPromises = [];
@@ -1200,12 +1205,11 @@ export function followPhoneNumbers(phoneNumbers) {
             .child(phone)
             .once('value')
             .then((phoneToUserSnapshot) => {
-              if (phoneToUserSnapshot.exists() && !hasWhiteSpace(phoneToUserSnapshot.val())) {
-                console.log('found value fro phone', phone, phoneToUserSnapshot.val());
-                return followUser(phoneToUserSnapshot.val())
-                  .then(() => Promise.resolve(1));
+              if (phoneToUserSnapshot.exists()
+                && !hasWhiteSpace(phoneToUserSnapshot.val())
+                && phoneToUserSnapshot.val() !== getUser().uid) {
+                return followUser(phoneToUserSnapshot.val()).then(() => Promise.resolve(1));
               }
-              console.log('no value for phone', phone);
               return Promise.resolve(0);
             }));
       });
