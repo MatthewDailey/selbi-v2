@@ -11,7 +11,7 @@
       ".write" : false
     },
 
-    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    // All phone numbers should be in the format XXXXXXXXXX (10 digits, no country code)
     "phoneVerification" : {
       // Only visible to service workers. Schema is here for convenience.
       ".read": "auth.admin === true",
@@ -21,7 +21,7 @@
       }
     },
 
-    // All phone numbers should be in the format +XXXXXXXXXXX (country code + 9 digits)
+    // All phone numbers should be in the format XXXXXXXXXX (10 digits, no country code)
     "phoneToUser" : {
       ".read": "auth.uid != null",
       ".write": "auth.admin === true",
