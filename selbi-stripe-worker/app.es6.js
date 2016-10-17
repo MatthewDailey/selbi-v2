@@ -1,36 +1,67 @@
 import express from 'express';
 import firebase from 'firebase';
+import initializeStripe from 'stripe';
 
-const basicServiceAccountConfig = {
-  serviceAccount: {
-    type: 'service_account',
-    project_id: 'selbi-develop',
-    private_key_id: '6d63cfa40b25e42176a962d038c1ea2edce6e5aa',
-    private_key: '-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDM3Jrg8onIsRvW\nlC9pwduL3jCQMJryQnJGyWfGFNM52H40b7GLht48sJUM1JUFAErNeqxcAwnb5Frm\nTobUm4zvYukia1ZGvQe2HhLRWbno5LeQniutok9q3LUPLEkTVex6+2w4HdDMn88g\nTNZUXqwdH2Q5jag83EEPioxJGrJAeIvI8ZoZesyR6y6jwNIXc115M3evsnuGEAdt\nvI+k4o2Q5bM4HZQFvcVoMKaTK1ufKD6nMpSloHrwMKPfDPc9M40KysTbFzTbaP/R\npqncJ6XzfcPoVMa+hX3sZkJdU80p6oIe1dLX5uNLZVWrgdp+yL079Ixr3djkIZXa\nF2aJMJBrAgMBAAECggEBAIJjJnBl7iw+DWnVhxfYutOa523egcAPaoyDQ/le59G5\naRoWvPoBLRGTkkpIQ1CbjwCZQ3qMtImwHerXsBlBp8H1Qk0V5CPBzFatbWyxnxIM\nAImbIlGxLLrnHpY5qYkU9x6PR6Gv2GVkkYANZ5zrZMBkanX3I00ZIo+xrvgYdbtx\n2nAofz+508Jj+ysP6qBd7O/YNDkqaJm5V+Oaa4RxwgcPluR6wH2+vbCSqO7nCXr5\nc8/MhAeUTxZaMEUaIYA3C9GPXQDjD7BVxzU/XATaM1lJlg9dno44PGYrqsWss/Gs\nzxYcz3EpuZtti7lpwnqymYMxNZaY//dw+F2Bl+lSsQECgYEA6iE2oIqnhGDD9Gzf\nhwJcq7cjMRLvcPdQ5kFFoErq7eSnsldfyr7kxEjPUuHzaJELZ5NCSgMsqoxWp8JX\nsvQNNwBfeTiCyendcp175TZjxKoIetmVqytDCmMiZ/nXQRP4gCscCFHbXEPDXs97\nuqoYirfrEO0WP4DrHtUW3V+/z4MCgYEA3/+AKIs8CXecfWMZVDaFejEw81UvPmFe\nGdPgZ3QavRPtsNJ+H7x+GhGhZC4G/uy1JsHYA2qgD14APbZSouJiEHbbvXGtWzYN\nndRicCwPiiom7ZTDV8uuZyxSLx/hiHZezi8pA6/SHT1mm/wApoerp4f/UG/cxPwA\ndSnD0RLKPvkCgYEAwfiyYV9+WdYxgpeQuTHjxP/9T/L4HQdJJvp8zMhEysLdjIuG\n+Vod/eC0o14/YyqH4E/IY7ktkD6krGf+cGxxZlgQwUVoVhBDP2np84SUM6MLU3xg\n22cEK97l6m67P1dkUgtlNh9bNZ2Oh0Yuo/+4RXUKcwN5ozMTmH/CabWiHDECgYEA\ngrFytzU13Fg7qDUP7EC7dGYLJ47GN+FbpDopLnNhvnxILOlDyYSTFua+gdMRJeA6\nediUDrpBlXXFMjyUzpDDotOWtlwDR7qsCzCGFui+UGDzwZ8QssMWiQAlG3XAg3x9\nKFP/3DTTpVfT7KMGRiPWlbMV1nrOFujp43Jw3CXYdxECgYAj1TvBISiH0UHOoiXb\njQvEGc+NyGf+lFMFNAorYN/dIsNiLHyAxID1Z3K6q+896qjdfOQl2exddMpzMRRZ\nVoyDgcCAO9k+sJ0M5j+hBu6vOUgvqV1tvvKubdr5+vSFauFQ0gpTg3bzaIC2ADY6\nH3H1BF5RjwOV7TTR3r1IrUNVKw==\n-----END PRIVATE KEY-----\n',
-    client_email: 'service-account@selbi-develop.iam.gserviceaccount.com',
-    client_id: '114189312436974099103',
-    auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-    token_uri: 'https://accounts.google.com/o/oauth2/token',
-    auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-    client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/service-account%40selbi-develop.iam.gserviceaccount.com'
-  },
-  databaseURL: 'https://selbi-develop.firebaseio.com',
-};
+import ServiceAccount from '@selbi/service-accounts';
 
-const serviceAccountApp = firebase.initializeApp(basicServiceAccountConfig, 'serviceUser');
+import CreateCustomerHandler from './src/CreateCustomerHandler';
+import CreateAccountHandler from './src/CreateAccountHandler';
+import CreatePurchaseHandler from './src/CreatePurchaseHandler';
+import MessageNotificationHandler from './src/MessageNotificationsHandler';
+import EventHandler from './src/EventHandler';
+import QueueListener from './src/QueueListener';
 
-function createListing() {
-  serviceAccountApp
-    .database()
-    .ref('test')
-    .push({ c: 1 })
-    .then(() => {
-      console.log('created test element.');
-    })
-    .catch(console.log);
+import { eventHandlers } from './src/events';
+
+import { sendNotification } from './src/FcmConnector';
+import { sendSms } from './src/sms/TwillioConnector';
+
+import config from './config';
+
+if (!config.stripePrivateKey) {
+  console.warn('Starting stripe worker without Stripe Private key!');
 }
+const stripe = initializeStripe(config.stripePrivateKey);
 
-createListing();
+const serviceAccountApp = firebase.initializeApp(ServiceAccount.firebaseConfigFromEnvironment(),
+  'serviceUser');
+const firebaseDb = serviceAccountApp.database();
+
+const eventQueueHandler = new EventHandler(firebaseDb, sendNotification, sendSms);
+const eventQueueListener = new QueueListener('/events');
+eventQueueListener.start(firebaseDb, eventQueueHandler.getTaskHandler(eventHandlers));
+
+const createCustomerHandler = new CreateCustomerHandler(firebaseDb, stripe.customers);
+const createCustomerQueueListener = new QueueListener('/createCustomer');
+createCustomerQueueListener.start(firebaseDb, createCustomerHandler.getTaskHandler());
+
+const createAccountHandler = new CreateAccountHandler(firebaseDb, stripe.accounts);
+const createAccountQueueListener = new QueueListener('/createAccount');
+createAccountQueueListener.start(firebaseDb, createAccountHandler.getTaskHandler());
+
+const messageNotificationHandler = new MessageNotificationHandler(firebaseDb, sendNotification);
+const messageNotificationQueueListener = new QueueListener('messageNotifications');
+messageNotificationQueueListener.start(firebaseDb, messageNotificationHandler.getTaskHandler());
+
+const purchaseHandler = new CreatePurchaseHandler(firebaseDb, stripe, sendNotification);
+const purchaseQueueListener = new QueueListener('createPurchase');
+purchaseQueueListener.start(firebaseDb, purchaseHandler.getTaskHandler());
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT, starting graceful shutdown...');
+
+  Promise.all([
+    createCustomerQueueListener.shutdown(),
+    createAccountQueueListener.shutdown(),
+    messageNotificationQueueListener.shutdown(),
+    purchaseQueueListener.shutdown(),
+    eventQueueListener.shutdown(),
+  ])
+    .then(() => serviceAccountApp.delete())
+    .then(() => console.log('Graceful shutdown of firebase connections complete.'))
+    .then(() => process.exit(0))
+    .catch(() => process.exit(0));
+});
 
 const app = express();
 
@@ -42,4 +73,4 @@ app.get('/', (req, res) => {
 });
 app.listen(8080);
 
-console.log('App can run.');
+console.log(`stripe-worker has started. SELBI_ENVIRONMENT=${process.env.SELBI_ENVIRONMENT}`);

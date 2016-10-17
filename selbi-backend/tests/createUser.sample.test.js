@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FirebaseTest, { testUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid } from '@selbi/firebase-test-resource';
 
 /*
  * When a user authenticates we need to know if we have created that user in the db. This code
@@ -86,18 +86,6 @@ describe('User Samples', () => {
       .then(() => checkIfUserExists(testUserUid, FirebaseTest.testUserApp.database()))
       .then((userData) => {
         expect(userData.userAgreementAccepted).to.equal(false);
-      })
-      .then(done)
-      .catch(done);
-  });
-
-  it('update user', (done) => {
-    createAnonymousUser(testUserUid, FirebaseTest.testUserApp.database())
-      .then(() => checkIfUserExists(testUserUid, FirebaseTest.testUserApp.database()))
-      .then(() => updateUser(testUserUid, FirebaseTest.testUserApp.database()))
-      .then(() => checkIfUserExists(testUserUid, FirebaseTest.testUserApp.database()))
-      .then((userData) => {
-        expect(userData.name.first).to.equal('Rand');
       })
       .then(done)
       .catch(done);

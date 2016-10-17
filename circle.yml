@@ -8,11 +8,18 @@ dependencies:
     - npm install -g firebase-tools
     - cd selbi-backend && npm install
     - cd selbi-stripe-worker && npm install
+    - cd service-accounts && npm install
+    - cd firebase-test-resource && npm install
 
 test:
   override:
     - cd selbi-backend && npm test
     - cd selbi-stripe-worker && npm test
+    - cd service-accounts && npm test
+    - cd firebase-test-resource && npm test
+
+# TODO: Consider how we deploy private node modules here. Manual publish from a machine is fine for now
+#  but at somepoint we'll want to do it in a CI environment. Perhaps this is a reason to move to seperate repos.
 
 deployment:
   staging:
@@ -23,6 +30,7 @@ deployment:
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-staging
+      - cd selbi-stripe-worker && cp selbiBuildResources/staging/app.yaml .
       - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
       - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
   production:
@@ -33,6 +41,7 @@ deployment:
       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
       - sudo /opt/google-cloud-sdk/bin/gcloud config set project selbi-production
+      - cd selbi-stripe-worker && cp selbiBuildResources/production/app.yaml .
       - cd selbi-stripe-worker && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
       - cd selbi-web && sudo /opt/google-cloud-sdk/bin/gcloud app deploy app.yaml -q
 

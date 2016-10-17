@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  .site-wrapper
+    .site-wrapper-inner
+      .cover-container
+        .masthead.clearfix
+        .inner.cover
+          img.selbi-logo(src='../images/selbilogo2.png')
+          p.lead
+            |Selbi is the easiest way to sell to your friends and the people around you.  It's the one stop shop for trustworthy and safe online buying and selling.
+          p.lead
+            |Want to hear when Selbi hits the App Store?
+          include mail.html            
+          p.lead.image-padding
+            a(href='#')
+              img.app-download(src='../images/appdownload.jpg')
+        .mastfoot
+          .inner
+            p.logos
+              a(href='#')
+                img.twitter-logo(src='../images/TwitterLogo_acee.png')
+              a(href='#')
+                img.facebook-logo(src='../images/FBLogoblue.png')
+            p
+              | Contact us at
+              | &nbsp;
+              a.contact-us(href="mailto:support@selbi.io")
+                | Support@selbi.io
+            p
+              | Copyright © 2016 Selbi Inc. All rights reserved.
+              | &nbsp;
+              a.terms-use(href='/terms-and-conditions')
+                | Terms & Conditions 
+              | | 
+              a.privacy-policy(href='/privacy')
+                | Privacy Policy

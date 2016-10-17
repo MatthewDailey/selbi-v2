@@ -1,20 +1,13 @@
 import { expect } from 'chai';
-import FirebaseTest, { minimalUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { expectUnableToStore }  from '@selbi/firebase-test-resource';
 
 describe('/listings', () => {
   before(function (done) {
     this.timeout(6000);
 
-    const createMinimalUser = () => FirebaseTest
-        .minimalUserApp
-        .database()
-        .ref('/users')
-        .child(minimalUserUid)
-        .set(FirebaseTest.getMinimalUserData());
-
     FirebaseTest
       .dropDatabase()
-      .then(createMinimalUser)
+      .then(() => FirebaseTest.createMinimalUser())
       .then(done)
       .catch(done);
   });
@@ -66,6 +59,25 @@ describe('/listings', () => {
     Promise.all([promiseStoreFirstListing, promiseStoreSecondListing])
       .then(verifyThatBothListingsAreStored)
       .catch(done);
+  });
+
+  it('cannot update another users listing', (done) => {
+    const testListingId = 'modifyAnotherUsersListing';
+    FirebaseTest
+      .minimalUserApp
+      .database()
+      .ref('listings')
+      .child(testListingId)
+      .set(FirebaseTest.getMinimalUserListingOne())
+      .then(() => expectUnableToStore(
+        FirebaseTest
+          .testUserApp
+          .database()
+          .ref('listings')
+          .child(testListingId)
+          .update({ price: 0.1 })))
+    .then(done)
+    .catch(done);
   });
 
   it('cannot have any extra properties', (done) => {
@@ -153,23 +165,115 @@ describe('/listings', () => {
     });
   });
 
-  describe('imageUrls', () => {
-    it('Must be list', (done) => {
+  describe('images', () => {
+    it('can create with valid data', (done) => {
       const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.imageUrls = 1;
+      modifiedMinimalUserListing.images = [
+        {
+          imageId: 'fake-image-id',
+          height: 20,
+          width: 20,
+        },
+        {
+          imageId: 'second-image-id',
+          height: 30,
+          width: 30,
+        },
+      ];
+      FirebaseTest
+        .minimalUserApp
+        .database()
+        .ref('listings')
+        .push(modifiedMinimalUserListing)
+        .then(() => done())
+        .catch(done);
+    });
+
+    it('Must be object', (done) => {
+      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+      modifiedMinimalUserListing.images = 1;
       storeListingAsMinimalUserAndExpectFailure(
         modifiedMinimalUserListing,
         'ImageUrls cannot be int',
         done);
     });
 
-    it('List must contain urls', (done) => {
-      const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
-      modifiedMinimalUserListing.imageUrls = ['normal string'];
-      storeListingAsMinimalUserAndExpectFailure(
-        modifiedMinimalUserListing,
-        'ImageUrls content must be urls',
-        done);
+    describe('property validation', () => {
+      it('images must be objects', (done) => {
+        const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+        modifiedMinimalUserListing.images = ['normal string'];
+        storeListingAsMinimalUserAndExpectFailure(
+          modifiedMinimalUserListing,
+          'ImageUrls content must be urls',
+          done);
+      });
+
+      it('can have no extra properties', (done) => {
+        const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+        modifiedMinimalUserListing.images[0].extraProp = 'extra';
+        storeListingAsMinimalUserAndExpectFailure(
+          modifiedMinimalUserListing,
+          'Can have no extra properties',
+          done);
+      });
+
+      describe('required', () => {
+        it('imageId', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].imageId;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('height', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].height;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('width', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[0].width;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+      });
+
+      describe('type', () => {
+        it('imageId is string', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].imageId = 1;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('height is number', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].height = 'a string';
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('width is number', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          modifiedMinimalUserListing.images[0].width = 'a string';
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+      })
     });
   });
 

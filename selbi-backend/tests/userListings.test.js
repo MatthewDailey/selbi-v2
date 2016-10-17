@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from
+  '@selbi/firebase-test-resource';
 
 describe('/userListings', () => {
   before(function (done) {

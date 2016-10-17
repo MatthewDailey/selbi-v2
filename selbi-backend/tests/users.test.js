@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './FirebaseTestConnections';
+import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from
+  '@selbi/firebase-test-resource';
 
 /*
  * In this test we use 4 different users to probe the schema requirements and demonstrate how
@@ -12,6 +13,10 @@ import FirebaseTest, { testUserUid, minimalUserUid, extraUserUid } from './Fireb
  * - serviceUser: user simulating a backend server interacting with firebase.
  *
  */
+
+function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
 describe('/users', () => {
   function getCreateFakeUsersFunction(done) {
@@ -116,6 +121,16 @@ describe('/users', () => {
         .child(testUserUid)
         .child('email')
         .set('test@selbi.io')
+        .then(done)
+        .catch(done);
+    });
+
+    it('can update fcmToken', (done) => {
+      usersRef
+        .child(testUserUid)
+        .update({
+          fcmToken: 'testFcmToken',
+        })
         .then(done)
         .catch(done);
     });
@@ -245,105 +260,12 @@ describe('/users', () => {
       });
     });
 
-    describe('name', () => {
-      function addNameToData(data) {
-        // noinspection Eslint
-        data.name = {
-          first: 'test',
-          last: 'user',
-        };
-      }
-
-      it('takes no extra parameters', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            addNameToData(data);
-            // noinspection Eslint
-            data.name.extra = "extraParam";
-          }, done);
-      });
-
-      describe('first', () => {
-        it('is required', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              delete data.name.first;
-            }, done);
-        });
-
-        it('is string', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              data.name.first = 1;
-            }, done);
-        });
-      });
-
-      describe('last', () => {
-        it('is required', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              delete data.name.last;
-            }, done);
-        });
-
-        it('is string', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              addNameToData(data);
-              // noinspection Eslint
-              data.name.last = 1;
-            }, done);
-        });
-      });
-    });
-
     it('email is string', (done) => {
       setPropertyAndExpectPermissionDenied(
         (data) => {
           // noinspection Eslint
           data.email = 1;
         }, done);
-    });
-
-    describe('profileImageUrl', () => {
-      it('cannot be non-string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 1;
-          }, done);
-      });
-
-      it('cannot be non-url string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = "not a url";
-          }, done);
-      });
-
-      it('may begin with http://', (done) => {
-        setPropertyAndExpectSuccessfulStore(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 'http://cooldomain';
-          }, done);
-      });
-
-      it('may begin with https://', (done) => {
-        setPropertyAndExpectSuccessfulStore(
-          (data) => {
-            // noinspection Eslint
-            data.profileImageUrl = 'https://cooldomain';
-          }, done);
-      });
     });
 
     describe('dateOfBirth', () => {
@@ -522,13 +444,15 @@ describe('/users', () => {
       });
     });
 
-    describe('payments', () => {
+    describe('payment', () => {
       const paymentData = {
-        stripeCustomerId: 'fakeStripeCustomerId',
-        stripeCardId: 'fakeStipeCardId',
-        cardType: 'fakeCardType',
-        lastFour: 1234,
-        expirationDate: '01-19',
+        stripeCustomerPointer: 'fakeStripeCustomerId',
+        status: 'OK',
+        metadata: {
+          cardBrand: 'Visa',
+          lastFour: 1234,
+          expirationDate: '01-19',
+        },
       };
 
       it('accepts valid payment data', (done) => {
@@ -539,89 +463,79 @@ describe('/users', () => {
           }, done);
       });
 
-      it('stripeCustomerId required', (done) => {
+      it('stripeCustomerPointer required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.stripeCustomerId;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.stripeCustomerPointer;
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
-      it('stripeCardId required', (done) => {
+      it('status required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.stripeCardId;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.status;
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
-      it('cardType required', (done) => {
+      it('cardBrand required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.cardType;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.metadata.cardBrand;
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('lastFour required', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.lastFour;
+            const modifiedPayment = deepCopy(paymentData);
+            delete modifiedPayment.metadata.lastFour;
             // noinspection Eslint
-            data.payments = modifiedPayment;
-          }, done);
-      });
-
-      it('expirationDate required', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            delete modifiedPayment.expirationDate;
-            // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('expirationDate matches MM-YY', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
-            modifiedPayment.expirationDate = '13-19';
+            const modifiedPayment = deepCopy(paymentData);
+            modifiedPayment.metadata.expirationDate = '13-19';
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
 
       it('accepts no extra data', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const modifiedPayment = Object.assign({}, paymentData);
+            const modifiedPayment = deepCopy(paymentData);
             modifiedPayment.extraData = 'randomExtra';
             // noinspection Eslint
-            data.payments = modifiedPayment;
+            data.payment = modifiedPayment;
           }, done);
       });
     });
 
     describe('merchant', () => {
       const merchantData = {
-        accountNumberLast4: 4444,
-        routingNumber: 325181028,
-        publicKey: 'fakePublicKey',
-        privateKey: 'fakePrivateKey',
-        stripeBankId: 'fakeStripeBankId',
-        stripeManagedAccountId: 'fakeManagedAccountId',
-        stripeVerified: true,
+        stripeAccountPointer: 'fakeAccountPointer',
+        status: 'OK',
+        metadata: {
+          accountNumberLastFour: 4444,
+          routingNumber: 325181028,
+          bankName: 'WSECU',
+        },
       };
 
-      it('stores valid date', (done) => {
+      it('stores valid data', (done) => {
         setPropertyAndExpectSuccessfulStore(
           (data) => {
             // noinspection Eslint
@@ -634,7 +548,7 @@ describe('/users', () => {
           (data) => {
             // noinspection Eslint
             data.merchant = {
-              stripeVerified: false
+              status: 'ERROR: test error.'
             };
           }, done);
       });
@@ -642,7 +556,7 @@ describe('/users', () => {
       it('accepts no extra data', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataWithExtra = Object.assign({}, merchantData);
+            const merchantDataWithExtra = deepCopy(merchantData);
             merchantDataWithExtra.extra = 'extraProp';
             // noinspection Eslint
             data.merchant = merchantDataWithExtra;
@@ -652,8 +566,8 @@ describe('/users', () => {
       it('accountNumberLast4 is number', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.accountNumberLast4 = 'a string';
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.metadata.accountNumberLastFour = 'a string';
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -662,8 +576,8 @@ describe('/users', () => {
       it('accountNumberLast4 is >3 digits', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.accountNumberLast4 = 123;
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.metadata.accountNumberLastFour = 123;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -672,8 +586,8 @@ describe('/users', () => {
       it('accountNumberLast4 is <5 digits', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.accountNumberLast4 = 12345;
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.metadata.accountNumberLastFour = 12345;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
@@ -682,75 +596,31 @@ describe('/users', () => {
       it('routingNumber is number', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.routingNumber = 'a string';
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.metadata.routingNumber = 'a string';
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
       });
 
-      it('publicKey is string', (done) => {
+      it('bankName is string', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.publicKey = 1;
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.metadata.bankName = 1;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
       });
 
-      it('privateKey is string', (done) => {
+      it('status is string', (done) => {
         setPropertyAndExpectPermissionDenied(
           (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.privateKey = 1;
+            const merchantDataCopy = deepCopy(merchantData);
+            merchantDataCopy.status = 1;
             // noinspection Eslint
             data.merchant = merchantDataCopy;
           }, done);
-      });
-
-      it('stripeBankId is string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.stripeBankId = 1;
-            // noinspection Eslint
-            data.merchant = merchantDataCopy;
-          }, done);
-      });
-
-      it('stripeManagedAccountId is string', (done) => {
-        setPropertyAndExpectPermissionDenied(
-          (data) => {
-            const merchantDataCopy = Object.assign({}, merchantData);
-            merchantDataCopy.stripeManagedAccountId = 1;
-            // noinspection Eslint
-            data.merchant = merchantDataCopy;
-          }, done);
-      });
-
-      it('stripeVerified required', () => {
-        it('stores valid date', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              const merchantDataCopy = Object.assign({}, merchantData);
-              delete merchantDataCopy.stripeVerified;
-              // noinspection Eslint
-              data.merchant = mermerchantDataCopychantData;
-            }, done);
-        });
-      });
-
-      it('stripeVerified is boolean', () => {
-        it('stores valid date', (done) => {
-          setPropertyAndExpectPermissionDenied(
-            (data) => {
-              const merchantDataCopy = Object.assign({}, merchantData);
-              merchantDataCopy.stripeVerified = 'a string';
-              // noinspection Eslint
-              data.merchant = mermerchantDataCopychantData;
-            }, done);
-        });
       });
     });
   });

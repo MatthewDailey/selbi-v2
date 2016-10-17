@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import initializeStripe from 'stripe';
 import fetch from 'node-fetch';
 
+process.env.STRIPE_PUBLIC = 'pk_test_pVgDzmnHbUaT9z8L7p5slTKB';
+
 /*
  * This test simulates creating 2 users (a buy and a seller) and then creating a charge between
  * them using the Stripe Connect API.
@@ -85,6 +87,8 @@ function createCustomer(paymentSourceToken, customerDescription) {
 }
 
 /*
+ * IMPORTANT: Turns out this isn't actually necessary. We can pass just user ssnLast4 instead.
+ *
  * This method demonstrates how to create Personally Identifying Information token (aka a token
  * which points to a user's SSN). This is passed when creating the Stripe Account for a seller to
  * receive payments.
@@ -141,7 +145,6 @@ function createBankToken_deviceSide(accountHolderName, routingNumber, accountNum
  *
  * This is intended to be run server side.
  *
- * @param piiTokenId String token representing PII. Passed from client device.
  * @param bankTokenId String token representing bank account. Passed from client device.
  * @param addressBlob Object with line1, line2, city, postal_code, state strings.
  * @param dobBlock Object with day, month, year numbers.
@@ -152,7 +155,7 @@ function createBankToken_deviceSide(accountHolderName, routingNumber, accountNum
  *
  * @returns Promise fulfilled with account data.
  */
-function createAccount(piiTokenId,
+function createAccount(ssnLast4,
                        bankTokenId,
                        addressBlob,
                        dobBlob,
@@ -173,7 +176,7 @@ function createAccount(piiTokenId,
         last_name: lastName,
         type: 'individual', // only other option is 'company'
         address: addressBlob,
-        personal_id_number: piiTokenId,
+        ssn_last_4: ssnLast4,
       },
       tos_acceptance: {
         date: tosAcceptanceDate,
@@ -228,18 +231,17 @@ describe('Stripe Accounts', () => {
     this.timeout(20000);
 
     const creditCardPromise = createPaymentSource_deviceSide(4242424242424242, 12, 2017, 123);
-    const piiPromise = createPiiToken_deviceSide('000000000');
     const bankPromise = createBankToken_deviceSide('Matt Dailey', '110000000', '000123456789');
 
-    Promise.all([creditCardPromise, piiPromise, bankPromise])
+    Promise.all([creditCardPromise, bankPromise])
       .then((results) => {
         // These would normally be passed to the backend server via Firebase events.
         const creditCardResult = results[0];
-        const piiResult = results[1];
-        const bankResult = results[2];
+        // const piiResult = results[1];
+        const bankResult = results[1];
 
         const createAccountPromise = createAccount(
-          piiResult.id,
+          '0000', // ssnLast4
           bankResult.id,
           { city: 'San Francisco',
             line1: '655 Natoma Street',

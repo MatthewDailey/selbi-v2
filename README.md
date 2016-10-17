@@ -8,7 +8,11 @@ This is a second implementation of Selbi based on Firebase. This repo contains:
 
 Testing
 -------
-All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g`.
+All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g
+
+To execute tests (and code in general), you'll need to include the ES6 compiler Babel. To do this add `--compilers js:babel-core/register` as an argument.
+
+You should be able to run all the tests in a project via `npm test`.
 
 Firebase and Google Cloud
 -------------------------
@@ -38,6 +42,15 @@ Useful commands:
 Configuration docs:
 - https://cloud.google.com/appengine/docs/python/config/appref
 
+Private NPM Packages
+--------------------
+
+Selbi makes use of private NPM packages to improve the modularity of our code base. To use these modules you will need to create an [NPM account](https://www.npmjs.com/) and join the Selbi team.
+
+You will then need to run `npm login` on your dev machine. This will generate a `~/.npmrc` file which contains an NPM token. You should add this token to you environment as an environment variable `NPM_TOKEN`. This will enable the Selbi projects which require private packages to properly authenitcate you. Read [this page](https://docs.npmjs.com/private-modules/intro) if you want more details.
+
+Read [this explanation](http://blog.npmjs.org/post/118393368555/deploying-with-npm-private-modules) on how to the continuous integration system works with private modules.
+
 Git Flow
 --------
 There are 3 permanant branches which mirror our 3 Google Cloud environments:
@@ -45,7 +58,7 @@ There are 3 permanant branches which mirror our 3 Google Cloud environments:
 - staging - Fully live test environment.
 - production - Code running live.
 
-New features are developed on a new branch titled `feature/<feature-name` which is then merged to develop. When we want to cut a release, we merge develop into staging and then to production. No one should push directly to staging or production. In fact, we should generally not push to develop but rather to a feature branch.
+New features are developed on a new branch titled `feature/<feature-name>` which is then merged to develop. When we want to cut a release, we merge develop into staging and then to production. Staging and production are protected branches so no one can push directly and all builds on develop must be passing on CircleCI to merge.
 
 CircleCI will run unit tests for any branch pushed to the repo which should take around 5 min to run per push. When merging to staging and production, CircleCI will deploy to staging and produciton automatically, including schema changes. This means if your feature will break something until it's complete, you should be using a feature branch.
 
@@ -57,3 +70,16 @@ A common workflow for modifying the firebase schema will be:
 - Merge the feature branch to `develop`. This will then deploy your changes to staging.
 
 
+ESLint
+------
+This project makes use of ESLint to improve code quality. The advised set up is Intellij Ultimate
+Edition with the ESLint plugin. There are several script in the root which will help you get
+set up.
+
+- `initNodeProject.sh` - This is useful if you are creating a new node package that other Selbi
+projects will depend on. Calls the other two scripts.
+- `installTestES6Deps.sh` - This will install mocha and various ES6 dependencies into an existing
+node project. It's recommended to also install these deps globally for an easier life (eg intellij
+will be able to find mocha and ESLint in your global npm rather than in each project so set up is
+slightly easier).
+- `printIntellijSetupInstructions.sh` - Tells you how to set up intellij for ES6.

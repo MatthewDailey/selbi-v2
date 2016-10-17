@@ -1,0 +1,43 @@
+{
+  "fcmToken" : "fake:fcm:token",
+  "locations" : {
+    "sellingFrom": {
+      "address1": "655 Natoma Street",
+      "address2": "Apt C",
+      "city": "San Francisco",
+      "state": "California",
+      "zip": 94013,
+      "country": "United States"
+    },
+    "shipTo": {
+      "address1": "655 Natoma Street",
+      "address2": "Apt C",
+      "city": "San Francisco",
+      "state": "California",
+      "zip": 94013,
+      "country": "United States"
+    }
+  },
+  "payment" : {
+    "stripeCustomerPointer": "fakeStripeCustomerId",
+    "status": "OK",
+    "metadata": {
+      "lastFour": 1234,
+      "expirationDate": "01-19",
+      "cardBrand": "Visa"
+    }
+  },
+  "merchant" : {
+    "stripeAccountPointer": "fakeAccountPointer",
+    "status": "OK",
+    "metadata": {
+      "accountNumberLastFour": 4444,
+      "routingNumber": 325181028,
+      "bankName": "WSECU"
+    }
+  },
+  "dateOfBirth" : "1990-03-20",
+  "email" : "test@selbi.io",
+  "phoneNumber" : 1234567890,
+  "userAgreementAccepted" : true
+}
