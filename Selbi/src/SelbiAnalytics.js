@@ -82,7 +82,7 @@ export function setUserAddedCreditCard(hasAddedCreditCard) {
 }
 
 export function setUserAddedPhone(hasAddedPhone) {
-  Analytics.setUserProperty('has_added_bank', `${hasAddedPhone}`);
+  Analytics.setUserProperty('has_added_phone', `${hasAddedPhone}`);
 }
 
 export function reportError(type, params) {
