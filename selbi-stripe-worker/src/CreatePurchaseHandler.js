@@ -290,7 +290,7 @@ class CreatePurchaseHandler {
             .then(() => sendNotification(executeChargeResult.sellerData.fcmToken,
               'Your listing was purchased! 🤑🤑🤑', // Emoji inline.
               `Your listing ${executeChargeResult.listingData.title} was purchased for `
-                + `$${parseFloat(executeChargeResult.priceCents).toFixed(2)}.`
+                + `$${parseFloat(executeChargeResult.priceCents / 100).toFixed(2)}.`
             ));
         };
 
