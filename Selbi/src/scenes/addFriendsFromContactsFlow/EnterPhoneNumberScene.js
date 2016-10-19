@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
     inputValue: state.addPhone.number,
     inputTitle: 'What is your phone number? We\'ll text you a 4 digit code to verify.',
     placeholder: '123 456 7890',
-    validateInputOnSubmit: (input) => (input.length === 10),
+    validateInputOnSubmit: (input) => !!normalizePhoneNumber(input),
     validateFormatSuggestion: 'Input must be a 10 digit US phone number.',
   };
 };
