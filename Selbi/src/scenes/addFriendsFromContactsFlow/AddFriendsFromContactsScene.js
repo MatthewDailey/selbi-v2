@@ -68,7 +68,6 @@ class AddFriendsFromContactsScene extends RoutableScene {
 
     this.state = {
       view: <SpinnerOverlay isVisible message="Waiting for code verification..." />,
-      renderPlaceholderOnly: true,
     };
   }
 
@@ -100,20 +99,17 @@ class AddFriendsFromContactsScene extends RoutableScene {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
-      this.setState({ renderPlaceholderOnly: false });
-      awaitPhoneVerification(normalizePhoneNumber(this.props.phoneNumber))
-        .then(() => {
-          this.setState({
-            view: <VerifiedCodeComponent followContacts={this.addFriendsFromPhoneBook} />,
-          });
-        })
-        .catch((error) => {
-          this.setState({
-            view: <FailureComponent message={`Failed to verified your phone. ${error}`} />,
-          });
+    awaitPhoneVerification(normalizePhoneNumber(this.props.phoneNumber))
+      .then(() => {
+        this.setState({
+          view: <VerifiedCodeComponent followContacts={this.addFriendsFromPhoneBook} />,
         });
-    });
+      })
+      .catch((error) => {
+        this.setState({
+          view: <FailureComponent message={`Failed to verified your phone. ${error}`} />,
+        });
+      });
   }
 
   renderWithNavBar() {

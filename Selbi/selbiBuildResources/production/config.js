@@ -1,6 +1,6 @@
 export default {
   firebase: {
-    apiKey: 'AIzaSyCmaprrhrf42pFO3HAhmukTUby_mL8JXAk',
+    apiKey: 'AIzaSyCZ00PFkNsM_I-OeitUPztMd_xD2MwvQbU',
     authDomain: 'selbi-production.firebaseapp.com',
     databaseURL: 'https://selbi-production.firebaseio.com',
     storageBucket: 'selbi-production.appspot.com',
