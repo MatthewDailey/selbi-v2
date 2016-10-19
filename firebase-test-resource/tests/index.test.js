@@ -4,7 +4,7 @@ import FirebaseTest, { minimalUserUid } from '../src/index';
 
 describe('firebase test resources', () => {
   before(function (done) {
-    this.timeout(6000)
+    this.timeout(6000);
     FirebaseTest
       .dropDatabase()
       .then(done)
