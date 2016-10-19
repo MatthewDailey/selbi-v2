@@ -1,15 +1,16 @@
 import Contacts from 'react-native-contacts';
+import phone from 'phone';
 
 export default undefined;
 
 export function normalizePhoneNumber(number) {
-  const cleanedNumber = number
-    .replace(/-/g, '')
-    .replace(/\(/g, '')
-    .replace(/\)/g, '')
-    .replace(/\s/g, '')
-    .replace(/\+1/g, '');
-  return cleanedNumber;
+  const phoneNormalizationResult = phone(number);
+
+  if (phoneNormalizationResult[0] && phoneNormalizationResult[1] === 'USA') {
+    const cleanedNumber = phoneNormalizationResult[0].replace(/^\+1/, '');
+    return cleanedNumber;
+  }
+  return null;
 }
 
 export function loadAllContactsPhoneNumber() {
@@ -22,8 +23,12 @@ export function loadAllContactsPhoneNumber() {
       } else {
         const allPhoneNumbers = [];
         contacts.forEach((contact) => {
-          contact.phoneNumbers.forEach((phone) =>
-            allPhoneNumbers.push(normalizePhoneNumber(phone.number)));
+          contact.phoneNumbers.forEach((phoneNumber) => {
+            const cleanedNumber = normalizePhoneNumber(phoneNumber.number);
+            if (cleanedNumber) {
+              allPhoneNumbers.push(cleanedNumber);
+            }
+          });
         });
         resolve(allPhoneNumbers);
       }

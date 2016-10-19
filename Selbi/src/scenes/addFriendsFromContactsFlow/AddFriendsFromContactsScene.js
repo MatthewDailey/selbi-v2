@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { InteractionManager, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 
 import { MKButton } from 'react-native-material-kit';
 
@@ -51,11 +51,11 @@ function AddedFriendsComponent({ numFriends }) {
   );
 }
 
-function FailureComponent({ message }) {
+function FailureComponent() {
   return (
     <View sylte={styles.paddedCenterContainer}>
       <Text style={styles.friendlyText}>
-        {message}
+        There has been an error adding your contacts. Please try again later. 😭
       </Text>
     </View>
   );
@@ -85,7 +85,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
     };
 
     const error = (error) => this.setState({
-      view: <FailureComponent message={error} />,
+      view: <FailureComponent />,
     });
 
     this.setState({
