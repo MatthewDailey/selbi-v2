@@ -38,10 +38,14 @@ function VerifiedCodeComponent({ followContacts }) {
 }
 
 function AddedFriendsComponent({ numFriends }) {
+  let friendsString = 'friends';
+  if (numFriends === 1) {
+    friendsString = 'friend';
+  }
   return (
     <View sylte={styles.paddedCenterContainer}>
       <Text style={styles.friendlyText}>
-        Added {numFriends} friend from your phone book.
+        Added {numFriends} {friendsString} from your phone book.
       </Text>
       <View style={styles.halfPadded} />
       <Text style={styles.friendlyText}>
