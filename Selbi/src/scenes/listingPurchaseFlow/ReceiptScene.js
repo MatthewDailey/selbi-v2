@@ -151,7 +151,7 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded}>
             <Button
               onPress={() => {
-                this.setState({ purchasing: true }, () => {
+                const doPayment = () => this.setState({ purchasing: true }, () => {
                   reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
                   purchaseListing(this.props.listingKey)
                     .then(() => {
@@ -165,6 +165,11 @@ class ListingReceiptScene extends RoutableScene {
                       this.setState({ purchasing: false });
                     });
                 });
+
+                Alert.alert(
+                  'Confirm Purchase',
+                  `Your credit card will be charged $${this.props.listingData.price}`,
+                  [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
               }}
             >
               <Text>Pay with Selbi</Text>
