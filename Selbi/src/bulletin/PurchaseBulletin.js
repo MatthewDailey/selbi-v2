@@ -12,7 +12,7 @@ export default function PurchaseBulletin({ bulletin, gotIt }) {
     <View>
       <ExpandingText style={bulletinStyles.bulletinText}>
         {`🤑 Your listing ${bulletin.payload.listingTitle} sold for`
-          + ` $${parseFloat(bulletin.payload.priceCents).toFixed(2)}`}
+          + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
       </ExpandingText>
       <BulletinActionButton
         text="Awesome! Got it"
