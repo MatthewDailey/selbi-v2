@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 function print_help {
     echo 'Usage: ./runSimulator <stage>'
