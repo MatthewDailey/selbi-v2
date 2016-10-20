@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import FirebaseTest, { minimalUserUid } from '../src/index';
+import FirebaseTest, { minimalUserUid, testUserUid } from '../src/index';
 
 
 describe('firebase test resources', () => {
@@ -31,7 +31,7 @@ describe('firebase test resources', () => {
     const testListingId = 'testListing';
     FirebaseTest.testUserApp.database()
       .ref('users')
-      .child(FirebaseTest.testUserUid)
+      .child(testUserUid)
       .set(FirebaseTest.getMinimalUserData())
       .then(() => FirebaseTest.testUserApp.database()
         .ref('listings')
