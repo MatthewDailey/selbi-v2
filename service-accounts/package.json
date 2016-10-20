@@ -1,6 +1,6 @@
 {
   "name": "@selbi/service-accounts",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Google Cloud Service Accounts used to manage the various Selbi environments. It is important that frontend projects NEVER depend on this. It should only be visible to Selbi managed servers.",
   "main": "lib/index.js",
   "scripts": {
