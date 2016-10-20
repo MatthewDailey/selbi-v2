@@ -285,11 +285,14 @@ class CreatePurchaseHandler {
                     priceCents: executeChargeResult.priceCents,
                     feeCents: executeChargeResult.feeCents,
                   },
-                });
+                })
+                .then(() => buyerPublicInfo);
             })
-            .then(() => sendNotification(executeChargeResult.sellerData.fcmToken,
-              'Your listing was purchased! 🤑🤑🤑', // Emoji inline.
-              `Your listing ${executeChargeResult.listingData.title} was purchased for `
+            .then((buyerPublicInfo) => sendNotification(
+              executeChargeResult.sellerData.fcmToken,
+              '🤑🤑🤑 Your listing was purchased!', // Emoji inline.
+              `${buyerPublicInfo.displayName} bought your listing `
+                + `${executeChargeResult.listingData.title} for `
                 + `$${parseFloat(executeChargeResult.priceCents / 100).toFixed(2)}.`
             ));
         };
