@@ -198,8 +198,8 @@ class CreatePurchaseHandler {
           });
 
         const executeCharge = () => {
-          const priceCents = listingData.price * 100;
-          const feeCents = priceCents * 0.15;
+          const priceCents = Math.floor(listingData.price * 100);
+          const feeCents = Math.ceil(priceCents * 0.15);
           const description = listingData.title;
 
           return loadBuyerAndSellerInfo()
