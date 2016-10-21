@@ -21,11 +21,17 @@ export function loadAllContactsPhoneNumber() {
       } else if (err) {
         reject(err);
       } else {
+        const scenePhoneNumber = {};
         const allPhoneNumbers = [];
         contacts.forEach((contact) => {
           contact.phoneNumbers.forEach((phoneNumber) => {
             const cleanedNumber = normalizePhoneNumber(phoneNumber.number);
             if (cleanedNumber) {
+              if (scenePhoneNumber[cleanedNumber]) {
+                return;
+              }
+              scenePhoneNumber[cleanedNumber] = true;
+
               allPhoneNumbers.push(cleanedNumber);
             }
           });
