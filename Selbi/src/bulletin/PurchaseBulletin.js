@@ -11,7 +11,8 @@ export default function PurchaseBulletin({ bulletin, gotIt }) {
   return (
     <View>
       <ExpandingText style={bulletinStyles.bulletinText}>
-        {`🤑 Your listing ${bulletin.payload.listingTitle} sold for`
+        {`🤑 ${bulletin.payload.buyerDisplayName} bought your listing`
+          + ` '${bulletin.payload.listingTitle}' for`
           + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
       </ExpandingText>
       <BulletinActionButton
