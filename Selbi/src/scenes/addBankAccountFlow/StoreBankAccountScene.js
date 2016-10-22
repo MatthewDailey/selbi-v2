@@ -69,18 +69,12 @@ class ChooseVisibilityScene extends RoutableScene {
           address.line2 = this.props.bankAccount.addressLine2;
         }
 
-        const dob = {
-          day: parseInt(this.props.bankAccount.dobDay, 10),
-          month: parseInt(this.props.bankAccount.dobMonth, 10),
-          year: parseInt(this.props.bankAccount.dobYear, 10),
-        };
-
         return enqueueCreateAccountRequest(
           bankTokenResponse.id,
           this.props.bankAccount.ssn,
           firstName,
           lastName,
-          dob,
+          this.props.dob,
           address,
           this.props.bankAccount.email,
           bankTokenResponse.client_ip,
@@ -124,8 +118,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <Text>
             <Text style={styles.labelTextLeft}>Date of birth: </Text>
             <Text style={styles.friendlyTextLeft}>
-              {`${this.props.bankAccount.dobMonth}/`
-              + `${this.props.bankAccount.dobDay}/${this.props.bankAccount.dobYear}`}
+              {`${this.props.dob.month}/${this.props.dob.day}/${this.props.dob.year}`}
             </Text>
           </Text>
 
@@ -194,6 +187,11 @@ class ChooseVisibilityScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     bankAccount: state.addBank,
+    dob: {
+      day: state.addBank.dob.getDate(),
+      month: state.addBank.dob.getMonth() + 1,
+      year: state.addBank.dob.getFullYear(),
+    },
   };
 };
 

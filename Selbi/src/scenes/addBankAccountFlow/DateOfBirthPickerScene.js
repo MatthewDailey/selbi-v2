@@ -9,20 +9,6 @@ import RoutableScene from '../../nav/RoutableScene';
 import { setDob } from '../../reducers/AddBankAccountReducer';
 
 class DateOfBirthPicker extends RoutableScene {
-  constructor(props) {
-    super(props);
-    this.parseAndPublishDate = this.parseAndPublishDate.bind(this);
-  }
-
-  parseAndPublishDate(date) {
-    console.log('date: ', date);
-    this.props.recordDob({
-      month: date.getMonth() + 1,
-      day: date.getDate(),
-      year: date.getFullYear(),
-    });
-  }
-
   renderWithNavBar() {
     return (
       <View style={styles.container}>
@@ -36,7 +22,7 @@ class DateOfBirthPicker extends RoutableScene {
             <DatePickerIOS
               date={this.props.date}
               mode="date"
-              onDateChange={this.parseAndPublishDate}
+              onDateChange={this.props.recordDob}
             />
           </View>
         </View>
@@ -47,9 +33,8 @@ class DateOfBirthPicker extends RoutableScene {
 
 export default connect(
   (state) => {
-    console.log(state.addBank);
     return {
-      date: new Date(state.addBank.dobYear, state.addBank.dobMonth - 1, state.addBank.dobDay),
+      date: state.addBank.dob,
     };
   },
   (dispatch) => {

@@ -85,6 +85,7 @@ class DetailBottomButtons extends Component {
 
   render() {
     const isSold = this.props.listingData.status === 'sold';
+    const isDeleted = this.props.listingData.status === 'inactive';
 
     if (this.props.isSeller && !isSold) {
       const bottomOverlayStyleMinusPadding = Object.assign({}, detailBottomOverlayStyle);
@@ -175,9 +176,14 @@ class DetailBottomButtons extends Component {
                   SOLD - ${this.props.listingData.price}
                 </Text>
               </VisibilityWrapper>
+              <VisibilityWrapper isVisible={isDeleted}>
+                <Text style={{ flex: 1, fontSize: 20 }}>
+                  This listing has been deleted.
+                </Text>
+              </VisibilityWrapper>
             </View>
           </TouchableHighlight>
-          <VisibilityWrapper isVisible={!isSold}>
+          <VisibilityWrapper isVisible={!isSold && !isDeleted}>
             <View style={{ flexDirection: 'row' }}>
               <ChatButton
                 isVisible={this.props.isChatButtonVisible}
