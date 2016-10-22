@@ -1,5 +1,7 @@
 import GeoFire from 'geofire';
 
+import { sendItemSoldEmail } from './EmailConnector';
+
 /*
  * This method demonstrates how to create a charge from a customer to a seller on the Stripe
  * Connect API.
@@ -241,6 +243,7 @@ class CreatePurchaseHandler {
                     sellerData,
                     priceCents,
                     feeCents,
+                    sellerMerchantAccount,
                   });
                 });
             });
@@ -270,6 +273,14 @@ class CreatePurchaseHandler {
               }
               return Promise.resolve({});
             })
+            .then((buyerPublicInfo) => sendItemSoldEmail(
+                executeChargeResult.sellerMerchantAccount.email,
+                executeChargeResult.sellerData.merchant.metadata.bankName,
+                buyerPublicInfo.displayName,
+                executeChargeResult.listingData.title,
+                executeChargeResult.priceCents,
+                executeChargeResult.feeCents)
+                .then(() => Promise.resolve(buyerPublicInfo)))
             .then((buyerPublicInfo) => {
               return firebaseDb
                 .ref('userBulletins')
