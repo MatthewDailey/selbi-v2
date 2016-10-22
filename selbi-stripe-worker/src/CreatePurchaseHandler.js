@@ -1,5 +1,7 @@
 import GeoFire from 'geofire';
 
+import { sendItemSoldEmail } from './EmailConnector';
+
 /*
  * This method demonstrates how to create a charge from a customer to a seller on the Stripe
  * Connect API.
@@ -198,8 +200,8 @@ class CreatePurchaseHandler {
           });
 
         const executeCharge = () => {
-          const priceCents = listingData.price * 100;
-          const feeCents = priceCents * 0.15;
+          const priceCents = Math.floor(listingData.price * 100);
+          const feeCents = Math.ceil(priceCents * 0.15);
           const description = listingData.title;
 
           return loadBuyerAndSellerInfo()
@@ -241,6 +243,7 @@ class CreatePurchaseHandler {
                     sellerData,
                     priceCents,
                     feeCents,
+                    sellerMerchantAccount,
                   });
                 });
             });
@@ -270,6 +273,14 @@ class CreatePurchaseHandler {
               }
               return Promise.resolve({});
             })
+            .then((buyerPublicInfo) => sendItemSoldEmail(
+                executeChargeResult.sellerMerchantAccount.email,
+                executeChargeResult.sellerData.merchant.metadata.bankName,
+                buyerPublicInfo.displayName,
+                executeChargeResult.listingData.title,
+                executeChargeResult.priceCents,
+                executeChargeResult.feeCents)
+                .then(() => Promise.resolve(buyerPublicInfo)))
             .then((buyerPublicInfo) => {
               return firebaseDb
                 .ref('userBulletins')
@@ -285,11 +296,14 @@ class CreatePurchaseHandler {
                     priceCents: executeChargeResult.priceCents,
                     feeCents: executeChargeResult.feeCents,
                   },
-                });
+                })
+                .then(() => buyerPublicInfo);
             })
-            .then(() => sendNotification(executeChargeResult.sellerData.fcmToken,
-              'Your listing was purchased! 🤑🤑🤑', // Emoji inline.
-              `Your listing ${executeChargeResult.listingData.title} was purchased for `
+            .then((buyerPublicInfo) => sendNotification(
+              executeChargeResult.sellerData.fcmToken,
+              '🤑🤑🤑 Your listing was purchased!', // Emoji inline.
+              `${buyerPublicInfo.displayName} bought your listing `
+                + `${executeChargeResult.listingData.title} for `
                 + `$${parseFloat(executeChargeResult.priceCents / 100).toFixed(2)}.`
             ));
         };

@@ -21,9 +21,8 @@ const BA_SET_SSN = 'bank-account-set-ssn';
 
 class AddBankAccountData extends Immutable.Record({
   legalName: undefined,
-  dobDay: 1,
-  dobMonth: 1,
   dobYear: 1990,
+  dob: new Date(1990, 0, 1),
   addressLine1: undefined,
   addressLine2: undefined,
   addressCity: undefined,
@@ -45,9 +44,7 @@ export default function (previousState = new AddBankAccountData(), action) {
 
     case BA_SET_DOB:
       return previousState.merge({
-        dobMonth: action.dob.month,
-        dobDay: action.dob.day,
-        dobYear: action.dob.year,
+        dob: action.dob,
       });
 
     case BA_SET_EMAIL:
