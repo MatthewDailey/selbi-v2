@@ -17,6 +17,10 @@ Getting Started
 
 3. Run `npm install` in the project dirs you're working in.
 
+4. Run `pod install` in `selbi-v2/Selbi/ios` to install iOS dependencies.
+
+5. From the repo root run `cp -r Selbi/ios/FacebookSDK ~/Documents/FacebookSDK` to install Facebook SDK dependency.
+
 4. Set up your own development Firebase instance. Local configuration will be stored in `~/.selbirc`
   - Open the [Firebase console](https://console.firebase.google.com/)
   - Create a new project called `<your nam>-selbi-test`.
@@ -59,7 +63,14 @@ Getting Started
   *At this point you should be able to run `./deploy <yourname>-selbi-test` from `selbi-backend` to deploy the schema to your dev Firebase instance and
    run `npm test` against that instance.*
   - In the Firebase console, click 'Authentication' on the left navbar and then choose the 'Sign-in Method' tab. From there, enable Email/Password and Facebook authentication. You can use the Facebook App ID and App secret from `selbi-develop`.
-  
+5. Set up your Selbi app to run against your individual Firebase instance.
+  - In the Firebase Console, open you project `<yourname>-selbi-test` and click 'Add Firebase to your iOS app'
+    - Step 1, enter bundle id `io.selbi.app` and put a nickname if you like.
+    - Step 2, save the `GoogleService-Info.plist` file you are prompted to download to `selbi-v2/Selbi/ios/Selbi/selbiBuildResources/individual`
+    - You can ignore steps 3 and 4 because they have already been completed for you.
+  - Use the values in `~/.selbirc` to fill in the values in `selbi-v2/Selbi/ios/selbiBuildResources/individual/config.js`
+
+
 
 
 
