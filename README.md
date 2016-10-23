@@ -6,6 +6,63 @@ This is a second implementation of Selbi based on Firebase. This repo contains:
 - selbi-backend: Tests covering the firebase schema and demonstrating various actions.
 - selbi-stripe-worker: Node service which listens to firebase for stripe updates.
 
+Getting Started
+---------------
+
+1. Make sure you have necessary local libraries installed:
+  - firebase-tools `npm install -g firebase-tools`
+  - mocha (for unit tests) `npm install -g mocha`
+
+2. Clone this repo `git clone git@github.com:MatthewDailey/selbi-v2.git`
+
+3. Run `npm install` in the project dirs you're working in.
+
+4. Set up your own development Firebase instance. Local configuration will be stored in `~/.selbirc`
+  - Open the [Firebase console](https://console.firebase.google.com/)
+  - Create a new project called `<your nam>-selbi-test`.
+  - Click 'Add Firebase to your web app', it should open a modal with a Firebase config json.
+  - Copy the `config` json object in to `~/.selbirc` as the `firebasePublicConfig`. Eg.
+    ```
+    ~/.selbirc
+    {
+        "firebasePublicConfig": {
+          "apiKey": "AIzaSyAJZv8E2eLE2ko9j4pAwDVuY2itPiD2lxA",
+          "authDomain": "matt-selbi-test.firebaseapp.com",
+          "databaseURL": "https://matt-selbi-test.firebaseio.com",
+          "storageBucket": "matt-selbi-test.appspot.com",
+          "messagingSenderId": "997177106323"
+        }
+    }
+    ```
+  - Open the Permissions page for your project by clicking the gear icon in the top left next the project name.
+  - Expand the left side menu and click on 'Service Accounts'
+  - Click 'Create Service Account' to create a service account named 'test service account'. Make sure to assign it the role 'Owner' and select 'Furnish new private key' as a json file.
+  - Copy the contents of the downloaded json file into a `firebaseServiceAccount` parameter in `~/.selbirc`. Eg.
+  ```
+  ~/.selbirc
+      {
+          "firebasePublicConfig": ...
+          "firebaseServiceAccount": {
+              "type": "service_account",
+              "project_id": "matt-selbi-test",
+              "private_key_id": "SOMEHASH",
+              "private_key": "-----BEGIN PRIVATE KEY-----\nSOMEHASH\n-----END PRIVATE KEY-----\n",
+              "client_email": "test-service-account@matt-selbi-test.iam.gserviceaccount.com",
+              "client_id": "100330410578482047362",
+              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+              "token_uri": "https://accounts.google.com/o/oauth2/token",
+              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+              "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test-service-account%40matt-selbi-test.iam.gserviceaccount.com"
+          }
+      }
+  ```
+  *At this point you should be able to run `./deploy <yourname>-selbi-test` from `selbi-backend` to deploy the schema to your dev Firebase instance and
+   run `npm test` against that instance.*
+  - In the Firebase console, click 'Authentication' on the left navbar and then choose the 'Sign-in Method' tab. From there, enable Email/Password and Facebook authentication. You can use the Facebook App ID and App secret from `selbi-develop`.
+  
+
+
+
 Testing
 -------
 All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g
