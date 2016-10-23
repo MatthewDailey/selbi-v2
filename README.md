@@ -71,6 +71,9 @@ Getting Started
   - Use the values in `~/.selbirc` to fill in the values in `selbi-v2/Selbi/ios/selbiBuildResources/individual/config.js`
 
 
+In order to make managing individual selbi instances easy, we've made some simplifications:
+- It doesn't support crash reporting.
+- It uses the develop stage deeplink urls (eg it accepts links starting with https.
 
 
 
