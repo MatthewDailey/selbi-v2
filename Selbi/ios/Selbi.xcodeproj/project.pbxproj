@@ -274,6 +274,8 @@
 		C97952F71D66E35100BCD992 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		C9B674E81DA94E3900269064 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
 		C9FCB5D41D89C31B0004EE34 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Selbi/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3F7D0859A2374C32ADF7AD3 /* Pods-SelbiTests.individual.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.individual.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.individual.xcconfig"; sourceTree = "<group>"; };
+		E7F3D7C7C5F2C8676A815E8B /* Pods-Selbi.individual.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.individual.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.individual.xcconfig"; sourceTree = "<group>"; };
 		E9F56AD3287C9920D060D945 /* libPods-SelbiTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SelbiTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE6D76FCDDA32141DA733ADA /* Pods-Selbi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Selbi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Selbi/Pods-Selbi.debug.xcconfig"; sourceTree = "<group>"; };
 		FA8EBC0206443D8693BCDD1F /* Pods-SelbiTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SelbiTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SelbiTests/Pods-SelbiTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -489,6 +491,8 @@
 				28A775074970FFCDF4733F64 /* Pods-SelbiTests.release.xcconfig */,
 				FF6F7BED376324D4AA2489F5 /* Pods-Selbi.staging.xcconfig */,
 				A9AC68C58FC9886C9C8E1A63 /* Pods-SelbiTests.staging.xcconfig */,
+				E7F3D7C7C5F2C8676A815E8B /* Pods-Selbi.individual.xcconfig */,
+				D3F7D0859A2374C32ADF7AD3 /* Pods-SelbiTests.individual.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1081,7 +1085,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file\n# Develop id:\nGOOGLE_APP_ID=1:699453567940:ios:22fe21a4b12bba0a\n\nif [ \"$SELBI_STAGE\" = \"staging\" ]; then\n    GOOGLE_APP_ID=1:186442987461:ios:22fe21a4b12bba0a\nfi\n\nif [ \"$SELBI_STAGE\" = \"production\" ]; then\n    GOOGLE_APP_ID=1:983312482100:ios:22fe21a4b12bba0a\nfi\n\n# Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded\n\"${PODS_ROOT}\"/FirebaseCrash/upload-sym -vvv \"${SRCROOT}/Selbi/selbiBuildResources/$SELBI_STAGE/selbi-crash-report-upload.json\"\n";
+			shellScript = "# Replace this with the GOOGLE_APP_ID from your GoogleService-Info.plist file\n# Develop id:\nGOOGLE_APP_ID=1:699453567940:ios:22fe21a4b12bba0a\n\nif [ \"$SELBI_STAGE\" = \"staging\" ]; then\n    GOOGLE_APP_ID=1:186442987461:ios:22fe21a4b12bba0a\nfi\n\nif [ \"$SELBI_STAGE\" = \"production\" ]; then\n    GOOGLE_APP_ID=1:983312482100:ios:22fe21a4b12bba0a\nfi\n\nif [ \"$SELBI_STAGE\" != \"individual\" ]; then\n    # Replace the /Path/To/ServiceAccount.json with the path to the key you just downloaded\n    \"${PODS_ROOT}\"/FirebaseCrash/upload-sym \"${SRCROOT}/Selbi/selbiBuildResources/$SELBI_STAGE/selbi-crash-report-upload.json\"\nfi\n";
 		};
 		C97C6FF51D90687300793D40 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1456,6 +1460,154 @@
 			};
 			name = Release;
 		};
+		C926E2CA1DBD6F0F00A0EB2D /* Individual */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
+					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Individual;
+		};
+		C926E2CB1DBD6F0F00A0EB2D /* Individual */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E7F3D7C7C5F2C8676A815E8B /* Pods-Selbi.individual.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = SelbiSplash;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
+				CODE_SIGN_ENTITLEMENTS = Selbi/Selbi.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 33;
+				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = L3LVTK8RFF;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseCore/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseDynamicLinks/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/FirebaseMessaging/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleIPhoneUtilities/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleInterchangeUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleSymbolUtilities/Frameworks/frameworks\"",
+					"\"${PODS_ROOT}/GoogleUtilities/Frameworks/frameworks\"",
+					"\"$(SRCROOT)/FacebookSDK",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../node_modules/react-native/React/**",
+					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios/**",
+					"$(SRCROOT)/../../../node_modules/react-native/React/Base/**",
+					"$(SRCROOT)/../node_modules/react-native-material-kit/iOS/RCTMaterialKit",
+					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/@selbi/react-native-image-reader/ios",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
+					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
+					"$(SRCROOT)/../node_modules/react-native-share/ios",
+					"$(SRCROOT)/../node_modules/react-native-permissions/**",
+					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-camera/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
+				);
+				INFOPLIST_FILE = Selbi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/@selbi/react-native-image-reader/ios",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.selbi.app;
+				PRODUCT_NAME = Selbi;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SELBI_STAGE = individual;
+			};
+			name = Individual;
+		};
+		C926E2CC1DBD6F0F00A0EB2D /* Individual */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3F7D0859A2374C32ADF7AD3 /* Pods-SelbiTests.individual.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SelbiTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Selbi.app/Selbi";
+			};
+			name = Individual;
+		};
 		C97C6FF21D90677400793D40 /* Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1600,6 +1752,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
+				C926E2CC1DBD6F0F00A0EB2D /* Individual */,
 				00E356F71AD99517003FC87E /* Release */,
 				C97C6FF41D90677400793D40 /* Staging */,
 			);
@@ -1610,6 +1763,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
+				C926E2CB1DBD6F0F00A0EB2D /* Individual */,
 				13B07F951A680F5B00A75B9A /* Release */,
 				C97C6FF31D90677400793D40 /* Staging */,
 			);
@@ -1620,6 +1774,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
+				C926E2CA1DBD6F0F00A0EB2D /* Individual */,
 				83CBBA211A601CBA00E9B192 /* Release */,
 				C97C6FF21D90677400793D40 /* Staging */,
 			);

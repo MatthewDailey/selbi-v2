@@ -6,6 +6,103 @@ This is a second implementation of Selbi based on Firebase. This repo contains:
 - selbi-backend: Tests covering the firebase schema and demonstrating various actions.
 - selbi-stripe-worker: Node service which listens to firebase for stripe updates.
 
+Getting Started
+---------------
+This should be a one-time set up required to build out the entire Selbi stack so that you can work
+in isolation with a full-fledged stack.
+
+
+1. Make sure you have necessary local libraries installed:
+  - firebase-tools `npm install -g firebase-tools`
+  - mocha (for unit tests) `npm install -g mocha`
+
+2. Clone this repo `git clone git@github.com:MatthewDailey/selbi-v2.git`
+
+3. Run `npm install` in the project dirs you're working in.
+
+4. Run `pod install` in `selbi-v2/Selbi/ios` to install iOS dependencies.
+
+5. From the repo root run `cp -r Selbi/ios/FacebookSDK ~/Documents/FacebookSDK` to install Facebook SDK dependency.
+
+4. Set up your own development Firebase instance. Local configuration will be stored in `~/.selbirc`
+  - Open the [Firebase console](https://console.firebase.google.com/)
+  - Create a new project called `<your nam>-selbi-test`.
+  - Click 'Add Firebase to your web app', it should open a modal with a Firebase config json.
+  - Copy the `config` json object in to `~/.selbirc` as the `firebasePublicConfig`. Eg.
+    ```
+    ~/.selbirc
+    {
+        "firebasePublicConfig": {
+          "apiKey": "AIzaSyAJZv8E2eLE2ko9j4pAwDVuY2itPiD2lxA",
+          "authDomain": "matt-selbi-test.firebaseapp.com",
+          "databaseURL": "https://matt-selbi-test.firebaseio.com",
+          "storageBucket": "matt-selbi-test.appspot.com",
+          "messagingSenderId": "997177106323"
+        }
+    }
+    ```
+  - Open the Permissions page for your project by clicking the gear icon in the top left next the project name.
+  - Expand the left side menu and click on 'Service Accounts'
+  - Click 'Create Service Account' to create a service account named 'test service account'. Make sure to assign it the role 'Owner' and select 'Furnish new private key' as a json file.
+  - Copy the contents of the downloaded json file into a `firebaseServiceAccount` parameter in `~/.selbirc`. Eg.
+  ```
+  ~/.selbirc
+      {
+          "firebasePublicConfig": ...
+          "firebaseServiceAccount": {
+              "type": "service_account",
+              "project_id": "matt-selbi-test",
+              "private_key_id": "SOMEHASH",
+              "private_key": "-----BEGIN PRIVATE KEY-----\nSOMEHASH\n-----END PRIVATE KEY-----\n",
+              "client_email": "test-service-account@matt-selbi-test.iam.gserviceaccount.com",
+              "client_id": "100330410578482047362",
+              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+              "token_uri": "https://accounts.google.com/o/oauth2/token",
+              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+              "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test-service-account%40matt-selbi-test.iam.gserviceaccount.com"
+          }
+      }
+  ```
+  *CHECKPOINT You should be able to run `./deploy <yourname>-selbi-test` from `selbi-backend` to deploy the schema to your dev Firebase instance and
+   run `npm test` against that instance.*
+  - In the Firebase console, click 'Authentication' on the left navbar and then choose the 'Sign-in Method' tab. From there, enable Email/Password and Facebook authentication. You can use the Facebook App ID and App secret from `selbi-develop`.
+6. Set up your Selbi app to run against your individual Firebase instance.
+  - In the Firebase Console, open you project `<yourname>-selbi-test` and click 'Add Firebase to your iOS app'
+    - Step 1, enter bundle id `io.selbi.app` and put a nickname if you like.
+    - Step 2, save the `GoogleService-Info.plist` file you are prompted to download to `selbi-v2/Selbi/ios/Selbi/selbiBuildResources/individual`
+    - You can ignore steps 3 and 4 because they have already been completed for you.
+  - Use the values in `~/.selbirc` to fill in the values in `selbi-v2/Selbi/ios/selbiBuildResources/individual/config.js`
+
+  *CHECKPOINT You should be able to run `./runSimulator.sh` from `Selbi` and it will launch a simulator
+  connected to your individual Firebase instance. Try watching the Firebase console database view as
+  you sign in to verify the connection is correct.*
+5. Enable FCM notifications.
+  - In Firebase console, click the gear to 'Project Settings' then go to the 'Cloud Messaging' tab.
+  - Upload `selbi-v2/Selbi/appleCerts/octoberPushDistributionPrivateKey.p12` with no password as both the
+    production and development APNS certificates.
+  - Copy the 'Server Key' and put it in your `~/.selbirc` under `fcmConfig.serverKey`
+  ```
+    ~/.selbirc
+        {
+            "firebasePublicConfig": ...
+            "firebaseServiceAccount": ...
+            "fcmConfig" : {
+              "serverKey": "AIzaSyAO0bh1DI5VOlePU2SWOHyfjAUE85VljrU"
+            }
+        }
+    ```
+    *CHECKPOINT You should be able to run the backend service from `selbi-stripe-work` with `npm start`,
+    run the 'Selbi Individual' scheme on your device from XCode and start a simulator from `./runSimulator`.
+    If you post a listing from the physical device then close the app then send a message about that listing
+    from another user on the simulator and get a notification.*
+
+In order to make managing individual selbi instances easy, we've made some simplifications:
+- It doesn't support crash reporting.
+- It uses the develop stage deeplink urls.
+- You should only run `selbi-stripe-worker` locally for your personal stack.
+
+
+
 Testing
 -------
 All projects in this repo use mocha to test and it should be installed globally via `npm install mocha -g

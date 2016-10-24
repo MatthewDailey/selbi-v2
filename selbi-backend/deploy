@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+function print_help {
+    echo 'Usage: ./deploy <stage>'
+    echo '  * stage - The Selbi stage to deploy.'
+    echo "            One of 'develop' 'staging', 'production' or the full name of the Firebase environment."
+}
+
+# Answer help request.
+if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) || ( "$#" -ne 1 ) ]]
+then
+    print_help
+    exit 0;
+fi
+
+stage=$1
+
+if [[ "$stage" = "staging" ]]
+then
+    firebase deploy --project selbi-staging
+elif [[ "$stage" = "production" ]]
+then
+    firebase deploy --project selbi-production
+elif [[ "$stage" = "develop" ]]
+then
+    firebase deploy --project selbi-develop
+else
+    firebase deploy --project $stage
+fi

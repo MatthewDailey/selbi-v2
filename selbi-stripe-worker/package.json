@@ -13,8 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@selbi/firebase-test-resource": "^1.0.12",
-    "@selbi/service-accounts": "^1.0.2",
+    "@selbi/firebase-test-resource": "^2.0.1",
+    "@selbi/service-accounts": "^2.0.0",
     "babel-core": "^6.13.2",
     "babel-preset-es2015": "^6.13.2",
     "chai": "^3.5.0",
@@ -25,6 +25,7 @@
     "firebase-queue": "^1.5.0",
     "geofire": "^4.1.1",
     "mocha": "^3.0.2",
+    "rc": "^1.1.6",
     "sendinblue-api": "^1.0.0",
     "sinon": "^1.17.5",
     "stripe": "^4.9.0",
