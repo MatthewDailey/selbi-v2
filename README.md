@@ -8,6 +8,9 @@ This is a second implementation of Selbi based on Firebase. This repo contains:
 
 Getting Started
 ---------------
+This should be a one-time set up required to build out the entire Selbi stack so that you can work
+in isolation with a full-fledged stack.
+
 
 1. Make sure you have necessary local libraries installed:
   - firebase-tools `npm install -g firebase-tools`
@@ -96,6 +99,7 @@ Getting Started
 In order to make managing individual selbi instances easy, we've made some simplifications:
 - It doesn't support crash reporting.
 - It uses the develop stage deeplink urls.
+- You should only run `selbi-stripe-worker` locally for your personal stack.
 
 
 
