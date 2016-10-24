@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+function print_help {
+    echo 'Deploys the selbi-stripe-worker (aka the background service) for the specified stage.'
+    echo 'Usage: ./deploy <stage>'
+    echo '  * stage - The Selbi stage to deploy.'
+    echo "            One of 'staging' or 'production'. You should not deploy to develop or your individual stage."
+}
+
+# Answer help request.
+if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) || ( "$#" -ne 1 ) ]]
+then
+    print_help
+    exit 0;
+fi
+
+stage=$1
+
+if [[ "$stage" = "staging" ]]
+then
+    gcloud auth activate-service-account --key-file ../service-accounts/selbi-staging-service-account.json
+    gcloud config set project selbi-staging
+    gcloud app deploy app.yaml -q
+elif [[ "$stage" = "production" ]]
+then
+    gcloud auth activate-service-account --key-file ../service-accounts/selbi-production-service-account.json
+    gcloud config set project selbi-production
+    gcloud app deploy app.yaml -q
+else
+    echo "Did not recognize stage: $stage. Must be one of 'staging' or 'production'"
+    exit 1
+fi

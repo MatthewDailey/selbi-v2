@@ -125,19 +125,6 @@ Firebase / Google Cloud deployments. This is useful for integration testing and 
 
 Note that Google app engine assumes any app deployed will serve an http endpoint on port 8080. If nothing is served at port 8080, then App Engine will assume something is wrong, delete the box and restart new one every 10 min resulting in 1 min of downtime. Therefore, even services such as stripe-worker depend on express and serve a basic status message.
 
-Deploying Microservices to Google App Engine
---------------------------------------------
-The backend services and future web frontend are deployed as NodeJS applications running on Google App Engine.
-
-These are deployed via the [Google Cloud SDK](https://cloud.google.com/sdk/docs/quickstart-mac-os-x?authuser=0). The `gcloud app` tool is used for managing and deploying services. Try `gcloud app services list` to list all running services.
-
-Useful commands:
-- `gcloud config set project selbi-production` Change the local working project.
-- `gcloud auth activate-service-account --key-file ../service-accounts/selbi-production-service-account.json` Change the account to work in.
-- `gcloud app deploy app.yaml -q` Deploy the app.
-
-Configuration docs:
-- https://cloud.google.com/appengine/docs/python/config/appref
 
 Private NPM Packages
 --------------------
