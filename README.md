@@ -60,20 +60,42 @@ Getting Started
           }
       }
   ```
-  *At this point you should be able to run `./deploy <yourname>-selbi-test` from `selbi-backend` to deploy the schema to your dev Firebase instance and
+  *CHECKPOINT You should be able to run `./deploy <yourname>-selbi-test` from `selbi-backend` to deploy the schema to your dev Firebase instance and
    run `npm test` against that instance.*
   - In the Firebase console, click 'Authentication' on the left navbar and then choose the 'Sign-in Method' tab. From there, enable Email/Password and Facebook authentication. You can use the Facebook App ID and App secret from `selbi-develop`.
-5. Set up your Selbi app to run against your individual Firebase instance.
+6. Set up your Selbi app to run against your individual Firebase instance.
   - In the Firebase Console, open you project `<yourname>-selbi-test` and click 'Add Firebase to your iOS app'
     - Step 1, enter bundle id `io.selbi.app` and put a nickname if you like.
     - Step 2, save the `GoogleService-Info.plist` file you are prompted to download to `selbi-v2/Selbi/ios/Selbi/selbiBuildResources/individual`
     - You can ignore steps 3 and 4 because they have already been completed for you.
   - Use the values in `~/.selbirc` to fill in the values in `selbi-v2/Selbi/ios/selbiBuildResources/individual/config.js`
 
+  *CHECKPOINT You should be able to run `./runSimulator.sh` from `Selbi` and it will launch a simulator
+  connected to your individual Firebase instance. Try watching the Firebase console database view as
+  you sign in to verify the connection is correct.*
+5. Enable FCM notifications.
+  - In Firebase console, click the gear to 'Project Settings' then go to the 'Cloud Messaging' tab.
+  - Upload `selbi-v2/Selbi/appleCerts/octoberPushDistributionPrivateKey.p12` with no password as both the
+    production and development APNS certificates.
+  - Copy the 'Server Key' and put it in your `~/.selbirc` under `fcmConfig.serverKey`
+  ```
+    ~/.selbirc
+        {
+            "firebasePublicConfig": ...
+            "firebaseServiceAccount": ...
+            "fcmConfig" : {
+              "serverKey": "AIzaSyAO0bh1DI5VOlePU2SWOHyfjAUE85VljrU"
+            }
+        }
+    ```
+    *CHECKPOINT You should be able to run the backend service from `selbi-stripe-work` with `npm start`,
+    run the 'Selbi Individual' scheme on your device from XCode and start a simulator from `./runSimulator`.
+    If you post a listing from the physical device then close the app then send a message about that listing
+    from another user on the simulator and get a notification.*
 
 In order to make managing individual selbi instances easy, we've made some simplifications:
 - It doesn't support crash reporting.
-- It uses the develop stage deeplink urls (eg it accepts links starting with https.
+- It uses the develop stage deeplink urls.
 
 
 
