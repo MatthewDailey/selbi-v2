@@ -1,58 +1,55 @@
 function print_help {
-    echo 'Usage: ./deploy <code level> <stage>'
+    echo 'Usage: ./deploy <stage> <code level>'
     echo
     echo "  This tool requires both code-push and fastlane to be installed."
     echo "    - code-push: https://github.com/Microsoft/react-native-code-push/tree/v1.13.6-beta"
     echo "    - fastlane: https://fastlane.tools/"
     echo
-    echo "  Note that pushing native code will increment the build version. This build version will need to be commited."
+    echo "  Note that code-push checks binary version compatibility between push and update so JS updates don't end up going to the wrong binary version."
     echo
-    echo "  Also note that code-push checks binary version compatibility between push and update so JS updates don't end up going to the wrong binary version."
-    echo
+    echo '  * stage - The Selbi stage to deploy.'
+    echo "            One of 'develop' 'staging' or 'production'."
     echo "  * code level - Specifies whether to deploy native code or javascript."
     echo "                 One of 'js' or 'native'. "
-    echo '  * stage - The Selbi stage to deploy.'
-    echo "            One of 'develop' 'staging' or 'production'. If no stage is provided, will select develop."
 }
 
 # Answer help request.
-if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) ]]
+if [[ ( "$1" = "-h" ) || ( "$1" = "--help" ) || ( $# -ne 2 ) ]]
 then
     print_help
     exit 0;
 fi
 
 # Check that first and second arg are valid.
-if [[ (( "$1" != "js" ) && ( "$1" != "native" ))
-    || (( ! -z "$2" ) && ( "$2" != "develop" ) && ( "$2" != "staging" ) && ( "$2" != "production" )) ]]
+if [[ (( "$2" != "js" ) && ( "$2" != "native" ))
+    || (( ! -z "$1" ) && ( "$1" != "develop" ) && ( "$1" != "staging" ) && ( "$1" != "production" )) ]]
 then
     print_help
     exit 1;
 fi
 
-codeLevel=$1
+codeLevel=$2
 stage="develop"
 
-if [[ ! -z "$2" ]]
+if [[ ! -z "$1" ]]
 then
-    stage=$2
+    stage=$1
 fi
 
 function deploy_js {
     # Make sure to put the proper config file in place.
     cp selbiBuildResources/$stage/config.js .
 
+    # Note that this key will expire on Dec 22 2016, to refresh see the CodePush docs
+    # https://microsoft.github.io/code-push/docs/cli.html
+    code-push login --accessKey 8CqhFr7RQ4C104H4e5kzYDI98RWZVybu8pY2Z
     code-push release-react selbi ios -d $stage -m
+    code-push logout
 }
 
 function deploy_native {
-    if [ "$stage" = "staging" ]
-    then
-        cd ios && fastlane staging
-    else
-        echo Cannot deploy native for stage=$stage.
-        exit 1
-    fi
+    echo Native deploy not currently supported for stage=$stage.
+    exit 1
 }
 
 echo Attmepting to deploy $codeLevel to $stage...
