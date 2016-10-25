@@ -105,7 +105,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .then(() => this.props.createUser(`${firstName} ${lastName}`, email))
       .then(() => this.props.signInWithEmail(email, password))
       .then((user) => {
-        reportSignIn('email', user.uid);
+        if (user) {
+          reportSignIn('email', user.uid);
+        }
         return Promise.resolve(user);
       })
       .then(this.registerOrSignInSuccessHandler)
