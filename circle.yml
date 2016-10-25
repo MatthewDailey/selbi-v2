@@ -11,7 +11,6 @@ dependencies:
     - cd selbi-stripe-worker && npm install
     - cd service-accounts && npm install
     - cd firebase-test-resource && npm install
-    - cd Selbi && npm install
   cache_directories:
     - selbi-backend/node_modules
     - selbi-stripe-worker/node_modules
@@ -27,7 +26,6 @@ test:
     - cd selbi-stripe-worker && npm test
     - cd service-accounts && npm test
     - cd firebase-test-resource && npm test
-    - cd Selbi && npm test
 
 # TODO: Consider how we deploy private node modules here. Manual publish from a machine is fine for now
 #  but at somepoint we'll want to do it in a CI environment. Perhaps this is a reason to move to seperate repos.
