@@ -11,6 +11,7 @@ dependencies:
     - cd selbi-stripe-worker && npm install
     - cd service-accounts && npm install
     - cd firebase-test-resource && npm install
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
     - cd Selbi && npm install
   cache_directories:
     - selbi-backend/node_modules
