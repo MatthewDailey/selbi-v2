@@ -45,6 +45,8 @@ const modulesToCompile = [
   'react-native-scrollable-tab-view',
   'react-native-autogrow-textinput',
   'react-native-fcm',
+  'react-native-firebase-analytics',
+  'react-native-fbsdk',
 ].map((moduleName) => new RegExp(`/node_modules/${moduleName}`));
 const rcPath = path.join(__dirname, '..', '.babelrc');
 const source = fs.readFileSync(rcPath).toString();
