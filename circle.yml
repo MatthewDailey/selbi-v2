@@ -5,13 +5,13 @@ machine:
 dependencies:
   override:
     - alias gcloud='sudo /opt/google-cloud-sdk/bin/gcloud'
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
     - npm install -g mocha
     - npm install -g firebase-tools
     - cd selbi-backend && npm install
     - cd selbi-stripe-worker && npm install
     - cd service-accounts && npm install
     - cd firebase-test-resource && npm install
-    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
     - cp Selbi/selbiBuildResources/develop/config.js Selbi/config.js
     - cd Selbi && npm install
   cache_directories:
