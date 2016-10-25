@@ -11,6 +11,15 @@ dependencies:
     - cd selbi-stripe-worker && npm install
     - cd service-accounts && npm install
     - cd firebase-test-resource && npm install
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+    - cp Selbi/selbiBuildResources/develop/config.js Selbi/config.js
+    - cd Selbi && npm install
+  cache_directories:
+    - selbi-backend/node_modules
+    - selbi-stripe-worker/node_modules
+    - service-accounts/node_modules
+    - firebase-test-resource/node_modules
+    - Selbi/node_modules
 
 test:
   override:
@@ -18,6 +27,7 @@ test:
     - cd selbi-stripe-worker && npm test
     - cd service-accounts && npm test
     - cd firebase-test-resource && npm test
+    - cd Selbi && npm test
 
 # TODO: Consider how we deploy private node modules here. Manual publish from a machine is fine for now
 #  but at somepoint we'll want to do it in a CI environment. Perhaps this is a reason to move to seperate repos.
@@ -29,9 +39,11 @@ deployment:
       - cd selbi-backend && ./deploy staging
       - cd selbi-stripe-worker && ./deploy staging
       - cd selbi-web && ./deploy staging
+      - cd Selbi && ./deploy staging js
   production:
     branch: production
     commands:
       - cd selbi-backend && ./deploy production
       - cd selbi-stripe-worker && ./deploy production
       - cd selbi-web && ./deploy production
+      - cd Selbi && ./deploy production js

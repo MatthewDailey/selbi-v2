@@ -1,4 +1,12 @@
-import Analytics from 'react-native-firebase-analytics';
+import FirebaseAnalytics from 'react-native-firebase-analytics';
+
+let Analytics = FirebaseAnalytics;
+if (__DEV__) {
+  Analytics = {
+    logEvent: console.log,
+  };
+}
+
 
 export default Analytics;
 
