@@ -12,6 +12,14 @@ dependencies:
     - cd service-accounts && npm install
     - cd firebase-test-resource && npm install
     - cd Selbi && npm install
+  cache_directories:
+    - selbi-backend/node_modules
+    - selbi-stripe-worker/node_modules
+    - service-accounts/node_modules
+    - firebase-test-resource/node_modules
+    - Selbi/node_modules
+    - /home/ubuntu/nvm/versions/node/4.4.4/bin
+    - /home/ubuntu/nvm/versions/node/4.4.4/lib/node_modules
 
 test:
   override:
