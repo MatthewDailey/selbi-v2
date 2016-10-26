@@ -18,6 +18,11 @@ This will also make sure the profile is up to date
 fastlane ios production
 ```
 Deploy a new version to the App Store
+### ios mark_production
+```
+fastlane ios mark_production
+```
+Mark this version as a production release
 
 ----
 
