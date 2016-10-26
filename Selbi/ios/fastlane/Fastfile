@@ -11,54 +11,31 @@
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
-fastlane_version "1.103.0"
+fastlane_version "1.106.0"
 
 default_platform :ios
 
 platform :ios do
   before_all do
     ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
-    #cocoapods
-    
   end
-
-  #desc "Runs all the tests"
-  #lane :test do
-  #  scan
-  #end
 
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :staging do
-    sh "cp ../../selbiBuildResources/staging/config.js ../../"
-
-    # match(type: "appstore") # more information: https://codesigning.guide
-    increment_build_number
+    match(type: "appstore") # more information: https://codesigning.guide
     gym(scheme: "Selbi Staging", use_legacy_build_api: true) # Build your app - more options available
-    pilot
+    testflight
 
-    # sh "your_script.sh"
-    # You can also use other beta testing services here (run `fastlane actions`)
+    slack(message: "Successfully uploaded a new Staging build.")
   end
 
   desc "Deploy a new version to the App Store"
   lane :production do
-    ENV["$SELBI_STAGE"] = "production"
-    # match(type: "appstore")
-    # snapshot
+    match(type: "appstore")
     gym(scheme: "Selbi Production") # Build your app - more options available
-    deliver(force: true)
-    # frameit
-  end
-
-  # You can define as many lanes as you want
-
-  after_all do |lane|
-    # This block is called, only if the executed lane was successful
-
-    slack(
-      message: "Successfully deployed new App Update."
-    )
+    appstore
+    slack(message: "Successfully uploaded a new Production build.")
   end
 
   error do |lane, exception|
