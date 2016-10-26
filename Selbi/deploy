@@ -40,6 +40,12 @@ function deploy_js {
     # Make sure to put the proper config file in place.
     cp selbiBuildResources/$stage/config.js .
 
+    # Mark as production version if it is one.
+    if [[ "$stage" = "production" ]]
+    then
+        cd ios && fastlane ios mark_production
+    fi
+
     # Note that this key will expire on Dec 22 2016, to refresh see the CodePush docs
     # https://microsoft.github.io/code-push/docs/cli.html
     code-push login --accessKey 8CqhFr7RQ4C104H4e5kzYDI98RWZVybu8pY2Z
