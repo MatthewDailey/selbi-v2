@@ -48,8 +48,13 @@ function deploy_js {
 }
 
 function deploy_native {
-    echo Native deploy not currently supported for stage=$stage.
-    exit 1
+    if [[ "$stage" = "develop" ]]
+    then
+        echo Native deploy not currently supported for stage=$stage.
+        exit 1
+    fi
+
+    cd ios && fastlane ios $stage
 }
 
 echo Attmepting to deploy $codeLevel to $stage...

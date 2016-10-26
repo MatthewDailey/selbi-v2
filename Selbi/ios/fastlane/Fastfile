@@ -24,21 +24,22 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :staging do
     match(type: "appstore") # more information: https://codesigning.guide
-    gym(scheme: "Selbi Staging", use_legacy_build_api: true) # Build your app - more options available
+    gym(scheme: "Selbi Staging", use_legacy_build_api: true)
     testflight
 
-    slack(message: "Successfully uploaded a new Staging build.")
+    slack(message: "Successfully uploaded a new Staging build for test flight.")
   end
 
   desc "Deploy a new version to the App Store"
   lane :production do
     # increment last digit of version number to mark this as a release.
     increment_version_number
-    
+
     match(type: "appstore")
-    gym(scheme: "Selbi Production") # Build your app - more options available
-    appstore
-    slack(message: "Successfully uploaded a new Production build.")
+    gym(scheme: "Selbi Production", use_legacy_build_api: true)
+    testflight
+
+    slack(message: "Successfully uploaded a new Production build for test flight.")
   end
 
   error do |lane, exception|
