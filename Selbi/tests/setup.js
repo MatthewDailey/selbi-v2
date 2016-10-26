@@ -69,3 +69,9 @@ mock('Dimensions', {
     return { width: 100, height: 100 };
   },
 });
+
+mock('react-native-firebase-analytics', {
+  logEvent(args) {
+    // Do nothing.
+  }
+})
