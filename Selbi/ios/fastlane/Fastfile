@@ -32,6 +32,9 @@ platform :ios do
 
   desc "Deploy a new version to the App Store"
   lane :production do
+    # increment last digit of version number to mark this as a release.
+    increment_version_number
+    
     match(type: "appstore")
     gym(scheme: "Selbi Production") # Build your app - more options available
     appstore
