@@ -41,6 +41,12 @@ export function distanceInMilesString(pointOne, pointTwo) {
   return distanceMiles.toFixed(0);
 }
 
+/*
+ * Read the devices geolocation using React Native's navigator.geolocation
+ *
+ * @returns Promise fulfilled with { lat, lon } if successful. Rejected with a human readable error
+ * otherwise.
+ */
 export function getGeolocation() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(

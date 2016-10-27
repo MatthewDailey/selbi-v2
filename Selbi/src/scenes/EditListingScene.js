@@ -18,7 +18,7 @@ import {
 
 import RoutableScene from '../nav/RoutableScene';
 
-import { isStringFloat } from '../utils';
+import { isStringFloat, getGeolocation } from '../utils';
 import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
 import { loadLocationForListing, changeListingStatus } from '../firebase/FirebaseConnector';
 import { setListingData } from '../reducers/ListingDetailReducer';
@@ -165,25 +165,6 @@ class EditListingScene extends RoutableScene {
       });
   }
 
-  getGeolocation() {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.props.setLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-          resolve();
-        },
-        (error) => {
-          // Code: 1 = permission denied, 2 = unavailable, 3 = timeout.
-          reject(error.message);
-        },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-      );
-    });
-  }
-
   recordScrollHeightForOverlay(event) {
     this.setState({
       overlayOffset: event.nativeEvent.contentOffset.y,
@@ -317,7 +298,11 @@ class EditListingScene extends RoutableScene {
                 <MKRadioButton
                   checked={this.props.listingStatus === 'public'}
                   group={this.radioGroup}
-                  onPress={() => this.getGeolocation().then(() => this.props.setStatus('public'))}
+                  onPress={() => getGeolocation()
+                    .then(() => this.props.setStatus('public'))
+                    .catch((error) =>
+                      Alert.alert(`There was an error fetching your location. ${error}`))
+                  }
                 />
                 <Text>Anyone Nearby</Text>
               </View>
