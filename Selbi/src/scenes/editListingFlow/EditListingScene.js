@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractionManager, ScrollView, View, Text, Image, MapView, Alert } from 'react-native';
+import { InteractionManager, ScrollView, View, Text, Image, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKRadioButton, MKButton } from 'react-native-material-kit';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
+import LocationPickerComponent from '../../components/editListing/LocationPickerComponent';
 
 import {
   setNewListingTitle,
@@ -18,7 +19,7 @@ import {
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { isStringFloat, getGeolocation } from '../utils';
+import { isStringFloat, getGeolocation } from '../../utils';
 import { updateListingFromStoreAndLoadResult } from '../../firebase/FirebaseActions';
 import { loadLocationForListing, changeListingStatus } from '../../firebase/FirebaseConnector';
 import { setListingData } from '../../reducers/ListingDetailReducer';
@@ -33,101 +34,6 @@ const DeleteListingButton = MKButton.flatButton()
   })
   .withBackgroundColor(colors.secondary)
   .build();
-
-class DraggableAnnotationExample extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFirstLoad: true,
-      annotations: [],
-    };
-  }
-
-  createAnnotation(longitude, latitude) {
-    return {
-      longitude,
-      latitude,
-      draggable: true,
-      onDragStateChange: (event) => {
-        if (event.state === 'idle') {
-          this.setState({
-            annotations: [this.createAnnotation(event.longitude, event.latitude)],
-          });
-          this.props.setLocation({
-            lat: event.latitude,
-            lon: event.longitude,
-          });
-        }
-      },
-    };
-  }
-
-  render() {
-    const onRegionChangeComplete = (region) => {
-      // When the MapView loads for the first time, we can create the annotation at the
-      // region that was loaded.
-      if (this.state.isFirstLoad) {
-        this.setState({
-          isFirstLoad: false,
-          annotations: [this.createAnnotation(region.longitude, region.latitude)],
-        });
-      }
-    };
-
-    return (
-      <MapView
-        style={{ height: 160 }}
-        onRegionChangeComplete={onRegionChangeComplete}
-        region={this.props.region}
-        annotations={this.state.annotations}
-      />
-    );
-  }
-}
-DraggableAnnotationExample.propTypes = {
-  setLocation: React.PropTypes.func.isRequired,
-  region: React.PropTypes.shape({
-    latitude: React.PropTypes.number.isRequired,
-    longitude: React.PropTypes.number.isRequired,
-    latitudeDelta: React.PropTypes.number.isRequired,
-    longitudeDelta: React.PropTypes.number.isRequired,
-  }),
-};
-
-function LocationComponent({ lat, lon, listingStatus, setLocation }) {
-  if (lat && lon && listingStatus === 'public') {
-    return (
-      <View>
-        <Text style={{ fontWeight: 'bold' }}>Location</Text>
-        <Text>
-          Don't worry about making this precise. Your exact location is never shared with other
-          users. It is only used for proximity.
-        </Text>
-        <DraggableAnnotationExample
-          region={{
-            latitude: lat,
-            longitude: lon,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          setLocation={setLocation}
-        />
-      </View>
-    );
-  }
-  return (
-    <View>
-      <Text style={{ fontWeight: 'bold' }}>Location</Text>
-      <Text>No location for this listing. Only public listings have an associated location.</Text>
-    </View>
-  );
-}
-LocationComponent.propTypes = {
-  lat: React.PropTypes.number,
-  lon: React.PropTypes.number,
-  listingStatus: React.PropTypes.string,
-  setLocation: React.PropTypes.func.isRequired,
-};
 
 class EditListingScene extends RoutableScene {
   constructor(props, context) {
@@ -317,7 +223,7 @@ class EditListingScene extends RoutableScene {
             </View>
           </View>
 
-          <LocationComponent
+          <LocationPickerComponent
             setLocation={this.props.setLocation}
             listingStatus={this.props.listingStatus}
             lat={this.props.listingLocation.lat}
@@ -359,6 +265,7 @@ class EditListingScene extends RoutableScene {
         </View>
         <SpinnerOverlay
           fillParent
+          message="Saving updated listing..."
           isVisible={this.state.storingUpdate}
           messageVerticalOffset={this.state.overlayOffset}
         />
