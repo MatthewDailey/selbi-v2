@@ -1,14 +1,14 @@
 import React from 'react';
-import { InteractionManager, ScrollView, View, Text, Image, Alert } from 'react-native';
+import { InteractionManager, ScrollView, View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import LocationPickerComponent from '../../components/editListing/LocationPickerComponent';
 import VisibilityPickerComponent from '../../components/editListing/VisibilityPickerComponent';
+import UpdateImageComponent from '../../components/editListing/UpdateImageComponent';
 
 import {
   setNewListingTitle,
@@ -110,46 +110,14 @@ class EditListingScene extends RoutableScene {
       );
     }
 
-    const imageContainerCameraIconSize = 40;
-    const imageContainerStyle = {
-      height: 160,
-      width: 160,
-      alignItems: 'center',
-      justifyContent: 'center',
-    };
-
     return (
       <ScrollView onScroll={this.recordScrollHeightForOverlay}>
         <View style={styles.paddedContainer}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}
-          >
-            <MKButton
-              style={imageContainerStyle}
-              onPress={() => this.goNext('camera')}
-            >
-              <Image
-                key={this.props.imageKey}
-                source={{ uri: this.props.listingImageUri }}
-                resizeMode="cover"
-                style={{ height: imageContainerStyle.height, width: imageContainerStyle.width }}
-              />
-              <Text
-                style={{
-                  position: 'absolute',
-                  backgroundColor: colors.transparent,
-                  top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
-                  left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2,
-                }}
-              >
-                <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
-              </Text>
-            </MKButton>
-          </View>
+
+          <UpdateImageComponent
+            imageUri={this.props.listingImageUri}
+            openCamera={() => this.goNext('camera')}
+          />
 
           <View style={styles.halfPadded} />
 
@@ -165,6 +133,7 @@ class EditListingScene extends RoutableScene {
               }
             }}
           />
+
           <Text style={{ fontWeight: 'bold' }}>Title</Text>
           <AutoGrowingTextInput
             style={styles.friendlyTextLeft}
@@ -172,6 +141,7 @@ class EditListingScene extends RoutableScene {
             value={this.props.listingTitle}
             onChangeText={(newText) => this.props.setTitle(newText)}
           />
+
           <Text style={{ fontWeight: 'bold' }}>Description</Text>
           <AutoGrowingTextInput
             style={styles.friendlyTextLeft}
