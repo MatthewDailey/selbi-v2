@@ -5,8 +5,8 @@ import { MKRadioButton, MKButton } from 'react-native-material-kit';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import SpinnerOverlay from '../components/SpinnerOverlay';
-import VisibilityWrapper from '../components/VisibilityWrapper';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import {
   setNewListingTitle,
@@ -14,18 +14,18 @@ import {
   setNewListingPrice,
   setNewListingStatus,
   setNewListingLocation,
-} from '../reducers/NewListingReducer';
+} from '../../reducers/NewListingReducer';
 
-import RoutableScene from '../nav/RoutableScene';
+import RoutableScene from '../../nav/RoutableScene';
 
 import { isStringFloat, getGeolocation } from '../utils';
-import { updateListingFromStoreAndLoadResult } from '../firebase/FirebaseActions';
-import { loadLocationForListing, changeListingStatus } from '../firebase/FirebaseConnector';
-import { setListingData } from '../reducers/ListingDetailReducer';
+import { updateListingFromStoreAndLoadResult } from '../../firebase/FirebaseActions';
+import { loadLocationForListing, changeListingStatus } from '../../firebase/FirebaseConnector';
+import { setListingData } from '../../reducers/ListingDetailReducer';
 
-import styles from '../../styles';
-import colors from '../../colors';
-import { reportButtonPress, reportEvent, reportError } from '../SelbiAnalytics';
+import styles from '../../../styles';
+import colors from '../../../colors';
+import { reportButtonPress, reportEvent, reportError } from '../../SelbiAnalytics';
 
 const DeleteListingButton = MKButton.flatButton()
   .withStyle({
