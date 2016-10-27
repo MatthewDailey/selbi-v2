@@ -133,8 +133,11 @@ class EditListingScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      overlayOffset: 0,
       renderPlaceholderOnly: true,
     };
+
+    this.recordScrollHeightForOverlay = this.recordScrollHeightForOverlay.bind(this);
 
     this.radioGroup = new MKRadioButton.Group();
   }
@@ -181,6 +184,12 @@ class EditListingScene extends RoutableScene {
     });
   }
 
+  recordScrollHeightForOverlay(event) {
+    this.setState({
+      overlayOffset: event.nativeEvent.contentOffset.y,
+    });
+  }
+
   renderWithNavBar() {
     if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
@@ -223,7 +232,7 @@ class EditListingScene extends RoutableScene {
     };
 
     return (
-      <ScrollView >
+      <ScrollView onScroll={this.recordScrollHeightForOverlay}>
         <View style={styles.paddedContainer}>
           <View
             style={{
@@ -363,7 +372,11 @@ class EditListingScene extends RoutableScene {
             </DeleteListingButton>
           </VisibilityWrapper>
         </View>
-        <SpinnerOverlay isVisible={this.state.storingUpdate} />
+        <SpinnerOverlay
+          fillParent
+          isVisible={this.state.storingUpdate}
+          messageVerticalOffset={this.state.overlayOffset}
+        />
       </ScrollView>
     );
   }
