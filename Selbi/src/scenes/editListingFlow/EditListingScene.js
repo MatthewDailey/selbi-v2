@@ -2,13 +2,14 @@ import React from 'react';
 import { InteractionManager, ScrollView, View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
-import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import LocationPickerComponent from '../../components/editListing/LocationPickerComponent';
 import VisibilityPickerComponent from '../../components/editListing/VisibilityPickerComponent';
 import UpdateImageComponent from '../../components/editListing/UpdateImageComponent';
+import { UpdatePriceComponent, UpdateTitleComponent, UpdateDescriptionComponent }
+  from '../../components/editListing/UpdateTextInputComponents';
 
 import {
   setNewListingTitle,
@@ -20,7 +21,6 @@ import {
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { isStringFloat } from '../../utils';
 import { updateListingFromStoreAndLoadResult } from '../../firebase/FirebaseActions';
 import { loadLocationForListing, changeListingStatus } from '../../firebase/FirebaseConnector';
 import { setListingData } from '../../reducers/ListingDetailReducer';
@@ -121,33 +121,19 @@ class EditListingScene extends RoutableScene {
 
           <View style={styles.halfPadded} />
 
-          <Text style={{ fontWeight: 'bold' }}>Price (USD)</Text>
-          <AutoGrowingTextInput
-            style={styles.friendlyTextLeft}
-            placeholder="Price"
-            keyboardType="numeric"
-            value={this.props.listingPrice}
-            onChangeText={(newText) => {
-              if (isStringFloat(newText)) {
-                this.props.setPrice(newText);
-              }
-            }}
+          <UpdatePriceComponent
+            price={this.props.listingPrice}
+            setPrice={this.props.setPrice}
           />
 
-          <Text style={{ fontWeight: 'bold' }}>Title</Text>
-          <AutoGrowingTextInput
-            style={styles.friendlyTextLeft}
-            placeholder="Title"
-            value={this.props.listingTitle}
-            onChangeText={(newText) => this.props.setTitle(newText)}
+          <UpdateTitleComponent
+            title={this.props.listingTitle}
+            setTitle={this.props.setTitle}
           />
 
-          <Text style={{ fontWeight: 'bold' }}>Description</Text>
-          <AutoGrowingTextInput
-            style={styles.friendlyTextLeft}
-            placeholder="Description"
-            value={this.props.listingDescription}
-            onChangeText={(newText) => this.props.setDescription(newText)}
+          <UpdateDescriptionComponent
+            description={this.props.listingDescription}
+            setDescription={this.props.setDescription}
           />
 
           <VisibilityPickerComponent
