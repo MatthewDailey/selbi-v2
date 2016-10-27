@@ -85,6 +85,33 @@ class DraggableAnnotationExample extends React.Component {
   }
 }
 
+function LocationComponent({ lat, lon, listingStatus, setLocation }) {
+  if (lat && lon && listingStatus === 'public') {
+    return (
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>Location</Text>
+        <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
+        <DraggableAnnotationExample
+          region={{
+            latitude: lat,
+            longitude: lon,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          setLocation={setLocation}
+        />
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        <Text style={{ fontWeight: 'bold' }}>Location</Text>
+        <Text>No location for this listing. Only public listings have an associated location.</Text>
+      </View>
+    );
+  }
+};
+
 function getPriceString(price) {
   if (price) {
     return price.toString();
@@ -183,34 +210,6 @@ class EditListingScene extends RoutableScene {
       width: 160,
       alignItems: 'center',
       justifyContent: 'center',
-    };
-
-    const LocationComponent = () => {
-      if (this.props.listingLocation.lat && this.props.listingLocation.lon
-        && this.props.listingStatus === 'public') {
-        return (
-          <View>
-            <Text style={{ fontWeight: 'bold' }}>Location</Text>
-            <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
-            <DraggableAnnotationExample
-              region={{
-                latitude: this.props.listingLocation.lat,
-                longitude: this.props.listingLocation.lon,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              setLocation={this.props.setLocation}
-            />
-          </View>
-        );
-      } else {
-        return (
-          <View>
-            <Text style={{ fontWeight: 'bold' }}>Location</Text>
-            <Text>No location for this listing. Only public listings have an associated location.</Text>
-          </View>
-        );
-      }
     };
 
     return (
@@ -313,7 +312,12 @@ class EditListingScene extends RoutableScene {
             </View>
           </View>
 
-          <LocationComponent />
+          <LocationComponent
+            setLocation={this.props.setLocation}
+            listingStatus={this.props.listingStatus}
+            lat={this.props.listingLocation.lat}
+            lon={this.props.listingLocation.lon}
+          />
 
           <View style={styles.padded} />
 
