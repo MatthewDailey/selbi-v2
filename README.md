@@ -14,6 +14,7 @@ in isolation with a full-fledged stack.
 
 1. Make sure you have necessary local libraries installed:
   - firebase-tools `npm install -g firebase-tools`
+  - Sign in via `firebase login` to firebase tools with your google @selbi.io account.
   - mocha (for unit tests) `npm install -g mocha`
 
 2. Clone this repo `git clone git@github.com:MatthewDailey/selbi-v2.git`
@@ -41,6 +42,7 @@ in isolation with a full-fledged stack.
         }
     }
     ```
+
   - Open the Permissions page for your project by clicking the gear icon in the top left next the project name.
   - Expand the left side menu and click on 'Service Accounts'
   - Click 'Create Service Account' to create a service account named 'test service account'. Make sure to assign it the role 'Owner' and select 'Furnish new private key' as a json file.
