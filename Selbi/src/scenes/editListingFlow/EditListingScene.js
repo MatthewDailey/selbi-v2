@@ -1,13 +1,14 @@
 import React from 'react';
 import { InteractionManager, ScrollView, View, Text, Image, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { MKRadioButton, MKButton } from 'react-native-material-kit';
+import { MKButton } from 'react-native-material-kit';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import LocationPickerComponent from '../../components/editListing/LocationPickerComponent';
+import VisibilityPickerComponent from '../../components/editListing/VisibilityPickerComponent';
 
 import {
   setNewListingTitle,
@@ -19,7 +20,7 @@ import {
 
 import RoutableScene from '../../nav/RoutableScene';
 
-import { isStringFloat, getGeolocation } from '../../utils';
+import { isStringFloat } from '../../utils';
 import { updateListingFromStoreAndLoadResult } from '../../firebase/FirebaseActions';
 import { loadLocationForListing, changeListingStatus } from '../../firebase/FirebaseConnector';
 import { setListingData } from '../../reducers/ListingDetailReducer';
@@ -35,6 +36,7 @@ const DeleteListingButton = MKButton.flatButton()
   .withBackgroundColor(colors.secondary)
   .build();
 
+
 class EditListingScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
@@ -44,8 +46,6 @@ class EditListingScene extends RoutableScene {
     };
 
     this.recordScrollHeightForOverlay = this.recordScrollHeightForOverlay.bind(this);
-
-    this.radioGroup = new MKRadioButton.Group();
   }
 
   componentDidMount() {
@@ -180,48 +180,11 @@ class EditListingScene extends RoutableScene {
             onChangeText={(newText) => this.props.setDescription(newText)}
           />
 
-          <View
-            style={{
-              paddingTop: 16,
-              paddingBottom: 16,
-            }}
-          >
-            <Text style={{ fontWeight: 'bold' }}>Listing Visibility</Text>
-            <VisibilityWrapper isVisible={this.props.listingStatus === 'inactive'}>
-              <Text style={{ color: colors.accent }}>
-                This listing has been deleted. Select 'Anyone Nearby' or 'Just Friends' and save to
-                restore.
-              </Text>
-            </VisibilityWrapper>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}
-            >
-              <View style={styles.halfPadded}>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'public'}
-                  group={this.radioGroup}
-                  onPress={() => getGeolocation()
-                    .then(() => this.props.setStatus('public'))
-                    .catch((error) =>
-                      Alert.alert(`There was an error fetching your location. ${error}`))
-                  }
-                />
-                <Text>Anyone Nearby</Text>
-              </View>
-              <View style={styles.halfPadded}>
-                <MKRadioButton
-                  checked={this.props.listingStatus === 'private'}
-                  group={this.radioGroup}
-                  onPress={() => this.props.setStatus('private')}
-                />
-                <Text>Just Friends</Text>
-              </View>
-            </View>
-          </View>
+          <VisibilityPickerComponent
+            setStatus={this.props.setStatus}
+            setLocation={this.props.setLocation}
+            listingStatus={this.props.listingStatus}
+          />
 
           <LocationPickerComponent
             setLocation={this.props.setLocation}
