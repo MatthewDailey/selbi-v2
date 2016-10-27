@@ -43,7 +43,7 @@ class DraggableAnnotationExample extends React.Component {
     };
   }
 
-  createAnnotation = (longitude, latitude) => {
+  createAnnotation(longitude, latitude) {
     return {
       longitude,
       latitude,
@@ -60,19 +60,19 @@ class DraggableAnnotationExample extends React.Component {
         }
       },
     };
-  };
+  }
 
   render() {
-    if (this.state.isFirstLoad) {
-      var onRegionChangeComplete = (region) => {
-        //When the MapView loads for the first time, we can create the annotation at the
-        //region that was loaded.
+    const onRegionChangeComplete = (region) => {
+      // When the MapView loads for the first time, we can create the annotation at the
+      // region that was loaded.
+      if (this.state.isFirstLoad) {
         this.setState({
           isFirstLoad: false,
           annotations: [this.createAnnotation(region.longitude, region.latitude)],
         });
-      };
-    }
+      }
+    };
 
     return (
       <MapView
@@ -84,13 +84,25 @@ class DraggableAnnotationExample extends React.Component {
     );
   }
 }
+DraggableAnnotationExample.propTypes = {
+  setLocation: React.PropTypes.func.isRequired,
+  region: React.PropTypes.shape({
+    latitude: React.PropTypes.number.isRequired,
+    longitude: React.PropTypes.number.isRequired,
+    latitudeDelta: React.PropTypes.number.isRequired,
+    longitudeDelta: React.PropTypes.number.isRequired,
+  }),
+};
 
 function LocationComponent({ lat, lon, listingStatus, setLocation }) {
   if (lat && lon && listingStatus === 'public') {
     return (
       <View>
         <Text style={{ fontWeight: 'bold' }}>Location</Text>
-        <Text>Don't worry about making this precise. Your exact location is never shared with other users. It is only used for proximity.</Text>
+        <Text>
+          Don't worry about making this precise. Your exact location is never shared with other
+          users. It is only used for proximity.
+        </Text>
         <DraggableAnnotationExample
           region={{
             latitude: lat,
@@ -102,28 +114,26 @@ function LocationComponent({ lat, lon, listingStatus, setLocation }) {
         />
       </View>
     );
-  } else {
-    return (
-      <View>
-        <Text style={{ fontWeight: 'bold' }}>Location</Text>
-        <Text>No location for this listing. Only public listings have an associated location.</Text>
-      </View>
-    );
   }
-};
-
-function getPriceString(price) {
-  if (price) {
-    return price.toString();
-  }
-  return undefined;
+  return (
+    <View>
+      <Text style={{ fontWeight: 'bold' }}>Location</Text>
+      <Text>No location for this listing. Only public listings have an associated location.</Text>
+    </View>
+  );
 }
+LocationComponent.propTypes = {
+  lat: React.PropTypes.number,
+  lon: React.PropTypes.number,
+  listingStatus: React.PropTypes.string,
+  setLocation: React.PropTypes.func.isRequired,
+};
 
 class EditListingScene extends RoutableScene {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      renderPlaceholderOnly: true
+      renderPlaceholderOnly: true,
     };
 
     this.radioGroup = new MKRadioButton.Group();
@@ -142,7 +152,7 @@ class EditListingScene extends RoutableScene {
       .then((updatedSnapshot) => this.props.setDetails(updatedSnapshot.val()))
       .then(() => {
         reportEvent('update_listing', { listing_id: this.props.listingKey });
-        this.goBack()
+        this.goBack();
       })
       .catch((error) => {
         reportError('update_listing_error', { error });
@@ -175,7 +185,7 @@ class EditListingScene extends RoutableScene {
     if (!this.props.listingLocation.lat || !this.props.listingLocation.lon) {
       loadLocationForListing(this.props.listingKey)
         .then((latlon) => {
-          if(latlon) {
+          if (latlon) {
             this.props.setLocation({
               lat: latlon[0],
               lon: latlon[1],
@@ -237,7 +247,7 @@ class EditListingScene extends RoutableScene {
                   position: 'absolute',
                   backgroundColor: colors.transparent,
                   top: (imageContainerStyle.height - imageContainerCameraIconSize) / 2,
-                  left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2
+                  left: (imageContainerStyle.width - imageContainerCameraIconSize) / 2,
                 }}
               >
                 <Icon name="camera" size={imageContainerCameraIconSize} color={colors.dark} />
@@ -255,7 +265,7 @@ class EditListingScene extends RoutableScene {
             value={this.props.listingPrice}
             onChangeText={(newText) => {
               if (isStringFloat(newText)) {
-                this.props.setPrice(newText)
+                this.props.setPrice(newText);
               }
             }}
           />
@@ -283,7 +293,8 @@ class EditListingScene extends RoutableScene {
             <Text style={{ fontWeight: 'bold' }}>Listing Visibility</Text>
             <VisibilityWrapper isVisible={this.props.listingStatus === 'inactive'}>
               <Text style={{ color: colors.accent }}>
-                This listing has been deleted. Select 'Anyone Nearby' or 'Just Friends' and save to restore.
+                This listing has been deleted. Select 'Anyone Nearby' or 'Just Friends' and save to
+                restore.
               </Text>
             </VisibilityWrapper>
             <View
@@ -321,15 +332,15 @@ class EditListingScene extends RoutableScene {
 
           <View style={styles.padded} />
 
-          <VisibilityWrapper isVisible={this.props.listingStatus != 'inactive'}>
+          <VisibilityWrapper isVisible={this.props.listingStatus !== 'inactive'}>
             <DeleteListingButton
               onPress={() => {
                 reportButtonPress('delete_listing_initial');
-                Alert.alert(`Delete this listing?`,
+                Alert.alert('Delete this listing?',
                   `Are you sure you want to delete ${this.props.listingTitle}?`,
                   [
                     {
-                      text: 'Cancel'
+                      text: 'Cancel',
                     },
                     {
                       text: 'Delete',
@@ -341,10 +352,10 @@ class EditListingScene extends RoutableScene {
                               reportEvent('deleted_listing', { listing_id: this.props.listingKey });
                               this.setState({ storingUpdate: false });
                             })
-                            .catch(() => this.setState({ storingUpdate: false }))
+                            .catch(() => this.setState({ storingUpdate: false }));
                         });
                       },
-                    }
+                    },
                   ]);
               }}
             >
@@ -366,7 +377,7 @@ function getPriceString(state) {
   return '';
 }
 
-const mapStateToProps = (state) => {
+function mapStateToProps(state) {
   return {
     fullListingData: state.newListing,
     title: 'Edit Listing',
@@ -381,9 +392,9 @@ const mapStateToProps = (state) => {
       lon: state.newListing.locationLon,
     },
   };
-};
+}
 
-const mapDispatchToProps = (dispatch) => {
+function mapDispatchToProps(dispatch) {
   return {
     setTitle: (title) => dispatch(setNewListingTitle(title)),
     setDescription: (description) => dispatch(setNewListingDescription(description)),
@@ -392,7 +403,7 @@ const mapDispatchToProps = (dispatch) => {
     setLocation: (latlon) => dispatch(setNewListingLocation(latlon)),
     setDetails: (listingData) => dispatch(setListingData(listingData)),
   };
-};
+}
 
 export default connect(
   mapStateToProps,
