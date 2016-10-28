@@ -11,10 +11,10 @@ import colors from '../../colors';
 import { reportButtonPress, reportEvent } from '../SelbiAnalytics';
 
 const BUTTONS = [
-  '📢 Share 📢',
-  '💌 Message 💌',
-  '💵 Buy 💵',
-  '🚩 Report Content 🚩',
+  'Share',
+  'Message',
+  'Buy',
+  'Report Content',
   'Cancel',
 ];
 const DESTRUCTIVE_INDEX = 3;
