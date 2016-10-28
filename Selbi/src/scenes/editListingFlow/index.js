@@ -2,7 +2,7 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
-import EditListingScene from '../EditListingScene';
+import EditListingScene from './EditListingScene';
 
 import SimpleCamera from '../newListingFlow/CameraScene';
 import ApproveImageScene from '../newListingFlow/ApproveImageScene';
