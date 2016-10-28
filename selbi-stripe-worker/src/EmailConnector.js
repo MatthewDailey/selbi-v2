@@ -34,3 +34,34 @@ export function sendItemSoldEmail(sellerEmail,
     });
   });
 }
+
+export function sendFlaggedInappropriateContentEmail(sellerId,
+                                                     sellerData,
+                                                     listingUrl,
+                                                     listingId,
+                                                     listingData,
+                                                     reporterId) {
+  return new Promise((resolve, reject) => {
+    emailClient.send_transactional_template({
+      id: 14, // flagged content transactional template id
+      to: 'matt@selbi.io',
+      attr: {
+        SELLER_ID: sellerId,
+        SELLER_DATA: JSON.stringify(sellerData),
+        LISTING_ID: listingId,
+        LISTING_DATA: JSON.stringify(listingData),
+        LISTING_URL: listingUrl,
+        REPORTER_ID: reporterId,
+      },
+    }, (error, result) => {
+      if (error) {
+        console.log(`Failed to send email about flagged content. Listing id: ${listingId}`
+            + ` reporterId: ${reporterId} Error Message: ${result.message}`);
+        reject(result.message);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+

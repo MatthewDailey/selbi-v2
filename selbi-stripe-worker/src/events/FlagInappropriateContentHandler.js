@@ -1,4 +1,6 @@
 
+import { sendFlaggedInappropriateContentEmail } from '../EmailConnector';
+
 const INAPPROPRIATE_CONTENT_EVENT_TYPE = 'inappropriate-content';
 
 function validateFollowPayload(payload) {
@@ -19,9 +21,67 @@ export default class FlagInappropriateContentHandler {
     return data.type === INAPPROPRIATE_CONTENT_EVENT_TYPE;
   }
 
-  handle(data, firebaseDb, sendNotification) {
+  handle(data, firebaseDb) {
+    const loadListingData = () => firebaseDb
+      .ref('listings')
+      .child(data.payload.listingId)
+      .once('value')
+      .then((dataSnapshot) => {
+        if (dataSnapshot.exists()) {
+          return Promise.resolve(dataSnapshot.val());
+        }
+        return Promise.reject(`Unable to load listing ${data.payload.listingId}`);
+      });
+
+    const loadSellerData = (listingData) => {
+      const promisePublicData = firebaseDb
+        .ref('userPublicData')
+        .child(listingData.sellerId)
+        .once('value')
+        .then((dataSnapshot) => {
+          if (dataSnapshot.exists()) {
+            return Promise.resolve(dataSnapshot.val());
+          }
+          return Promise.reject(`Unable to load user public data ${listingData.sellerId}`);
+        });
+
+      const promisePrivateData = firebaseDb
+        .ref('users')
+        .child(listingData.sellerId)
+        .once('value')
+        .then((dataSnapshot) => {
+          if (dataSnapshot.exists()) {
+            return Promise.resolve(dataSnapshot.val());
+          }
+          return Promise.reject(`Unable to load user private data ${listingData.sellerId}`);
+        });
+
+      return Promise.all([promisePublicData, promisePrivateData])
+        .then((results) => {
+          return {
+            listingData,
+            sellerData: {
+              id: listingData.sellerId,
+              publicData: results[0],
+              privateData: results[1],
+            },
+          };
+        });
+    };
+
     return validateFollowPayload(data.payload)
-      .then(() => console.log(data));
+      .then(loadListingData)
+      .then(loadSellerData)
+      .then((listingAndSellerData) => sendFlaggedInappropriateContentEmail(
+        listingAndSellerData.sellerData.id,
+        listingAndSellerData.sellerData,
+        data.payload.listingUrl,
+        data.payload.listingId,
+        listingAndSellerData.listingData,
+        data.owner
+      ))
+      .then(() => console.log(`Sent email about reported listing id: ${data.listingId}`
+        + ` reporter: ${data.owner}`));
   }
 }
 
