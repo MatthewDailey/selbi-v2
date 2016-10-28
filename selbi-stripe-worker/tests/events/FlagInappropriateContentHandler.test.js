@@ -48,15 +48,15 @@ describe('events - FlagInappropriateContentHandler', () => {
       //   .catch(done);
     });
 
-    it('can update', function(done) {
-      this.timeout(6000);
-
-      handler.handle(
-        validEvent,
-        FirebaseTest.serviceAccountApp.database())
-        .then(done)
-        .catch(done);
-    });
+    // it('can update', function(done) {
+    //   this.timeout(6000);
+    //
+    //   handler.handle(
+    //     validEvent,
+    //     FirebaseTest.serviceAccountApp.database())
+    //     .then(done)
+    //     .catch(done);
+    // });
   });
 });
 
