@@ -131,7 +131,7 @@ class ListingReceiptScene extends RoutableScene {
                 reportButtonPress('request_seller_accept_payment');
                 this.goNext('chat');
               }}
-              actionText="RequestSeller accept Pay with Selbi"
+              actionText="Request seller accept Pay with Selbi"
             />
           </View>
           <View style={styles.halfPadded}>
