@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import {LoginManager, AccessToken } from 'react-native-fbsdk';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 
 import { convertToUsername } from './FirebaseUtils';
