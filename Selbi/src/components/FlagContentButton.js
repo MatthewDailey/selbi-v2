@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, TouchableHighlight, Alert } from 'react-native';
+import { View, Text, TouchableHighlight, Alert, ActionSheetIOS } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Share from 'react-native-share';
 
 import { flagListingAsInappropriate } from '../firebase/FirebaseConnector';
 
@@ -9,7 +10,49 @@ import { getListingShareUrl } from '../deeplinking/Utilities';
 import colors from '../../colors';
 import { reportButtonPress, reportEvent } from '../SelbiAnalytics';
 
-export default function FlagContentButton({ listingId }) {
+const BUTTONS = [
+  '📢 Share 📢',
+  '💌 Message 💌',
+  '💵 Buy 💵',
+  '🚩 Report Content 🚩',
+  'Cancel',
+];
+const DESTRUCTIVE_INDEX = 3;
+const CANCEL_INDEX = 4;
+
+export default function FlagContentButton({ listingId, openChat, openBuy, isSeller }) {
+  if (isSeller) {
+    return <View />;
+  }
+
+  const reportContent = () => {
+    reportButtonPress('flag_content');
+    Alert.alert('Inappropriate Content?',
+      'Do you want to flag this listing as inappropriate content?',
+      [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Flag',
+          onPress: () => {
+            reportEvent('flagged_content');
+            flagListingAsInappropriate(listingId, getListingShareUrl(listingId))
+             .catch(console.log);
+            Alert.alert('😭 Sorry you had to see that!', 'Thanks for being an awesome member'
+              + ' of the Selbi community!');
+          },
+        },
+      ]);
+  };
+
+  const shareListing = () => {
+    reportButtonPress('action_sheet_share');
+    Share.open({ url: getListingShareUrl(listingId) })
+      .then(console.log)
+      .catch(console.log);
+  };
+
   return (
     <TouchableHighlight
       style={{
@@ -24,24 +67,31 @@ export default function FlagContentButton({ listingId }) {
         opacity: 0.7,
       }}
       onPress={() => {
-        reportButtonPress('flag_content');
-        Alert.alert('Inappropriate Content?',
-          'Do you want to flag this listing as inappropriate content?',
-          [
-            {
-              text: 'Cancel',
-            },
-            {
-              text: 'Flag',
-              onPress: () => {
-                reportEvent('flagged_content');
-                flagListingAsInappropriate(listingId, getListingShareUrl(listingId))
-                  .catch(console.log);
-                Alert.alert('😭 Sorry you had to see that!', 'Thanks for being an awesome member' +
-                  ' of the Selbi community!');
-              },
-            },
-          ]);
+        ActionSheetIOS.showActionSheetWithOptions({
+          options: BUTTONS,
+          cancelButtonIndex: CANCEL_INDEX,
+          destructiveButtonIndex: DESTRUCTIVE_INDEX,
+        },
+        (buttonIndex) => {
+          switch (buttonIndex) {
+            case 0:
+              shareListing();
+              break;
+            case 1:
+              reportButtonPress('action_sheet_chat');
+              openChat();
+              break;
+            case 2:
+              reportButtonPress('action_sheet_buy');
+              openBuy();
+              break;
+            case DESTRUCTIVE_INDEX:
+              reportContent();
+              break;
+            default:
+              // Do nothing.
+          }
+        });
       }}
       underlayColor={colors.transparent}
       activeOpacity={0.5}
@@ -56,7 +106,7 @@ export default function FlagContentButton({ listingId }) {
           textShadowRadius: 2,
         }}
       >
-        <Icon name="flag-o" size={18} color={colors.secondary} />
+        <Icon name="ellipsis-v" size={18} color={colors.secondary} />
       </Text>
     </TouchableHighlight>
   );

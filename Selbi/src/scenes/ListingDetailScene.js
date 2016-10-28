@@ -104,8 +104,10 @@ class DetailBottomButtons extends Component {
         >
           <View style={bottomOverlayStyleMinusPadding}>
             <ShareButton
-              onPress={() => Share.open({ url: getListingShareUrl(this.props.listingKey) })
-                  .catch(console.log)}
+              onPress={() => {
+                reportButtonPress('bottom_buttons_share');
+                Share.open({ url: getListingShareUrl(this.props.listingKey) }).catch(console.log);
+              }}
             />
             <View style={styles.halfPadded} />
             <UpdateButton onPress={this.props.openEdit} />
@@ -330,6 +332,7 @@ class ListingDetailScene extends RoutableScene {
 
     const imageData = this.props.imageData;
     const listingData = this.props.listingData;
+    const isSeller = !!getUser() && listingData.sellerId === getUser().uid;
 
     return (
       <TouchableHighlight
@@ -344,7 +347,12 @@ class ListingDetailScene extends RoutableScene {
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TopLeftBackButton onPress={this.goBack} />
-          <FlagContentButton listingId={this.props.listingKey} />
+          <FlagContentButton
+            listingId={this.props.listingKey}
+            openChat={() => this.goNext('chat')}
+            openBuy={() => this.goNext('buy')}
+            isSeller={isSeller}
+          />
           <VisibilityWrapper
             isVisible={this.state.showExtraDetails}
             style={{
@@ -354,7 +362,7 @@ class ListingDetailScene extends RoutableScene {
             }}
           >
             <DetailBottomButtons
-              isSeller={!!getUser() && listingData.sellerId === getUser().uid}
+              isSeller={isSeller}
               listingKey={this.props.listingKey}
               listingData={listingData}
               listingDistance={this.props.listingDistance}
