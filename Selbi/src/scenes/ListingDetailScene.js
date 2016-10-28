@@ -20,6 +20,7 @@ import RoutableScene from '../nav/RoutableScene';
 
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
+import FlagContentButton from '../components/FlagContentButton';
 import { BuyButton, ChatButton, UpdateButton, ShareButton }
   from '../components/buttons/ListingDetailButtons';
 import VisibilityWrapper from '../components/VisibilityWrapper';
@@ -343,6 +344,7 @@ class ListingDetailScene extends RoutableScene {
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TopLeftBackButton onPress={this.goBack} />
+          <FlagContentButton listingId={this.props.listingKey} />
           <VisibilityWrapper
             isVisible={this.state.showExtraDetails}
             style={{
