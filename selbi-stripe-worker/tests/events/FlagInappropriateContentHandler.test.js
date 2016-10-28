@@ -9,7 +9,7 @@ chai.use(dirtyChai);
 
 const handler = new FlagInappropriateContentHandler();
 
-const inappropriateListingId = 'test-listing-id';
+const inappropriateListingId = '-KUnye2SHB0eNdU1b12-';
 const inappropriateListing = FirebaseTest.getMinimalUserListingOne();
 
 const validEvent = {
@@ -34,20 +34,23 @@ describe('events - FlagInappropriateContentHandler', () => {
   describe('sucessfully mark bulletin as read', () => {
     before(function (done) {
       this.timeout(6000);
-
-      FirebaseTest
-        .createMinimalUser()
-        .then(() => FirebaseTest
-          .minimalUserApp
-          .database()
-          .ref('listings')
-          .child(inappropriateListingId)
-          .set(inappropriateListing))
-        .then(done)
-        .catch(done);
+      done();
+      //
+      // FirebaseTest
+      //   .createMinimalUser()
+      //   .then(() => FirebaseTest
+      //     .minimalUserApp
+      //     .database()
+      //     .ref('listings')
+      //     .child(inappropriateListingId)
+      //     .set(inappropriateListing))
+      //   .then(done)
+      //   .catch(done);
     });
 
-    it('can update', (done) => {
+    it('can update', function(done) {
+      this.timeout(6000);
+
       handler.handle(
         validEvent,
         FirebaseTest.serviceAccountApp.database())

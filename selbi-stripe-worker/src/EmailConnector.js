@@ -47,9 +47,9 @@ export function sendFlaggedInappropriateContentEmail(sellerId,
       to: 'matt@selbi.io',
       attr: {
         SELLER_ID: sellerId,
-        SELLER_DATA: JSON.stringify(sellerData),
+        SELLER_DATA: JSON.stringify(sellerData, undefined, 2),
         LISTING_ID: listingId,
-        LISTING_DATA: JSON.stringify(listingData),
+        LISTING_DATA: JSON.stringify(listingData, undefined, 2),
         LISTING_URL: listingUrl,
         REPORTER_ID: reporterId,
       },
@@ -59,6 +59,7 @@ export function sendFlaggedInappropriateContentEmail(sellerId,
             + ` reporterId: ${reporterId} Error Message: ${result.message}`);
         reject(result.message);
       } else {
+        console.log(result);
         resolve();
       }
     });

@@ -72,15 +72,17 @@ export default class FlagInappropriateContentHandler {
     return validateFollowPayload(data.payload)
       .then(loadListingData)
       .then(loadSellerData)
-      .then((listingAndSellerData) => sendFlaggedInappropriateContentEmail(
-        listingAndSellerData.sellerData.id,
-        listingAndSellerData.sellerData,
-        data.payload.listingUrl,
-        data.payload.listingId,
-        listingAndSellerData.listingData,
-        data.owner
-      ))
-      .then(() => console.log(`Sent email about reported listing id: ${data.listingId}`
+      .then((listingAndSellerData) => {
+        console.log(listingAndSellerData)
+        return sendFlaggedInappropriateContentEmail(
+          listingAndSellerData.sellerData.id,
+          listingAndSellerData.sellerData,
+          data.payload.listingUrl,
+          data.payload.listingId,
+          listingAndSellerData.listingData,
+          data.owner);
+      })
+      .then(() => console.log(`Sent email about reported listing id: ${data.payload.listingId}`
         + ` reporter: ${data.owner}`));
   }
 }
