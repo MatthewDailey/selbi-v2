@@ -1,8 +1,13 @@
 import React from 'react';
-import { Text, TouchableHighlight } from 'react-native';
+import { Text, TouchableHighlight, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { flagListingAsInappropriate } from '../firebase/FirebaseConnector';
+
+import { getListingShareUrl } from '../deeplinking/Utilities';
+
 import colors from '../../colors';
+import { reportButtonPress, reportEvent } from '../SelbiAnalytics';
 
 export default function FlagContentButton({ listingId }) {
   return (
@@ -18,7 +23,26 @@ export default function FlagContentButton({ listingId }) {
         width: 48,
         opacity: 0.7,
       }}
-      onPress={() => console.log('Pressed flag content', listingId)}
+      onPress={() => {
+        reportButtonPress('flag_content');
+        Alert.alert('Inappropriate Content?',
+          'Do you want to flag this listing as inappropriate content?',
+          [
+            {
+              text: 'Cancel',
+            },
+            {
+              text: 'Flag',
+              onPress: () => {
+                reportEvent('flagged_content');
+                flagListingAsInappropriate(listingId, getListingShareUrl(listingId))
+                  .catch(console.log);
+                Alert.alert('😭 Sorry you had to see that!', 'Thanks for being an awesome member' +
+                  ' of the Selbi community!');
+              },
+            },
+          ]);
+      }}
       underlayColor={colors.transparent}
       activeOpacity={0.5}
     >

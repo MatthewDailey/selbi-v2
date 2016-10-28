@@ -1234,3 +1234,24 @@ export function createShouldAddPhoneBulletin() {
       }));
 }
 
+export function flagListingAsInappropriate(listingId, listingUrl) {
+  let reporterId = 'user-not-signed-in';
+  if (getUser()) {
+    reporterId = getUser().uid;
+  }
+
+  return firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: reporterId,
+        type: 'inappropriate-content',
+        timestamp: new Date().getTime(),
+        payload: {
+          listingId,
+          listingUrl,
+        },
+      });
+}
+
