@@ -1278,3 +1278,16 @@ export function blockUser(uid) {
       .child(uid)
       .set(true));
 }
+
+export function unblockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot unblock null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .remove());
+}

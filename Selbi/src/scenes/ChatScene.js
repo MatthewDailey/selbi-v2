@@ -6,7 +6,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import RoutableScene from '../nav/RoutableScene';
 
 import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
-  createChatAsBuyer, blockUser } from '../firebase/FirebaseConnector';
+  createChatAsBuyer, blockUser, unblockUser } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
 import styles from '../../styles';
@@ -168,11 +168,27 @@ class ChatScene extends RoutableScene {
 
   renderWithNavBar() {
     if (this.props.isUserBlocked) {
-      const otherUserName = this.state.uidToName[this.getOtherUserUid()];
+      const otherUserUid = this.getOtherUserUid();
+      const otherUserName = this.state.uidToName[otherUserUid];
       return (
         <TouchableHighlight
           style={styles.paddedContainer}
-          onPress={() => console.log('unblock')}
+          onPress={() => {
+            Alert.alert('Unblock user?',
+              `Do you want to unblock messages from ${this.state.uidToName[otherUserUid]}?`,
+              [
+                {
+                  text: 'Cancel',
+                },
+                {
+                  text: 'Unblock',
+                  onPress: () => {
+                    reportEvent('unblock_user');
+                    unblockUser(otherUserUid);
+                  },
+                },
+              ]);
+          }}
           underlayColor={`${colors.black}64`}
         >
           <View>
