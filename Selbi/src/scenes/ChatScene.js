@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, View } from 'react-native';
+import { Alert, View, ActionSheetIOS } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../nav/RoutableScene';
@@ -31,6 +31,30 @@ class ChatScene extends RoutableScene {
         name: this.state.uidToName[dbMessage.authorUid],
       },
     };
+  }
+
+  goActionSheet() {
+    const buttons = [...this.props.routeLinks.actionSheet.buttons, 'Block User', 'Cancel'];
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: buttons,
+      cancelButtonIndex: buttons.length - 1,
+      destructiveButtonIndex: buttons.length - 2,
+    }, (buttonIndex) => {
+      const buttonName = buttons[buttonIndex];
+      const buttonNextRouteName = this.props.routeLinks.actionSheet.buttonNextRoute[buttonName];
+      if (buttonNextRouteName) {
+        this.goNext(buttonNextRouteName);
+        return;
+      }
+      switch (buttonIndex) {
+        case buttons.length - 1:
+          // TODO Block user.
+          break;
+        default:
+          // Do nothing.
+      }
+      console.log('Pressed:', buttonIndex);
+    });
   }
 
   componentWillMount() {
