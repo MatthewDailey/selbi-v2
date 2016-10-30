@@ -35,7 +35,7 @@ export default Object.assign(
   paletteFour,
   {
     white: '#ffffff',
-    black: '#000',
+    black: '#000000',
     greyedOut: '#dddddd',
     transparent: '#00000000',
   }

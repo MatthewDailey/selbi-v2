@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, View, ActionSheetIOS } from 'react-native';
+import { Alert, View, ActionSheetIOS, Text, TouchableHighlight } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../nav/RoutableScene';
@@ -9,6 +9,7 @@ import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewM
   createChatAsBuyer, blockUser } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
+import styles from '../../styles';
 import { reportSendMessage, reportEvent } from '../SelbiAnalytics';
 
 class ChatScene extends RoutableScene {
@@ -166,6 +167,25 @@ class ChatScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    if (this.props.isUserBlocked) {
+      const otherUserName = this.state.uidToName[this.getOtherUserUid()];
+      return (
+        <TouchableHighlight
+          style={styles.paddedContainer}
+          onPress={() => console.log('unblock')}
+          underlayColor={`${colors.black}64`}
+        >
+          <View>
+            <Text style={styles.friendlyText}>
+              You've blocked all messages between you and {otherUserName}.
+            </Text>
+            <View style={styles.padded} />
+            <Text style={styles.friendlyText}>Tap to unblock.</Text>
+          </View>
+        </TouchableHighlight>
+      );
+    }
+
     return (
       <View
         style={{
@@ -189,12 +209,22 @@ const mapStateToProps = (state) => {
     computedBuyerUid = getUser().uid;
   }
 
-  return {
+  const isUserBlocked = state.blockedUsers[state.listingDetails.listingData.sellerId]
+    || state.blockedUsers[computedBuyerUid];
+
+  const newProps = {
     title: state.listingDetails.listingData.title,
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     buyerUid: computedBuyerUid,
+    isUserBlocked,
   };
+
+  // If the user is blocked, don't show the actionSheet button.
+  if (isUserBlocked) {
+    newProps.rightIs = 'next';
+  }
+  return newProps;
 };
 
 const mapDispatchToProps = (dispatch) => {
