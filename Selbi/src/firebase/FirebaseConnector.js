@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import {LoginManager, AccessToken } from 'react-native-fbsdk';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 
 import { convertToUsername } from './FirebaseUtils';
@@ -1232,5 +1232,26 @@ export function createShouldAddPhoneBulletin() {
         timestamp: new Date().getTime(),
         payload: {},
       }));
+}
+
+export function flagListingAsInappropriate(listingId, listingUrl) {
+  let reporterId = 'user-not-signed-in';
+  if (getUser()) {
+    reporterId = getUser().uid;
+  }
+
+  return firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: reporterId,
+        type: 'inappropriate-content',
+        timestamp: new Date().getTime(),
+        payload: {
+          listingId,
+          listingUrl,
+        },
+      });
 }
 

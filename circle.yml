@@ -46,4 +46,5 @@ deployment:
       - cd selbi-backend && ./deploy production
       - cd selbi-stripe-worker && ./deploy production
       - cd selbi-web && ./deploy production
-      - cd Selbi && ./deploy production js
+      # Turn off auto deploy for production
+      # - cd Selbi && ./deploy production js
