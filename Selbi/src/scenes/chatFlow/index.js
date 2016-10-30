@@ -24,7 +24,7 @@ routeLinks[chatScene.id] = {
   },
   actionSheet: {
     buttons: ['Details'],
-    buttonNextRoute: {
+    buttonsNextRouteName: {
       Details: 'details',
     },
   },

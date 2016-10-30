@@ -41,7 +41,8 @@ class ChatScene extends RoutableScene {
       destructiveButtonIndex: buttons.length - 2,
     }, (buttonIndex) => {
       const buttonName = buttons[buttonIndex];
-      const buttonNextRouteName = this.props.routeLinks.actionSheet.buttonNextRoute[buttonName];
+      const buttonNextRouteName = this.props.routeLinks.actionSheet
+        .buttonsNextRouteName[buttonName];
       if (buttonNextRouteName) {
         this.goNext(buttonNextRouteName);
         return;
