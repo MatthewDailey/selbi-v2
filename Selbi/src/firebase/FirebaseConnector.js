@@ -1255,3 +1255,15 @@ export function flagListingAsInappropriate(listingId, listingUrl) {
       });
 }
 
+export function blockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot block null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .set(true));
+}

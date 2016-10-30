@@ -6,10 +6,10 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import RoutableScene from '../nav/RoutableScene';
 
 import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
-  createChatAsBuyer } from '../firebase/FirebaseConnector';
+  createChatAsBuyer, blockUser } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
-import { reportSendMessage } from '../SelbiAnalytics';
+import { reportSendMessage, reportEvent } from '../SelbiAnalytics';
 
 class ChatScene extends RoutableScene {
   constructor(props) {
@@ -33,7 +33,33 @@ class ChatScene extends RoutableScene {
     };
   }
 
+  getOtherUserUid() {
+    const currentUserUid = getUser().uid;
+    if (currentUserUid === this.props.buyerUid) {
+      return this.props.listingData.sellerId;
+    }
+    return this.props.buyerUid;
+  }
+
   goActionSheet() {
+    const otherUserUid = this.getOtherUserUid();
+    const askWouldLikeToBlockUser = () => {
+      Alert.alert('Block user?',
+        `Do you want to block all messages from ${this.state.uidToName[otherUserUid]}?`,
+        [
+          {
+            text: 'Cancel',
+          },
+          {
+            text: 'Block',
+            onPress: () => {
+              reportEvent('block_user');
+              blockUser(otherUserUid);
+            },
+          },
+        ]);
+    };
+
     const buttons = [...this.props.routeLinks.actionSheet.buttons, 'Block User', 'Cancel'];
     ActionSheetIOS.showActionSheetWithOptions({
       options: buttons,
@@ -48,8 +74,8 @@ class ChatScene extends RoutableScene {
         return;
       }
       switch (buttonIndex) {
-        case buttons.length - 1:
-          // TODO Block user.
+        case buttons.length - 2:
+          askWouldLikeToBlockUser();
           break;
         default:
           // Do nothing.
