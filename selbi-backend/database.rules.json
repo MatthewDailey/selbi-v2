@@ -806,6 +806,16 @@
       }
     },
 
+    "blocking" : {
+      "$uid" : {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid",
+        "$blockedUid" : {
+          ".validate": "newData.isBoolean() && $uid != $blockedUid"
+        }
+      }
+    },
+
     "usernames" : {
       ".read": true,
       "$username" : {
