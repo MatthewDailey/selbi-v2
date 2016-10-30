@@ -1073,16 +1073,16 @@ export function followListingSeller(listingId) {
     });
 }
 
-export function listenToBulletins(bulletinsHandler) {
+function listenToUserForRoute(route, handler) {
   if (!getUser()) {
     return undefined;
   }
 
   const handleSnapshot = (bulletinsSnapshot) => {
     if (bulletinsSnapshot.exists()) {
-      bulletinsHandler(bulletinsSnapshot.val());
+      handler(bulletinsSnapshot.val());
     } else {
-      bulletinsHandler({});
+      handler({});
     }
   };
 
@@ -1091,17 +1091,28 @@ export function listenToBulletins(bulletinsHandler) {
 
   firebaseApp
     .database()
-    .ref('userBulletins')
+    .ref(route)
     .child(uid)
     .on('value', handleSnapshot);
 
   return () => {
     firebaseApp
       .database()
-      .ref('userBulletins')
+      .ref(route)
       .child(uid)
       .off('value');
   };
+}
+
+/*
+ * Listin to /blocking/$uid for updates.
+ */
+export function listenToBlockedUsers(blockedUsersHandler) {
+  return listenToUserForRoute('blocking', blockedUsersHandler);
+}
+
+export function listenToBulletins(bulletinsHandler) {
+  return listenToUserForRoute('userBulletins', bulletinsHandler);
 }
 
 export function updateBulletin(bulletinId, updatedValue) {
@@ -1255,3 +1266,28 @@ export function flagListingAsInappropriate(listingId, listingUrl) {
       });
 }
 
+export function blockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot block null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .set(true));
+}
+
+export function unblockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot unblock null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .remove());
+}

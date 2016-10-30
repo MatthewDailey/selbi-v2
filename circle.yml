@@ -23,6 +23,7 @@ dependencies:
 
 test:
   override:
+    - cd selbi-backend && ./deploy develop
     - cd selbi-backend && npm test
     - cd selbi-stripe-worker && npm test
     - cd service-accounts && npm test

@@ -21,12 +21,12 @@ import EditListingFlow from '../editListingFlow';
 
 const chatFromDetailScene = {
   id: 'listing_purchase_details_chat_scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const chatFromReceiptScene = {
   id: 'listing_purchase_receipt_chat_scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" />),
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const listingDetailScene = {
@@ -121,6 +121,10 @@ routeLinks[chatFromDetailScene.id] = {
   back: {
     getRoute: () => listingDetailScene,
   },
+  actionSheet: {
+    buttons: [],
+    buttonsNextRouteName: {},
+  },
 };
 
 routeLinks[addEmailScene.id] = {
@@ -149,6 +153,13 @@ routeLinks[receiptScene.id] = {
   next: {
     title: '',
     getRoute: () => completedPurchaseScene,
+  },
+};
+
+routeLinks[chatFromReceiptScene.id] = {
+  actionSheet: {
+    buttons: [],
+    buttonsNextRouteName: {},
   },
 };
 

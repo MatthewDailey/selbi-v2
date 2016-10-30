@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableHighlight, Alert, ActionSheetIOS } from 'react-native';
+import { Text, TouchableHighlight, Alert, ActionSheetIOS } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 
@@ -12,19 +12,13 @@ import { reportButtonPress, reportEvent } from '../SelbiAnalytics';
 
 const BUTTONS = [
   'Share',
-  'Message',
-  'Buy',
   'Report Content',
   'Cancel',
 ];
-const DESTRUCTIVE_INDEX = 3;
-const CANCEL_INDEX = 4;
+const DESTRUCTIVE_INDEX = 1;
+const CANCEL_INDEX = 2;
 
-export default function FlagContentButton({ listingId, openChat, openBuy, isSeller }) {
-  if (isSeller) {
-    return <View />;
-  }
-
+export default function DetailMenuButton({ listingId }) {
   const reportContent = () => {
     reportButtonPress('flag_content');
     Alert.alert('Inappropriate Content?',
@@ -77,14 +71,6 @@ export default function FlagContentButton({ listingId, openChat, openBuy, isSell
             case 0:
               shareListing();
               break;
-            case 1:
-              reportButtonPress('action_sheet_chat');
-              openChat();
-              break;
-            case 2:
-              reportButtonPress('action_sheet_buy');
-              openBuy();
-              break;
             case DESTRUCTIVE_INDEX:
               reportContent();
               break;
@@ -111,7 +97,7 @@ export default function FlagContentButton({ listingId, openChat, openBuy, isSell
     </TouchableHighlight>
   );
 }
-FlagContentButton.propTypes = {
+DetailMenuButton.propTypes = {
   listingId: React.PropTypes.string.isRequired,
 };
 
