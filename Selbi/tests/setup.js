@@ -39,12 +39,15 @@ Module._findPath = (request, paths) => {
 
 // Ignore all node_modules except these
 const modulesToCompile = [
+  'react-native-restart',
   'react-native-gifted-chat',
   'react-native-material-kit',
   'react-native-vector-icons',
   'react-native-scrollable-tab-view',
   'react-native-autogrow-textinput',
   'react-native-fcm',
+  'react-native-firebase-analytics',
+  'react-native-fbsdk',
 ].map((moduleName) => new RegExp(`/node_modules/${moduleName}`));
 const rcPath = path.join(__dirname, '..', '.babelrc');
 const source = fs.readFileSync(rcPath).toString();
@@ -67,3 +70,9 @@ mock('Dimensions', {
     return { width: 100, height: 100 };
   },
 });
+
+mock('react-native-firebase-analytics', {
+  logEvent(args) {
+    // Do nothing.
+  }
+})

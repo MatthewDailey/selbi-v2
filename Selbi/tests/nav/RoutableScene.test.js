@@ -42,8 +42,7 @@ describe('<RoutableScene />', () => {
       const navBar = wrapper.find('NavigationBar').get(0);
 
       expect(navBar.props.leftButton).to.exist();
-      expect(navBar.props.leftButton.title).to.equal('Menu');
-      expect(navBar.props.leftButton.handler.name).to.equal('bound goMenu');
+      expect(navBar.props.leftButton.props.onPress.name).to.equal('bound goMenu');
     });
 
     it('will enable back with leftIs=back', () => {
@@ -51,8 +50,7 @@ describe('<RoutableScene />', () => {
       const navBar = wrapper.find('NavigationBar').get(0);
 
       expect(navBar.props.leftButton).to.exist();
-      expect(navBar.props.leftButton.title).to.equal('<');
-      expect(navBar.props.leftButton.handler.name).to.equal('bound goBackHandler');
+      expect(navBar.props.leftButton.props.onPress.name).to.equal('bound goBackHandler');
     });
 
     it('will disable without leftIs', () => {

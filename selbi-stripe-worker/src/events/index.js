@@ -4,6 +4,8 @@ import NotifyFollowersOfNewListingHandler from './NotifyFollowersOfNewListingHan
 import ShouldAddBankAccountHandler from './ShouldAddBankAccountHandler';
 import ClearShouldAddBankAccountHandler from './ClearShouldAddBankAccountHandler';
 
+import FlagInappropriateContentHandler from './FlagInappropriateContentHandler';
+
 import VerifyPhoneHandler from '../sms/VerifyPhoneHandler';
 import CreatePhoneVerification from '../sms/CreatePhoneVerificationHandler';
 
@@ -16,4 +18,5 @@ export const eventHandlers = [
   new ClearShouldAddBankAccountHandler(),
   new AddBulletinForNewFollower(),
   new NotifyFollowersOfNewListingHandler(),
+  new FlagInappropriateContentHandler(),
 ];

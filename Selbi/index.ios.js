@@ -42,10 +42,13 @@ import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
 import permissionsReducer from './src/reducers/PermissionsReducer';
 import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
+import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
+  from './src/reducers/BlockedUsersReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
-  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData }
+  listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData,
+  listenToBlockedUsers, listenToBannedUsers }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -82,7 +85,10 @@ const store = createStore(combineReducers({
   bulletins: bulletinsReducer,
   permissions: permissionsReducer,
   addPhone: addPhoneReducer,
+  blockedUsers: blockedUsersReducer,
 }));
+
+addAuthStateChangeListener(listenToBannedUsers);
 
 let startedListeningForLocalListings = false;
 function fetchLocalListings() {
@@ -150,6 +156,20 @@ const listenForUserBulletins = (user) => {
   }
 };
 addAuthStateChangeListener(listenForUserBulletins);
+
+let unwatchBlockedUsers;
+const listenForBlockedUsers = (user) => {
+  if (user) {
+    unwatchBlockedUsers = listenToBlockedUsers((blockedUsers) =>
+      store.dispatch(setBlockedUsers(blockedUsers)));
+  } else {
+    if (unwatchBlockedUsers) {
+      unwatchBlockedUsers();
+    }
+    store.dispatch(clearBlockedUsers());
+  }
+};
+addAuthStateChangeListener(listenForBlockedUsers)
 
 let unwatchUserForAnalytics;
 const listenForUserAnalytics = (user) => {

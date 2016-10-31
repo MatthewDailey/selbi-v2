@@ -19,7 +19,7 @@ describe('NewListingReducer', () => {
   const initialState = newListingReducer();
 
   it('returns initial state', () => {
-    expect(initialState.status).to.equal('building');
+    expect(initialState.status).to.equal('inactive');
   });
 
   it('can set listing id', () => {

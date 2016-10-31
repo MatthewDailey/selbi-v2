@@ -26,11 +26,11 @@ describe('/users', () => {
         .ref('/users');
 
       const createTestUserPromise = usersRef
-        .child(FirebaseTest.testUserUid)
+        .child(testUserUid)
         .set(FirebaseTest.getTestUserData());
 
       const createFakeUserPromise = usersRef
-        .child(FirebaseTest.extraUserUid)
+        .child(extraUserUid)
         .set(FirebaseTest.getTestUserData());
 
       Promise.all([createFakeUserPromise, createTestUserPromise])
@@ -63,7 +63,7 @@ describe('/users', () => {
       .testUserApp
       .database()
       .ref('/users')
-      .child(FirebaseTest.testUserUid)
+      .child(testUserUid)
       .set(testUserDataWithExtra)
       .then(() => {
         done(new Error('Should not be able to store user data with extra property.'));

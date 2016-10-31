@@ -1,7 +1,8 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
-import {LoginManager, AccessToken } from 'react-native-fbsdk';
+import RNRestart from 'react-native-restart';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 
 import { convertToUsername } from './FirebaseUtils';
@@ -1073,35 +1074,61 @@ export function followListingSeller(listingId) {
     });
 }
 
-export function listenToBulletins(bulletinsHandler) {
+function listenToUserForRoute(route, handler, defaultValue = {}) {
   if (!getUser()) {
     return undefined;
   }
 
-  const handleSnapshot = (bulletinsSnapshot) => {
-    if (bulletinsSnapshot.exists()) {
-      bulletinsHandler(bulletinsSnapshot.val());
+  const handleSnapshot = (snapshot) => {
+    console.log(route, snapshot.key, snapshot.val())
+    if (snapshot.exists()) {
+      handler(snapshot.val());
     } else {
-      bulletinsHandler({});
+      handler(defaultValue);
     }
   };
+
+  console.log('listen to route: ', route)
 
   // Fetch this before since we'll be signed out during call to returned unwatch method.
   const uid = getUser().uid;
 
   firebaseApp
     .database()
-    .ref('userBulletins')
+    .ref(route)
     .child(uid)
     .on('value', handleSnapshot);
 
   return () => {
     firebaseApp
       .database()
-      .ref('userBulletins')
+      .ref(route)
       .child(uid)
       .off('value');
   };
+}
+
+export function listenToBannedUsers() {
+  listenToUserForRoute(
+    'bannedUsers',
+    (isBanned) => {
+      if (isBanned) {
+        signOut();
+        RNRestart.Restart();
+      }
+    },
+    false);
+}
+
+/*
+ * Listin to /blocking/$uid for updates.
+ */
+export function listenToBlockedUsers(blockedUsersHandler) {
+  return listenToUserForRoute('blocking', blockedUsersHandler);
+}
+
+export function listenToBulletins(bulletinsHandler) {
+  return listenToUserForRoute('userBulletins', bulletinsHandler);
 }
 
 export function updateBulletin(bulletinId, updatedValue) {
@@ -1234,3 +1261,49 @@ export function createShouldAddPhoneBulletin() {
       }));
 }
 
+export function flagListingAsInappropriate(listingId, listingUrl) {
+  let reporterId = 'user-not-signed-in';
+  if (getUser()) {
+    reporterId = getUser().uid;
+  }
+
+  return firebaseApp
+      .database()
+      .ref('events/tasks')
+      .push()
+      .set({
+        owner: reporterId,
+        type: 'inappropriate-content',
+        timestamp: new Date().getTime(),
+        payload: {
+          listingId,
+          listingUrl,
+        },
+      });
+}
+
+export function blockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot block null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .set(true));
+}
+
+export function unblockUser(uid) {
+  if (!uid) {
+    return Promise.reject('Cannot unblock null user.');
+  }
+  return requireSignedIn()
+    .then(firebaseApp
+      .database()
+      .ref('blocking')
+      .child(getUser().uid)
+      .child(uid)
+      .remove());
+}

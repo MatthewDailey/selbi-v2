@@ -126,7 +126,7 @@ describe('<SignInOrRegisterScene />', () => {
         .instance()
         .getInnerView(TabTypes.signIn, spy());
 
-      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First Name'))
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First name'))
         .to.be.false();
     });
 
@@ -135,7 +135,7 @@ describe('<SignInOrRegisterScene />', () => {
         .instance()
         .getInnerView(TabTypes.signIn, spy());
 
-      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last Name'))
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last name'))
         .to.be.false();
     });
 
@@ -162,7 +162,7 @@ describe('<SignInOrRegisterScene />', () => {
         .instance()
         .getInnerView(TabTypes.register, spy());
 
-      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First Name'))
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'First name'))
         .to.be.true();
     });
 
@@ -171,7 +171,7 @@ describe('<SignInOrRegisterScene />', () => {
         .instance()
         .getInnerView(TabTypes.register, spy());
 
-      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last Name'))
+      expect(atleastOneChildMatches(innerView, (child) => child.props.placeholder === 'Last name'))
         .to.be.true();
     });
   });
@@ -216,10 +216,11 @@ describe('<SignInOrRegisterScene />', () => {
     it('calls register with correct email and pw and name', (done) => {
       signInOrRegisterWrapper.instance().registerUserWithEmailAndPassword()
         .then(() => {
-          expect(mockSignInWithEmail.neverCalledWith()).to.be.true();
           expect(mockRegisterWithEmail.calledWithExactly('email-register', 'password-register'))
             .to.be.true();
-          expect(mockCreateUser.calledWithExactly('first-name', 'last-name'))
+          expect(mockCreateUser.calledWithExactly('first-name last-name', 'email-register'))
+            .to.be.true();
+          expect(mockSignInWithEmail.calledWithExactly('email-register', 'password-register'))
             .to.be.true();
           done();
         })

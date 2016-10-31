@@ -6,15 +6,15 @@ import ChatListComponent from '../../src/components/ChatListComponent';
 
 const testChats = [
   {
-    title: 'Coasters',
-    listingId: '-KQfYCq4TWSaR_EvGO9n',
+    listingData: { title: 'Coasters' },
+    listingKey: '-KQfYCq4TWSaR_EvGO9n',
     sellerUid: '2xcY7hZKe6O6QHWlsRJsZmdZAZn1',
     buyerUid: 'AFDjatxUmhUrtP7qKZ8ozHqr2NE3',
     type: 'selling',
   },
   {
-    title: 'Courts glasses',
-    listingId: '-KQfYYZF7IsKCQGiQO69',
+    listingData: { title: 'Courts glasses' },
+    listingKey: '-KQfYYZF7IsKCQGiQO69',
     sellerUid: '2xcY7hZKe6O6QHWlsRJsZmdZAZn1',
     buyerUid: 'AFDjatxUmhUrtP7qKZ8ozHqr2NE3',
     type: 'selling',
@@ -62,7 +62,7 @@ describe('<ChatListComponent />', () => {
 
     expect(chatListItem.type.name).to.equal('ChatListItem');
 
-    expect(chatListItem.props.chatTitle).to.equal(testChats[0].title);
+    expect(chatListItem.props.chatTitle).to.equal(testChats[0].listingData.title);
     expect(chatListItem.props.chatType).to.equal(testChats[0].type);
 
     chatListItem.props.openChatScene();
