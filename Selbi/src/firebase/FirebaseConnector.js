@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import GeoFire from 'geofire';
 import FCM from 'react-native-fcm';
+import RNRestart from 'react-native-restart';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 
@@ -1073,18 +1074,21 @@ export function followListingSeller(listingId) {
     });
 }
 
-function listenToUserForRoute(route, handler) {
+function listenToUserForRoute(route, handler, defaultValue = {}) {
   if (!getUser()) {
     return undefined;
   }
 
-  const handleSnapshot = (bulletinsSnapshot) => {
-    if (bulletinsSnapshot.exists()) {
-      handler(bulletinsSnapshot.val());
+  const handleSnapshot = (snapshot) => {
+    console.log(route, snapshot.key, snapshot.val())
+    if (snapshot.exists()) {
+      handler(snapshot.val());
     } else {
-      handler({});
+      handler(defaultValue);
     }
   };
+
+  console.log('listen to route: ', route)
 
   // Fetch this before since we'll be signed out during call to returned unwatch method.
   const uid = getUser().uid;
@@ -1102,6 +1106,18 @@ function listenToUserForRoute(route, handler) {
       .child(uid)
       .off('value');
   };
+}
+
+export function listenToBannedUsers() {
+  listenToUserForRoute(
+    'bannedUsers',
+    (isBanned) => {
+      if (isBanned) {
+        signOut();
+        RNRestart.Restart();
+      }
+    },
+    false);
 }
 
 /*

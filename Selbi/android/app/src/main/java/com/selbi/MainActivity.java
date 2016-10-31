@@ -1,6 +1,8 @@
 package com.selbi;
 
 import com.facebook.react.ReactActivity;
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;

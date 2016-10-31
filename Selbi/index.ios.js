@@ -48,7 +48,7 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
   listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData,
-  listenToBlockedUsers }
+  listenToBlockedUsers, listenToBannedUsers }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -87,6 +87,8 @@ const store = createStore(combineReducers({
   addPhone: addPhoneReducer,
   blockedUsers: blockedUsersReducer,
 }));
+
+addAuthStateChangeListener(listenToBannedUsers);
 
 let startedListeningForLocalListings = false;
 function fetchLocalListings() {

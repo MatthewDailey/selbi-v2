@@ -816,6 +816,14 @@
       }
     },
 
+    "bannedUsers" : {
+      "$uid" : {
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.isBoolean()"
+      }
+    },
+
     "usernames" : {
       ".read": true,
       "$username" : {
