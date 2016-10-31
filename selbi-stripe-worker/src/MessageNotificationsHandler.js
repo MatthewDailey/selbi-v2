@@ -93,6 +93,20 @@ export default class MessageNotificationsHandler {
         });
     };
 
+    const checkIfRecipientBlockedSender = (recipientUid, authorUid) => {
+      return firebaseDb
+        .ref('blocking')
+        .child(recipientUid)
+        .child(authorUid)
+        .once('value')
+        .then((snapshot) => {
+          if (snapshot.exists() && snapshot.val()) {
+            return Promise.reject(`User ${recipientUid} blocked message from ${authorUid}`);
+          }
+          return Promise.resolve();
+        });
+    };
+
     return (data, progress, resolveTask, rejectTask) => {
       const listingId = data.listingId;
       const buyerId = data.buyerId;
@@ -144,19 +158,15 @@ export default class MessageNotificationsHandler {
 
             const recipientId = getRecipient(message.authorUid);
             const promiseRecipientFcmToken = loadUserPrivateInfo(recipientId)
-              .then((recipient) => {
-                if (recipient.fcmToken) {
-                  return Promise.resolve(recipient.fcmToken);
-                }
-                return Promise.reject(`Unable to find fcmToken for user ${recipientId}`);
-              });
+              .then((recipient) => Promise.resolve(recipient.fcmToken));
 
             const promiseRecipientId = Promise.resolve(recipientId);
             const promiseMessage = Promise.resolve(message.text);
             const promiseListingTitle = Promise.resolve(listing.title);
 
-            return Promise.all([promiseRecipientFcmToken, promiseAuthorName, promiseMessage,
-              promiseListingTitle, promiseRecipientId]);
+            return checkIfRecipientBlockedSender(recipientId, message.authorUid)
+              .then(() => Promise.all([promiseRecipientFcmToken, promiseAuthorName, promiseMessage,
+              promiseListingTitle, promiseRecipientId]));
           });
       };
 
@@ -181,6 +191,12 @@ export default class MessageNotificationsHandler {
           const authorName = fcmTokenAndAuthorAndMessageAndListingTitle[1];
           const messageText = fcmTokenAndAuthorAndMessageAndListingTitle[2];
           const listingTitle = fcmTokenAndAuthorAndMessageAndListingTitle[3];
+          const recipientId = fcmTokenAndAuthorAndMessageAndListingTitle[4];
+
+          if (!fcmToken) {
+            return Promise.reject(`Unable to find fcmToken for user ${recipientId}`);
+          }
+
           return sendNotification(
             fcmToken,
             `New Message about ${listingTitle}`,
