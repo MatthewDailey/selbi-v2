@@ -39,6 +39,7 @@ Module._findPath = (request, paths) => {
 
 // Ignore all node_modules except these
 const modulesToCompile = [
+  'react-native-restart',
   'react-native-gifted-chat',
   'react-native-material-kit',
   'react-native-vector-icons',
