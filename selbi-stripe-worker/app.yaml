@@ -1,9 +1,0 @@
-# cmaking the default serviec since app engine requires that
-service: stripe-worker
-runtime: nodejs
-vm: true
-instance_class: B1
-manual_scaling:
-  instances: 1
-env_variables:
-  SELBI_ENVIRONMENT: 'staging'
