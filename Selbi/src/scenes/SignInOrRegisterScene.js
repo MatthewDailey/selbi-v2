@@ -105,7 +105,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
       .then(() => this.props.createUser(`${firstName} ${lastName}`, email))
       .then(() => this.props.signInWithEmail(email, password))
       .then((user) => {
-        reportSignIn('email', user.uid);
+        if (user) {
+          reportSignIn('email', user.uid);
+        }
         return Promise.resolve(user);
       })
       .then(this.registerOrSignInSuccessHandler)
@@ -199,9 +201,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
         onSubmitEditing={() => this.refs.EmailInput.focus()}
       /> : <View />;
 
-    const termsOfServiceViewIfNecessary = registerOrSignInType === TabTypes.register ?
+    const termsOfServiceView = (
       <Text>
-        {'By registering you are agreeing to Selbi\'s '}
+        {'By signing in you are agreeing to Selbi\'s '}
         <Text
           style={{ textDecorationLine: 'underline' }}
           onPress={() => this.props.navigator.push(termsAndConditionsScene)}
@@ -216,7 +218,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           privacy policy
         </Text>.
       </Text>
-      : <View />;
+    );
 
     return (
       <ScrollView
@@ -289,7 +291,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
         <View style={styles.padded} />
         <SubmitButton />
         <View style={styles.halfPadded} />
-        {termsOfServiceViewIfNecessary}
+        {termsOfServiceView}
       </ScrollView>
     );
   }

@@ -51,6 +51,7 @@ export default class RoutableScene extends Component {
     this.goReturn = this.goReturn.bind(this);
     this.goReturnHandler = this.goReturnHandler.bind(this);
     this.openSimpleScene = this.openSimpleScene.bind(this);
+    this.goActionSheet = this.goActionSheet.bind(this);
   }
 
   onGoHome() {
@@ -103,7 +104,18 @@ export default class RoutableScene extends Component {
       tintColor: colors.secondary,
     };
 
-    if (this.props.routeLinks.next && this.props.rightIs === 'next') {
+    if (this.props.routeLinks.actionSheet && this.props.rightIs === 'actionSheet') {
+      return (
+        <TouchableHighlight
+          onPress={() => this.goActionSheet()}
+          style={styles.paddedCenterContainerClear}
+          underlayColor={colors.transparent}
+          activeOpacity={0.5}
+        >
+          <Text><Icon name="ellipsis-v" size={18} color={colors.secondary} /></Text>
+        </TouchableHighlight>
+      );
+    } else if (this.props.routeLinks.next && this.props.rightIs === 'next') {
       rightButton.handler = this.goNextHandler;
       rightButton.title = this.props.routeLinks.next.title;
       return rightButton;
@@ -119,6 +131,10 @@ export default class RoutableScene extends Component {
 
     // Return nothing. No right button.
     return undefined;
+  }
+
+  goActionSheet() {
+    // Implemented by children.
   }
 
   goMenu() {
@@ -250,5 +266,5 @@ RoutableScene.propTypes = {
   navigator: React.PropTypes.object,
   routeLinks: React.PropTypes.object,
   leftIs: React.PropTypes.oneOf(['back', 'menu']),
-  rightIs: React.PropTypes.oneOf(['next', 'home', 'return']),
+  rightIs: React.PropTypes.oneOf(['next', 'home', 'return', 'actionSheet']),
 };

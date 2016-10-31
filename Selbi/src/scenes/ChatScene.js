@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, View } from 'react-native';
+import { Alert, View, ActionSheetIOS, Text, TouchableHighlight } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 
 import RoutableScene from '../nav/RoutableScene';
 
 import { loadUserPublicData, loadMessages, sendMessage, getUser, subscribeToNewMessages,
-  createChatAsBuyer } from '../firebase/FirebaseConnector';
+  createChatAsBuyer, blockUser, unblockUser } from '../firebase/FirebaseConnector';
 
 import colors from '../../colors';
-import { reportSendMessage } from '../SelbiAnalytics';
+import styles from '../../styles';
+import { reportSendMessage, reportEvent } from '../SelbiAnalytics';
 
 class ChatScene extends RoutableScene {
   constructor(props) {
@@ -31,6 +32,57 @@ class ChatScene extends RoutableScene {
         name: this.state.uidToName[dbMessage.authorUid],
       },
     };
+  }
+
+  getOtherUserUid() {
+    const currentUserUid = getUser().uid;
+    if (currentUserUid === this.props.buyerUid) {
+      return this.props.listingData.sellerId;
+    }
+    return this.props.buyerUid;
+  }
+
+  goActionSheet() {
+    const otherUserUid = this.getOtherUserUid();
+    const askWouldLikeToBlockUser = () => {
+      Alert.alert('Block user?',
+        `Do you want to block all messages from ${this.state.uidToName[otherUserUid]}?`,
+        [
+          {
+            text: 'Cancel',
+          },
+          {
+            text: 'Block',
+            onPress: () => {
+              reportEvent('block_user');
+              blockUser(otherUserUid);
+            },
+          },
+        ]);
+    };
+
+    const buttons = [...this.props.routeLinks.actionSheet.buttons, 'Block User', 'Cancel'];
+    ActionSheetIOS.showActionSheetWithOptions({
+      options: buttons,
+      cancelButtonIndex: buttons.length - 1,
+      destructiveButtonIndex: buttons.length - 2,
+    }, (buttonIndex) => {
+      const buttonName = buttons[buttonIndex];
+      const buttonNextRouteName = this.props.routeLinks.actionSheet
+        .buttonsNextRouteName[buttonName];
+      if (buttonNextRouteName) {
+        this.goNext(buttonNextRouteName);
+        return;
+      }
+      switch (buttonIndex) {
+        case buttons.length - 2:
+          askWouldLikeToBlockUser();
+          break;
+        default:
+          // Do nothing.
+      }
+      console.log('Pressed:', buttonIndex);
+    });
   }
 
   componentWillMount() {
@@ -115,6 +167,41 @@ class ChatScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    if (this.props.isUserBlocked) {
+      const otherUserUid = this.getOtherUserUid();
+      const otherUserName = this.state.uidToName[otherUserUid];
+      return (
+        <TouchableHighlight
+          style={styles.paddedContainer}
+          onPress={() => {
+            Alert.alert('Unblock user?',
+              `Do you want to unblock messages from ${this.state.uidToName[otherUserUid]}?`,
+              [
+                {
+                  text: 'Cancel',
+                },
+                {
+                  text: 'Unblock',
+                  onPress: () => {
+                    reportEvent('unblock_user');
+                    unblockUser(otherUserUid);
+                  },
+                },
+              ]);
+          }}
+          underlayColor={`${colors.black}64`}
+        >
+          <View>
+            <Text style={styles.friendlyText}>
+              You've blocked all messages between you and {otherUserName}.
+            </Text>
+            <View style={styles.padded} />
+            <Text style={styles.friendlyText}>Tap to unblock.</Text>
+          </View>
+        </TouchableHighlight>
+      );
+    }
+
     return (
       <View
         style={{
@@ -138,12 +225,22 @@ const mapStateToProps = (state) => {
     computedBuyerUid = getUser().uid;
   }
 
-  return {
+  const isUserBlocked = state.blockedUsers[state.listingDetails.listingData.sellerId]
+    || state.blockedUsers[computedBuyerUid];
+
+  const newProps = {
     title: state.listingDetails.listingData.title,
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     buyerUid: computedBuyerUid,
+    isUserBlocked,
   };
+
+  // If the user is blocked, don't show the actionSheet button.
+  if (isUserBlocked) {
+    newProps.rightIs = 'next';
+  }
+  return newProps;
 };
 
 const mapDispatchToProps = (dispatch) => {

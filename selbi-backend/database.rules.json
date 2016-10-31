@@ -35,7 +35,7 @@
       "tasks": {
         // Auth'd users can write, only service account can read.
         ".read": false,
-        ".write": "auth.uid != null",
+        ".write": true,
         ".indexOn": "_state",
         "$taskId": {
           ".validate": "newData.hasChildren(['type', 'owner', 'timestamp']) || (auth.admin === true && newData.hasChildren(['_state', '_state_changed', '_progress']))",
@@ -803,6 +803,24 @@
           ".write": "auth.uid === $friendUid || auth.uid === $uid",
           ".validate": "newData.isBoolean() && $uid != $friendUid"
         }
+      }
+    },
+
+    "blocking" : {
+      "$uid" : {
+        ".read": "auth.uid === $uid",
+        ".write": "auth.uid === $uid",
+        "$blockedUid" : {
+          ".validate": "newData.isBoolean() && $uid != $blockedUid"
+        }
+      }
+    },
+
+    "bannedUsers" : {
+      "$uid" : {
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.isBoolean()"
       }
     },
 

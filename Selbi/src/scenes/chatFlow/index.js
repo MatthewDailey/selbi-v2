@@ -7,7 +7,7 @@ import ListingDetailScene from '../ListingDetailScene';
 
 const chatScene = {
   id: 'chat_scene',
-  renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="next" />),
+  renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const detailScene = {
@@ -18,9 +18,15 @@ const detailScene = {
 const routeLinks = {};
 
 routeLinks[chatScene.id] = {
-  next: {
+  details: {
     title: 'Details',
     getRoute: () => detailScene,
+  },
+  actionSheet: {
+    buttons: ['Details'],
+    buttonsNextRouteName: {
+      Details: 'details',
+    },
   },
 };
 

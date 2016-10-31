@@ -10,6 +10,7 @@ import colors from '../../colors';
 export default function SpinnerOverlay({
   isVisible,
   message,
+  messageVerticalOffset = 0,
   backgroundColor = colors.dark,
   fillParent = false }) {
   if (isVisible) {
@@ -37,14 +38,10 @@ export default function SpinnerOverlay({
             backgroundColor: `${backgroundColor}aa`,
           }}
         >
+          <View style={{ paddingTop: messageVerticalOffset }} />
           <View style={styles.paddedCenterContainerClear}>
             <MKSpinner strokeColor={colors.primary} />
-            <Text
-              color={colors.white}
-              style={styles.friendlyTextLight}
-            >
-              {message}
-            </Text>
+            <Text color={colors.white} style={styles.friendlyTextLight}>{message}</Text>
           </View>
         </View>
       );
@@ -70,6 +67,7 @@ export default function SpinnerOverlay({
 SpinnerOverlay.propTypes = {
   isVisible: React.PropTypes.any,
   message: React.PropTypes.node,
+  messageVerticalOffset: React.PropTypes.number,
   backgroundColor: React.PropTypes.string,
   fillParent: React.PropTypes.bool,
 };

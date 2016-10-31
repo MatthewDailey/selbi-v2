@@ -1,7 +1,7 @@
 import React from 'react-native';
 import { shallow } from 'enzyme';
 import chai, { expect } from 'chai';
-import { spy, mock, stub } from 'sinon';
+import { spy } from 'sinon';
 import dirtyChai from 'dirty-chai';
 
 import InputScene from '../../src/scenes/InputScene';
@@ -16,6 +16,7 @@ describe('<InputScene />', () => {
       <InputScene
         title="test input"
         loadInitialInput={() => 'some text'}
+        routeLinks={{}}
       />
     );
     expect(wrapper.length).to.equal(1);

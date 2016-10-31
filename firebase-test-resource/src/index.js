@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { expect } from 'chai';
+import rc from 'rc';
 
 const testUserData = require('../resources/testUser.json');
 const minimalUserData = require('../resources/minimalUser.json');
@@ -13,30 +13,45 @@ const partialUserListing = require('../resources/userListingsCompleteFromUser.js
 const completeUserListing = require('../resources/userListingsPartial.json');
 const soldUserListing = require('../resources/userListingsComplete.json');
 
-function deepCopy(obj) {
+export function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+export function getLocalConfig() {
+  const rcFilePath = process.env.SELBI_CONFIG_FILE ? process.env.SELBI_CONFIG_FILE : 'selbi';
+  return rc(rcFilePath, {});
+}
+
+export const extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
+export const testUserUid = '3imZ3SbitbMUXL6Pt2FmVYCUtDo2';
+export const minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
+
 class TestFirebaseConnections {
   constructor() {
-    this.extraUserUid = 'AxoUrxRsXIZhHhdpyP0ejZi8MFE3';
-    this.testUserUid = '3imZ3SbitbMUXL6Pt2FmVYCUtDo2';
-    this.minimalUserUid = 'b7PJjQTFl8O2xRlYaohLD0AITb72';
-
-    const basicServiceAccountConfig = {
+    let basicServiceAccountConfig = {
       serviceAccount: '../service-accounts/selbi-develop-service-account.json',
       databaseURL: 'https://selbi-develop.firebaseio.com',
     };
 
+    const localSelbiConfig = getLocalConfig();
+    if (!!localSelbiConfig.firebaseServiceAccount && !!localSelbiConfig.firebasePublicConfig) {
+      basicServiceAccountConfig = {
+        serviceAccount: localSelbiConfig.firebaseServiceAccount,
+        databaseURL: localSelbiConfig.firebasePublicConfig.databaseURL,
+      };
+    } else {
+      console.warn('Tests are running against develop!');
+    }
+
     const testUserConfig = deepCopy(basicServiceAccountConfig);
     testUserConfig.databaseAuthVariableOverride = {
-      uid: this.testUserUid,
+      uid: testUserUid,
     };
     this.testUserApp = firebase.initializeApp(testUserConfig, 'testUser');
 
     const minimalUserConfig = deepCopy(basicServiceAccountConfig);
     minimalUserConfig.databaseAuthVariableOverride = {
-      uid: this.minimalUserUid,
+      uid: minimalUserUid,
     };
     this.minimalUserApp = firebase.initializeApp(minimalUserConfig, 'minimalUser');
 
@@ -92,16 +107,14 @@ class TestFirebaseConnections {
     return this.minimalUserApp
       .database()
       .ref('/users')
-      .child(this.minimalUserUid)
+      .child(minimalUserUid)
       .set(this.getMinimalUserData());
   }
 }
 
-module.exports = new TestFirebaseConnections();
+export default new TestFirebaseConnections();
 
-module.exports.deepCopy = deepCopy;
-
-module.exports.expectUnableToStore = function(firebaseStorePromise) {
+export function expectUnableToStore(firebaseStorePromise) {
   return firebaseStorePromise
     .then(() => {
       throw new Error('Should not be able to store.');
@@ -111,5 +124,5 @@ module.exports.expectUnableToStore = function(firebaseStorePromise) {
         throw error;
       }
     });
-};
+}
 

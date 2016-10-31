@@ -31,7 +31,7 @@ class AddressAutocompleteScene extends RoutableScene {
           }}
           query={{
             // available options: https://developers.google.com/places/web-service/autocomplete
-            key: config.googleBrowserKey,
+            key: config.firebase.apiKey,
             language: 'en', // language of the results
             types: 'geocode', // default: 'geocode'. Enables address search.
           }}

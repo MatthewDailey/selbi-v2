@@ -1,9 +1,21 @@
+import rc from 'rc';
+
 const developAccount = require('../selbi-develop-service-account.json');
 const stagingAccount = require('../selbi-staging-service-account.json');
 const productionAccount = require('../selbi-production-service-account.json');
 
+function getLocalConfig() {
+  const rcFilePath = process.env.SELBI_CONFIG_FILE ? process.env.SELBI_CONFIG_FILE : 'selbi';
+  return rc(rcFilePath, {});
+}
+
 class ServiceAccountSupplier {
   fromEnvironment() {
+    const localSelbiConfig = getLocalConfig();
+
+    if (localSelbiConfig.firebaseServiceAccount) {
+      return localSelbiConfig.firebaseServiceAccount;
+    }
     if (process.env.SELBI_ENVIRONMENT === 'production') {
       return productionAccount;
     }
@@ -14,6 +26,14 @@ class ServiceAccountSupplier {
   }
 
   firebaseConfigFromEnvironment() {
+    const localSelbiConfig = getLocalConfig();
+
+    if (!!localSelbiConfig.firebaseServiceAccount && !!localSelbiConfig.firebasePublicConfig) {
+      return {
+        serviceAccount: localSelbiConfig.firebaseServiceAccount,
+        databaseURL: localSelbiConfig.firebasePublicConfig.databaseURL,
+      };
+    }
     if (process.env.SELBI_ENVIRONMENT === 'production') {
       return {
         serviceAccount: productionAccount,

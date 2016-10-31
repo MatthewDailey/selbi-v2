@@ -1,0 +1,21 @@
+{
+  "firebasePublicConfig" : {
+    "apiKey": "AIzaSyAJZv8E2eLE2ko9j4pAwDVuY2itPiD2lxA",
+    "authDomain": "matt-selbi-test.firebaseapp.com",
+    "databaseURL": "https://service-account-selbi-test.firebaseio.com",
+    "storageBucket": "",
+    "messagingSenderId": "997177106323"
+  },
+  "firebaseServiceAccount" : {
+    "type": "service_account",
+    "project_id": "service-accounts-selbi-test",
+    "private_key_id": "SECRET",
+    "private_key": "SECRET",
+    "client_email": "UNUSED",
+    "client_id": "100330410578482047362",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "UNUSED"
+  }
+}
