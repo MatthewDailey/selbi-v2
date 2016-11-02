@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, ScrollView, Text, RefreshControl } from 'react-native';
 
+// noinspection Eslint - Dimensions provided by react-native env.
+import Dimensions from 'Dimensions';
+
 import { MKSpinner } from 'react-native-material-kit';
 
 import RoutableScene from '../../nav/RoutableScene';
@@ -54,8 +57,21 @@ class ListingsScene extends RoutableScene {
       return <OpenSettingsComponent missingPermission="location" />;
     }
 
+    const { width } = Dimensions.get('window');
+
     return (
       <ListingsListComponent
+        header={
+          <View style={{ width }}>
+            <BulletinBoard goNext={this.goNext} />
+          </View>
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
         listings={this.props.listings}
         emptyView={EmptyView}
         openDetailScene={() => {
@@ -68,19 +84,7 @@ class ListingsScene extends RoutableScene {
 
   renderWithNavBar() {
     console.log('Rendering LocalListingsScene');
-    return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />
-        }
-      >
-        <BulletinBoard goNext={this.goNext} />
-        {this.getLocalListingsView()}
-      </ScrollView>
-    );
+    return this.getLocalListingsView();
   }
 }
 

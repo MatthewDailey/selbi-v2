@@ -69,6 +69,7 @@ export default class ListingsComponent extends Component {
           contentContainerStyle={{
             flexDirection: 'row',
             flexWrap: 'wrap',
+            alignItems: 'flex-start',
           }}
           dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
             .cloneWithRows(this.props.listings)}
@@ -77,6 +78,7 @@ export default class ListingsComponent extends Component {
               listing={data}
               openDetailScene={this.props.openDetailScene}
             />}
+          renderHeader={() => this.props.header}
         />
       </View>
     );

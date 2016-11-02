@@ -65,6 +65,7 @@ class ItemView extends Component {
     const image = this.props.listing.val().images.image1;
 
     if (!this.props.imageData || this.props.imageKey !== image.imageId) {
+      console.log('downloading image for ItemView');
       loadImage(this.props.imageKey)
         .then((imageSnapshot) => this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
     }
