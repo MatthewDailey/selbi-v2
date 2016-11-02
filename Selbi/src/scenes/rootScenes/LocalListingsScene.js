@@ -1,11 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View,Text, RefreshControl } from 'react-native';
-
-// noinspection Eslint - Dimensions provided by react-native env.
-import Dimensions from 'Dimensions';
-
-import { MKSpinner } from 'react-native-material-kit';
+import { RefreshControl } from 'react-native';
 
 import RoutableScene from '../../nav/RoutableScene';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
@@ -17,18 +12,7 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-import styles from '../../../styles';
-import colors from '../../../colors';
 import { reportButtonPress } from '../../SelbiAnalytics';
-
-function EmptyView() {
-  return (
-    <View style={styles.paddedCenterContainerClear}>
-      <Text style={styles.friendlyText}>Searching for listings near you...</Text>
-      <MKSpinner strokeColor={colors.primary} />
-    </View>
-  );
-}
 
 class ListingsScene extends RoutableScene {
   constructor(props) {
@@ -65,8 +49,9 @@ class ListingsScene extends RoutableScene {
             onRefresh={this.onRefresh}
           />
         }
+        refresh={this.props.fetchLocalListings}
         listings={this.props.listings}
-        emptyView={EmptyView}
+        emptyMessage="No listings found in your area."
         openDetailScene={() => {
           reportButtonPress('local_listing_open_details');
           this.goNext('details');

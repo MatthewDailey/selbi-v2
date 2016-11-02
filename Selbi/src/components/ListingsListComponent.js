@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { View, ListView, Text, InteractionManager } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
+import { MKButton, MKSpinner } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ItemView from './ItemView';
 import styles from '../../styles';
+import colors from '../../colors';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -39,6 +40,15 @@ export default class ListingsComponent extends Component {
       })
       .build();
 
+    if (this.props.listings.uninitialized) {
+      return (
+        <View style={styles.paddedCenterContainerClear}>
+          <Text style={styles.friendlyText}>Searching for listings...</Text>
+          <MKSpinner strokeColor={colors.primary} />
+        </View>
+      );
+    }
+
     if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
       if (this.props.emptyView) {
         return <this.props.emptyView />;
@@ -55,9 +65,12 @@ export default class ListingsComponent extends Component {
         return undefined;
       };
       return (
-        <View style={styles.paddedCenterContainer}>
-          <Text>{this.props.emptyMessage}</Text>
-          {getRefreshButton()}
+        <View>
+          {this.props.header}
+          <View style={styles.paddedCenterContainer}>
+            <Text>{this.props.emptyMessage}</Text>
+            {getRefreshButton()}
+          </View>
         </View>
       );
     }
