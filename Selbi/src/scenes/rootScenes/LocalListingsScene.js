@@ -52,6 +52,7 @@ class ListingsScene extends RoutableScene {
   }
 
   renderWithNavBar() {
+    console.log('Rendering LocalListingsScene');
     return (
       <ScrollView>
         <BulletinBoard goNext={this.goNext} />

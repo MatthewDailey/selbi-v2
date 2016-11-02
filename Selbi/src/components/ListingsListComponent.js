@@ -19,6 +19,7 @@ export default class ListingsComponent extends Component {
   }
 
   render() {
+
     if (this.state.renderPlaceholderOnly) {
       return (
         <View style={styles.container} />
@@ -36,6 +37,7 @@ export default class ListingsComponent extends Component {
       .build();
 
     if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
+      console.log('Rendering ListingsListComponent - empty');
       if (this.props.emptyView) {
         return <this.props.emptyView />;
       }
@@ -58,6 +60,7 @@ export default class ListingsComponent extends Component {
       );
     }
 
+    console.log('Rendering ListingsListComponent - has listings');
     return (
       <View style={styles.container}>
         <ListView

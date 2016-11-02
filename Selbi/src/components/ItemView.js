@@ -57,6 +57,7 @@ class ItemView extends Component {
   }
 
   render() {
+    console.log('Rendering ItemView');
     const { width } = Dimensions.get('window');
     const itemMargin = 2;
     const columnWidth = (width / 2) - (itemMargin * 2);
