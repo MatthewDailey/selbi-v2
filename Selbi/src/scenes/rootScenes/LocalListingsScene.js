@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RefreshControl } from 'react-native';
 
 import RoutableScene from '../../nav/RoutableScene';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
@@ -15,23 +14,6 @@ import { clearNewListing } from '../../reducers/NewListingReducer';
 import { reportButtonPress } from '../../SelbiAnalytics';
 
 class ListingsScene extends RoutableScene {
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false,
-    };
-
-    this.onRefresh = this.onRefresh.bind(this);
-  }
-
-  onRefresh() {
-    this.setState({ refreshing: true });
-    this.props.fetchLocalListings()
-      .then(() => {
-        this.setState({ refreshing: false });
-      });
-  }
-
   onGoNext() {
     this.props.clearNewListingData();
   }
@@ -43,15 +25,9 @@ class ListingsScene extends RoutableScene {
     return (
       <ListingsListComponent
         header={<BulletinBoard goNext={this.goNext} />}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />
-        }
         refresh={this.props.fetchLocalListings}
         listings={this.props.listings}
-        emptyMessage="No listings found in your area."
+        emptyMessage="Be the first to post a listing in your area!"
         openDetailScene={() => {
           reportButtonPress('local_listing_open_details');
           this.goNext('details');

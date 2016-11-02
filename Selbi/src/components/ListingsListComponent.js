@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ListView, Text, InteractionManager } from 'react-native';
+import { View, ListView, Text, InteractionManager, RefreshControl } from 'react-native';
 import { MKButton, MKSpinner } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -13,7 +13,12 @@ import Dimensions from 'Dimensions';
 export default class ListingsComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { renderPlaceholderOnly: true };
+    this.state = {
+      renderPlaceholderOnly: true,
+      refreshing: false,
+    };
+
+    this.onRefresh = this.onRefresh.bind(this);
   }
 
   componentDidMount() {
@@ -22,8 +27,15 @@ export default class ListingsComponent extends Component {
     });
   }
 
-  render() {
+  onRefresh() {
+    this.setState({ refreshing: true });
+    this.props.refresh()
+      .then(() => {
+        this.setState({ refreshing: false });
+      });
+  }
 
+  render() {
     if (this.state.renderPlaceholderOnly) {
       return (
         <View style={styles.container} />
@@ -87,6 +99,12 @@ export default class ListingsComponent extends Component {
             flexWrap: 'wrap',
             alignItems: 'flex-start',
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
           dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
             .cloneWithRows(this.props.listings)}
           renderRow={(data) =>
