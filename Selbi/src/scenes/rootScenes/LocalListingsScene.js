@@ -37,8 +37,6 @@ class ListingsScene extends RoutableScene {
       return <OpenSettingsComponent missingPermission="location" />;
     }
 
-    this.props.startWatchingLocalListings();
-
     return (
       <ListingsListComponent
         listings={this.props.listings}
