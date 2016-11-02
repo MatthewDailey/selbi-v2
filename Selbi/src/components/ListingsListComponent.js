@@ -40,7 +40,6 @@ export default class ListingsComponent extends Component {
       .build();
 
     if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
-      console.log('Rendering ListingsListComponent - empty');
       if (this.props.emptyView) {
         return <this.props.emptyView />;
       }
@@ -65,7 +64,6 @@ export default class ListingsComponent extends Component {
 
     const { width } = Dimensions.get('window');
 
-    console.log('Rendering ListingsListComponent - has listings');
     return (
       <View style={styles.container}>
         <ListView
@@ -84,7 +82,7 @@ export default class ListingsComponent extends Component {
               openDetailScene={this.props.openDetailScene}
             />}
           renderHeader={() =>
-            <View style={{width}}>
+            <View style={{ width }}>
               {this.props.header}
             </View>
           }

@@ -57,7 +57,6 @@ class ItemView extends Component {
   }
 
   render() {
-    console.log('Rendering ItemView');
     const { width } = Dimensions.get('window');
     const itemMargin = 2;
     const columnWidth = (width / 2) - (itemMargin * 2);
@@ -65,7 +64,6 @@ class ItemView extends Component {
     const image = this.props.listing.val().images.image1;
 
     if (!this.props.imageData || this.props.imageKey !== image.imageId) {
-      console.log('downloading image for ItemView');
       loadImage(this.props.imageKey)
         .then((imageSnapshot) => this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
     }
