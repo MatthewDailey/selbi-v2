@@ -28,7 +28,7 @@ import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
 import FollowFriendScene from './src/scenes/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
-import localListingsReducer, { addLocalListing, removeLocalListing }
+import localListingsReducer, { setLocalListings }
   from './src/reducers/LocalListingsReducer';
 import myListingsReducer, { setMyListingsPrivate, setMyListingsPublic, setMyListingsSold,
   clearMyListings } from './src/reducers/MyListingsReducer';
@@ -46,14 +46,14 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
   from './src/reducers/BlockedUsersReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
-  addAuthStateChangeListener, listenToListingsByStatus, listenToListingsByLocation,
+  addAuthStateChangeListener, listenToListingsByStatus,
   listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData,
-  listenToBlockedUsers, listenToBannedUsers }
+  listenToBlockedUsers, listenToBannedUsers, loadListingByLocation }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
 
-import { getGeolocation, watchGeolocation } from './src/utils';
+import { getGeolocation } from './src/utils';
 
 import colors from './colors';
 import config from './config';
@@ -90,32 +90,13 @@ const store = createStore(combineReducers({
 
 addAuthStateChangeListener(listenToBannedUsers);
 
-let startedListeningForLocalListings = false;
 function fetchLocalListings() {
-  if (!startedListeningForLocalListings) {
-    getGeolocation()
-      .then((location) => {
-        const geoQuery =
-          listenToListingsByLocation(
-            [location.lat, location.lon],
-            200,
-            (listing) => store.dispatch(addLocalListing(listing)),
-            (listingId) => store.dispatch(removeLocalListing(listingId)));
-
-        watchGeolocation((newLocation) => {
-          if (geoQuery) {
-            this.cancelGeoWatch = geoQuery.updateCriteria({
-              center: [newLocation.lat, newLocation.lon],
-            });
-          }
-        });
-      })
-      .then(() => startedListeningForLocalListings = true)
-      .catch((error) => {
-        startedListeningForLocalListings = false;
-        console.log(error);
-      });
-  }
+  return getGeolocation()
+    .then((location) => loadListingByLocation([location.lat, location.lon], 200))
+    .then((localListings) => store.dispatch(setLocalListings(localListings)))
+    .catch((error) => {
+      console.log('Failed to fetch local listings', error);
+    });
 }
 fetchLocalListings();
 
@@ -273,7 +254,7 @@ const localListingScene = {
       title="Local Listings"
       leftIs="menu"
       rightIs="next"
-      startWatchingLocalListings={fetchLocalListings}
+      fetchLocalListings={fetchLocalListings}
     />),
 };
 

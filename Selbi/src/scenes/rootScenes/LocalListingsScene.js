@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text } from 'react-native';
+import { View,Text, RefreshControl } from 'react-native';
+
+// noinspection Eslint - Dimensions provided by react-native env.
+import Dimensions from 'Dimensions';
 
 import { MKSpinner } from 'react-native-material-kit';
 
@@ -28,19 +31,40 @@ function EmptyView() {
 }
 
 class ListingsScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+
+    this.onRefresh = this.onRefresh.bind(this);
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true });
+    this.props.fetchLocalListings()
+      .then(() => {
+        this.setState({ refreshing: false });
+      });
+  }
+
   onGoNext() {
     this.props.clearNewListingData();
   }
 
-  getLocalListingsView() {
+  renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
       return <OpenSettingsComponent missingPermission="location" />;
     }
-
-    this.props.startWatchingLocalListings();
-
     return (
       <ListingsListComponent
+        header={<BulletinBoard goNext={this.goNext} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
         listings={this.props.listings}
         emptyView={EmptyView}
         openDetailScene={() => {
@@ -48,15 +72,6 @@ class ListingsScene extends RoutableScene {
           this.goNext('details');
         }}
       />
-    );
-  }
-
-  renderWithNavBar() {
-    return (
-      <ScrollView>
-        <BulletinBoard goNext={this.goNext} />
-        {this.getLocalListingsView()}
-      </ScrollView>
     );
   }
 }

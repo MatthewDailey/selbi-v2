@@ -38,14 +38,14 @@ deployment:
     branch: staging
     commands:
       - cd selbi-backend && ./deploy staging
-      - cd selbi-stripe-worker && ./deploy staging
-      - cd selbi-web && ./deploy staging
-      - cd Selbi && ./deploy staging js
+      - cd selbi-stripe-worker && sudo ./deploy staging
+      - cd selbi-web && sudo ./deploy staging
+      - cd Selbi && sudo ./deploy staging js
   production:
     branch: production
     commands:
-      - cd selbi-backend && ./deploy production
-      - cd selbi-stripe-worker && ./deploy production
-      - cd selbi-web && ./deploy production
+      - cd selbi-backend && sudo ./deploy production
+      - cd selbi-stripe-worker && sudo ./deploy production
+      - cd selbi-web && sudo ./deploy production
       # Turn off auto deploy for production
       # - cd Selbi && ./deploy production js
