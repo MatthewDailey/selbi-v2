@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text, RefreshControl } from 'react-native';
+import { View,Text, RefreshControl } from 'react-native';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -52,20 +52,13 @@ class ListingsScene extends RoutableScene {
     this.props.clearNewListingData();
   }
 
-  getLocalListingsView() {
+  renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
       return <OpenSettingsComponent missingPermission="location" />;
     }
-
-    const { width } = Dimensions.get('window');
-
     return (
       <ListingsListComponent
-        header={
-          <View style={{ width }}>
-            <BulletinBoard goNext={this.goNext} />
-          </View>
-        }
+        header={<BulletinBoard goNext={this.goNext} />}
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -80,11 +73,6 @@ class ListingsScene extends RoutableScene {
         }}
       />
     );
-  }
-
-  renderWithNavBar() {
-    console.log('Rendering LocalListingsScene');
-    return this.getLocalListingsView();
   }
 }
 

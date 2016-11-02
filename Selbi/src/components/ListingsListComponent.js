@@ -6,6 +6,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ItemView from './ItemView';
 import styles from '../../styles';
 
+// noinspection Eslint - Dimensions provided by react-native env.
+import Dimensions from 'Dimensions';
+
 export default class ListingsComponent extends Component {
   constructor(props) {
     super(props);
@@ -60,6 +63,8 @@ export default class ListingsComponent extends Component {
       );
     }
 
+    const { width } = Dimensions.get('window');
+
     console.log('Rendering ListingsListComponent - has listings');
     return (
       <View style={styles.container}>
@@ -78,7 +83,11 @@ export default class ListingsComponent extends Component {
               listing={data}
               openDetailScene={this.props.openDetailScene}
             />}
-          renderHeader={() => this.props.header}
+          renderHeader={() =>
+            <View style={{width}}>
+              {this.props.header}
+            </View>
+          }
         />
       </View>
     );
@@ -91,4 +100,5 @@ ListingsComponent.propTypes = {
   emptyMessage: React.PropTypes.string,
   listings: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.array]),
   openDetailScene: React.PropTypes.func,
+  header: React.PropTypes.element,
 };
