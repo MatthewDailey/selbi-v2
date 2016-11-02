@@ -1,16 +1,33 @@
 import ImageReader from '@selbi/react-native-image-reader';
-import { publishImage, createListing, changeListingStatus, updateListing, loadListingData }
-  from './FirebaseConnector';
+import RNFetchBlob from 'react-native-fetch-blob';
+
+import { publishImage, createListing, changeListingStatus, updateListing, loadListingData,
+  uploadFile } from './FirebaseConnector';
+
+const fs = RNFetchBlob.fs;
+const Blob = RNFetchBlob.polyfill.Blob;
+
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+window.Blob = Blob;
+
 
 export default undefined;
+
+function writeToFirebase(rnfbURI) {
+  // create Blob from file path
+  console.log(rnfbURI);
+  return Blob
+    .build(rnfbURI, { type: 'image/jpg;' })
+    .then(uploadFile);
+}
 
 export function createNewListingFromStore(newListingData) {
   if (!newListingData.imageUri) {
     return Promise.reject('Error loading image.');
   }
 
-  return ImageReader
-    .readImage(newListingData.imageUri)
+  return writeToFirebase(newListingData.imageUri)
+    .then(() => ImageReader.readImage(newListingData.imageUri))
     .then((imageBase64) => publishImage(
       imageBase64[0],
       newListingData.imageHeight,

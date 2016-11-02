@@ -52,6 +52,17 @@ export function setUserFcmToken(fcmToken) {
     });
 }
 
+export function uploadFile(blob) {
+  console.log(blob);
+  return firebase.storage()
+    .ref('rn-firebase-upload')
+    .child('test-image-name')
+    .put(blob, { contentType: 'image/jpg' })
+    .then((snapshot) => {
+      console.log('Completed file upload', snapshot.metadata);
+    });
+}
+
 /*
  * Attempts to create a new user based on email and password.
  *
