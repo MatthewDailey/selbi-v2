@@ -91,11 +91,11 @@ const store = createStore(combineReducers({
 addAuthStateChangeListener(listenToBannedUsers);
 
 function fetchLocalListings() {
-  getGeolocation()
+  return getGeolocation()
     .then((location) => loadListingByLocation([location.lat, location.lon], 200))
     .then((localListings) => store.dispatch(setLocalListings(localListings)))
     .catch((error) => {
-      console.log('Failed to fetch local listings', error)
+      console.log('Failed to fetch local listings', error);
     });
 }
 fetchLocalListings();
@@ -254,7 +254,7 @@ const localListingScene = {
       title="Local Listings"
       leftIs="menu"
       rightIs="next"
-      startWatchingLocalListings={fetchLocalListings}
+      fetchLocalListings={fetchLocalListings}
     />),
 };
 

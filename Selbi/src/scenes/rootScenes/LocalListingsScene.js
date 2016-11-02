@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView, Text, RefreshControl } from 'react-native';
 
 import { MKSpinner } from 'react-native-material-kit';
 
@@ -28,6 +28,23 @@ function EmptyView() {
 }
 
 class ListingsScene extends RoutableScene {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+
+    this.onRefresh = this.onRefresh.bind(this);
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true });
+    this.props.fetchLocalListings()
+      .then(() => {
+        this.setState({ refreshing: false });
+      });
+  }
+
   onGoNext() {
     this.props.clearNewListingData();
   }
@@ -52,7 +69,14 @@ class ListingsScene extends RoutableScene {
   renderWithNavBar() {
     console.log('Rendering LocalListingsScene');
     return (
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />
+        }
+      >
         <BulletinBoard goNext={this.goNext} />
         {this.getLocalListingsView()}
       </ScrollView>
