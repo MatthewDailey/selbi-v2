@@ -52,11 +52,9 @@ export function setUserFcmToken(fcmToken) {
     });
 }
 
-export function uploadFile(blob) {
-  console.log(blob);
+export function uploadFile(path, blob) {
   return firebase.storage()
-    .ref('rn-firebase-upload')
-    .child('test-image-name')
+    .ref(path)
     .put(blob, { contentType: 'image/jpg' })
     .then((snapshot) => {
       console.log('Completed file upload', snapshot.metadata);

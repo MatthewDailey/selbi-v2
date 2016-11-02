@@ -13,12 +13,12 @@ window.Blob = Blob;
 
 export default undefined;
 
-function writeToFirebase(rnfbURI) {
+function writeImageUriToFirebase(path, rnfbURI) {
   // create Blob from file path
   console.log(rnfbURI);
   return Blob
-    .build(rnfbURI, { type: 'image/jpg;' })
-    .then(uploadFile);
+    .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
+    .then((blob) => uploadFile(path, blob));
 }
 
 export function createNewListingFromStore(newListingData) {
@@ -26,7 +26,7 @@ export function createNewListingFromStore(newListingData) {
     return Promise.reject('Error loading image.');
   }
 
-  return writeToFirebase(newListingData.imageUri)
+  return writeImageUriToFirebase('listingImages/uid/listingId/image1', newListingData.imageUri)
     .then(() => ImageReader.readImage(newListingData.imageUri))
     .then((imageBase64) => publishImage(
       imageBase64[0],
