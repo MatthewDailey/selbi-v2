@@ -90,7 +90,9 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text style={buttonTextStyle}><Icon name="users" size={buttonTextStyle.fontSize} />  My Friends</Text>
+            <Text style={buttonTextStyle}>
+              <Icon name="users" size={buttonTextStyle.fontSize} />  My Friends
+            </Text>
           </Button>
         </View>
         <View style={styles.halfPadded}>
@@ -114,7 +116,9 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text style={buttonTextStyle}><Icon name="globe" size={buttonTextStyle.fontSize} />  Anyone Nearby</Text>
+            <Text style={buttonTextStyle}>
+              <Icon name="globe" size={buttonTextStyle.fontSize} />  Anyone Nearby
+            </Text>
           </Button>
         </View>
         <SpinnerOverlay isVisible={this.state.publishing} />

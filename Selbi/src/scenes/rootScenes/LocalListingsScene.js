@@ -35,7 +35,7 @@ function EmptyView({ openSell }) {
       <View style={styles.halfPadded} />
       <EmptySellButton onPress={() => {
         reportButtonPress('local_listing_open_details');
-        openSell()
+        openSell();
       }}>
         <Text>Sell something</Text>
       </EmptySellButton>

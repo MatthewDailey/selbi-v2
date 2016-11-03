@@ -732,9 +732,12 @@
         "images": {
           ".validate": "newData.hasChildren()",
           "$key": {
-            ".validate": "newData.hasChildren(['imageId', 'height', 'width'])",
+            ".validate": "newData.hasChildren(['height', 'width']) && (newData.hasChildren(['url']) || newData.hasChildren(['imageId']))",
             "$other" : {
               ".validate": false
+            },
+            "url" : {
+              ".validate": "newData.isString()"
             },
             "imageId" : {
               ".validate": "newData.isString()"
