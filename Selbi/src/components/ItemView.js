@@ -63,13 +63,7 @@ class ItemView extends Component {
         openDetailView);
     }
 
-    return (
-      <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }}>
-        <View style={styles.paddedCenterContainerClear}>
-          <MKSpinner strokeColor={colors.secondary} />
-        </View>
-      </View>
-    );
+    return <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }} />;
   }
 
   render() {
