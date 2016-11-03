@@ -62,10 +62,6 @@ export default class ListingsComponent extends Component {
     }
 
     if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
-      if (this.props.emptyView) {
-        return <this.props.emptyView />;
-      }
-
       const getRefreshButton = () => {
         if (this.props.refresh) {
           return (
@@ -76,11 +72,24 @@ export default class ListingsComponent extends Component {
         }
         return undefined;
       };
+
+      if (this.props.emptyView) {
+        return (
+          <View>
+            {this.props.header}
+            <View  style={styles.paddedCenterContainer}>
+              <this.props.emptyView />
+              {getRefreshButton()}
+            </View>
+          </View>
+        );
+      }
+
       return (
         <View>
           {this.props.header}
           <View style={styles.paddedCenterContainer}>
-            <Text>{this.props.emptyMessage}</Text>
+            <Text style={styles.friendlyText}>{this.props.emptyMessage}</Text>
             {getRefreshButton()}
           </View>
         </View>
