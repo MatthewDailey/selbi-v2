@@ -77,7 +77,7 @@ export default class ListingsComponent extends Component {
         return (
           <View>
             {this.props.header}
-            <View  style={styles.paddedCenterContainer}>
+            <View style={styles.paddedCenterContainer}>
               <this.props.emptyView />
               {getRefreshButton()}
             </View>
@@ -99,7 +99,7 @@ export default class ListingsComponent extends Component {
     const { width } = Dimensions.get('window');
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.white }]}>
         <ListView
           enableEmptySections
           removeClippedSubviews={false}

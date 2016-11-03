@@ -2,7 +2,7 @@ import { getActionType } from './ActionUtils';
 
 const FL_SET_FRIENDS_LISTINGS = 'friends-listings-set';
 
-export default function (localListingsState = null, action) {
+export default function (localListingsState = { uninitialized: true }, action) {
   switch (getActionType(action)) {
     case FL_SET_FRIENDS_LISTINGS:
       return action.listings.slice();
