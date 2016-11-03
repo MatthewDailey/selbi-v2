@@ -262,12 +262,19 @@ class ListingDetailScene extends RoutableScene {
   onGoNext(routeName) {
     if (routeName === 'edit') {
       this.props.clearListingDataForEditing();
-      this.props.setListingDataForEditing(
-        this.props.imageKey,
-        this.props.imageData,
-        this.props.listingKey,
-        this.props.listingData
-      );
+      if (this.props.imageUri) {
+        this.props.setListingDataForEditing(
+          this.props.imageUri,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      } else {
+        this.props.setListingDataForEditing(
+          `data:image/png;base64,${this.props.imageData.base64}`,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      }
     }
   }
 
@@ -415,8 +422,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
-    setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
-      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
+    setListingDataForEditing: (imageUri, listingKey, listingData) =>
+      dispatch(setFromExistingListing(imageUri, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
