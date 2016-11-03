@@ -1,7 +1,6 @@
-import ImageReader from '@selbi/react-native-image-reader';
 import RNFetchBlob from 'react-native-fetch-blob';
 
-import { publishImage, createListing, changeListingStatus, updateListing, loadListingData,
+import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
 
 const fs = RNFetchBlob.fs;
@@ -74,20 +73,15 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   let updateImagePromise = Promise.resolve();
 
   if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
-    updateImagePromise = ImageReader
-      .readImage(newListingData.imageUri)
-      .then((imageBase64) => publishImage(
-        imageBase64[0],
-        newListingData.imageHeight,
-        newListingData.imageWidth))
-      .then((imageKey) => updateListing(
+    updateImagePromise = writeImageUriToFirebase(newListingData.imageUri)
+      .then((imageUri) => updateListing(
         listingId,
         newListingData.title,
         newListingData.description,
         newListingData.price,
         {
           image1: {
-            imageId: imageKey,
+            url: imageUri,
             width: newListingData.imageWidth,
             height: newListingData.imageHeight,
           },
