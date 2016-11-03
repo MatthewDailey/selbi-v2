@@ -13,12 +13,12 @@ window.Blob = Blob;
 
 export default undefined;
 
-function writeImageUriToFirebase(path, rnfbURI) {
+function writeImageUriToFirebase(rnfbURI) {
   // create Blob from file path
   console.log(rnfbURI);
   return Blob
     .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
-    .then((blob) => uploadFile(path, blob));
+    .then((blob) => uploadFile(blob));
 }
 
 export function createNewListingFromStore(newListingData) {
@@ -26,19 +26,14 @@ export function createNewListingFromStore(newListingData) {
     return Promise.reject('Error loading image.');
   }
 
-  return writeImageUriToFirebase('listingImages/uid/listingId/image1', newListingData.imageUri)
-    .then(() => ImageReader.readImage(newListingData.imageUri))
-    .then((imageBase64) => publishImage(
-      imageBase64[0],
-      newListingData.imageHeight,
-      newListingData.imageWidth))
-    .then((imageKey) => createListing(
+  return writeImageUriToFirebase(newListingData.imageUri)
+    .then((imageUrl) => createListing(
       newListingData.title,
       '', // description
       newListingData.price,
       {
         image1: {
-          imageId: imageKey,
+          url: imageUrl,
           width: newListingData.imageWidth,
           height: newListingData.imageHeight,
         },
