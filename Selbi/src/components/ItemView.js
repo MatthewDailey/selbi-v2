@@ -19,8 +19,8 @@ class ItemView extends Component {
       <TouchableHighlight onPress={openDetailView}>
         <Image
           key={this.props.imageKey}
-          source={{ uri: uri }}
-          style={{ height: fitHeight, borderRadius: 3 }}
+          source={{ uri }}
+          style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }}
         >
           <Text
             style={{
