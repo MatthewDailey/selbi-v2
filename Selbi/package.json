@@ -7,7 +7,6 @@
     "test": "mocha tests --compilers js:babel-core/register --require tests/setup.js --require react-native-mock/mock tests/*"
   },
   "dependencies": {
-    "@selbi/react-native-image-reader": "^1.0.7",
     "@selbi/react-native-navbar": "0.0.4",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",

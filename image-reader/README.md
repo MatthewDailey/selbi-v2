@@ -1,7 +1,9 @@
 
-# react-native-image-reader
+# DEPRECATED!!! react-native-image-reader
 
 This package provides a native module for reading iOS images as base64. 
+
+This package is deprecated and should not be used!!! Instead use react-native-fetch-blob for accessing images.
 
 
 ## Getting started
