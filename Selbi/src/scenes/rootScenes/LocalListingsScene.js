@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View,Text, RefreshControl } from 'react-native';
 
-// noinspection Eslint - Dimensions provided by react-native env.
-import Dimensions from 'Dimensions';
+import { View, Text } from 'react-native';
+import { MKButton } from 'react-native-material-kit';
 
-import { MKSpinner } from 'react-native-material-kit';
+import styles from '../../../styles';
 
 import RoutableScene from '../../nav/RoutableScene';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
@@ -17,37 +16,35 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-import styles from '../../../styles';
-import colors from '../../../colors';
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-function EmptyView() {
+
+
+function EmptyView({ openSell }) {
+  const EmptySellButton = MKButton.button()
+    .withOnPress(() => {
+      this.props.refresh();
+    })
+    .build();
+
   return (
-    <View style={styles.paddedCenterContainerClear}>
-      <Text style={styles.friendlyText}>Searching for listings near you...</Text>
-      <MKSpinner strokeColor={colors.primary} />
+    <View>
+
+      <Text style={styles.friendlyText}>No listings near you.</Text>
+      <Text>Be the first to sell in your area!</Text>
+      <View style={styles.halfPadded} />
+      <EmptySellButton onPress={() => {
+        reportButtonPress('local_listing_open_details');
+        openSell();
+      }}>
+        <Text>Sell something</Text>
+      </EmptySellButton>
+      <View style={styles.padded} />
     </View>
   );
 }
 
 class ListingsScene extends RoutableScene {
-  constructor(props) {
-    super(props);
-    this.state = {
-      refreshing: false,
-    };
-
-    this.onRefresh = this.onRefresh.bind(this);
-  }
-
-  onRefresh() {
-    this.setState({ refreshing: true });
-    this.props.fetchLocalListings()
-      .then(() => {
-        this.setState({ refreshing: false });
-      });
-  }
-
   onGoNext() {
     this.props.clearNewListingData();
   }
@@ -59,14 +56,10 @@ class ListingsScene extends RoutableScene {
     return (
       <ListingsListComponent
         header={<BulletinBoard goNext={this.goNext} />}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />
-        }
+        refresh={this.props.fetchLocalListings}
         listings={this.props.listings}
-        emptyView={EmptyView}
+        emptyMessage="Be the first to post a listing in your area!"
+        emptyView={() => <EmptyView openSell={this.goNext} />}
         openDetailScene={() => {
           reportButtonPress('local_listing_open_details');
           this.goNext('details');

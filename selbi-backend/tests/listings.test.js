@@ -175,7 +175,7 @@ describe('/listings', () => {
           width: 20,
         },
         {
-          imageId: 'second-image-id',
+          url: 'second-image-url',
           height: 30,
           width: 30,
         },
@@ -221,6 +221,15 @@ describe('/listings', () => {
         it('imageId', (done) => {
           const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
           delete modifiedMinimalUserListing.images[0].imageId;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('url', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[1].url;
           storeListingAsMinimalUserAndExpectFailure(
             modifiedMinimalUserListing,
             'Can have no extra properties',

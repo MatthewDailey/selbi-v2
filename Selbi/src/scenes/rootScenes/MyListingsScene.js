@@ -45,7 +45,7 @@ class MyListingsScene extends RoutableScene {
         tabBarActiveTextColor={colors.secondary}
         style={styles.fullScreenContainer}
       >
-        <View tabLabel="Local" style={styles.fullScreenContainer}>
+        <View tabLabel="Local" style={styles.container}>
           <ListingsListComponent
             listings={this.props.public}
             emptyMessage="You have no public listings."
@@ -55,7 +55,7 @@ class MyListingsScene extends RoutableScene {
             }}
           />
         </View>
-        <View tabLabel="Friends Only" style={styles.fullScreenContainer}>
+        <View tabLabel="Friends Only" style={styles.container}>
           <ListingsListComponent
             listings={this.props.private}
             emptyMessage="You have no private listings."
@@ -65,7 +65,7 @@ class MyListingsScene extends RoutableScene {
             }}
           />
         </View>
-        <View tabLabel="Sold" style={styles.fullScreenContainer}>
+        <View tabLabel="Sold" style={styles.container}>
           <ListingsListComponent
             listings={this.props.sold}
             emptyMessage="You have not sold any listings."

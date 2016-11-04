@@ -36,6 +36,13 @@ export function getUser() {
     .currentUser;
 }
 
+function requireSignedIn() {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+  return Promise.resolve();
+}
+
 export function setUserFcmToken(fcmToken) {
   if (!getUser()) {
     return Promise.reject('Not signed in.');
@@ -50,6 +57,17 @@ export function setUserFcmToken(fcmToken) {
     .update({
       fcmToken
     });
+}
+
+export function uploadFile(blob) {
+  return requireSignedIn()
+    .then(() => firebase.storage()
+      .ref(`images/${getUser().uid}/${new Date().getTime()}`)
+      .put(blob, { contentType: 'image/jpg' })
+      .then((snapshot) => {
+        console.log('Completed file upload', snapshot.metadata);
+        return Promise.resolve(snapshot.downloadURL);
+      }));
 }
 
 /*
@@ -1142,13 +1160,6 @@ export function updateBulletin(bulletinId, updatedValue) {
     .child(getUser().uid)
     .child(bulletinId)
     .update(updatedValue);
-}
-
-function requireSignedIn() {
-  if (!getUser()) {
-    return Promise.reject('Must be signed in.');
-  }
-  return Promise.resolve();
 }
 
 export function enqueuePhoneNumber(phoneNumber) {

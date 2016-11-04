@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, ListView, Text, InteractionManager } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
+import { View, ListView, Text, InteractionManager, RefreshControl } from 'react-native';
+import { MKButton, MKSpinner } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ItemView from './ItemView';
 import styles from '../../styles';
+import colors from '../../colors';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -12,7 +13,12 @@ import Dimensions from 'Dimensions';
 export default class ListingsComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { renderPlaceholderOnly: true };
+    this.state = {
+      renderPlaceholderOnly: true,
+      refreshing: false,
+    };
+
+    this.onRefresh = this.onRefresh.bind(this);
   }
 
   componentDidMount() {
@@ -21,8 +27,15 @@ export default class ListingsComponent extends Component {
     });
   }
 
-  render() {
+  onRefresh() {
+    this.setState({ refreshing: true });
+    this.props.refresh()
+      .then(() => {
+        this.setState({ refreshing: false });
+      });
+  }
 
+  render() {
     if (this.state.renderPlaceholderOnly) {
       return (
         <View style={styles.container} />
@@ -39,11 +52,16 @@ export default class ListingsComponent extends Component {
       })
       .build();
 
-    if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
-      if (this.props.emptyView) {
-        return <this.props.emptyView />;
-      }
+    if (this.props.listings.uninitialized) {
+      return (
+        <View style={styles.paddedCenterContainerClear}>
+          <Text style={styles.friendlyText}>Searching for listings...</Text>
+          <MKSpinner strokeColor={colors.primary} />
+        </View>
+      );
+    }
 
+    if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
       const getRefreshButton = () => {
         if (this.props.refresh) {
           return (
@@ -54,10 +72,26 @@ export default class ListingsComponent extends Component {
         }
         return undefined;
       };
+
+      if (this.props.emptyView) {
+        return (
+          <View>
+            {this.props.header}
+            <View style={styles.paddedCenterContainer}>
+              <this.props.emptyView />
+              {getRefreshButton()}
+            </View>
+          </View>
+        );
+      }
+
       return (
-        <View style={styles.paddedCenterContainer}>
-          <Text>{this.props.emptyMessage}</Text>
-          {getRefreshButton()}
+        <View>
+          {this.props.header}
+          <View style={styles.paddedCenterContainer}>
+            <Text style={styles.friendlyText}>{this.props.emptyMessage}</Text>
+            {getRefreshButton()}
+          </View>
         </View>
       );
     }
@@ -65,7 +99,7 @@ export default class ListingsComponent extends Component {
     const { width } = Dimensions.get('window');
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.white }]}>
         <ListView
           enableEmptySections
           removeClippedSubviews={false}
@@ -74,6 +108,12 @@ export default class ListingsComponent extends Component {
             flexWrap: 'wrap',
             alignItems: 'flex-start',
           }}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
           dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
             .cloneWithRows(this.props.listings)}
           renderRow={(data) =>

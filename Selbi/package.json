@@ -7,7 +7,6 @@
     "test": "mocha tests --compilers js:babel-core/register --require tests/setup.js --require react-native-mock/mock tests/*"
   },
   "dependencies": {
-    "@selbi/react-native-image-reader": "^1.0.7",
     "@selbi/react-native-navbar": "0.0.4",
     "babel-cli": "^6.11.4",
     "babel-core": "^6.13.2",
@@ -32,6 +31,7 @@
     "react-native-drawer": "^2.2.6",
     "react-native-fbsdk": "^0.3.0",
     "react-native-fcm": "^2.3.0",
+    "react-native-fetch-blob": "^0.9.6",
     "react-native-firebase-analytics": "^1.0.4",
     "react-native-gifted-chat": "0.0.10",
     "react-native-google-places-autocomplete": "^1.2.4",

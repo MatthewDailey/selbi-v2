@@ -56,14 +56,13 @@ export default function (futureListingState = new NewListing(), action) {
   }
 }
 
-export function setFromExistingListing(imageKey, imageData, listingKey, listingData) {
+export function setFromExistingListing(imageUri, listingKey, listingData) {
   return {
     type: NL_SET_FROM_EXISTING_LISTING,
     data: {
-      imageId: imageKey,
-      imageUri: `data:image/png;base64,${imageData.base64}`,
-      imageHeight: imageData.height,
-      imageWidth: imageData.width,
+      imageUri,
+      imageHeight: listingData.images.image1.height,
+      imageWidth: listingData.images.image1.width,
       listingId: listingKey,
       title: listingData.title,
       description: listingData.description,

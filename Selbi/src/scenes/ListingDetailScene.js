@@ -262,12 +262,19 @@ class ListingDetailScene extends RoutableScene {
   onGoNext(routeName) {
     if (routeName === 'edit') {
       this.props.clearListingDataForEditing();
-      this.props.setListingDataForEditing(
-        this.props.imageKey,
-        this.props.imageData,
-        this.props.listingKey,
-        this.props.listingData
-      );
+      if (this.props.imageUri) {
+        this.props.setListingDataForEditing(
+          this.props.imageUri,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      } else {
+        this.props.setListingDataForEditing(
+          `data:image/png;base64,${this.props.imageData.base64}`,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      }
     }
   }
 
@@ -319,8 +326,8 @@ class ListingDetailScene extends RoutableScene {
       this.loadAndStoreSellerData();
     }
 
-    if (this.state.renderPlaceholderOnly || !this.props.imageData) {
-      if (!this.props.imageData && this.props.imageKey) {
+    if (this.state.renderPlaceholderOnly || (!this.props.imageUri && !this.props.imageData)) {
+      if (!this.props.imageUri && !this.props.imageData && this.props.imageKey) {
         loadImage(this.props.imageKey)
           .then((imageSnapshot) =>
             this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()))
@@ -334,6 +341,9 @@ class ListingDetailScene extends RoutableScene {
     const listingData = this.props.listingData;
     const isSeller = !!getUser() && listingData.sellerId === getUser().uid;
 
+    const imageUri = this.props.imageUri ? this.props.imageUri :
+      `data:image/png;base64,${imageData.base64}`;
+
     return (
       <TouchableHighlight
         underlayColor={colors.transparent}
@@ -343,7 +353,7 @@ class ListingDetailScene extends RoutableScene {
       >
         <Image
           key={this.props.imageKey}
-          source={{ uri: `data:image/png;base64,${imageData.base64}` }}
+          source={{ uri: imageUri }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TopLeftBackButton onPress={this.goBack} />
@@ -396,8 +406,14 @@ const mapStateToProps = (state) => {
 
   if (state.listingDetails.listingData) {
     const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-    props.imageKey = imageStoreKey;
-    props.imageData = state.images[imageStoreKey];
+    const imageUri = state.listingDetails.listingData.images.image1.url;
+
+    if (imageUri) {
+      props.imageUri = imageUri;
+    } else {
+      props.imageKey = imageStoreKey;
+      props.imageData = state.images[imageStoreKey];
+    }
   }
 
   return props;
@@ -406,8 +422,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
-    setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
-      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
+    setListingDataForEditing: (imageUri, listingKey, listingData) =>
+      dispatch(setFromExistingListing(imageUri, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
