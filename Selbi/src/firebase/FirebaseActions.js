@@ -32,7 +32,7 @@ export function createNewListingFromStore(newListingData) {
         newListingData.imageWidth / 2,
         newListingData.imageHeight / 2,
         'JPEG',
-        10)
+        70)
         .then(writeImageUriToFirebase)
         .then((thumbnailUrl) => Promise.resolve({
           thumbnailUrl,
