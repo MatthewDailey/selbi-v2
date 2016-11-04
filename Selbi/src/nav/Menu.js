@@ -134,7 +134,7 @@ class Menu extends Component {
     const isSignedOut = () => !this.props.userDisplayName;
 
     return (
-      <View style={styles.paddedContainerClear}>
+      <View style={[styles.paddedContainerClear, { backgroundColor: colors.white }]}>
         {getHeader()}
 
         <Divider />
