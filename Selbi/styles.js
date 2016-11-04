@@ -74,6 +74,7 @@ export default StyleSheet.create({
     padding: paddingSize,
   },
   menuText: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
@@ -109,6 +110,7 @@ export default StyleSheet.create({
     padding: paddingSize / 2,
   },
   friendlyText: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
@@ -120,16 +122,19 @@ export default StyleSheet.create({
     fontWeight: '500',
   },
   friendlyTextLeft: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
   friendlyTextLeftLarge: {
+    color: colors.black,
     fontSize: 30,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
   friendlyTextLeftMed: {
+    color: colors.black,
     fontSize: 25,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
