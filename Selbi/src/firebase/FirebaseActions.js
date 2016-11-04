@@ -1,5 +1,6 @@
 import RNFetchBlob from 'react-native-fetch-blob';
 
+
 import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
 
@@ -9,12 +10,10 @@ const Blob = RNFetchBlob.polyfill.Blob;
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 window.Blob = Blob;
 
-
 export default undefined;
 
 function writeImageUriToFirebase(rnfbURI) {
   // create Blob from file path
-  console.log(rnfbURI);
   return Blob
     .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
     .then((blob) => uploadFile(blob));

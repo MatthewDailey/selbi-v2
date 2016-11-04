@@ -65,7 +65,6 @@ export function uploadFile(blob) {
       .ref(`images/${getUser().uid}/${new Date().getTime()}`)
       .put(blob, { contentType: 'image/jpg' })
       .then((snapshot) => {
-        console.log('Completed file upload', snapshot.metadata);
         return Promise.resolve(snapshot.downloadURL);
       }));
 }
@@ -284,8 +283,6 @@ export function updateListing(listingId, title, description, price, images) {
   if (images) {
     listing.images = images;
   }
-
-  console.log(listing)
 
   const listingRef = firebaseApp.database().ref('/listings').child(listingId);
 

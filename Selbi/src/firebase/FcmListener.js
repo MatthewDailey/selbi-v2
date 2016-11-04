@@ -1,10 +1,13 @@
+import { Platform } from 'react-native';
 import FCM from 'react-native-fcm';
 
 export default undefined;
 
 // Requires we upgrade React Native version and react-native-fcm version
 export function setBadgeNumber(n) {
-  FCM.setBadgeNumber(n);
+  if (Platform.OS === 'ios') {
+    FCM.setBadgeNumber(n);
+  }
 }
 
 this.notificationUnsubscribe = FCM.on('notification', (notif) => {

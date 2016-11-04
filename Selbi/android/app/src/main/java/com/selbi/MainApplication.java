@@ -13,6 +13,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
                     new FIRAnalyticsPackage(),
                     new RCTCameraPackage(),
                     new RNSharePackage(),
+                    new ReactMaterialKitPackage(),
                     new ReactNativePermissionsPackage(),
                     new CodePush(null, MainApplication.this, BuildConfig.DEBUG)
             );
