@@ -1,14 +1,8 @@
 package com.selbi;
 
+import android.content.Intent;
+
 import com.facebook.react.ReactActivity;
-import com.avishayil.rnrestart.ReactNativeRestartPackage;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.lwansbrough.RCTCamera.RCTCameraPackage;
-import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
-import com.evollu.react.fa.FIRAnalyticsPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -19,5 +13,11 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "Selbi";
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }
