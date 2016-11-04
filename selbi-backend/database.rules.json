@@ -732,11 +732,14 @@
         "images": {
           ".validate": "newData.hasChildren()",
           "$key": {
-            ".validate": "newData.hasChildren(['height', 'width']) && (newData.hasChildren(['url']) || newData.hasChildren(['imageId']))",
+            ".validate": "newData.hasChildren(['height', 'width']) && (newData.hasChildren(['url', 'thumbnailUrl']) || newData.hasChildren(['imageId']))",
             "$other" : {
               ".validate": false
             },
             "url" : {
+              ".validate": "newData.isString()"
+            },
+            "thumbnailUrl" : {
               ".validate": "newData.isString()"
             },
             "imageId" : {
