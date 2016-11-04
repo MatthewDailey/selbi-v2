@@ -38,6 +38,7 @@
     "react-native-image-resizer": "0.0.11",
     "react-native-material-kit": "^0.3.2",
     "react-native-permissions": "^0.2.5",
+    "react-native-progressive-image": "^1.0.3",
     "react-native-restart": "0.0.1",
     "react-native-router-flux": "^3.35.0",
     "react-native-scrollable-tab-view": "^0.5.4",

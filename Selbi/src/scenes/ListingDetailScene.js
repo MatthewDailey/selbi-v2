@@ -18,6 +18,7 @@ import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
+import ProgressiveImage from '../components/ProgressiveImage';
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
 import DetailMenuButton from '../components/DetailMenuButton';
@@ -344,6 +345,9 @@ class ListingDetailScene extends RoutableScene {
     const imageUri = this.props.imageUri ? this.props.imageUri :
       `data:image/png;base64,${imageData.base64}`;
 
+    const thumbnailUri = this.props.imageThumbnailUrl ? this.props.imageThumbnailUrl :
+      `data:image/png;base64,${imageData.base64}`;
+
     return (
       <TouchableHighlight
         underlayColor={colors.transparent}
@@ -351,9 +355,10 @@ class ListingDetailScene extends RoutableScene {
         style={{ flex: 1, backgroundColor: colors.dark }}
         onPress={this.toggleShowExtraDetails}
       >
-        <Image
-          key={this.props.imageKey}
-          source={{ uri: imageUri }}
+        <View style={{flex: 1}}>
+        <ProgressiveImage
+          thumbnailSource={{ uri: thumbnailUri }}
+          imageSource={{ uri: imageUri }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TopLeftBackButton onPress={this.goBack} />
@@ -387,7 +392,8 @@ class ListingDetailScene extends RoutableScene {
               }}
             />
           </VisibilityWrapper>
-        </Image>
+        </ProgressiveImage>
+        </View>
       </TouchableHighlight>
     );
   }
@@ -410,6 +416,7 @@ const mapStateToProps = (state) => {
 
     if (imageUri) {
       props.imageUri = imageUri;
+      props.imageThumbnailUrl = state.listingDetails.listingData.images.image1.thumbnailUrl;
     } else {
       props.imageKey = imageStoreKey;
       props.imageData = state.images[imageStoreKey];
