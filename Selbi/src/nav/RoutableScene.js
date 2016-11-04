@@ -1,5 +1,5 @@
 import React, { cloneElement, Component } from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text, TouchableHighlight, StatusBar, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import NavigationBar from '@selbi/react-native-navbar';
@@ -231,6 +231,7 @@ export default class RoutableScene extends Component {
         style={{
           fontSize: 25,
           fontWeight: '300',
+          fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
         }}
       >
         {this.props.title}
@@ -241,6 +242,10 @@ export default class RoutableScene extends Component {
       // Note this flex:1 style. Super fucking important to make sure listview can scroll.
       // Without it, the view will just bounce back. Who the fuck knows why.
       <View style={{ flex: 1, backgroundColor: colors.secondary }}>
+        <StatusBar
+          backgroundColor={colors.primary}
+          barStyle="light-content"
+        />
         <NavigationBar
           tintColor={colors.primary}
           style={{ backgroundColor: colors.primary, zIndex: 2 }}
