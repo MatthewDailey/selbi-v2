@@ -36,7 +36,9 @@ export default class DrawerNavigator extends React.Component {
 
   render() {
     BackAndroid.addEventListener('hardwareBackPress', () => {
-      if (this.navigator.getCurrentRoutes().length > 1) {
+      if (this.drawer._open) {
+        this.closeMenu();
+      } else if (this.navigator.getCurrentRoutes().length > 1) {
         this.navigator.pop();
       } else {
         BackAndroid.exitApp();
