@@ -28,8 +28,8 @@ const iconStyle = {
   textAlign: 'center',
   width: 40,
 };
-const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16 };
-const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14 };
+const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16, color: colors.black };
+const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14, color: colors.black };
 
 function MenuItem({ onPress, icon, title, shouldGreyOut }) {
   let textColor = colors.black;
@@ -134,7 +134,7 @@ class Menu extends Component {
     const isSignedOut = () => !this.props.userDisplayName;
 
     return (
-      <View style={styles.paddedContainerClear}>
+      <View style={[styles.paddedContainerClear, { backgroundColor: colors.white }]}>
         {getHeader()}
 
         <Divider />

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import colors from './colors';
 
 export const paddingSize = 16;
@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
   row: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   container: {
     flex: 1,
@@ -74,13 +74,16 @@ export default StyleSheet.create({
     padding: paddingSize,
   },
   menuText: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     padding: paddingSize / 2,
   },
   greyedOutMenuText: {
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     padding: paddingSize / 2,
     color: colors.greyedOut,
   },
@@ -88,6 +91,7 @@ export default StyleSheet.create({
     color: colors.white,
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     textAlign: 'center',
     padding: paddingSize / 2,
   },
@@ -95,17 +99,21 @@ export default StyleSheet.create({
     color: colors.white,
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     padding: paddingSize / 2,
   },
   friendlyHeaderLightLeftAlign: {
     color: colors.white,
     fontSize: 16,
     fontWeight: '400',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     padding: paddingSize / 2,
   },
   friendlyText: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
     textAlign: 'center',
     padding: paddingSize / 2,
   },
@@ -114,15 +122,21 @@ export default StyleSheet.create({
     fontWeight: '500',
   },
   friendlyTextLeft: {
+    color: colors.black,
     fontSize: 20,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
   friendlyTextLeftLarge: {
+    color: colors.black,
     fontSize: 30,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
   friendlyTextLeftMed: {
+    color: colors.black,
     fontSize: 25,
     fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
 });

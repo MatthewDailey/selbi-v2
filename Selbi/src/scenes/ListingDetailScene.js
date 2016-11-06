@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { InteractionManager, Image, View, Text, TouchableHighlight } from 'react-native';
+import { InteractionManager, Platform, View, Text, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 
@@ -18,6 +18,7 @@ import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
+import ProgressiveImage from '../components/ProgressiveImage';
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
 import DetailMenuButton from '../components/DetailMenuButton';
@@ -53,7 +54,7 @@ function DescriptionText({ description, showFullDescription }) {
 
   if (showFullDescription && description) {
     return (
-      <Text style={{ flex: 1, fontSize: descriptionFontSize }}>
+      <Text style={{ flex: 1, fontSize: descriptionFontSize, color: colors.black }}>
         {description}
       </Text>
     );
@@ -65,6 +66,7 @@ function DescriptionText({ description, showFullDescription }) {
       style={{
         flex: 1,
         fontSize: descriptionFontSize,
+        color: colors.black,
       }}
     >
       {description}
@@ -120,7 +122,7 @@ class DetailBottomButtons extends Component {
       if (this.props.sellerData) {
         return (
           <VisibilityWrapper isVisible={this.state.showDescription && !!this.props.sellerData}>
-            <Text>{this.props.sellerData.displayName}</Text>
+            <Text style={{ color: colors.black }}>{this.props.sellerData.displayName}</Text>
           </VisibilityWrapper>
         );
       }
@@ -128,14 +130,23 @@ class DetailBottomButtons extends Component {
     };
 
     const Title = () => (
-      <Text style={{ fontSize: 30, fontWeight: '300' }}>{this.props.listingData.title}</Text>
+      <Text
+        style={{
+          color: colors.black,
+          fontSize: 30,
+          fontWeight: '300',
+          fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
+        }}
+      >
+        {this.props.listingData.title}
+      </Text>
     );
 
     const ListingDistance = ({ distanceString }) => {
       if (this.props.listingDistance) {
         const distanceFontSize = 16;
         return (
-          <Text style={{ fontSize: distanceFontSize }}>
+          <Text style={{ fontSize: distanceFontSize, color: colors.black }}>
             <Icon name="map-marker" size={distanceFontSize} /> {`${distanceString} mi.`}
           </Text>
         );
@@ -175,12 +186,12 @@ class DetailBottomButtons extends Component {
               </View>
               <View style={styles.quarterPadded} />
               <VisibilityWrapper isVisible={isSold}>
-                <Text style={{ flex: 1, fontSize: 20 }}>
+                <Text style={{ flex: 1, fontSize: 20, color: colors.black }}>
                   SOLD - ${this.props.listingData.price}
                 </Text>
               </VisibilityWrapper>
               <VisibilityWrapper isVisible={isDeleted}>
-                <Text style={{ flex: 1, fontSize: 20 }}>
+                <Text style={{ flex: 1, fontSize: 20, color: colors.black }}>
                   This listing has been deleted.
                 </Text>
               </VisibilityWrapper>
@@ -344,6 +355,9 @@ class ListingDetailScene extends RoutableScene {
     const imageUri = this.props.imageUri ? this.props.imageUri :
       `data:image/png;base64,${imageData.base64}`;
 
+    const thumbnailUri = this.props.imageThumbnailUrl ? this.props.imageThumbnailUrl :
+      `data:image/png;base64,${imageData.base64}`;
+
     return (
       <TouchableHighlight
         underlayColor={colors.transparent}
@@ -351,9 +365,10 @@ class ListingDetailScene extends RoutableScene {
         style={{ flex: 1, backgroundColor: colors.dark }}
         onPress={this.toggleShowExtraDetails}
       >
-        <Image
-          key={this.props.imageKey}
-          source={{ uri: imageUri }}
+        <View style={{flex: 1}}>
+        <ProgressiveImage
+          thumbnailSource={{ uri: thumbnailUri }}
+          imageSource={{ uri: imageUri }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         >
           <TopLeftBackButton onPress={this.goBack} />
@@ -387,7 +402,8 @@ class ListingDetailScene extends RoutableScene {
               }}
             />
           </VisibilityWrapper>
-        </Image>
+        </ProgressiveImage>
+        </View>
       </TouchableHighlight>
     );
   }
@@ -410,6 +426,7 @@ const mapStateToProps = (state) => {
 
     if (imageUri) {
       props.imageUri = imageUri;
+      props.imageThumbnailUrl = state.listingDetails.listingData.images.image1.thumbnailUrl;
     } else {
       props.imageKey = imageStoreKey;
       props.imageData = state.images[imageStoreKey];

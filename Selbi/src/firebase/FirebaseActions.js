@@ -1,4 +1,6 @@
 import RNFetchBlob from 'react-native-fetch-blob';
+import ImageResizer from 'react-native-image-resizer';
+
 
 import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
@@ -9,12 +11,11 @@ const Blob = RNFetchBlob.polyfill.Blob;
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
 window.Blob = Blob;
 
-
 export default undefined;
 
 function writeImageUriToFirebase(rnfbURI) {
+  console.log('write image uri ;;;;;;;; ', rnfbURI);
   // create Blob from file path
-  console.log(rnfbURI);
   return Blob
     .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
     .then((blob) => uploadFile(blob));
@@ -26,13 +27,25 @@ export function createNewListingFromStore(newListingData) {
   }
 
   return writeImageUriToFirebase(newListingData.imageUri)
-    .then((imageUrl) => createListing(
+    .then((imageUrl) => ImageResizer.createResizedImage(
+        newListingData.imageUri,
+        newListingData.imageWidth / 2,
+        newListingData.imageHeight / 2,
+        'JPEG',
+        70)
+        .then(writeImageUriToFirebase)
+        .then((thumbnailUrl) => Promise.resolve({
+          thumbnailUrl,
+          imageUrl,
+        })))
+    .then(({ thumbnailUrl, imageUrl }) => createListing(
       newListingData.title,
       '', // description
       newListingData.price,
       {
         image1: {
           url: imageUrl,
+          thumbnailUrl,
           width: newListingData.imageWidth,
           height: newListingData.imageHeight,
         },

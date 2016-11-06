@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, View, Image, TouchableHighlight } from 'react-native';
-import { MKSpinner } from 'react-native-material-kit';
 
 import { loadImage, getUser } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
@@ -109,7 +108,7 @@ ItemView.propTypes = {
 // TODO: Get ride of hard coded image1.
 const mapStateToProps = (state, currentProps) => {
   const imageId = currentProps.listing.val().images.image1.imageId;
-  const imageUri = currentProps.listing.val().images.image1.url;
+  const imageUri = currentProps.listing.val().images.image1.thumbnailUrl;
 
   if (imageUri) {
     return {

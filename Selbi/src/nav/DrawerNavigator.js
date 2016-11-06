@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigator } from 'react-native';
+import { Navigator, BackAndroid } from 'react-native';
 
 import Drawer from 'react-native-drawer';
 
@@ -35,17 +35,28 @@ export default class DrawerNavigator extends React.Component {
   }
 
   render() {
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      if (this.drawer._open) {
+        this.closeMenu();
+      } else if (this.navigator.getCurrentRoutes().length > 1) {
+        this.navigator.pop();
+      } else {
+        BackAndroid.exitApp();
+      }
+      return true;
+    });
+
+
     return (
       <Navigator
+        ref={(c) => { this.navigator = c; }}
         initialRoute={this.props.initialRoute}
         onDidFocus={(route) => reportOpenScene(route.id)}
         renderScene={(route, navigator) => {
           console.log('Rendering: ', route);
           return (
             <Drawer
-              ref={(c) => {
-                this.drawer = c;
-              }}
+              ref={(c) => { this.drawer = c; }}
               content={this.props.renderMenuWithNavigator(navigator, this.closeMenu)}
               tapToClose
               openDrawerOffset={0.2}

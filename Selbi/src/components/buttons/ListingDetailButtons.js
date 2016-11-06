@@ -7,7 +7,7 @@ import colors from '../../../colors';
 import { paddingSize } from '../../../styles';
 import { isPaymentsEnabled } from '../../../features';
 
-const buttonStyle = { fontSize: 20 };
+const buttonStyle = { fontSize: 20, color: colors.black };
 const buttonMargin = paddingSize / 2;
 
 const Button = MKButton.button()

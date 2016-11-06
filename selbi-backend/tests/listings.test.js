@@ -176,6 +176,7 @@ describe('/listings', () => {
         },
         {
           url: 'second-image-url',
+          thumbnailUrl: 'thumbnail-url',
           height: 30,
           width: 30,
         },
@@ -230,6 +231,15 @@ describe('/listings', () => {
         it('url', (done) => {
           const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
           delete modifiedMinimalUserListing.images[1].url;
+          storeListingAsMinimalUserAndExpectFailure(
+            modifiedMinimalUserListing,
+            'Can have no extra properties',
+            done);
+        });
+
+        it('thumbnailUrl', (done) => {
+          const modifiedMinimalUserListing = FirebaseTest.getMinimalUserListingTwo();
+          delete modifiedMinimalUserListing.images[1].thumbnailUrl;
           storeListingAsMinimalUserAndExpectFailure(
             modifiedMinimalUserListing,
             'Can have no extra properties',
