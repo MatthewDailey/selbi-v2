@@ -18,6 +18,7 @@ export default function PurchaseBulletin({ bulletin, gotIt }) {
       <BulletinActionButton
         text="Awesome! Got it"
         onPress={gotIt}
+        isAction={false}
       />
     </View>
   );

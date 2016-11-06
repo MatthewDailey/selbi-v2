@@ -69,6 +69,11 @@ export default StyleSheet.create({
     padding: paddingSize,
     backgroundColor: colors.secondary,
   },
+  halfPaddedContainer: {
+    flex: 1,
+    padding: paddingSize / 2,
+    backgroundColor: colors.secondary,
+  },
   paddedContainerClear: {
     flex: 1,
     padding: paddingSize,

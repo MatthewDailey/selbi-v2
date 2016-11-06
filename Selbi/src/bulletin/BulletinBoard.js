@@ -190,11 +190,6 @@ class SignedInBulletinBoard extends Component {
 
     return (
       <View>
-        <View
-          style={{
-            margin: 8,
-          }}
-        >
           <View style={styles.paddedContainer}>
             {getBulletins()}
             <SpinnerOverlay
@@ -203,7 +198,6 @@ class SignedInBulletinBoard extends Component {
               fillParent
             />
           </View>
-        </View>
       </View>
     );
   }
