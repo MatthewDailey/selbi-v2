@@ -13,7 +13,6 @@ window.Blob = Blob;
 export default undefined;
 
 function writeImageUriToFirebase(rnfbURI) {
-  console.log('write image uri ;;;;;;;; ', rnfbURI);
   // create Blob from file path
   return Blob
     .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })

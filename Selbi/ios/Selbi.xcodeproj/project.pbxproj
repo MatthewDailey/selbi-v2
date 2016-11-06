@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -315,6 +316,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9C49D8B1DCD178E00D3BFC4 /* libRCTImageResizer.a in Frameworks */,
 				C97953081D66E3B500BCD992 /* libRCTCameraRoll.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -346,7 +348,6 @@
 				C93756F41DAD537F003DE6B0 /* libRCTFBSDK.a in Frameworks */,
 				C92D2DD41DC6EAAD0022B245 /* libRCTRestart.a in Frameworks */,
 				C9242FFC1DCA49EB00107EE7 /* libRNFetchBlob.a in Frameworks */,
-				C9C49D8B1DCD178E00D3BFC4 /* libRCTImageResizer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
