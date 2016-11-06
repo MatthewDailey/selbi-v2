@@ -155,5 +155,5 @@ routeLinks[publishCompletedScene.id] = {
 };
 
 
-module.exports.routesLinks = routeLinks;
+module.exports.routeLinks = routeLinks;
 module.exports.firstScene = cameraScene;

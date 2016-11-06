@@ -206,5 +206,5 @@ routeLinks[completedPurchaseScene.id] = {
   },
 };
 
-module.exports.routesLinks = routeLinks;
+module.exports.routeLinks = routeLinks;
 module.exports.firstScene = listingDetailScene;

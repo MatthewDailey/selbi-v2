@@ -209,6 +209,16 @@ class Menu extends Component {
           title="Follow a Friend"
         />
 
+        <Divider />
+
+        <MenuItem
+          onPress={() => {
+            setSceneAndCloseMenu(this.props.introScene);
+          }}
+          icon={<Icon name="map-marker" size={iconSize} />}
+          title="Intro"
+        />
+
         {getFooter()}
       </View>
     );
@@ -228,6 +238,7 @@ Menu.propTypes = {
   followFriendScene: React.PropTypes.object.isRequired,
   signInOrRegisterScene: React.PropTypes.object.isRequired,
   sellScene: React.PropTypes.object.isRequired,
+  introScene: React.PropTypes.object.isRequired,
 };
 
 export default connect(
