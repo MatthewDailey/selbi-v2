@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
-import ExpandingText from '../components/ExpandingText';
+import EmojiAlignedText from '../components/EmojiAlignedText';
 import VisibilityWrapper from '../components/VisibilityWrapper';
 
 import bulletinStyles from './bulletinStyles';
@@ -15,9 +15,9 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser, g
 
   return (
     <View>
-      <ExpandingText style={bulletinStyles.bulletinText}>
-        😘 {newFollowerDisplayName} (@{newFollowerUsername}) is now following you.
-      </ExpandingText>
+      <EmojiAlignedText emoji=" 😘" style={bulletinStyles.bulletinText}>
+       {newFollowerDisplayName} (@{newFollowerUsername}) is now following you.
+      </EmojiAlignedText>
       <VisibilityWrapper isVisible={!newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
           text={`Follow ${newFollowerDisplayName}`}

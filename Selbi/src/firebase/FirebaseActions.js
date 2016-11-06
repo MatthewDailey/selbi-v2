@@ -1,7 +1,6 @@
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImageResizer from 'react-native-image-resizer';
 
-
 import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
 

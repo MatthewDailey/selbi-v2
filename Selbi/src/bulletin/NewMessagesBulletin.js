@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
-import ExpandingText from '../components/ExpandingText';
+import EmojiAlignedText from '../components/EmojiAlignedText';
 
 import { setListingKey, setBuyerUid } from '../reducers/ListingDetailReducer';
 
@@ -15,9 +15,9 @@ function NewMessagesBulletin({ bulletin, takeAction }) {
 
   return (
     <View>
-      <ExpandingText style={bulletinStyles.bulletinText}>
-        💌 {bulletin.payload.senderDisplayName} sent you {bulletin.payload.count} new {messageOrMessages} about {bulletin.payload.listingTitle}
-      </ExpandingText>
+      <EmojiAlignedText emoji="💌" style={bulletinStyles.bulletinText}>
+        {bulletin.payload.senderDisplayName} sent you {bulletin.payload.count} new {messageOrMessages} about {bulletin.payload.listingTitle}
+      </EmojiAlignedText>
       <BulletinActionButton
         text="Read new messages"
         onPress={takeAction}
