@@ -193,12 +193,6 @@ class SignedInBulletinBoard extends Component {
         <View
           style={{
             margin: 8,
-            shadowOffset:{
-              width: 2,
-              height: 2,
-            },
-            shadowColor: 'black',
-            shadowOpacity: 1.0,
           }}
         >
           <View style={styles.paddedContainer}>

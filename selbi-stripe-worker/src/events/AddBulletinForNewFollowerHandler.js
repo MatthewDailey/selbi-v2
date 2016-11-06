@@ -73,13 +73,14 @@ export default class AddBulletinForNewFollower {
       .then((newFollowerPublicData) => {
         bulletin.payload.newFollowerPublicData = newFollowerPublicData;
       })
-      .then(sendNotificationToLeader)
       .then(checkIfAlreadyFollowing)
       .then(() => firebaseDb
         .ref('userBulletins')
         .child(data.payload.leader)
         .push()
-        .set(bulletin));
+        .set(bulletin))
+      .then(sendNotificationToLeader);
+
   }
 }
 

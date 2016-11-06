@@ -13,12 +13,18 @@ const FlatButton = MKButton.flatButton()
   .withBackgroundColor(colors.white)
   .build();
 
-export default function BulletinActionButton({ text, onPress }) {
+export default function BulletinActionButton({ text, onPress, isAction }) {
+  let actionIcon = <Icon name="arrow-right" size={notificationDescriptionFontSize} />;
+
+  if (!isAction) {
+    actionIcon = <Icon name="check" size={notificationDescriptionFontSize} />
+  }
+
   return (
     <View style={{ alignItems: 'flex-end' }}>
       <FlatButton onPress={onPress}>
         <Text style={bulletinStyles.actionButtonText}>
-          {text} <Icon name="arrow-right" size={notificationDescriptionFontSize} />
+          {text} {actionIcon}
         </Text>
       </FlatButton>
     </View>
@@ -28,4 +34,9 @@ export default function BulletinActionButton({ text, onPress }) {
 BulletinActionButton.propTypes = {
   text: React.PropTypes.string.isRequired,
   onPress: React.PropTypes.func,
+  isAction: React.PropTypes.bool,
+};
+
+BulletinActionButton.defaultProps = {
+  isAction: true,
 };

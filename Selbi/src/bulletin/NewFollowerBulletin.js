@@ -22,12 +22,14 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser, g
         <BulletinActionButton
           text={`Follow ${newFollowerDisplayName}`}
           onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
+          isAction={false}
         />
       </VisibilityWrapper>
       <VisibilityWrapper isVisible={newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
           text="Nice! Got it"
           onPress={gotIt}
+          isAction={false}
         />
       </VisibilityWrapper>
     </View>
