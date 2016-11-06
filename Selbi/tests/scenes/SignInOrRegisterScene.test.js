@@ -55,9 +55,9 @@ describe('<SignInOrRegisterScene />', () => {
       SignInOrRegisterScene.prototype.getInnerView.restore();
     });
 
-    it('has 2 children', () => {
+    it('has 3 children', () => {
       const signInOrRegisterWrapper = shallow(<SignInOrRegisterScene />);
-      expect(signInOrRegisterWrapper.children()).to.have.lengthOf(2);
+      expect(signInOrRegisterWrapper.children()).to.have.lengthOf(3);
     });
 
     it('calls getInnerView twice to generate 2 children', () => {
