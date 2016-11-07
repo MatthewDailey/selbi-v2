@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ListView, Text, InteractionManager, RefreshControl } from 'react-native';
+import { View, ScrollView, ListView, Text, InteractionManager, RefreshControl } from 'react-native';
 import { MKButton, MKSpinner } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -42,16 +42,6 @@ export default class ListingsComponent extends Component {
       );
     }
 
-    const RefreshButton = MKButton.plainFab()
-      .withStyle({
-        borderRadius: 20,
-        margin: 20,
-      })
-      .withOnPress(() => {
-        this.props.refresh();
-      })
-      .build();
-
     if (this.props.listings.uninitialized) {
       return (
         <View style={styles.paddedCenterContainerClear}>
@@ -62,12 +52,13 @@ export default class ListingsComponent extends Component {
     }
 
     if (!this.props.listings || Object.keys(this.props.listings).length === 0) {
-      const getRefreshButton = () => {
+      const getRefreshControl = () => {
         if (this.props.refresh) {
           return (
-            <RefreshButton>
-              <Text><Icon name="refresh" size={16} /></Text>
-            </RefreshButton>
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
           );
         }
         return undefined;
@@ -75,24 +66,22 @@ export default class ListingsComponent extends Component {
 
       if (this.props.emptyView) {
         return (
-          <View>
+          <ScrollView refreshControl={getRefreshControl()}>
             {this.props.header}
             <View style={styles.paddedCenterContainer}>
               <this.props.emptyView />
-              {getRefreshButton()}
             </View>
-          </View>
+          </ScrollView>
         );
       }
 
       return (
-        <View>
+        <ScrollView refreshControl={getRefreshControl()}>
           {this.props.header}
           <View style={styles.paddedCenterContainer}>
             <Text style={styles.friendlyText}>{this.props.emptyMessage}</Text>
-            {getRefreshButton()}
           </View>
-        </View>
+        </ScrollView>
       );
     }
 

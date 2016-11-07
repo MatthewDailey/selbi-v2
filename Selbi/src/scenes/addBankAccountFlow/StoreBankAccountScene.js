@@ -20,9 +20,10 @@ import { reportAddBankInfo, reportError } from '../../SelbiAnalytics';
 import styles from '../../../styles';
 import colors from '../../../colors';
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -157,7 +158,7 @@ class ChooseVisibilityScene extends RoutableScene {
           <View style={styles.padded} />
 
           <Button onPress={this.createAccount}>
-            <Text style={styles.padded}><Icon name="university" /> Submit</Text>
+            <Text><Icon name="university" /> Submit</Text>
           </Button>
 
           <View style={styles.halfPadded} />

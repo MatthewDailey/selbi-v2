@@ -26,9 +26,10 @@ const FlatButton = MKButton.flatButton()
   .withBackgroundColor(colors.white)
   .build();
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -92,8 +93,10 @@ class ListingReceiptScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly || !this.props.imageData || !this.props.sellerData) {
-      if (!this.props.imageData) {
+    if (this.state.renderPlaceholderOnly
+      || (!this.props.imageUrl && !this.props.imageData)
+      || !this.props.sellerData) {
+      if (!this.props.imageUrl && !this.props.imageData) {
         loadImage(this.props.imageKey).then((imageSnapshot) =>
           this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
       }
@@ -105,11 +108,16 @@ class ListingReceiptScene extends RoutableScene {
       return <LoadingListingComponent />;
     }
 
+    let imageUri = this.props.imageUrl;
+    if (this.props.imageData) {
+      imageUri = `data:image/png;base64,${this.props.imageData.base64}`;
+    }
+
     // TODO ScrollView Could be in a better place.
     return (
       <View style={styles.container}>
         <Image
-          source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
+          source={{ uri: imageUri }}
           style={{ flex: 1, backgroundColor: colors.dark }}
         />
         <ScrollView style={{ flex: 2, padding: 16 }}>
@@ -187,12 +195,14 @@ class ListingReceiptScene extends RoutableScene {
 
 const mapStateToProps = (state) => {
   const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
+  const imageUrl = state.listingDetails.listingData.images.image1.url;
   return {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     listingDistance: state.listingDetails.listingDistance,
     sellerData: state.listingDetails.sellerData,
     imageKey: imageStoreKey,
+    imageUrl,
     imageData: state.images[imageStoreKey],
     buyerUid: state.listingDetails.buyerUid,
     hasPaymentMethod: state.user.hasPayment,

@@ -22,10 +22,10 @@ const buttonTextStyle = {
   fontSize: 20,
 };
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
-    padding: 8,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();

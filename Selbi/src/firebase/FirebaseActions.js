@@ -1,7 +1,6 @@
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImageResizer from 'react-native-image-resizer';
 
-
 import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
 
@@ -14,7 +13,6 @@ window.Blob = Blob;
 export default undefined;
 
 function writeImageUriToFirebase(rnfbURI) {
-  console.log('write image uri ;;;;;;;; ', rnfbURI);
   // create Blob from file path
   return Blob
     .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
@@ -29,8 +27,8 @@ export function createNewListingFromStore(newListingData) {
   return writeImageUriToFirebase(newListingData.imageUri)
     .then((imageUrl) => ImageResizer.createResizedImage(
         newListingData.imageUri,
-        newListingData.imageWidth / 2,
-        newListingData.imageHeight / 2,
+          newListingData.imageWidth / 2,
+          newListingData.imageHeight / 2,
         'JPEG',
         70)
         .then(writeImageUriToFirebase)

@@ -69,6 +69,11 @@ export default StyleSheet.create({
     padding: paddingSize,
     backgroundColor: colors.secondary,
   },
+  halfPaddedContainer: {
+    flex: 1,
+    padding: paddingSize / 2,
+    backgroundColor: colors.secondary,
+  },
   paddedContainerClear: {
     flex: 1,
     padding: paddingSize,
@@ -138,5 +143,9 @@ export default StyleSheet.create({
     fontSize: 25,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
+  },
+  buttonTextStyle: {
+    color: colors.black,
+    fontSize: 20,
   },
 });

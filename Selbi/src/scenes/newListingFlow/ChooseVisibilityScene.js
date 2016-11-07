@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Permissions from 'react-native-permissions';
+import flattenStyle from 'flattenStyle';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
@@ -21,14 +22,10 @@ import colors from '../../../colors';
 
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-const buttonTextStyle = {
-  fontSize: 20,
-};
-
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
-    padding: 8,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -90,8 +87,8 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text style={buttonTextStyle}>
-              <Icon name="users" size={buttonTextStyle.fontSize} />  My Friends
+            <Text style={styles.buttonTextStyle}>
+              <Icon name="users" size={flattenStyle(styles.buttonTextStyle).fontSize} />  My Friends
             </Text>
           </Button>
         </View>
@@ -100,7 +97,7 @@ class ChooseVisibilityScene extends RoutableScene {
             onPress={
               () => {
                 reportButtonPress('choose_visibility_public');
-                this.setState({ publishing: true })
+                this.setState({ publishing: true });
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
                     this.props.setNewListingId(newListingId);
@@ -116,8 +113,8 @@ class ChooseVisibilityScene extends RoutableScene {
               }
             }
           >
-            <Text style={buttonTextStyle}>
-              <Icon name="globe" size={buttonTextStyle.fontSize} />  Anyone Nearby
+            <Text style={styles.buttonTextStyle}>
+              <Icon name="globe" size={flattenStyle(styles.buttonTextStyle).fontSize} />  Anyone Nearby
             </Text>
           </Button>
         </View>

@@ -1,20 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { View, InteractionManager } from 'react-native';
-import Camera from 'react-native-camera';
-import { MKButton } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Permissions from 'react-native-permissions';
-import RoutableScene from '../../nav/RoutableScene';
-
-import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
-import { setSinglePermission } from '../../reducers/PermissionsReducer';
-
-import SpinnerOverlay from '../../components/SpinnerOverlay';
-import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
-
-import styles from '../../../styles';
-import colors from '../../../colors';
+import React from "react";
+import {connect} from "react-redux";
+import {View, InteractionManager} from "react-native";
+import Camera from "react-native-camera";
+import {MKButton} from "react-native-material-kit";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Permissions from "react-native-permissions";
+import RoutableScene from "../../nav/RoutableScene";
+import {setNewListingImageLocalUri} from "../../reducers/NewListingReducer";
+import {setSinglePermission} from "../../reducers/PermissionsReducer";
+import SpinnerOverlay from "../../components/SpinnerOverlay";
+import OpenSettingsComponent from "../../nav/OpenSettingsComponent";
+import styles from "../../../styles";
+import colors from "../../../colors";
 
 const ColoredRaisedButton = MKButton
   .accentColoredFab()

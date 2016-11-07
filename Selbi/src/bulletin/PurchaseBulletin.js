@@ -1,25 +1,16 @@
 import React from 'react';
 
-import { View } from 'react-native';
-
 import BulletinActionButton from './BulletinActionButton';
-import ExpandingText from '../components/ExpandingText';
-
-import bulletinStyles from './bulletinStyles';
 
 export default function PurchaseBulletin({ bulletin, gotIt }) {
   return (
-    <View>
-      <ExpandingText style={bulletinStyles.bulletinText}>
-        {`🤑 ${bulletin.payload.buyerDisplayName} bought your listing`
-          + ` '${bulletin.payload.listingTitle}' for`
-          + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
-      </ExpandingText>
-      <BulletinActionButton
-        text="Awesome! Got it"
-        onPress={gotIt}
-      />
-    </View>
+    <BulletinActionButton
+      emoji="🤑"
+      text={`${bulletin.payload.buyerDisplayName} bought your listing`
+        + ` '${bulletin.payload.listingTitle}' for`
+        + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
+      onPress={gotIt}
+    />
   );
 }
 

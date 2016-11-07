@@ -228,6 +228,7 @@ Menu.propTypes = {
   followFriendScene: React.PropTypes.object.isRequired,
   signInOrRegisterScene: React.PropTypes.object.isRequired,
   sellScene: React.PropTypes.object.isRequired,
+  introScene: React.PropTypes.object.isRequired,
 };
 
 export default connect(

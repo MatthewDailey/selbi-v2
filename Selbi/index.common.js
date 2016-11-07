@@ -18,6 +18,7 @@ import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
 import AddBankFlow from './src/scenes/addBankAccountFlow';
 import AddPhoneFlow from './src/scenes/addFriendsFromContactsFlow';
+import IntroFlow from './src/scenes/introFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -371,12 +372,13 @@ routeLinks[followFriendScene.id] = {
   },
 };
 
-routeLinks = Object.assign(routeLinks, NewListingFlow.routesLinks);
-routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routesLinks);
+routeLinks = Object.assign(routeLinks, NewListingFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddPhoneFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks)
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -390,6 +392,7 @@ function renderMenu(navigator, closeMenu) {
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
       followFriendScene={followFriendScene}
+      introScene={IntroFlow.firstScene}
       loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={menuSignInScene}
       sellScene={NewListingFlow.firstScene}
@@ -411,13 +414,13 @@ class NavApp extends Component {
   componentDidMount() {
     if (config.codePushKey) {
       this.refreshCode = setInterval(() => {
-          codePush.sync({
-            updateDialog: true,
-            deploymentKey: config.codePushKey,
-            installMode: codePush.InstallMode.IMMEDIATE,
-          });
-        },
-        5000);
+        codePush.sync({
+          updateDialog: true,
+          deploymentKey: config.codePushKey,
+          installMode: codePush.InstallMode.IMMEDIATE,
+        });
+      },
+      5000);
     }
   }
 

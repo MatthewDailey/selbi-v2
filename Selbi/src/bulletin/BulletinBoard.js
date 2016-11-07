@@ -103,6 +103,10 @@ class SignedInBulletinBoard extends Component {
                       this.props.goNext('details');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
+                    gotIt={() => {
+                      reportButtonPress('bulletin_ack_new_listing');
+                      updateBulletin(bulletinKey, { status: 'read' });
+                    }}
                     bulletin={bulletin}
                   />
                 </View>
@@ -190,18 +194,8 @@ class SignedInBulletinBoard extends Component {
 
     return (
       <View>
-        <View
-          style={{
-            margin: 8,
-            shadowOffset:{
-              width: 2,
-              height: 2,
-            },
-            shadowColor: 'black',
-            shadowOpacity: 1.0,
-          }}
-        >
           <View style={styles.paddedContainer}>
+            <Text style={{ fontWeight: 'bold', color: colors.black }}>Notifications</Text>
             {getBulletins()}
             <SpinnerOverlay
               isVisible={this.state.takingAction}
@@ -209,7 +203,6 @@ class SignedInBulletinBoard extends Component {
               fillParent
             />
           </View>
-        </View>
       </View>
     );
   }
@@ -225,6 +218,7 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
+      borderWidth: 1,
     })
     .withBackgroundColor(colors.white)
     .withOnPress(() => {
@@ -238,12 +232,6 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
       <View
         style={{
           margin: 8,
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
-          shadowColor: 'black',
-          shadowOpacity: 1.0,
         }}
       >
         <FlatButton>

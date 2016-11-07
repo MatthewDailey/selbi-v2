@@ -10,7 +10,7 @@ import { isPaymentsEnabled } from '../../../features';
 const buttonStyle = { fontSize: 20, color: colors.black };
 const buttonMargin = paddingSize / 2;
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
     padding: 15,
@@ -46,7 +46,7 @@ ShareButton.propTypes = {
 
 const unsupported = () => Alert.alert('Sorry, not yet supported.');
 
-const LeftButton = MKButton.button()
+const LeftButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginRight: buttonMargin / 2,
@@ -54,7 +54,7 @@ const LeftButton = MKButton.button()
   .withBackgroundColor(colors.primary)
   .build();
 
-const RightButton = MKButton.button()
+const RightButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginLeft: buttonMargin / 2,
