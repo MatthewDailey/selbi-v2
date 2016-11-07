@@ -50,6 +50,7 @@ const LeftButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginRight: buttonMargin / 2,
+    borderRadius: 5,
   })
   .withBackgroundColor(colors.primary)
   .build();
@@ -58,6 +59,7 @@ const RightButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginLeft: buttonMargin / 2,
+    borderRadius: 5,
   })
   .withBackgroundColor(colors.primary)
   .build();

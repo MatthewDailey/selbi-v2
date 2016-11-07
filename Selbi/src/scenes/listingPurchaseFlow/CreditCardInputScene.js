@@ -18,9 +18,10 @@ import SpinnerOverlay from '../../components/SpinnerOverlay';
 
 import { reportAddPaymentInfo, reportError } from '../../SelbiAnalytics';
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
  .withStyle({
    borderRadius: 5,
+   borderWidth: 1,
    margin: paddingSize,
  })
   .withBackgroundColor(colors.white)

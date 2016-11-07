@@ -66,34 +66,36 @@ class CompletedPurchaseScene extends RoutableScene {
     // TODO ScrollView Could be in a better place.
     return (
       <View style={styles.container}>
-        <Image
-          source={{ uri: imageUri}}
-          style={{ flex: 1, backgroundColor: colors.dark }}
-        />
-        <ScrollView style={{ flex: 2, padding: 16 }}>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
-            <Text>{this.props.sellerData.displayName}</Text>
-          </View>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
-          </View>
+        <ScrollView >
+          <Image
+            source={{ uri: imageUri}}
+            style={{ flex: 1, backgroundColor: colors.dark }}
+          />
+          <View style={{ flex: 1, padding: 16 }}>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
+              <Text>{this.props.sellerData.displayName}</Text>
+            </View>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
+            </View>
 
-          <View style={styles.halfPadded} />
+            <View style={styles.halfPadded} />
 
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeft}>
-              <GreenCheck /> Purchase Complete
-            </Text>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeft}>
+                <GreenCheck /> Purchase Complete
+              </Text>
+            </View>
+
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeft}>
+                You will receive a receipt in your email shortly.
+              </Text>
+            </View>
+
+            <View style={styles.padded} />
           </View>
-
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeft}>
-              You will receive a receipt in your email shortly.
-            </Text>
-          </View>
-
-          <View style={styles.padded} />
         </ScrollView>
       </View>
     );
