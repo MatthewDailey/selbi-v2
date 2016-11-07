@@ -145,6 +145,7 @@ export default StyleSheet.create({
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
   buttonTextStyle: {
+    color: colors.black,
     fontSize: 20,
   },
 });

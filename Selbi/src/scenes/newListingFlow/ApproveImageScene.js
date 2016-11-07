@@ -23,7 +23,6 @@ class ApproveImageScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.newListing);
   return {
     imageUri: state.newListing.imageUri,
   };

@@ -27,8 +27,8 @@ export function createNewListingFromStore(newListingData) {
   return writeImageUriToFirebase(newListingData.imageUri)
     .then((imageUrl) => ImageResizer.createResizedImage(
         newListingData.imageUri,
-        newListingData.imageWidth / 2,
-        newListingData.imageHeight / 2,
+          newListingData.imageWidth / 2,
+          newListingData.imageHeight / 2,
         'JPEG',
         70)
         .then(writeImageUriToFirebase)

@@ -53,7 +53,7 @@ export default class DrawerNavigator extends React.Component {
         initialRoute={this.props.initialRoute}
         onDidFocus={(route) => reportOpenScene(route.id)}
         renderScene={(route, navigator) => {
-          console.log('Rendering: ', route);
+          console.log('Rendering: ', route.id);
           return (
             <Drawer
               ref={(c) => { this.drawer = c; }}
