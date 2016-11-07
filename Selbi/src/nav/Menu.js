@@ -209,16 +209,6 @@ class Menu extends Component {
           title="Follow a Friend"
         />
 
-        <Divider />
-
-        <MenuItem
-          onPress={() => {
-            setSceneAndCloseMenu(this.props.introScene);
-          }}
-          icon={<Icon name="map-marker" size={iconSize} />}
-          title="Intro"
-        />
-
         {getFooter()}
       </View>
     );
