@@ -214,6 +214,7 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
   const FlatButton = MKButton.flatButton()
     .withStyle({
       borderRadius: 5,
+      borderWidth: 1,
     })
     .withBackgroundColor(colors.white)
     .withOnPress(() => {

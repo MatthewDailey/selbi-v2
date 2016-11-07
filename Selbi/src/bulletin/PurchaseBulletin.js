@@ -5,22 +5,16 @@ import { View } from 'react-native';
 import BulletinActionButton from './BulletinActionButton';
 import EmojiAlignedText from '../components/EmojiAlignedText';
 
-import bulletinStyles from './bulletinStyles';
-
 export default function PurchaseBulletin({ bulletin, gotIt }) {
   return (
-    <View>
-      <EmojiAlignedText emoji="🤑" style={bulletinStyles.bulletinText}>
-        {`${bulletin.payload.buyerDisplayName} bought your listing`
-          + ` '${bulletin.payload.listingTitle}' for`
-          + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
-      </EmojiAlignedText>
-      <BulletinActionButton
-        text="Awesome! Got it"
-        onPress={gotIt}
-        isAction={false}
-      />
-    </View>
+    <BulletinActionButton
+      emoji="🤑"
+      text={`${bulletin.payload.buyerDisplayName} bought your listing`
+        + ` '${bulletin.payload.listingTitle}' for`
+        + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
+      onPress={gotIt}
+      onDismiss={gotIt}
+    />
   );
 }
 

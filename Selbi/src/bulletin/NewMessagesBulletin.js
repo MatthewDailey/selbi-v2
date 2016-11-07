@@ -15,13 +15,11 @@ function NewMessagesBulletin({ bulletin, takeAction }) {
 
   return (
     <View>
-      <EmojiAlignedText emoji="💌" style={bulletinStyles.bulletinText}>
-        {bulletin.payload.senderDisplayName} sent you {bulletin.payload.count} new {messageOrMessages} about {bulletin.payload.listingTitle}
-      </EmojiAlignedText>
       <BulletinActionButton
         emoji="💌"
-        text="Read new messages"
+        text={`${bulletin.payload.senderDisplayName} sent you ${bulletin.payload.count} new ${messageOrMessages} about ${bulletin.payload.listingTitle}`}
         onPress={takeAction}
+        onDismiss={() => {}}
       />
     </View>
   );

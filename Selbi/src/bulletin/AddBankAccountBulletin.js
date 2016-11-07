@@ -10,12 +10,9 @@ import bulletinStyles from './bulletinStyles';
 export default function AddBankAccountBulletin({ addBankAccount }) {
   return (
     <View>
-      <EmojiAlignedText emoji="💰" style={bulletinStyles.bulletinText}>
-        Get paid fast by setting up a way to receive payments.
-      </EmojiAlignedText>
       <BulletinActionButton
         emoji="💰"
-        text="Connect bank account"
+        text="Connect a bank account"
         onPress={addBankAccount}
       />
     </View>

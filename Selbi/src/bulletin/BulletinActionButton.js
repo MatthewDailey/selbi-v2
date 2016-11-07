@@ -4,8 +4,9 @@ import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import VisibilityWrapper from '../components/VisibilityWrapper';
+import EmojiAlignedText from '../components/EmojiAlignedText';
 
-import bulletinStyles, { notificationDescriptionFontSize } from './bulletinStyles';
+import bulletinStyles from './bulletinStyles';
 import colors from '../../colors';
 
 const IgnoreButton = MKButton.flatButton()
@@ -17,29 +18,30 @@ const IgnoreButton = MKButton.flatButton()
 
 const FlatButton = MKButton.flatButton()
   .withStyle({
-    borderRadius: 2,
+    borderRadius: 4,
     flex: 1,
     borderWidth: 1,
+  })
+  .withTextStyle({
+    textAlign: 'left',
   })
   .build();
 
 export default function BulletinActionButton({ text, onPress, onDismiss, emoji }) {
   return (
     <View style={{ flexDirection: 'row' }}>
-      <VisibilityWrapper isVisible={!!onDismiss} style={{ flex: 1, margin: 4 }}>
+      <View style={{ flex: 1, marginRight: 4 }}>
+        <FlatButton onPress={onPress}>
+          <EmojiAlignedText emoji={`${emoji}`} style={bulletinStyles.actionBulletinText}>{text}</EmojiAlignedText>
+        </FlatButton>
+      </View>
+      <VisibilityWrapper isVisible={!!onDismiss}>
         <IgnoreButton onPress={onDismiss}>
-          <Text style={bulletinStyles.actionButtonText}>
-            Dismiss
+          <Text style={bulletinStyles.dismissButtonText}>
+            <Icon name="times" />
           </Text>
         </IgnoreButton>
       </VisibilityWrapper>
-      <View style={{ flex: 1, margin: 4 }}>
-        <FlatButton onPress={onPress}>
-          <Text style={bulletinStyles.actionButtonText}>
-            {emoji} {text}
-          </Text>
-        </FlatButton>
-      </View>
     </View>
   );
 }

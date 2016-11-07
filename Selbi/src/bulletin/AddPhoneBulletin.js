@@ -10,9 +10,6 @@ import bulletinStyles from './bulletinStyles';
 export default function AddPhoneBulletin({ takeAction }) {
   return (
     <View>
-      <EmojiAlignedText emoji="☎️" style={bulletinStyles.bulletinText}>
-        Find out what your friends are selling.
-      </EmojiAlignedText>
       <BulletinActionButton
         emoji="☎️"
         text="Connect with contacts"

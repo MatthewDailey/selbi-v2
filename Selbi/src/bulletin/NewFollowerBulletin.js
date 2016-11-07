@@ -15,23 +15,20 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser, g
 
   return (
     <View>
-      <EmojiAlignedText emoji=" 😘" style={bulletinStyles.bulletinText}>
-       {newFollowerDisplayName} (@{newFollowerUsername}) is now following you.
-      </EmojiAlignedText>
       <VisibilityWrapper isVisible={!newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
-          emoji=" 😘"
-          text={`Follow ${newFollowerDisplayName}`}
+          emoji="😘"
+          text={`${newFollowerDisplayName} is now following you.`}
           onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
-          isAction={false}
+          onDismiss={gotIt}
         />
       </VisibilityWrapper>
       <VisibilityWrapper isVisible={newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
           emoji=" 😘"
-          text="Nice! Got it"
+          text={`${newFollowerDisplayName} is now following you.`}
           onPress={gotIt}
-          isAction={false}
+          onDismiss={gotIt}
         />
       </VisibilityWrapper>
     </View>
