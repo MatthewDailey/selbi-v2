@@ -29,14 +29,14 @@ const FlatButton = MKButton.flatButton()
 export default function BulletinActionButton({ text, onPress, onDismiss, emoji }) {
   return (
     <View style={{ flexDirection: 'row' }}>
-      <View style={{ flex: 1, marginRight: 4 }}>
+      <View style={{ flex: 1 }}>
         <FlatButton onPress={onPress}>
           <EmojiAlignedText emoji={`${emoji}`} style={bulletinStyles.actionBulletinText}>
             {text}
           </EmojiAlignedText>
         </FlatButton>
       </View>
-      <VisibilityWrapper isVisible={!!onDismiss}>
+      <VisibilityWrapper isVisible={!!onDismiss} style={{ marginLeft: 4 }}>
         <IgnoreButton onPress={onDismiss}>
           <Text style={bulletinStyles.dismissButtonText}>
             <Icon name="times" />
