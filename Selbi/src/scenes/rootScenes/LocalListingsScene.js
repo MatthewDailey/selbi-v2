@@ -21,7 +21,11 @@ import { reportButtonPress } from '../../SelbiAnalytics';
 
 
 function EmptyView({ openSell }) {
-  const EmptySellButton = MKButton.button()
+  const EmptySellButton = MKButton.flatButton()
+    .withStyle({
+      borderRadius: 5,
+      borderWidth: 1,
+    })
     .withOnPress(() => {
       this.props.refresh();
     })
@@ -33,16 +37,22 @@ function EmptyView({ openSell }) {
       <Text style={styles.friendlyText}>No listings near you.</Text>
       <Text>Be the first to sell in your area!</Text>
       <View style={styles.halfPadded} />
-      <EmptySellButton onPress={() => {
-        reportButtonPress('local_listing_open_details');
-        openSell();
-      }}>
+      <EmptySellButton
+        onPress={() => {
+          reportButtonPress('local_listing_open_details');
+          openSell();
+        }}
+      >
         <Text>Sell something</Text>
       </EmptySellButton>
       <View style={styles.padded} />
     </View>
   );
 }
+
+EmptyView.propTypes = {
+  openSell: React.PropTypes.func.isRequired,
+};
 
 class ListingsScene extends RoutableScene {
   onGoNext() {
