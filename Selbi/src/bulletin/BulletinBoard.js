@@ -103,6 +103,10 @@ class SignedInBulletinBoard extends Component {
                       this.props.goNext('details');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
+                    gotIt={() => {
+                      reportButtonPress('bulletin_ack_new_listing');
+                      updateBulletin(bulletinKey, { status: 'read' });
+                    }}
                     bulletin={bulletin}
                   />
                 </View>
@@ -191,7 +195,7 @@ class SignedInBulletinBoard extends Component {
     return (
       <View>
           <View style={styles.paddedContainer}>
-            <Text style={{ fontWeight: 'bold' }}>Notifications</Text>
+            <Text style={{ fontWeight: 'bold', color: colors.black }}>Notifications</Text>
             {getBulletins()}
             <SpinnerOverlay
               isVisible={this.state.takingAction}

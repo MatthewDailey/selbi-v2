@@ -7,7 +7,6 @@ import VisibilityWrapper from '../components/VisibilityWrapper';
 import EmojiAlignedText from '../components/EmojiAlignedText';
 
 import bulletinStyles from './bulletinStyles';
-import colors from '../../colors';
 
 const IgnoreButton = MKButton.flatButton()
   .withStyle({
@@ -32,7 +31,9 @@ export default function BulletinActionButton({ text, onPress, onDismiss, emoji }
     <View style={{ flexDirection: 'row' }}>
       <View style={{ flex: 1, marginRight: 4 }}>
         <FlatButton onPress={onPress}>
-          <EmojiAlignedText emoji={`${emoji}`} style={bulletinStyles.actionBulletinText}>{text}</EmojiAlignedText>
+          <EmojiAlignedText emoji={`${emoji}`} style={bulletinStyles.actionBulletinText}>
+            {text}
+          </EmojiAlignedText>
         </FlatButton>
       </View>
       <VisibilityWrapper isVisible={!!onDismiss}>
