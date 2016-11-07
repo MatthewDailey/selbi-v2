@@ -116,78 +116,80 @@ class ListingReceiptScene extends RoutableScene {
     // TODO ScrollView Could be in a better place.
     return (
       <View style={styles.container}>
-        <Image
-          source={{ uri: imageUri }}
-          style={{ flex: 1, backgroundColor: colors.dark }}
-        />
-        <ScrollView style={{ flex: 2, padding: 16 }}>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
-            <Text>{this.props.sellerData.displayName}</Text>
-          </View>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
-          </View>
+        <ScrollView>
+          <Image
+            source={{ uri: imageUri }}
+            style={{ flex: 1, backgroundColor: colors.dark }}
+          />
+          <View style={{ flex: 1, padding: 16 }}>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
+              <Text>{this.props.sellerData.displayName}</Text>
+            </View>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
+            </View>
 
-          <View style={styles.halfPadded} />
+            <View style={styles.halfPadded} />
 
-          <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.sellerData.hasBankAccount}
-              title="Seller accepts payment"
-              takeAction={() => {
-                reportButtonPress('request_seller_accept_payment');
-                this.goNext('chat');
-              }}
-              actionText="Ask seller to accept payments"
-            />
-          </View>
-          <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.hasPaymentMethod}
-              title="Payment method set up"
-              takeAction={() => {
-                reportButtonPress('add_payment');
-                this.goNext('addPayment');
-              }}
-              actionText="Add a credit card"
-            />
-          </View>
+            <View style={styles.halfPadded}>
+              <CheckBox
+                checked={this.props.sellerData.hasBankAccount}
+                title="Seller accepts payment"
+                takeAction={() => {
+                  reportButtonPress('request_seller_accept_payment');
+                  this.goNext('chat');
+                }}
+                actionText="Ask seller to accept payments"
+              />
+            </View>
+            <View style={styles.halfPadded}>
+              <CheckBox
+                checked={this.props.hasPaymentMethod}
+                title="Payment method set up"
+                takeAction={() => {
+                  reportButtonPress('add_payment');
+                  this.goNext('addPayment');
+                }}
+                actionText="Add a credit card"
+              />
+            </View>
 
-          <View style={styles.halfPadded} />
+            <View style={styles.halfPadded} />
 
-          <VisibilityWrapper
-            isVisible={this.props.hasPaymentMethod && this.props.sellerData.hasBankAccount}
-            style={styles.halfPadded}
-          >
-            <Button
-              onPress={() => {
-                const doPayment = () => this.setState({ purchasing: true }, () => {
-                  reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
-                  purchaseListing(this.props.listingKey)
-                    .then(() => {
-                      reportPurchase(this.props.listingData.price, this.props.listingKey);
-                      this.setState({ purchasing: false });
-                      this.goNext();
-                    })
-                    .catch((error) => {
-                      Alert.alert(error);
-                      console.log(error);
-                      this.setState({ purchasing: false });
-                    });
-                });
-
-                Alert.alert(
-                  'Confirm Purchase',
-                  `Your credit card will be charged $${this.props.listingData.price}`,
-                  [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
-              }}
+            <VisibilityWrapper
+              isVisible={this.props.hasPaymentMethod && this.props.sellerData.hasBankAccount}
+              style={styles.halfPadded}
             >
-              <Text>Sumbit Payment</Text>
-            </Button>
-          </VisibilityWrapper>
+              <Button
+                onPress={() => {
+                  const doPayment = () => this.setState({ purchasing: true }, () => {
+                    reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
+                    purchaseListing(this.props.listingKey)
+                      .then(() => {
+                        reportPurchase(this.props.listingData.price, this.props.listingKey);
+                        this.setState({ purchasing: false });
+                        this.goNext();
+                      })
+                      .catch((error) => {
+                        Alert.alert(error);
+                        console.log(error);
+                        this.setState({ purchasing: false });
+                      });
+                  });
 
-          <View style={styles.padded} />
+                  Alert.alert(
+                    'Confirm Purchase',
+                    `Your credit card will be charged $${this.props.listingData.price}`,
+                    [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
+                }}
+              >
+                <Text>Submit Payment</Text>
+              </Button>
+            </VisibilityWrapper>
+
+            <View style={styles.padded} />
+          </View>
         </ScrollView>
         <SpinnerOverlay isVisible={this.state.purchasing} message="Completing payment..." />
       </View>
