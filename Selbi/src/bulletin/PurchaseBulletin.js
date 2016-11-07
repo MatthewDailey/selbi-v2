@@ -1,9 +1,6 @@
 import React from 'react';
 
-import { View } from 'react-native';
-
 import BulletinActionButton from './BulletinActionButton';
-import EmojiAlignedText from '../components/EmojiAlignedText';
 
 export default function PurchaseBulletin({ bulletin, gotIt }) {
   return (
@@ -13,7 +10,6 @@ export default function PurchaseBulletin({ bulletin, gotIt }) {
         + ` '${bulletin.payload.listingTitle}' for`
         + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
       onPress={gotIt}
-      onDismiss={gotIt}
     />
   );
 }
