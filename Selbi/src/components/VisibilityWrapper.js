@@ -10,5 +10,4 @@ export default function VisibilityWrapper({ isVisible = false, children, style }
 VisibilityWrapper.propTypes = {
   isVisible: React.PropTypes.bool,
   children: React.PropTypes.element.isRequired,
-  style: React.PropTypes.object,
 };

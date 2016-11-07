@@ -13,6 +13,7 @@ import { storeImage } from '../../reducers/ImagesReducer';
 
 import LoadingListingComponent from '../../components/LoadingListingComponent';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -50,13 +51,12 @@ function CheckBox({ checked, title, takeAction, actionText }) {
       <Text style={styles.friendlyTextLeft}>
         <EmptyCheck /> {title}
       </Text>
-      <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPress={takeAction}>
-          <Text style={{ fontSize: 16 }}>
-            {actionText} <Icon name="arrow-right" />
-          </Text>
-        </FlatButton>
-      </View>
+      <View style={styles.halfPadded} />
+      <Button onPress={takeAction}>
+        <Text>
+          {actionText}
+        </Text>
+      </Button>
     </View>
   );
 }
@@ -134,12 +134,12 @@ class ListingReceiptScene extends RoutableScene {
           <View style={styles.halfPadded}>
             <CheckBox
               checked={this.props.sellerData.hasBankAccount}
-              title="Seller accepts Pay with Selbi"
+              title="Seller accepts payment"
               takeAction={() => {
                 reportButtonPress('request_seller_accept_payment');
                 this.goNext('chat');
               }}
-              actionText="Request seller accept Pay with Selbi"
+              actionText="Ask seller to accept payments"
             />
           </View>
           <View style={styles.halfPadded}>
@@ -156,7 +156,10 @@ class ListingReceiptScene extends RoutableScene {
 
           <View style={styles.halfPadded} />
 
-          <View style={styles.halfPadded}>
+          <VisibilityWrapper
+            isVisible={this.props.hasPaymentMethod && this.props.sellerData.hasBankAccount}
+            style={styles.halfPadded}
+          >
             <Button
               onPress={() => {
                 const doPayment = () => this.setState({ purchasing: true }, () => {
@@ -180,9 +183,9 @@ class ListingReceiptScene extends RoutableScene {
                   [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
               }}
             >
-              <Text>Pay with Selbi</Text>
+              <Text>Sumbit Payment</Text>
             </Button>
-          </View>
+          </VisibilityWrapper>
 
           <View style={styles.padded} />
         </ScrollView>
