@@ -191,6 +191,7 @@ class SignedInBulletinBoard extends Component {
     return (
       <View>
           <View style={styles.paddedContainer}>
+            <Text style={{ fontWeight: 'bold' }}>Notifications</Text>
             {getBulletins()}
             <SpinnerOverlay
               isVisible={this.state.takingAction}
@@ -226,12 +227,6 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
       <View
         style={{
           margin: 8,
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
-          shadowColor: 'black',
-          shadowOpacity: 1.0,
         }}
       >
         <FlatButton>

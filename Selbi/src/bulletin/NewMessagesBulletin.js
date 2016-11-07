@@ -19,6 +19,7 @@ function NewMessagesBulletin({ bulletin, takeAction }) {
         {bulletin.payload.senderDisplayName} sent you {bulletin.payload.count} new {messageOrMessages} about {bulletin.payload.listingTitle}
       </EmojiAlignedText>
       <BulletinActionButton
+        emoji="💌"
         text="Read new messages"
         onPress={takeAction}
       />

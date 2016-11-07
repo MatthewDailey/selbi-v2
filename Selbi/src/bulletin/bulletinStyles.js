@@ -7,9 +7,11 @@ export default StyleSheet.create({
   bulletinText: {
     color: colors.black,
     fontSize: notificationDescriptionFontSize,
+    fontWeight: '300',
   },
   actionButtonText: {
     color: colors.black,
-    fontSize: notificationDescriptionFontSize + 2,
+    fontSize: notificationDescriptionFontSize,
+    fontWeight: '300',
   },
 });

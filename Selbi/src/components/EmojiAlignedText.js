@@ -5,7 +5,6 @@ export default class EmojiAlignedText extends Component {
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'row' }}>
-        <Text style={[this.props.style, { width: 50, textAlign: 'center' }]}>{this.props.emoji}</Text>
         <Text style={[this.props.style, { flex: 1, flexWrap: 'wrap' }]}>{this.props.children}</Text>
       </View>
     );

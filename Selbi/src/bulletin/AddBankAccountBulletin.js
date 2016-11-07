@@ -14,6 +14,7 @@ export default function AddBankAccountBulletin({ addBankAccount }) {
         Get paid fast by setting up a way to receive payments.
       </EmojiAlignedText>
       <BulletinActionButton
+        emoji="💰"
         text="Connect bank account"
         onPress={addBankAccount}
       />

@@ -14,6 +14,7 @@ export default function AddPhoneBulletin({ takeAction }) {
         Find out what your friends are selling.
       </EmojiAlignedText>
       <BulletinActionButton
+        emoji="☎️"
         text="Connect with contacts"
         onPress={takeAction}
       />

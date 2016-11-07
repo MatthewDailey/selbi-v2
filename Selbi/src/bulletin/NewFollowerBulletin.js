@@ -20,6 +20,7 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser, g
       </EmojiAlignedText>
       <VisibilityWrapper isVisible={!newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
+          emoji=" 😘"
           text={`Follow ${newFollowerDisplayName}`}
           onPress={() => followUser(newFollowerBulletin.payload.newFollowerUid)}
           isAction={false}
@@ -27,6 +28,7 @@ export default function NewFollowerBulletin({ newFollowerBulletin, followUser, g
       </VisibilityWrapper>
       <VisibilityWrapper isVisible={newFollowerBulletin.payload.reciprocated}>
         <BulletinActionButton
+          emoji=" 😘"
           text="Nice! Got it"
           onPress={gotIt}
           isAction={false}

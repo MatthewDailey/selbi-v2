@@ -15,11 +15,13 @@ function NewFollowerBulletin({ bulletin, openDetails, setDetailSceneListingKey }
 
   return (
     <View>
-      <EmojiAlignedText style={bulletinStyles.bulletinText}>
-        🎁 {sellerDisplayName} posted a new listing!
+      <EmojiAlignedText emoji="🎁" style={bulletinStyles.bulletinText}>
+        {sellerDisplayName} posted a new listing!
       </EmojiAlignedText>
       <BulletinActionButton
+        emoji="🎁"
         text="Check it out"
+        onDismiss={() => {console.log('pressed dismiss')}}
         onPress={() => {
           setDetailSceneListingKey(bulletin.payload.listingId);
           openDetails();
