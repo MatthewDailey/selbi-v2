@@ -121,7 +121,7 @@ class DetailBottomButtons extends Component {
     const SellerName = () => {
       if (this.props.sellerData) {
         return (
-          <VisibilityWrapper isVisible={this.state.showDescription && !!this.props.sellerData}>
+          <VisibilityWrapper isVisible={!!this.props.sellerData}>
             <Text style={{ color: colors.black }}>{this.props.sellerData.displayName}</Text>
           </VisibilityWrapper>
         );
