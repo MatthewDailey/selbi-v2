@@ -26,9 +26,10 @@ const FlatButton = MKButton.flatButton()
   .withBackgroundColor(colors.white)
   .build();
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();

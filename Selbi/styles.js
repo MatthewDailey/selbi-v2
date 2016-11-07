@@ -144,4 +144,7 @@ export default StyleSheet.create({
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
   },
+  buttonTextStyle: {
+    fontSize: 20,
+  },
 });

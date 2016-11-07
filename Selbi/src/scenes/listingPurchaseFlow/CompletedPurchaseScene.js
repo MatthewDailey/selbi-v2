@@ -46,7 +46,7 @@ class CompletedPurchaseScene extends RoutableScene {
     if (this.state.renderPlaceholderOnly
       || (!this.props.imageUrl && !this.props.imageData)
       || !this.props.sellerData) {
-      if (!this.props.imageData) {
+      if (!this.props.imageUrl && !this.props.imageData) {
         loadImage(this.props.imageKey).then((imageSnapshot) =>
           this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
       }
