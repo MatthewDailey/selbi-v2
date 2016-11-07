@@ -43,8 +43,10 @@ export default class ListingsComponent extends Component {
     }
 
     const RefreshButton = MKButton.plainFab()
+      .withBackgroundColor(colors.white)
       .withStyle({
         borderRadius: 20,
+        borderWidth: 1,
         margin: 20,
       })
       .withOnPress(() => {
