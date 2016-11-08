@@ -1,7 +1,7 @@
 import { getActionType } from './ActionUtils';
 
 const SP_SET_PUBLIC_LISTINGS = 'seller-profile-set-public-listings';
-const SP_SET_PRIVATE_LISTINGS = 'seller-profile-set-public-listings';
+const SP_SET_PRIVATE_LISTINGS = 'seller-profile-set-private-listings';
 const SP_SET_INFO = 'seller-profile-set-info';
 const SP_CLEAR = 'seller-profile-clear';
 
@@ -26,6 +26,7 @@ export default function (
         privateListings: uninitialized,
       };
     case SP_SET_PUBLIC_LISTINGS:
+      console.log(action.listings.length);
       return {
         uid: priorState.uid,
         sellerData: priorState.sellerData,
@@ -33,6 +34,7 @@ export default function (
         privateListings: priorState.privateListings,
       };
     case SP_SET_PRIVATE_LISTINGS:
+      console.log(action.listings.length);
       return {
         uid: priorState.uid,
         sellerData: priorState.sellerData,
@@ -68,7 +70,7 @@ export function setSellerProfilePublicListings(listings) {
 
 export function setSellerProfilePrivateListings(listings) {
   return {
-    type: SP_SET_PUBLIC_LISTINGS,
+    type: SP_SET_PRIVATE_LISTINGS,
     listings,
   };
 }

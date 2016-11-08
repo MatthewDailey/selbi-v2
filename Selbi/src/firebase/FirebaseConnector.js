@@ -476,7 +476,7 @@ function loadChatDetailsFromUserChats(userChatsData) {
   return Promise.all(chatPromises);
 }
 
-function loadUserListingsByStatus(uid, status) {
+export function loadUserListingsByStatus(uid, status) {
   return firebaseApp
     .database()
     .ref('/userListings')
