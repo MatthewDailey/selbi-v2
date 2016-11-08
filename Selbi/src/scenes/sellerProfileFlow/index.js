@@ -39,7 +39,7 @@ const chatFromReceiptScene = {
 };
 
 const listingDetailScene = {
-  id: 'seller_profile_scene',
+  id: 'seller_profile_detail_scene',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
 };
 
@@ -183,6 +183,7 @@ routeLinks[listingDetailScene.id] = {
   },
   buy: {
     getRoute: () => {
+      console.log('called get route for buy')
       if (getUser()) {
         return receiptScene;
       }
