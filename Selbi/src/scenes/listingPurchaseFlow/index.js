@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import SellerProfileFlow from '../sellerProfileFlow';
+
 import { withNavigatorProps } from '../../nav/RoutableScene';
 import { setBuyerUid } from '../../reducers/ListingDetailReducer';
 
@@ -183,6 +185,9 @@ routeLinks[listingDetailScene.id] = {
       }
       return buySignInScene;
     },
+  },
+  sellerProfile: {
+    getRoute: () => SellerProfileFlow.firstScene,
   },
 };
 

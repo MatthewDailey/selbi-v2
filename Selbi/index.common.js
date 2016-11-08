@@ -19,6 +19,7 @@ import EditListingFlow from './src/scenes/editListingFlow';
 import AddBankFlow from './src/scenes/addBankAccountFlow';
 import AddPhoneFlow from './src/scenes/addFriendsFromContactsFlow';
 import IntroFlow from './src/scenes/introFlow';
+import SellerProfileFlow from './src/scenes/sellerProfileFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -380,7 +381,8 @@ routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddPhoneFlow.routeLinks);
-routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks)
+routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, SellerProfileFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (

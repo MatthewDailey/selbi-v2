@@ -5,25 +5,36 @@ const SP_SET_INFO = 'seller-profile-set-info';
 const SP_CLEAR = 'seller-profile-clear';
 
 export default function (
-  priorState = { uid: undefined, sellerData: undefined, listings: undefined }, action) {
+  priorState = {
+    uid: undefined,
+    sellerData: undefined,
+    listings: {
+      uninitialized: true,
+    },
+  },
+  action) {
   switch (getActionType(action)) {
     case SP_SET_INFO:
       return {
         uid: action.uid,
-        listings: undefined,
         sellerData: action.sellerData,
+        listings: {
+          uninitialized: true,
+        },
       };
     case SP_SET_LISTINGS:
       return {
         uid: priorState.uid,
-        listings: action.listings,
         sellerData: priorState.sellerData,
+        listings: action.listings,
       };
     case SP_CLEAR:
       return {
         uid: undefined,
-        listings: undefined,
         sellerData: undefined,
+        listings: {
+          uninitialized: true,
+        },
       };
     default:
       return priorState;
