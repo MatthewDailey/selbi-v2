@@ -64,21 +64,14 @@ class SellerProfileScene extends RoutableScene {
 
   renderWithNavBar() {
     const SellerPrivateListings = () => {
-      if (this.props.isFollowingSeller === undefined) {
-        return (
-          <ListingsListComponent
-            listings={{}}
-            emptyMessage="You must sign in to view private listings."
-          />
-        );
-      } else if (!this.props.isFollowingSeller) {
+      if (this.props.isFollowingSeller !== undefined && !this.props.isFollowingSeller) {
         return (
           <ListingsListComponent
             listings={{}}
             emptyMessage={`You are not following ${this.props.sellerData.displayName}.`}
           />
         );
-      } else {
+      } else if (this.props.isFollowingSeller) {
         return (
           <ListingsListComponent
             listings={this.props.privateListings}
@@ -90,6 +83,13 @@ class SellerProfileScene extends RoutableScene {
           />
         );
       }
+
+      return (
+        <ListingsListComponent
+          listings={{}}
+          emptyMessage="You must sign in to view private listings."
+        />
+      );
     };
 
     const FollowButton = () => {
