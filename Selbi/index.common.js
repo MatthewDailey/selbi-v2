@@ -45,6 +45,7 @@ import permissionsReducer from './src/reducers/PermissionsReducer';
 import addPhoneReducer from './src/reducers/AddFriendsFromContactsReducer';
 import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
   from './src/reducers/BlockedUsersReducer';
+import sellerProfileReducer from './src/reducers/SellerProfileReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus,
@@ -87,6 +88,7 @@ const store = createStore(combineReducers({
   permissions: permissionsReducer,
   addPhone: addPhoneReducer,
   blockedUsers: blockedUsersReducer,
+  sellerProfile: sellerProfileReducer,
 }));
 
 addAuthStateChangeListener(listenToBannedUsers);
