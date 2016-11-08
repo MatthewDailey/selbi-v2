@@ -43,10 +43,6 @@ class SellerProfileScene extends RoutableScene {
     this.checkIfFollowingSeller().catch(console.log);
   }
 
-  componentWillUnmount() {
-    this.props.clearSellerProfile();
-  }
-
   fetchPrivateListings() {
     return loadUserListingsByStatus(this.props.sellerId, 'private')
       .then(this.props.setPrivateListings);
