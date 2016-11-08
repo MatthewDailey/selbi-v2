@@ -55,12 +55,12 @@ class SellerProfileScene extends RoutableScene {
           tabBarActiveTextColor={colors.primary}
           style={styles.fullScreenContainer}
         >
-          <View tabLabel="Local" style={styles.container}>
+          <View tabLabel="Public" style={styles.container}>
             <ListingsListComponent
               listings={this.props.listings}
-              emptyMessage="You have no public listings."
+              emptyMessage={`${this.props.sellerData.displayName} has no public listings.`}
               openDetailScene={() => {
-                reportButtonPress('my_listings_public_open_detail');
+                reportButtonPress('seller_profile_public_open_detail');
                 this.goNext('details');
               }}
             />
@@ -68,19 +68,9 @@ class SellerProfileScene extends RoutableScene {
           <View tabLabel="Friends Only" style={styles.container}>
             <ListingsListComponent
               listings={this.props.listings}
-              emptyMessage="You have no private listings."
+              emptyMessage={`${this.props.sellerData.displayName} has no private listings.`}
               openDetailScene={() => {
-                reportButtonPress('my_listings_private_open_detail');
-                this.goNext('details');
-              }}
-            />
-          </View>
-          <View tabLabel="Sold" style={styles.container}>
-            <ListingsListComponent
-              listings={this.props.listings}
-              emptyMessage="You have not sold any listings."
-              openDetailScene={() => {
-                reportButtonPress('my_listings_sold_open_detail');
+                reportButtonPress('seller_profile_private_open_detail');
                 this.goNext('details');
               }}
             />
