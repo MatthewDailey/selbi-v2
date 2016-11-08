@@ -4,6 +4,7 @@ const SP_SET_PUBLIC_LISTINGS = 'seller-profile-set-public-listings';
 const SP_SET_PRIVATE_LISTINGS = 'seller-profile-set-private-listings';
 const SP_SET_INFO = 'seller-profile-set-info';
 const SP_CLEAR = 'seller-profile-clear';
+const SP_SET_FOLLOWING_SELLER = 'seller-profile-following-seller';
 
 const uninitialized = {
   uninitialized: true,
@@ -13,6 +14,7 @@ export default function (
   priorState = {
     uid: undefined,
     sellerData: undefined,
+    isFollowingSeller: undefined,
     publicListings: uninitialized,
     privateListings: uninitialized,
   },
@@ -22,29 +24,30 @@ export default function (
       return {
         uid: action.uid,
         sellerData: action.sellerData,
+        isFollowingSeller: undefined,
         publicListings: uninitialized,
         privateListings: uninitialized,
       };
     case SP_SET_PUBLIC_LISTINGS:
-      console.log(action.listings.length);
       return {
-        uid: priorState.uid,
-        sellerData: priorState.sellerData,
+        ...priorState,
         publicListings: action.listings,
-        privateListings: priorState.privateListings,
       };
     case SP_SET_PRIVATE_LISTINGS:
-      console.log(action.listings.length);
       return {
-        uid: priorState.uid,
-        sellerData: priorState.sellerData,
-        publicListings: priorState.publicListings,
+        ...priorState,
         privateListings: action.listings,
+      };
+    case SP_SET_FOLLOWING_SELLER:
+      return {
+        ...priorState,
+        isFollowingSeller: action.isFollowingSeller,
       };
     case SP_CLEAR:
       return {
         uid: undefined,
         sellerData: undefined,
+        isFollowingSeller: undefined,
         publicListings: uninitialized,
         privateListings: uninitialized,
       };
@@ -73,6 +76,13 @@ export function setSellerProfilePrivateListings(listings) {
     type: SP_SET_PRIVATE_LISTINGS,
     listings,
   };
+}
+
+export function setIsFollowingSeller(isFollowingSeller) {
+  return {
+    type: SP_SET_FOLLOWING_SELLER,
+    isFollowingSeller,
+  }
 }
 
 export function clearSellerProfile() {

@@ -504,6 +504,20 @@ export function loadUserListingsByStatus(uid, status) {
     });
 }
 
+export function isFollowing(uid) {
+  return requireSignedIn()
+    .then(() => firebaseApp.database()
+      .ref('following')
+      .child(getUser().uid)
+      .once('value')
+      .then((followingSnapshot) => {
+        if (followingSnapshot.exists() && followingSnapshot.val()[uid]) {
+          return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+      }));
+}
+
 export function loadFriendsListings() {
   return firebaseApp.database()
     .ref('following')
