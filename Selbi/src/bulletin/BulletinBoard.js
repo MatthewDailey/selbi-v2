@@ -16,6 +16,7 @@ import EmptyBulletinBoardBulletin from './EmptyBulletinBoardBulletin';
 import AddPhoneBulleting from './AddPhoneBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import FlatButton from '../components/buttons/FlatButton';
 
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
 import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
@@ -209,17 +210,6 @@ SignedInBulletinBoard.propTypes = {
 
 
 const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
-  const FlatButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-      borderWidth: 1,
-    })
-    .withBackgroundColor(colors.white)
-    .withOnPress(() => {
-      reportButtonPress('bulletin_sign_in');
-      goNext('signIn');
-    })
-    .build();
 
   return (
     <View>
@@ -228,7 +218,12 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
           margin: 8,
         }}
       >
-        <FlatButton>
+        <FlatButton
+          onPress={() => {
+            reportButtonPress('bulletin_sign_in');
+            goNext('signIn');
+          }}
+        >
           <Text style={styles.menuText}>Sign in <Icon name="sign-in" size={20} /></Text>
         </FlatButton>
       </View>
