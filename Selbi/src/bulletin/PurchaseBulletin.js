@@ -1,4 +1,5 @@
 import React from 'react';
+import { toDollarString } from '../utils';
 
 import BulletinActionButton from './BulletinActionButton';
 
@@ -8,7 +9,7 @@ export default function PurchaseBulletin({ bulletin, gotIt }) {
       emoji="🤑"
       text={`${bulletin.payload.buyerDisplayName} bought your listing`
         + ` '${bulletin.payload.listingTitle}' for`
-        + ` $${parseFloat(bulletin.payload.priceCents / 100).toFixed(2)}`}
+        + ` ${toDollarString(bulletin.payload.priceCents / 100)}`}
       onPress={gotIt}
     />
   );

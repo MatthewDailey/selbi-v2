@@ -5,6 +5,7 @@ import { Text, View, Image, TouchableHighlight } from 'react-native';
 import { loadImage, getUser } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
+import { toDollarString } from '../utils';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -35,7 +36,7 @@ class ItemView extends Component {
               backgroundColor: 'transparent',
             }}
           >
-            {`$${this.props.listing.val().price}`}
+            {toDollarString(this.props.listing.val().price)}
           </Text>
         </Image>
       </TouchableHighlight>

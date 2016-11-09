@@ -6,6 +6,7 @@ import { MKButton } from 'react-native-material-kit';
 import colors from '../../../colors';
 import { paddingSize } from '../../../styles';
 import { isPaymentsEnabled } from '../../../features';
+import { toDollarString } from '../../utils';
 
 const buttonStyle = { fontSize: 20, color: colors.black };
 const buttonMargin = paddingSize / 2;
@@ -93,7 +94,7 @@ export function BuyButton({ price, onPress = unsupported }) {
       }}
     >
       <Text style={buttonStyle}>
-        ${price}
+        {toDollarString(price)}
       </Text>
     </RightButton>
   );
