@@ -10,7 +10,8 @@ import { loadImage, loadUserPublicData } from '../../firebase/FirebaseConnector'
 import { storeImage } from '../../reducers/ImagesReducer';
 
 import LoadingListingComponent from '../../components/LoadingListingComponent';
-import SpinnerOverlay from '../../components/SpinnerOverlay';
+
+import { toDollarString } from '../../utils';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
@@ -77,7 +78,9 @@ class CompletedPurchaseScene extends RoutableScene {
               <Text>{this.props.sellerData.displayName}</Text>
             </View>
             <View style={styles.halfPadded}>
-              <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
+              <Text style={styles.friendlyTextLeftMed}>
+                {toDollarString(this.props.listingData.price)}
+              </Text>
             </View>
 
             <View style={styles.halfPadded} />

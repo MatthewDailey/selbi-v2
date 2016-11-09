@@ -395,46 +395,46 @@ class ListingDetailScene extends RoutableScene {
         style={{ flex: 1, backgroundColor: colors.dark }}
         onPress={this.toggleShowExtraDetails}
       >
-        <View style={{flex: 1}}>
-        <ProgressiveImage
-          thumbnailSource={{ uri: thumbnailUri }}
-          imageSource={{ uri: imageUri }}
-          style={{ flex: 1, backgroundColor: colors.dark }}
-        >
-          <TopLeftBackButton onPress={this.goBack} />
-          <DetailMenuButton listingId={this.props.listingKey} />
-          <VisibilityWrapper
-            isVisible={this.state.showExtraDetails}
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+        <View style={{ flex: 1 }}>
+          <ProgressiveImage
+            thumbnailSource={{ uri: thumbnailUri }}
+            imageSource={{ uri: imageUri }}
+            style={{ flex: 1, backgroundColor: colors.dark }}
           >
-            <DetailBottomButtons
-              isSeller={isSeller}
-              listingKey={this.props.listingKey}
-              listingData={listingData}
-              listingDistance={this.props.listingDistance}
-              sellerData={this.props.sellerData}
-              isChatButtonVisible={!!this.props.routeLinks.chat}
-              openChat={() => {
-                reportButtonPress('listing_details_chat');
-                this.goNext('chat');
+            <TopLeftBackButton onPress={this.goBack} />
+            <DetailMenuButton listingId={this.props.listingKey} />
+            <VisibilityWrapper
+              isVisible={this.state.showExtraDetails}
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
               }}
-              openEdit={() => {
-                reportButtonPress('listing_details_edit');
-                this.goNext('edit');
-              }}
-              openBuy={() => {
-                reportButtonPress('listing_details_buy');
-                this.goNext('buy');
-              }}
-              openSellerProfile={openSellerProfile}
-              setSellerProfileInfo={this.props.setSellerProfileInfo}
-            />
-          </VisibilityWrapper>
-        </ProgressiveImage>
+            >
+              <DetailBottomButtons
+                isSeller={isSeller}
+                listingKey={this.props.listingKey}
+                listingData={listingData}
+                listingDistance={this.props.listingDistance}
+                sellerData={this.props.sellerData}
+                isChatButtonVisible={!!this.props.routeLinks.chat}
+                openChat={() => {
+                  reportButtonPress('listing_details_chat');
+                  this.goNext('chat');
+                }}
+                openEdit={() => {
+                  reportButtonPress('listing_details_edit');
+                  this.goNext('edit');
+                }}
+                openBuy={() => {
+                  reportButtonPress('listing_details_buy');
+                  this.goNext('buy');
+                }}
+                openSellerProfile={openSellerProfile}
+                setSellerProfileInfo={this.props.setSellerProfileInfo}
+              />
+            </VisibilityWrapper>
+          </ProgressiveImage>
         </View>
       </TouchableHighlight>
     );

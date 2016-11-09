@@ -17,15 +17,9 @@ import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { toDollarString } from '../../utils';
 import { reportPurchase, reportButtonPress } from '../../SelbiAnalytics';
 
-
-const FlatButton = MKButton.flatButton()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
 
 const Button = MKButton.flatButton()
   .withStyle({
@@ -127,7 +121,9 @@ class ListingReceiptScene extends RoutableScene {
               <Text>{this.props.sellerData.displayName}</Text>
             </View>
             <View style={styles.halfPadded}>
-              <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
+              <Text style={styles.friendlyTextLeftMed}>
+                {toDollarString(this.props.listingData.price)}
+              </Text>
             </View>
 
             <View style={styles.halfPadded} />
@@ -180,7 +176,8 @@ class ListingReceiptScene extends RoutableScene {
 
                   Alert.alert(
                     'Confirm Purchase',
-                    `Your credit card will be charged $${this.props.listingData.price}`,
+                    'Your credit card will be charged '
+                      + `${toDollarString(this.props.listingData.price)}`,
                     [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
                 }}
               >

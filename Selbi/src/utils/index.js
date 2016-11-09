@@ -15,6 +15,13 @@ function toRadian(degree) {
   return (degree * Math.PI) / 180;
 }
 
+export function toDollarString(price) {
+  if (Number.isInteger(price)) {
+    return `$${price}`;
+  }
+  return `$${price.toFixed(2)}`;
+}
+
 // Copied from http://stackoverflow.com/questions/13840516/how-to-find-my-distance-to-a-known-location-in-javascript
 export function distanceInMilesString(pointOne, pointTwo) {
   const lat1 = pointOne.lat;
