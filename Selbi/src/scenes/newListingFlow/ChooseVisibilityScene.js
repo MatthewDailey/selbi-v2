@@ -1,13 +1,13 @@
 import React from 'react';
 import { Alert, View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Permissions from 'react-native-permissions';
 import flattenStyle from 'flattenStyle';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { getGeolocation } from '../../utils';
 
@@ -18,17 +18,8 @@ import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
   from '../../firebase/FirebaseActions';
 
 import styles from '../../../styles';
-import colors from '../../../colors';
 
 import { reportButtonPress } from '../../SelbiAnalytics';
-
-const Button = MKButton.flatButton()
-  .withStyle({
-    borderRadius: 5,
-    borderWidth: 1,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
 
 class ChooseVisibilityScene extends RoutableScene {
   constructor(props) {
@@ -69,7 +60,7 @@ class ChooseVisibilityScene extends RoutableScene {
       <View style={styles.paddedContainer}>
         <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
         <View style={styles.halfPadded}>
-          <Button
+          <FlatButton
             onPress={
               () => {
                 reportButtonPress('choose_visibility_private');
@@ -90,10 +81,10 @@ class ChooseVisibilityScene extends RoutableScene {
             <Text style={styles.buttonTextStyle}>
               <Icon name="users" size={flattenStyle(styles.buttonTextStyle).fontSize} />  My Friends
             </Text>
-          </Button>
+          </FlatButton>
         </View>
         <View style={styles.halfPadded}>
-          <Button
+          <FlatButton
             onPress={
               () => {
                 reportButtonPress('choose_visibility_public');
@@ -116,7 +107,7 @@ class ChooseVisibilityScene extends RoutableScene {
             <Text style={styles.buttonTextStyle}>
               <Icon name="globe" size={flattenStyle(styles.buttonTextStyle).fontSize} />  Anyone Nearby
             </Text>
-          </Button>
+          </FlatButton>
         </View>
         <SpinnerOverlay isVisible={this.state.publishing} />
       </View>
