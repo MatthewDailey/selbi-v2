@@ -476,7 +476,7 @@ function loadChatDetailsFromUserChats(userChatsData) {
   return Promise.all(chatPromises);
 }
 
-function loadUserListingsByStatus(uid, status) {
+export function loadUserListingsByStatus(uid, status) {
   return firebaseApp
     .database()
     .ref('/userListings')
@@ -502,6 +502,20 @@ function loadUserListingsByStatus(uid, status) {
         });
       return Promise.all(allListings);
     });
+}
+
+export function isFollowing(uid) {
+  return requireSignedIn()
+    .then(() => firebaseApp.database()
+      .ref('following')
+      .child(getUser().uid)
+      .once('value')
+      .then((followingSnapshot) => {
+        if (followingSnapshot.exists() && followingSnapshot.val()[uid]) {
+          return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+      }));
 }
 
 export function loadFriendsListings() {

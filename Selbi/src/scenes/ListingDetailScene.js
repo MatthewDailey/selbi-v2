@@ -12,6 +12,7 @@ import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenT
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
 import { setListingDistance, setListingDetailsSellerData, setListingData }
   from '../reducers/ListingDetailReducer';
+import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles, { paddingSize } from '../../styles';
@@ -120,10 +121,31 @@ class DetailBottomButtons extends Component {
 
     const SellerName = () => {
       if (this.props.sellerData) {
+        if (this.props.openSellerProfile) {
+          return (
+            <VisibilityWrapper isVisible={!!this.props.sellerData}>
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableHighlight
+                  underlayColor={colors.primary}
+                  onPress={() => {
+                    this.props.setSellerProfileInfo(
+                      this.props.listingData.sellerId,
+                      this.props.sellerData);
+                    this.props.openSellerProfile();
+                  }}
+                >
+                  <Text style={{ color: colors.black, textDecorationLine: 'underline' }}>
+                    {this.props.sellerData.displayName}
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            </VisibilityWrapper>
+          );
+        }
         return (
-          <VisibilityWrapper isVisible={this.state.showDescription && !!this.props.sellerData}>
-            <Text style={{ color: colors.black }}>{this.props.sellerData.displayName}</Text>
-          </VisibilityWrapper>
+          <Text style={{ color: colors.black }}>
+            {this.props.sellerData.displayName}
+          </Text>
         );
       }
       return <View />;
@@ -225,6 +247,8 @@ DetailBottomButtons.propTypes = {
   openChat: React.PropTypes.func.isRequired,
   openEdit: React.PropTypes.func.isRequired,
   openBuy: React.PropTypes.func.isRequired,
+  openSellerProfile: React.PropTypes.func,
+  setSellerProfileInfo: React.PropTypes.func.isRequired,
 };
 
 class ListingDetailScene extends RoutableScene {
@@ -358,6 +382,12 @@ class ListingDetailScene extends RoutableScene {
     const thumbnailUri = this.props.imageThumbnailUrl ? this.props.imageThumbnailUrl :
       `data:image/png;base64,${imageData.base64}`;
 
+    const openSellerProfile = this.props.routeLinks.sellerProfile ?
+      () => {
+        reportButtonPress('listing_details_open_seller');
+        this.goNext('sellerProfile');
+      } : undefined;
+
     return (
       <TouchableHighlight
         underlayColor={colors.transparent}
@@ -400,6 +430,8 @@ class ListingDetailScene extends RoutableScene {
                 reportButtonPress('listing_details_buy');
                 this.goNext('buy');
               }}
+              openSellerProfile={openSellerProfile}
+              setSellerProfileInfo={this.props.setSellerProfileInfo}
             />
           </VisibilityWrapper>
         </ProgressiveImage>
@@ -445,6 +477,8 @@ const mapDispatchToProps = (dispatch) => {
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
     setListingDetailsData: (listingData) => dispatch(setListingData(listingData)),
+    setSellerProfileInfo: (sellerId, sellerData) =>
+      dispatch(setSellerProfileInfo(sellerId, sellerData)),
   };
 };
 
