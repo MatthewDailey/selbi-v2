@@ -209,7 +209,6 @@ SignedInBulletinBoard.propTypes = {
 
 
 const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
-
   return (
     <View>
       <View
