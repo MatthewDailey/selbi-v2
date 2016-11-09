@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Alert, View, Text, Image } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
 import { CreditCardInput } from 'react-native-credit-card-input';
 
 import { setCreditCard, clearCreditCard, AddCreditCardStatus }
@@ -15,17 +14,9 @@ import colors from '../../../colors';
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { reportAddPaymentInfo, reportError } from '../../SelbiAnalytics';
-
-const Button = MKButton.flatButton()
- .withStyle({
-   borderRadius: 5,
-   borderWidth: 1,
-   margin: paddingSize,
- })
-  .withBackgroundColor(colors.white)
-  .build();
 
 class CreditCardInputScene extends RoutableScene {
   constructor(props) {
@@ -78,8 +69,6 @@ class CreditCardInputScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    console.log(this.props.creditCardData.valid);
-
     return (
       <View style={{ paddingTop: paddingSize }}>
         <CreditCardInput
@@ -88,8 +77,8 @@ class CreditCardInputScene extends RoutableScene {
           invalidColor={colors.accent}
           onChange={this.props.setCreditCardData}
         />
-        <VisibilityWrapper isVisible={this.props.creditCardData.valid}>
-          <Button onPress={this.submit}><Text>Submit</Text></Button>
+        <VisibilityWrapper isVisible={this.props.creditCardData.valid} style={styles.padded}>
+          <FlatButton onPress={this.submit}><Text>Submit</Text></FlatButton>
         </VisibilityWrapper>
         <View style={[styles.halfPadded, styles.centerContainer]}>
           <Image source={require('../../../images/powered_by_stripe@3x.png')} />
