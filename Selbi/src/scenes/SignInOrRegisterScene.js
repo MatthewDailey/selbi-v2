@@ -19,7 +19,7 @@ import { reportSignIn } from '../SelbiAnalytics';
 const inputStyle = {
   height: 48,  // have to do it on iOS
   marginTop: 10,
-  fontSize: 30,
+  fontSize: 25,
 };
 
 // Visible for tests.
