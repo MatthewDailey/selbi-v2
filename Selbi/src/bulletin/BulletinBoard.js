@@ -18,7 +18,8 @@ import AddPhoneBulleting from './AddPhoneBulletin';
 import SpinnerOverlay from '../components/SpinnerOverlay';
 
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
-import { followUser, updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
+import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
+import { updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
 
 import { reportButtonPress } from '../SelbiAnalytics';
 
@@ -70,24 +71,16 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewFollowerBulletin
                     gotIt={() => {
-                      reportButtonPress('bulletin_acknowledge_follow');
+                      reportButtonPress('bulletin_follow_got_it');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
-                    followUser={(uid) => {
+                    onPress={() => {
                       reportButtonPress('bulletin_follow_back');
-                      this.startTakingAction(
-                        `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
-                        () => followUser(uid)
-                          .then(() => {
-                            updateBulletin(bulletinKey, {
-                              status: 'read',
-                              payload: {
-                                ...bulletin.payload,
-                                reciprocated: true,
-                              },
-                            });
-                          })
-                      );
+                      this.props.setSellerProfileInfo(
+                        bulletin.payload.newFollowerUid,
+                        bulletin.payload.newFollowerPublicData);
+                      this.props.goNext('sellerProfile');
+                      updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     newFollowerBulletin={bulletin}
                   />
@@ -211,6 +204,7 @@ SignedInBulletinBoard.propTypes = {
   bulletins: React.PropTypes.object,
   goNext: React.PropTypes.func.isRequired,
   setListingDetailsForChat: React.PropTypes.func.isRequired,
+  setSellerProfileInfo: React.PropTypes.func.isRequired,
 };
 
 
@@ -273,6 +267,8 @@ const mapDispatchToProps = (dispatch) => {
           data: listingData,
         })
     ),
+    setSellerProfileInfo: (sellerId, sellerData) =>
+      dispatch(setSellerProfileInfo(sellerId, sellerData)),
   };
 };
 

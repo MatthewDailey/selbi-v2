@@ -341,6 +341,9 @@ routeLinks[localListingScene.id] = {
   chat: {
     getRoute: () => ChatFlow.firstScene,
   },
+  sellerProfile: {
+    getRoute: () => SellerProfileFlow.firstScene,
+  },
 };
 
 routeLinks[friendsListingScene.id] = {
