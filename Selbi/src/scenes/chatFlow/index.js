@@ -2,17 +2,13 @@ import React from 'react';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
+import ListingPurchaseFlow from '../listingPurchaseFlow';
+
 import ChatScene from '../ChatScene';
-import ListingDetailScene from '../ListingDetailScene';
 
 const chatScene = {
   id: 'chat_scene',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
-};
-
-const detailScene = {
-  id: 'chat_listing_detail_scene',
-  renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" />),
 };
 
 const routeLinks = {};
@@ -20,7 +16,7 @@ const routeLinks = {};
 routeLinks[chatScene.id] = {
   details: {
     title: 'Details',
-    getRoute: () => detailScene,
+    getRoute: () => ListingPurchaseFlow.firstScene,
   },
   actionSheet: {
     buttons: ['Details'],
