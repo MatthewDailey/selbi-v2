@@ -1,14 +1,15 @@
 import React from 'react';
 import { ScrollView, View, Text, Alert, TextInput } from 'react-native';
 
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 
-import styles, { paddingSize } from '../../styles';
+import styles from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import FlatButton from '../components/buttons/FlatButton';
+
 import { privacyPolicyScene, termsAndConditionsScene } from './legal';
 
 import { signInWithFacebook } from '../firebase/FirebaseConnector';
@@ -20,14 +21,6 @@ const inputStyle = {
   marginTop: 10,
   fontSize: 30,
 };
-
-const FacebookButton = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-    padding: paddingSize,
-  })
-  .withBackgroundColor('#3b5998')
-  .build();
 
 // Visible for tests.
 export const TabTypes = {
@@ -144,40 +137,27 @@ export default class SignInOrRegisterScene extends RoutableScene {
   }
 
   getInnerView(registerOrSignInType, registerOrSignInMethod) {
-    const SubmitButton = MKButton
-      .button()
-      .withStyle({
-        borderRadius: 5,
-        padding: paddingSize,
-      })
-      .withBackgroundColor(colors.secondary)
-      .withText(registerOrSignInType.asTitle)
-      .withOnPress(() => {
-        registerOrSignInMethod();
-      })
-      .build();
-
     const scrollToFirstName = () => {
-      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
+      this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 120, animated: true });
     };
 
     const scrollToLastName = () => {
-      this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 240, animated: true});
+      this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 210, animated: true });
     };
 
     const scrollToEmail = () => {
       if (registerOrSignInType === TabTypes.register) {
-        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 300, animated: true});
+        this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 270, animated: true });
       } else {
-        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 150, animated: true});
+        this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 120, animated: true });
       }
     };
 
     const scrollToPassword = () => {
       if (registerOrSignInType === TabTypes.register) {
-        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 360, animated: true});
+        this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 330, animated: true });
       } else {
-        this[scrollViewRef(registerOrSignInType)].scrollTo({x: 0, y: 240, animated: true});
+        this[scrollViewRef(registerOrSignInType)].scrollTo({ x: 0, y: 210, animated: true });
       }
     };
 
@@ -226,7 +206,10 @@ export default class SignInOrRegisterScene extends RoutableScene {
         style={styles.paddedFullScreenContainer}
         tabLabel={registerOrSignInType.asTitle}
       >
-        <FacebookButton
+        <FlatButton
+          underlayColor={colors.greyedOut}
+          backgroundColor="#3b5998"
+          borderWidth={0}
           onPress={() => {
             this.setState({ signingIn: true });
             signInWithFacebook()
@@ -245,7 +228,7 @@ export default class SignInOrRegisterScene extends RoutableScene {
           <Text style={{ color: colors.white }}>
             <Icon name="facebook" size={16} /> {`${registerOrSignInType.asSentence} with Facebook`}
           </Text>
-        </FacebookButton>
+        </FlatButton>
         <View style={styles.halfPadded} />
         <View style={styles.padded} />
         <View
@@ -289,7 +272,9 @@ export default class SignInOrRegisterScene extends RoutableScene {
           onSubmitEditing={registerOrSignInMethod}
         />
         <View style={styles.padded} />
-        <SubmitButton />
+        <FlatButton onPress={() => registerOrSignInMethod()} >
+          <Text>Submit</Text>
+        </FlatButton>
         <View style={styles.halfPadded} />
         {termsOfServiceView}
       </ScrollView>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Alert } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../../styles';
