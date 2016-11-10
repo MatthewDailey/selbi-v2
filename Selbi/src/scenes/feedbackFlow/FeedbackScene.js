@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TextInput } from 'react-native';
+import { Alert, View, Text, TextInput } from 'react-native';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import RoutableScene from '../../nav/RoutableScene';
@@ -10,6 +10,19 @@ import { setFeedbackEmail, setFeedbackMessage } from '../../reducers/FeedbackRed
 import styles from '../../../styles';
 
 class FeedbackScene extends RoutableScene {
+  shouldGoNext() {
+    if (!this.props.email) {
+      Alert.alert('Missing email', 'You must include an email so we can respond to you.');
+      return false;
+    }
+    if (!this.props.message) {
+      Alert.alert('Missing message',
+        'You must include a message so we know what we can do to help.');
+      return false;
+    }
+    return true;
+  }
+
   renderWithNavBar() {
     return (
       <View style={styles.padded}>
