@@ -212,6 +212,20 @@ class Menu extends Component {
         <Divider />
 
         <MenuItem
+          shouldGreyOut={isSignedOut()}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_settings');
+            }
+            ifSignedIn(pushSceneAndCloseMenu)(this.props.settingsScene);
+          }}
+          icon={<Icon name="gear" size={iconSize} />}
+          title="Settings"
+        />
+
+        <Divider />
+
+        <MenuItem
           onPress={() => {
             reportButtonPress('menu_feedback');
             pushSceneAndCloseMenu(this.props.feedbackScene);
@@ -219,6 +233,8 @@ class Menu extends Component {
           icon={<Icon name="envelope-o" size={iconSize} />}
           title="Give Feedback"
         />
+
+
 
         {getFooter()}
       </View>
@@ -241,6 +257,7 @@ Menu.propTypes = {
   sellScene: React.PropTypes.object.isRequired,
   introScene: React.PropTypes.object.isRequired,
   feedbackScene: React.PropTypes.object.isRequired,
+  settingsScene: React.PropTypes.object.isRequired,
 };
 
 export default connect(
