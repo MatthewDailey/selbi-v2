@@ -17,6 +17,7 @@ export default function (priorState = new FeedbackData(), action) {
     case F_SET_MESSAGE:
       return priorState.merge({ message: action.message });
     case F_CLEAR:
+      console.log('called clear')
       return new FeedbackData();
     default:
       return priorState;

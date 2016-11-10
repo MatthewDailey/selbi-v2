@@ -27,8 +27,6 @@ class FeedbackScene extends RoutableScene {
   }
 
   componentWillMount() {
-    this.props.clear();
-
     const user = getUser();
     if (user) {
       this.props.recordEmail(user.email);
@@ -37,8 +35,13 @@ class FeedbackScene extends RoutableScene {
 
   onGoNext(route) {
     if (route === 'next') {
-      sendFeedback(this.props.email, this.props.message);
+      sendFeedback(this.props.email, this.props.message)
+        .then(this.props.clear);
     }
+  }
+
+  onGoBack() {
+    this.props.clear();
   }
 
   renderWithNavBar() {
@@ -64,6 +67,7 @@ class FeedbackScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state.feedback)
   return {
     email: state.feedback.email,
     message: state.feedback.message,

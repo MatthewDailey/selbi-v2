@@ -70,7 +70,8 @@ export function sendFeedbackEmail(uid, email, message) {
   return new Promise((resolve, reject) => {
     emailClient.send_transactional_template({
       id: 15, // feedback transactional template id
-      to: email,
+      to: 'matt@selbi.io',
+      cc: email,
       attr: {
         UID: uid,
         MESSAGE: message,
