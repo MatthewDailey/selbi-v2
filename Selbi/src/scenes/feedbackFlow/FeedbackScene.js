@@ -3,9 +3,12 @@ import { connect } from 'react-redux';
 import { Alert, View, Text, TextInput } from 'react-native';
 import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
+import { sendFeedback, getUser } from '../../firebase/FirebaseConnector';
+
 import RoutableScene from '../../nav/RoutableScene';
 
-import { setFeedbackEmail, setFeedbackMessage } from '../../reducers/FeedbackReducer';
+import { clearFeedback, setFeedbackEmail, setFeedbackMessage }
+  from '../../reducers/FeedbackReducer';
 
 import styles from '../../../styles';
 
@@ -21,6 +24,21 @@ class FeedbackScene extends RoutableScene {
       return false;
     }
     return true;
+  }
+
+  componentWillMount() {
+    this.props.clear();
+
+    const user = getUser();
+    if (user) {
+      this.props.recordEmail(user.email);
+    }
+  }
+
+  onGoNext(route) {
+    if (route === 'next') {
+      sendFeedback(this.props.email, this.props.message);
+    }
   }
 
   renderWithNavBar() {
@@ -56,6 +74,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     recordEmail: (value) => dispatch(setFeedbackEmail(value)),
     recordMessage: (value) => dispatch(setFeedbackMessage(value)),
+    clear: () => dispatch(clearFeedback()),
   };
 };
 
