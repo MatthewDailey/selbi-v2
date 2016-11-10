@@ -8,11 +8,11 @@ import RoutableScene from '../../nav/RoutableScene';
 
 import styles from '../../../styles';
 
-function BankInfoSettings() {
+function BankInfoSettings({ openAddBank }) {
   return (
     <View style={styles.padded}>
       <Text style={styles.friendlyTextLeft}>Bank info</Text>
-      <FlatButton>
+      <FlatButton onPress={openAddBank}>
         <Text>Update bank info</Text>
       </FlatButton>
     </View>
@@ -57,7 +57,7 @@ export default class SettingsScene extends RoutableScene {
       <View>
         <EmailSettings />
         <ConnectedAccountsSettings />
-        <BankInfoSettings />
+        <BankInfoSettings openAddBank={() => this.goNext('bank')} />
         <CreditCardInfoSettings />
       </View>
     );
