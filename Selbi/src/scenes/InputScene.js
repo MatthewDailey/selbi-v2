@@ -1,6 +1,5 @@
 import React from 'react';
 import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
-import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import { isStringFloat, isStringInt } from '../utils';
 import styles, { paddingSize } from '../../styles';

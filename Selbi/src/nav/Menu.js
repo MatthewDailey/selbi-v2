@@ -209,6 +209,17 @@ class Menu extends Component {
           title="Follow a Friend"
         />
 
+        <Divider />
+
+        <MenuItem
+          onPress={() => {
+            reportButtonPress('menu_feedback');
+            pushSceneAndCloseMenu(this.props.feedbackScene);
+          }}
+          icon={<Icon name="envelope-o" size={iconSize} />}
+          title="Give Feedback"
+        />
+
         {getFooter()}
       </View>
     );
@@ -229,6 +240,7 @@ Menu.propTypes = {
   signInOrRegisterScene: React.PropTypes.object.isRequired,
   sellScene: React.PropTypes.object.isRequired,
   introScene: React.PropTypes.object.isRequired,
+  feedbackScene: React.PropTypes.object.isRequired,
 };
 
 export default connect(
