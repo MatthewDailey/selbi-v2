@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { loadUserListingsByStatus, isFollowing, followUser }
   from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { setSellerProfilePrivateListings, setSellerProfilePublicListings, setIsFollowingSeller,
   clearSellerProfile } from '../../reducers/SellerProfileReducer';
@@ -17,14 +17,6 @@ import colors from '../../../colors';
 import styles from '../../../styles';
 
 import { reportButtonPress } from '../../SelbiAnalytics';
-
-const Button = MKButton.flatButton()
-  .withStyle({
-    borderRadius: 5,
-    borderWidth: 1,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
 
 const GreenCheck = () => <Icon name="check-square-o" color="green" />;
 
@@ -91,9 +83,11 @@ class SellerProfileScene extends RoutableScene {
     const FollowButton = () => {
       if (this.props.isFollowingSeller !== undefined && !this.props.isFollowingSeller) {
         return (
-          <Button onPress={() => followUser(this.props.sellerId).then(this.checkIfFollowingSeller)}>
+          <FlatButton
+            onPress={() => followUser(this.props.sellerId).then(this.checkIfFollowingSeller)}
+          >
             <Text>Follow</Text>
-          </Button>
+          </FlatButton>
         );
       } else if (this.props.isFollowingSeller) {
         return (

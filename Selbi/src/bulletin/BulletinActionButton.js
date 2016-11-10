@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import VisibilityWrapper from '../components/VisibilityWrapper';
 import EmojiAlignedText from '../components/EmojiAlignedText';
+import FlatButton from '../components/buttons/FlatButton';
 
 import bulletinStyles from './bulletinStyles';
 
@@ -12,17 +13,6 @@ const IgnoreButton = MKButton.flatButton()
   .withStyle({
     borderRadius: 2,
     flex: 1,
-  })
-  .build();
-
-const FlatButton = MKButton.flatButton()
-  .withStyle({
-    borderRadius: 4,
-    flex: 1,
-    borderWidth: 1,
-  })
-  .withTextStyle({
-    textAlign: 'left',
   })
   .build();
 
