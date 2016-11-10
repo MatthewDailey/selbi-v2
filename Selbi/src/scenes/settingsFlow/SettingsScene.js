@@ -19,11 +19,11 @@ function BankInfoSettings({ openAddBank }) {
   );
 }
 
-function CreditCardInfoSettings() {
+function CreditCardInfoSettings({ onPress }) {
   return (
     <View style={styles.padded}>
       <Text style={styles.friendlyTextLeft}>Credit Card Info</Text>
-      <FlatButton>
+      <FlatButton onPress={onPress}>
         <Text>Update credit card info</Text>
       </FlatButton>
     </View>
@@ -58,7 +58,7 @@ export default class SettingsScene extends RoutableScene {
         <EmailSettings />
         <ConnectedAccountsSettings />
         <BankInfoSettings openAddBank={() => this.goNext('bank')} />
-        <CreditCardInfoSettings />
+        <CreditCardInfoSettings onPress={() => this.goNext('creditCard')}/>
       </View>
     );
   }

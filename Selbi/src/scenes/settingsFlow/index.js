@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AddBankFlow from '../addBankAccountFlow';
+import AddCreditCardFlow from '../addCreditCardFlow';
 
 import { withNavigatorProps } from '../../nav/RoutableScene';
 
@@ -22,6 +23,9 @@ routeLinks[settingsScene.id] = {
   bank: {
     getRoute: () => AddBankFlow.firstScene,
   },
+  creditCard: {
+    getRoute: () => AddCreditCardFlow.firstScene,
+  }
 };
 
 module.exports.routeLinks = routeLinks;
