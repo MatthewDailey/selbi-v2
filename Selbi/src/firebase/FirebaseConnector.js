@@ -36,6 +36,13 @@ export function getUser() {
     .currentUser;
 }
 
+function getUserIdSafe() {
+  if (getUser()) {
+    return getUser().uid;
+  }
+  return 'user-not-signed-in';
+}
+
 function requireSignedIn() {
   if (!getUser()) {
     return Promise.reject('Must be signed in.');
@@ -568,6 +575,22 @@ export function followUser(uid) {
           leader: uid,
         },
       }));
+}
+
+export function sendFeedback(email, message) {
+  return firebaseApp
+    .database()
+    .ref('events/tasks')
+    .push()
+    .set({
+      owner: getUserIdSafe(),
+      type: 'feedback',
+      timestamp: new Date().getTime(),
+      payload: {
+        email,
+        message,
+      },
+    });
 }
 
 export function addFriendByUsername(friendUsername) {
@@ -1284,17 +1307,12 @@ export function createShouldAddPhoneBulletin() {
 }
 
 export function flagListingAsInappropriate(listingId, listingUrl) {
-  let reporterId = 'user-not-signed-in';
-  if (getUser()) {
-    reporterId = getUser().uid;
-  }
-
   return firebaseApp
       .database()
       .ref('events/tasks')
       .push()
       .set({
-        owner: reporterId,
+        owner: getUserIdSafe(),
         type: 'inappropriate-content',
         timestamp: new Date().getTime(),
         payload: {
