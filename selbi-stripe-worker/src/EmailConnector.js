@@ -66,3 +66,23 @@ export function sendFlaggedInappropriateContentEmail(sellerId,
   });
 }
 
+export function sendFeedbackEmail(uid, email, message) {
+  return new Promise((resolve, reject) => {
+    emailClient.send_transactional_template({
+      id: 15, // feedback transactional template id
+      to: email,
+      attr: {
+        UID: uid,
+        MESSAGE: message,
+      },
+    }, (error, result) => {
+      if (error) {
+        console.log(`Failed to send feedback email to ${email} for user ${uid}.`);
+        reject(result.message);
+      } else {
+        console.log(result);
+        resolve();
+      }
+    });
+  });
+}
