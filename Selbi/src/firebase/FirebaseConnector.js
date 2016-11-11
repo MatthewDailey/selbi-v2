@@ -596,6 +596,26 @@ export function followUser(uid) {
       }));
 }
 
+export function unfollowUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to unfollow another user.')
+  }
+
+  const removeFollowingPromise = firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .remove();
+
+  const removeFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .remove();
+
+  return Promise.all([removeFollowerPromise, removeFollowingPromise]);
+}
+
 export function sendFeedback(email, message) {
   return firebaseApp
     .database()
@@ -1299,15 +1319,33 @@ export function followPhoneNumbers(phoneNumbers) {
               if (phoneToUserSnapshot.exists()
                 && !hasWhiteSpace(phoneToUserSnapshot.val())
                 && phoneToUserSnapshot.val() !== getUser().uid) {
-                return followUser(phoneToUserSnapshot.val()).then(() => Promise.resolve(1));
+                return Promise.resolve(phoneToUserSnapshot.val());
               }
-              return Promise.resolve(0);
-            }));
+              return Promise.reject(undefined);
+            })
+            .then((contactUid) => followUser(contactUid).then(() => contactUid))
+            .then(loadUserPublicData)
+            .then((userPublicDataSnapshot) => {
+              if (userPublicDataSnapshot.exists()) {
+                return Promise.resolve({
+                  uid: userPublicDataSnapshot.key,
+                  publicData: userPublicDataSnapshot.val(),
+                });
+              }
+              return Promise.reject(undefined);
+            })
+            .catch((error) => {
+              if (error) {
+                console.log('ERROR while following phone numbers', error);
+              }
+              return Promise.resolve(undefined);
+            })
+        );
       });
 
       return Promise.all(followPhonesPromises);
     })
-    .then((results) => results.reduce((a, b) => a + b, 0));
+    .then((results) => results.filter(n => n));
 }
 
 export function createShouldAddPhoneBulletin() {

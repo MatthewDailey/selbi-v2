@@ -1,57 +1,115 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
 
-import { MKButton } from 'react-native-material-kit';
-
-import { awaitPhoneVerification, followPhoneNumbers, updateBulletin } from '../../firebase/FirebaseConnector';
+import { awaitPhoneVerification, followPhoneNumbers, updateBulletin, unfollowUser, followUser }
+  from '../../firebase/FirebaseConnector';
 import { normalizePhoneNumber, loadAllContactsPhoneNumber } from './utils';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import FlatButton from '../../components/buttons/FlatButton';
 
-import styles, { paddingSize } from '../../../styles';
+import styles from '../../../styles';
 
-const SubmitButton = MKButton
-  .button()
-  .withStyle({
-    borderRadius: 5,
-    padding: paddingSize,
-  })
-  .withText('Follow Contacts')
-  .build();
 
 function VerifiedCodeComponent({ followContacts }) {
   return (
-    <View sylte={styles.paddedCenterContainer}>
-      <Text style={styles.friendlyText}>
+    <View style={styles.paddedContainer}>
+      <Text style={styles.friendlyTextLeft}>
         Successfully verified your phone!
       </Text>
       <View style={styles.halfPadded} />
-      <Text style={styles.friendlyText}>
+      <Text style={styles.friendlyTextLeft}>
         Follow people in your contact book to see what your friends are selling.
       </Text>
       <View style={styles.halfPadded} />
-      <SubmitButton onPress={followContacts} />
+      <FlatButton onPress={followContacts}>
+        <Text>Follow Contacts</Text>
+      </FlatButton>
     </View>
   );
 }
 
-function AddedFriendsComponent({ numFriends }) {
+class NewFriendListItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      following: true,
+      modifying: false,
+    };
+
+    this.toggleFollowing = this.toggleFollowing.bind(this);
+  }
+
+  toggleFollowing() {
+    if (this.state.following) {
+      this.updateFollowing(unfollowUser, false);
+    } else {
+      this.updateFollowing(followUser, true);
+    }
+  }
+
+  updateFollowing(userAction, isFollowing) {
+    this.setState({ modifying: true }, () => {
+      userAction(this.props.friendData.uid)
+        .then(() => {
+          this.setState({ following: isFollowing, modifying: false });
+        })
+        .catch((error) => {
+          Alert.alert(error.message);
+          this.setState({ following: false });
+        });
+    });
+  }
+
+  render() {
+    return (
+      <View
+        style={
+          [
+            styles.halfPadded,
+            { flex: 1, flexDirection: 'row', justifyContent: 'space-between' },
+          ]
+        }
+      >
+        <Text style={styles.buttonTextStyle}>
+          {this.props.friendData.publicData.displayName}
+        </Text>
+        <FlatButton onPress={this.toggleFollowing}>
+          <Text>{this.state.following ? 'Unfollow' : 'Follow'}</Text>
+        </FlatButton>
+      </View>
+    );
+  }
+}
+
+function AddedFriendsComponent({ usersFollowed }) {
+  console.log('Added friends: ', usersFollowed);
+  const numFriends = usersFollowed.length;
   let friendsString = 'friends';
   if (numFriends === 1) {
     friendsString = 'friend';
   }
   return (
-    <View sylte={styles.paddedCenterContainer}>
-      <Text style={styles.friendlyText}>
-        Added {numFriends} {friendsString} from your phone book.
-      </Text>
-      <View style={styles.halfPadded} />
-      <Text style={styles.friendlyText}>
-        Your contacts will also be able to follow you based on your phone number.
-      </Text>
-    </View>
+    <ScrollView>
+      <View style={styles.paddedContainer}>
+        <Text style={styles.friendlyTextLeft}>
+          Added {numFriends} {friendsString} from your phone book.
+        </Text>
+        <View style={styles.halfPadded} />
+        <Text style={styles.friendlyTextLeft}>
+          Your contacts will also be able to follow you based on your phone number.
+        </Text>
+        <View style={styles.halfPadded} />
+        <Text style={{ fontWeight: 'bold' }}>
+          You are now following:
+        </Text>
+        {usersFollowed.map((userData) =>
+          <NewFriendListItem key={userData.uid} friendData={userData} />)}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -76,9 +134,9 @@ class AddFriendsFromContactsScene extends RoutableScene {
   }
 
   addFriendsFromPhoneBook() {
-    const success = (numFriends) => {
+    const success = (usersFollowed) => {
       this.setState({
-        view: <AddedFriendsComponent numFriends={numFriends} />,
+        view: <AddedFriendsComponent usersFollowed={usersFollowed} />,
       });
 
       Object.keys(this.props.bulletins).forEach((key) => {
@@ -118,7 +176,7 @@ class AddFriendsFromContactsScene extends RoutableScene {
 
   renderWithNavBar() {
     return (
-      <View style={styles.paddedContainer}>
+      <View style={styles.container}>
         {this.state.view}
       </View>
     );
