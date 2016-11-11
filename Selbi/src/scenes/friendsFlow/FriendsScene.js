@@ -25,7 +25,7 @@ class FriendsScene extends RoutableScene {
             friends={this.props.following}
             openSellerProfile={() => this.goNext('sellerProfile')}
             header={
-              <View style={styles.paddedContainer}>
+              <View style={styles.padded}>
                 <FlatButton onPress={() => this.goNext('addFriend')}>
                   <Text>Follow by Username</Text>
                 </FlatButton>
