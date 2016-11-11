@@ -166,7 +166,7 @@ class Menu extends Component {
             }
             ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene);
           }}
-          icon={<Icon name="users" size={iconSize} />}
+          icon={<Icon name="shopping-bag" size={iconSize} />}
           title="Friends' Listings"
         />
 
@@ -192,7 +192,7 @@ class Menu extends Component {
             }
             ifSignedIn(setSceneAndCloseMenu)(this.props.friendsScene);
           }}
-          icon={<Icon name="user-plus" size={iconSize} />}
+          icon={<Icon name="users" size={iconSize} />}
           title="Friends"
         />
         <MenuItem
