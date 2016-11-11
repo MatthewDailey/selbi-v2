@@ -144,7 +144,7 @@ function insertUserInDatabase(userDisplayName) {
     .child(getUser().uid)
     .set({
       email: getUser().email,
-      userAgreementAccepted: false,
+      userAgreementAccepted: true,
     });
 
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
