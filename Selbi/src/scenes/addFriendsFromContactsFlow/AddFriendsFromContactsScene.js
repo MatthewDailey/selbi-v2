@@ -10,6 +10,7 @@ import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import FlatButton from '../../components/buttons/FlatButton';
 import NewFriendListItem from '../../components/NewFriendListItem';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles from '../../../styles';
 
@@ -51,9 +52,11 @@ function AddedFriendsComponent({ usersFollowed }) {
           Your contacts will also be able to follow you based on your phone number.
         </Text>
         <View style={styles.halfPadded} />
-        <Text style={{ fontWeight: 'bold' }}>
-          You are now following:
-        </Text>
+        <VisibilityWrapper isVisible={Object.keys(usersFollowed).length > 0}>
+          <Text style={{ fontWeight: 'bold' }}>
+            You are now following:
+          </Text>
+        </VisibilityWrapper>
         {usersFollowed.map((userData) =>
           <NewFriendListItem key={userData.uid} friendData={userData} />)}
       </View>
