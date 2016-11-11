@@ -6,6 +6,7 @@ import FriendsScene from './FriendsScene';
 import FollowFriendScene from './FollowFriendScene';
 
 import SellerProfileFlow from '../sellerProfileFlow';
+import AddFriendsFromContactsFlow from '../addFriendsFromContactsFlow';
 
 const friendsScene = {
   id: 'friends_scene',
@@ -35,6 +36,9 @@ routeLinks[friendsScene.id] = {
   },
   sellerProfile: {
     getRoute: () => SellerProfileFlow.firstScene,
+  },
+  syncContacts: {
+    getRoute: () => AddFriendsFromContactsFlow.firstScene,
   },
 };
 

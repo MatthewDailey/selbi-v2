@@ -29,6 +29,10 @@ class FriendsScene extends RoutableScene {
                 <FlatButton onPress={() => this.goNext('addFriend')}>
                   <Text>Follow by Username</Text>
                 </FlatButton>
+                <View style={styles.halfPadded} />
+                <FlatButton onPress={() => this.goNext('syncContacts')}>
+                  <Text>Follow Contacts</Text>
+                </FlatButton>
               </View>
             }
             emptyMessage="You aren't following anyone."
