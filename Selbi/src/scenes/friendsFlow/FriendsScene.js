@@ -30,10 +30,14 @@ class FriendsScene extends RoutableScene {
                 </FlatButton>
               </View>
             }
+            emptyMessage="You aren't following anyone."
           />
         </View>
         <View tabLabel="Followers" style={styles.container}>
-          <FriendsListComponent friends={this.props.followers} />
+          <FriendsListComponent
+            friends={this.props.followers}
+            emptyMessage="You have no followers."
+          />
         </View>
       </ScrollableTabView>
     );

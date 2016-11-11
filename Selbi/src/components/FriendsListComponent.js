@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ListView } from 'react-native';
+import { ListView, View, Text } from 'react-native';
 
 import NewFriendListItem from './NewFriendListItem';
 
-function FriendsListComponent({ friends, following, header }) {
+import styles from '../../styles';
+
+function FriendsListComponent({ friends, following, header, emptyMessage }) {
   const friendsDatas = Object.keys(friends).map((friendUid) => {
     return {
       uid: friendUid,
@@ -12,7 +14,16 @@ function FriendsListComponent({ friends, following, header }) {
     };
   });
 
-  console.log(friends);
+  if (Object.keys(friends).length === 0) {
+    return (
+      <View style>
+        {header}
+        <View style={styles.paddedCenterContainer}>
+          <Text style={styles.friendlyText}>{emptyMessage}</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <ListView
