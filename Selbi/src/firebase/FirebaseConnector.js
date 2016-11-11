@@ -1225,12 +1225,14 @@ function convertUidsToPublicData(uids) {
 
 export function listenToFollowers(handler) {
   return listenToUserForRoute('followers', (followers) => {
+    console.log('Update to followers', followers);
     convertUidsToPublicData(followers).then(handler);
   });
 }
 
 export function listenToFollowing(handler) {
   return listenToUserForRoute('following', (following) => {
+    console.log('Update to following', following);
     convertUidsToPublicData(following).then(handler);
   });
 }

@@ -7,13 +7,15 @@ const CLEAR = 'clear-friends';
 export default function (priorState = { following: {}, followers: {} }, action) {
   switch (getActionType(action)) {
     case SET_FOLLOWERS:
+      console.log(action)
       return {
-        ...priorState,
         followers: action.followers,
+        following: priorState.following,
       };
     case SET_FOLLOWING:
+      console.log(action)
       return {
-        ...priorState,
+        followers: priorState.followers,
         following: action.following,
       };
     case CLEAR:
@@ -44,4 +46,4 @@ export function clearFriends() {
   return {
     type: CLEAR,
   };
-}
+};

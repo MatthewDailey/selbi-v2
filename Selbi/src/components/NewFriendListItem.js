@@ -12,7 +12,7 @@ export default class NewFriendListItem extends Component {
     super(props);
 
     this.state = {
-      following: true,
+      following: this.props.isFollower,
       modifying: false,
     };
 

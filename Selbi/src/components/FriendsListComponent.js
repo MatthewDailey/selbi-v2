@@ -1,9 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { ListView } from 'react-native';
 
 import NewFriendListItem from './NewFriendListItem';
 
-export default function FriendsListComponent({ areFollowers, friends }) {
+function FriendsListComponent({ friends, followers, header }) {
   const friendsDatas = Object.keys(friends).map((friendUid) => {
     return {
       uid: friendUid,
@@ -17,12 +18,26 @@ export default function FriendsListComponent({ areFollowers, friends }) {
       removeClippedSubviews={false}
       dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
         .cloneWithRows(friendsDatas)}
-      renderRow={(data) => <NewFriendListItem isFollower={areFollowers} friendData={data} />}
+      renderRow={(data) =>
+        <NewFriendListItem isFollower={!!followers[data.uid]} friendData={data} />}
+      renderHeader={() => header}
     />
   );
 }
 
 FriendsListComponent.propTypes = {
-  areFollowers: React.PropTypes.bool.isRequired,
   friends: React.PropTypes.object.isRequired,
+  followers: React.PropTypes.object.isRequired,
+  header: React.PropTypes.element,
 };
+
+function mapStateToProps(state) {
+  return {
+    followers: state.friends.followers,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  undefined
+)(FriendsListComponent);
