@@ -42,6 +42,8 @@ import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
+import userPrivateReducer, { setUserPrivateData, clearUserPrivateData }
+  from './src/reducers/UserPrivateReducer';
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
@@ -87,6 +89,7 @@ const store = createStore(combineReducers({
   followFriend: followFriendReducer,
   friendsListings: friendsListingsReducer,
   user: userReducer,
+  userPrivate: userPrivateReducer,
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
@@ -161,10 +164,10 @@ const listenForBlockedUsers = (user) => {
 };
 addAuthStateChangeListener(listenForBlockedUsers)
 
-let unwatchUserForAnalytics;
-const listenForUserAnalytics = (user) => {
+let unwatchUserPrivate;
+const listenForUserPrivate = (user) => {
   if (user) {
-    unwatchUserForAnalytics = watchUserData((userData) => {
+    unwatchUserPrivate = watchUserData((userData) => {
       if (userData.payments && userData.payments.status === 'OK') {
         setUserAddedCreditCard(true);
       } else {
@@ -186,12 +189,15 @@ const listenForUserAnalytics = (user) => {
         });
       }
       setUserNumItemsPurchased(purchaseCount);
+
+      store.dispatch(setUserPrivateData(userData));
     });
-  } else if (unwatchUserForAnalytics) {
-    unwatchUserForAnalytics();
+  } else if (unwatchUserPrivate) {
+    unwatchUserPrivate();
+    store.dispatch(clearUserPrivateData());
   }
 };
-addAuthStateChangeListener(listenForUserAnalytics);
+addAuthStateChangeListener(listenForUserPrivate);
 
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
