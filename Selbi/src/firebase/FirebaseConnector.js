@@ -207,6 +207,17 @@ export function signOut() {
     .signOut();
 }
 
+export function updateEmail(newEmail) {
+  return requireSignedIn()
+    .then(() => getUser().updateEmail(newEmail))
+    .then(() => firebaseApp
+      .database()
+      .ref('/users')
+      .child(getUser().uid)
+      .update({
+        email: getUser().email,
+      }));
+}
 
 export function createUser(displayName, email) {
   if (!getUser()) {
