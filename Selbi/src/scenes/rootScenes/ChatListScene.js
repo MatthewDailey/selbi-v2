@@ -35,14 +35,13 @@ class ChatListScene extends RoutableScene {
   loadChatData() {
     return loadAllUserChats()
       .then((allUserChats) => {
-        const allValidUserChats = allUserChats.filter(Boolean);
-        const loadedBuyingChats = allValidUserChats.filter(
+        const loadedBuyingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'buying');
-        const loadedSellingChats = allValidUserChats.filter(
+        const loadedSellingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'selling');
         this.setState({
           loading: false,
-          allChats: allValidUserChats,
+          allChats: allUserChats,
           buyingChats: loadedBuyingChats,
           sellingChats: loadedSellingChats,
         }, () => console.log(this.state));

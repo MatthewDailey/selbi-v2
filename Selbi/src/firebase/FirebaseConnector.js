@@ -652,7 +652,8 @@ export function loadAllUserChats() {
     .ref('chats')
     .child(getUser().uid)
     .once('value')
-    .then(loadChatDetailsFromUserChats);
+    .then(loadChatDetailsFromUserChats)
+    .then((allChats) => allChats.filter(Boolean));
 }
 
 export function loadUserPublicData(uid) {
