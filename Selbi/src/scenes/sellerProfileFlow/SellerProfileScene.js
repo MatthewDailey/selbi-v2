@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { loadUserListingsByStatus, isFollowing, followUser }
+import { loadUserListingsByStatus, isFollowing, followUser, unfollowUser }
   from '../../firebase/FirebaseConnector';
 import RoutableScene from '../../nav/RoutableScene';
 import ListingsListComponent from '../../components/ListingsListComponent';
@@ -91,7 +91,12 @@ class SellerProfileScene extends RoutableScene {
         );
       } else if (this.props.isFollowingSeller) {
         return (
-          <Text><GreenCheck /> Following</Text>
+          <TouchableHighlight
+            onPress={() => unfollowUser(this.props.sellerId).then(this.checkIfFollowingSeller)}
+            underlayColor={colors.buttonHighlight}
+          >
+            <Text><GreenCheck /> Following</Text>
+          </TouchableHighlight>
         );
       }
       return <View />;
