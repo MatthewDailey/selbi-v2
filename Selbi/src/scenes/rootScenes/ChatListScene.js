@@ -50,11 +50,12 @@ class ChatListScene extends RoutableScene {
       .catch(console.log);
   }
 
-  getChatListComponentForChats(chats) {
+  getChatListComponentForChats(chats, emptyMessage) {
     return (
       <ChatListComponent
         refresh={this.loadChatData}
         chats={chats}
+        emptyMessage={emptyMessage}
         openChatScene={(data) => {
           this.props.setListingDetails(data.buyerUid, data.listingKey, data.listingData);
           this.goNext('chat');
@@ -80,10 +81,12 @@ class ChatListScene extends RoutableScene {
         style={styles.fullScreenContainer}
       >
         <View tabLabel="Buying" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.buyingChats)}
+          {this.getChatListComponentForChats(this.state.buyingChats,
+            'No chats about items you might buy.')}
         </View>
         <View tabLabel="Selling" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.sellingChats)}
+          {this.getChatListComponentForChats(this.state.sellingChats,
+            'No chats about items you\'re selling.')}
         </View>
       </ScrollableTabView>
     );
