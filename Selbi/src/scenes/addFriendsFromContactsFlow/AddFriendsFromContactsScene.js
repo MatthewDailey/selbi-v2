@@ -37,7 +37,9 @@ function VerifiedCodeComponent({ followContacts }) {
   );
 }
 
-function AddedFriendsComponent({ numFriends }) {
+function AddedFriendsComponent({ usersFollowed }) {
+  console.log('Added friends: ', usersFollowed);
+  const numFriends = usersFollowed.length;
   let friendsString = 'friends';
   if (numFriends === 1) {
     friendsString = 'friend';
@@ -76,9 +78,9 @@ class AddFriendsFromContactsScene extends RoutableScene {
   }
 
   addFriendsFromPhoneBook() {
-    const success = (numFriends) => {
+    const success = (usersFollowed) => {
       this.setState({
-        view: <AddedFriendsComponent numFriends={numFriends} />,
+        view: <AddedFriendsComponent usersFollowed={usersFollowed} />,
       });
 
       Object.keys(this.props.bulletins).forEach((key) => {

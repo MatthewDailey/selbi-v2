@@ -1299,15 +1299,30 @@ export function followPhoneNumbers(phoneNumbers) {
               if (phoneToUserSnapshot.exists()
                 && !hasWhiteSpace(phoneToUserSnapshot.val())
                 && phoneToUserSnapshot.val() !== getUser().uid) {
-                return followUser(phoneToUserSnapshot.val()).then(() => Promise.resolve(1));
+                return Promise.resolve(phoneToUserSnapshot.val());
               }
-              return Promise.resolve(0);
-            }));
+              return Promise.reject(undefined);
+            })
+            .then((contactUid) => followUser(contactUid).then(() => contactUid))
+            .then(loadUserPublicData)
+            .then((userPublicDataSnapshot) => {
+              if (userPublicDataSnapshot.exists()) {
+                return Promise.resolve(userPublicDataSnapshot.val())
+              }
+              return Promise.reject(undefined);
+            })
+            .catch((error) => {
+              if (error) {
+                console.log('ERROR while following phone numbers', error);
+              }
+              return Promise.resolve(undefined);
+            })
+        );
       });
 
       return Promise.all(followPhonesPromises);
     })
-    .then((results) => results.reduce((a, b) => a + b, 0));
+    .then((results) => results.filter(n => n));
 }
 
 export function createShouldAddPhoneBulletin() {
