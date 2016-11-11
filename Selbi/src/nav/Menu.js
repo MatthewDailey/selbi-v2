@@ -15,7 +15,7 @@ function Divider() {
   return (
     <View
       style={{
-        margin: 8,
+        margin: 4,
         borderBottomWidth: 1,
         borderBottomColor: `${colors.dark}64`,
       }}
@@ -38,7 +38,7 @@ function MenuItem({ onPress, icon, title, shouldGreyOut }) {
   }
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={colors.secondary}>
+    <TouchableHighlight onPress={onPress} underlayColor={colors.buttonHighlight}>
       <View style={styles.row}>
         <Text style={{ ...iconStyle, color: textColor }}>{icon}</Text>
         <Text style={{ ...flattenStyle(styles.menuText), color: textColor }}>{title}</Text>
@@ -170,8 +170,6 @@ class Menu extends Component {
           title="Friends' Listings"
         />
 
-        <Divider />
-
         <MenuItem
           shouldGreyOut={isSignedOut()}
           onPress={() => {
@@ -182,6 +180,20 @@ class Menu extends Component {
           }}
           icon={<Icon name="gift" size={iconSize} />}
           title="My Listings"
+        />
+
+        <Divider />
+
+        <MenuItem
+          shouldGreyOut={isSignedOut()}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_friends');
+            }
+            ifSignedIn(setSceneAndCloseMenu)(this.props.friendsScene);
+          }}
+          icon={<Icon name="user-plus" size={iconSize} />}
+          title="Friends"
         />
         <MenuItem
           shouldGreyOut={isSignedOut()}
@@ -201,20 +213,6 @@ class Menu extends Component {
           shouldGreyOut={isSignedOut()}
           onPress={() => {
             if (!isSignedOut()) {
-              reportButtonPress('menu_friends');
-            }
-            ifSignedIn(setSceneAndCloseMenu)(this.props.friendsScene);
-          }}
-          icon={<Icon name="user-plus" size={iconSize} />}
-          title="Friends"
-        />
-
-        <Divider />
-
-        <MenuItem
-          shouldGreyOut={isSignedOut()}
-          onPress={() => {
-            if (!isSignedOut()) {
               reportButtonPress('menu_settings');
             }
             ifSignedIn(pushSceneAndCloseMenu)(this.props.settingsScene);
@@ -222,8 +220,6 @@ class Menu extends Component {
           icon={<Icon name="gear" size={iconSize} />}
           title="Settings"
         />
-
-        <Divider />
 
         <MenuItem
           onPress={() => {
@@ -233,8 +229,6 @@ class Menu extends Component {
           icon={<Icon name="envelope-o" size={iconSize} />}
           title="Give Feedback"
         />
-
-
 
         {getFooter()}
       </View>
