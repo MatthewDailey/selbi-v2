@@ -596,6 +596,26 @@ export function followUser(uid) {
       }));
 }
 
+export function unfollowUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to unfollow another user.')
+  }
+
+  const removeFollowingPromise = firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .remove();
+
+  const removeFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .remove();
+
+  return Promise.all([removeFollowerPromise, removeFollowingPromise]);
+}
+
 export function sendFeedback(email, message) {
   return firebaseApp
     .database()
