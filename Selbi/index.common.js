@@ -54,12 +54,14 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
 import sellerProfileReducer from './src/reducers/SellerProfileReducer';
 import feedbackReducer from './src/reducers/FeedbackReducer';
 import updateEmailReducer from './src/reducers/UpdateEmailReducer';
-import friendsReducer from './src/reducers/FriendsReducer';
+import friendsReducer, { setFollowers, setFollowing, clearFriends }
+  from './src/reducers/FriendsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus,
   listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData,
-  listenToBlockedUsers, listenToBannedUsers, loadListingByLocation }
+  listenToBlockedUsers, listenToBannedUsers, loadListingByLocation, listenToFollowers,
+  listenToFollowing }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -265,6 +267,24 @@ const storeUserData = (user) => {
   }
 };
 addAuthStateChangeListener(storeUserData);
+
+let unwatchFollowers;
+let unwatchFollowing;
+const watchFriends = (user) => {
+  if (user) {
+    unwatchFollowers = listenToFollowers((followers) => store.dispatch(setFollowers(followers)));
+    unwatchFollowing = listenToFollowing((following) => store.dispatch(setFollowing(following)));
+  } else {
+    if (unwatchFollowing) {
+      unwatchFollowing();
+    }
+    if (unwatchFollowers) {
+      unwatchFollowers();
+    }
+    store.dispatch(clearFriends());
+  }
+};
+addAuthStateChangeListener(watchFriends);
 
 const localListingScene = {
   id: 'local_listings_scene',

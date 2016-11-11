@@ -1199,6 +1199,14 @@ function listenToUserForRoute(route, handler, defaultValue = {}) {
   };
 }
 
+export function listenToFollowers(handler) {
+  return listenToUserForRoute('followers', handler);
+}
+
+export function listenToFollowing(handler) {
+  return listenToUserForRoute('following', handler);
+}
+
 export function listenToBannedUsers() {
   listenToUserForRoute(
     'bannedUsers',
