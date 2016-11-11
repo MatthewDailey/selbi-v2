@@ -1,34 +1,64 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { ScrollView, View, Text } from 'react-native';
 
 import FlatButton from '../../components/buttons/FlatButton';
 import FacebookButton from '../../components/buttons/FacebookButton';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import RoutableScene from '../../nav/RoutableScene';
 
 import styles from '../../../styles';
 
-function BankInfoSettings({ openAddBank }) {
-  return (
-    <View style={styles.padded}>
-      <Text style={styles.friendlyTextLeft}>Bank info</Text>
-      <FlatButton onPress={openAddBank}>
-        <Text>Update bank info</Text>
-      </FlatButton>
-    </View>
-  );
-}
+const noValue = 'N/A';
 
-function CreditCardInfoSettings({ onPress }) {
+function BankInfoSettings({ bankInfo, onPress }) {
+  const buttonText = bankInfo ? 'Update Bank' : 'Add Bank';
+
   return (
     <View style={styles.padded}>
-      <Text style={styles.friendlyTextLeft}>Credit Card Info</Text>
-      <FlatButton onPress={onPress}>
-        <Text>Update credit card info</Text>
-      </FlatButton>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={styles.friendlyTextLeft}>Bank Account</Text>
+        <FlatButton onPress={onPress}>
+          <Text>{buttonText}</Text>
+        </FlatButton>
+      </View>
+      <VisibilityWrapper isVisible={!!bankInfo}>
+        <Text>Bank: {bankInfo ? bankInfo.bankName : noValue}</Text>
+        <Text>Last four of account: {bankInfo? bankInfo.accountNumberLastFour : noValue}</Text>
+      </VisibilityWrapper>
+
     </View>
   );
 }
+BankInfoSettings.propTypes = {
+  bankInfo: React.PropTypes.object,
+  onPress: React.PropTypes.func.isRequired,
+};
+
+function CreditCardInfoSettings({ creditCardInfo, onPress }) {
+  const buttonText = creditCardInfo ? 'Update Credit Card' : 'Add Credit Card';
+  return (
+    <View style={styles.padded}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={styles.friendlyTextLeft}>Credit Card</Text>
+        <FlatButton onPress={onPress}>
+          <Text>{buttonText}</Text>
+        </FlatButton>
+      </View>
+
+      <VisibilityWrapper isVisible={!!creditCardInfo}>
+        <Text>Card Type: {creditCardInfo ? creditCardInfo.cardBrand : noValue}</Text>
+        <Text>Expiration: {creditCardInfo ? creditCardInfo.expirationDate : noValue}</Text>
+        <Text>Last four of card: {creditCardInfo ? creditCardInfo.lastFour : noValue}</Text>
+      </VisibilityWrapper>
+    </View>
+  );
+}
+CreditCardInfoSettings.propTypes = {
+  creditCardInfo: React.PropTypes.object,
+  onPress: React.PropTypes.func.isRequired,
+};
 
 function EmailSettings() {
   return (
@@ -41,7 +71,6 @@ function EmailSettings() {
   );
 }
 
-
 function ConnectedAccountsSettings() {
   return (
     <View style={styles.padded}>
@@ -51,16 +80,33 @@ function ConnectedAccountsSettings() {
   );
 }
 
-export default class SettingsScene extends RoutableScene {
+class SettingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
-      <View>
+      <ScrollView>
         <EmailSettings />
+        <BankInfoSettings
+          bankInfo={this.props.bankInfo}
+          onPress={() => this.goNext('bank')}
+        />
+        <CreditCardInfoSettings
+          creditCardInfo={this.props.creditCardInfo}
+          onPress={() => this.goNext('creditCard')}
+        />
         <ConnectedAccountsSettings />
-        <BankInfoSettings openAddBank={() => this.goNext('bank')} />
-        <CreditCardInfoSettings onPress={() => this.goNext('creditCard')}/>
-      </View>
+      </ScrollView>
     );
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    bankInfo: state.userPrivate.merchant ? state.userPrivate.merchant.metadata : undefined,
+    creditCardInfo: state.userPrivate.payment ? state.userPrivate.payment.metadata : undefined,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  undefined
+)(SettingsScene);
