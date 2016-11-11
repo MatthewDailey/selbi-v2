@@ -31,7 +31,7 @@ class FriendsScene extends RoutableScene {
                 </FlatButton>
                 <View style={styles.halfPadded} />
                 <FlatButton onPress={() => this.goNext('syncContacts')}>
-                  <Text>Follow Contacts</Text>
+                  <Text>Follow from Contacts</Text>
                 </FlatButton>
               </View>
             }
