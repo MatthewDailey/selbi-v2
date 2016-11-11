@@ -38,7 +38,7 @@ function MenuItem({ onPress, icon, title, shouldGreyOut }) {
   }
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={colors.secondary}>
+    <TouchableHighlight onPress={onPress} underlayColor={colors.buttonHighlight}>
       <View style={styles.row}>
         <Text style={{ ...iconStyle, color: textColor }}>{icon}</Text>
         <Text style={{ ...flattenStyle(styles.menuText), color: textColor }}>{title}</Text>
@@ -137,8 +137,6 @@ class Menu extends Component {
       <View style={[styles.paddedContainerClear, { backgroundColor: colors.white }]}>
         {getHeader()}
 
-        <Divider />
-
         <MenuItem
           onPress={() => {
             reportButtonPress('menu_sell_something');
@@ -148,7 +146,6 @@ class Menu extends Component {
           title="Sell Something"
         />
 
-        <Divider />
 
         <MenuItem
           onPress={() => {
@@ -170,7 +167,6 @@ class Menu extends Component {
           title="Friends' Listings"
         />
 
-        <Divider />
 
         <MenuItem
           shouldGreyOut={isSignedOut()}
@@ -195,7 +191,6 @@ class Menu extends Component {
           title="Chats"
         />
 
-        <Divider />
 
         <MenuItem
           shouldGreyOut={isSignedOut()}
@@ -209,8 +204,6 @@ class Menu extends Component {
           title="Friends"
         />
 
-        <Divider />
-
         <MenuItem
           shouldGreyOut={isSignedOut()}
           onPress={() => {
@@ -222,8 +215,6 @@ class Menu extends Component {
           icon={<Icon name="gear" size={iconSize} />}
           title="Settings"
         />
-
-        <Divider />
 
         <MenuItem
           onPress={() => {
