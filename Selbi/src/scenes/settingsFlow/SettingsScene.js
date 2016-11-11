@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View, Text, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import FlatButton from '../../components/buttons/FlatButton';
 import FacebookButton from '../../components/buttons/FacebookButton';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import RoutableScene from '../../nav/RoutableScene';
+
+import { linkWithFacebook, getUser } from '../../firebase/FirebaseConnector';
 
 import styles from '../../../styles';
 
@@ -71,11 +74,32 @@ function EmailSettings() {
   );
 }
 
+const GreenCheck = () => <Icon name="check-square-o" color="green" />;
+
+function FacebookConnectionView() {
+  const hasLinkedFacebook = getUser().providerData
+    .map((provider) => provider.providerId === 'facebook.com')
+    .reduce((a, b) => a || b, false);
+
+  if (hasLinkedFacebook) {
+    return (
+      <Text><GreenCheck /> Facebook</Text>
+    );
+  }
+
+  return (
+    <FacebookButton
+      onPress={() => linkWithFacebook().catch((error) => Alert.alert(error.message))}
+      text="Connect with Facebook"
+    />
+  );
+}
+
 function ConnectedAccountsSettings() {
   return (
     <View style={styles.padded}>
       <Text style={styles.friendlyTextLeft}>Connected Accounts</Text>
-      <FacebookButton text="Connect with Facebook" />
+      <FacebookConnectionView />
     </View>
   );
 }
