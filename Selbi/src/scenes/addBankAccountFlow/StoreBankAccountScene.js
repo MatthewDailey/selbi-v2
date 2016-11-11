@@ -80,7 +80,7 @@ class ChooseVisibilityScene extends RoutableScene {
         reportAddBankInfo();
         console.log(result);
         Alert.alert('Successfully added the bank account!');
-        this.goHome();
+        this.goReturn();
       })
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });

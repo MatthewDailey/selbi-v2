@@ -169,5 +169,11 @@ routeLinks[ssnInput.id] = {
   },
 };
 
+routeLinks[storeAccountScene.id] = {
+  return: {
+    numScenes: 9,
+  },
+};
+
 module.exports.routeLinks = routeLinks;
 module.exports.firstScene = emailInput;

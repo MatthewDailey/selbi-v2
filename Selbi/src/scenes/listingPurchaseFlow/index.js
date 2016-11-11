@@ -11,9 +11,9 @@ import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
 
 import ReceiptScene from './ReceiptScene';
-import CreditCardInputScene from './CreditCardInputScene';
+import CreditCardInputScene from '../addCreditCardFlow/CreditCardInputScene';
 import CompletedPurchaseScene from './CompletedPurchaseScene';
-import AddEmailScene from './AddCreditCardEmailScene';
+import AddEmailScene from '../addCreditCardFlow/AddCreditCardEmailScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';

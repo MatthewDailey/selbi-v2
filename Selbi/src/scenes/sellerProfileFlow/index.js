@@ -12,9 +12,9 @@ import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
 
 import ReceiptScene from '../listingPurchaseFlow/ReceiptScene';
-import CreditCardInputScene from '../listingPurchaseFlow/CreditCardInputScene';
+import CreditCardInputScene from '../addCreditCardFlow/CreditCardInputScene';
 import CompletedPurchaseScene from '../listingPurchaseFlow/CompletedPurchaseScene';
-import AddEmailScene from '../listingPurchaseFlow/AddCreditCardEmailScene';
+import AddEmailScene from '../addCreditCardFlow/AddCreditCardEmailScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';

@@ -144,14 +144,13 @@ function insertUserInDatabase(userDisplayName) {
     .child(getUser().uid)
     .set({
       email: getUser().email,
-      userAgreementAccepted: false,
+      userAgreementAccepted: true,
     });
 
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
 }
 
-export function signInWithFacebook() {
-  const auth = firebase.auth();
+function getFacebookCredential() {
   const provider = firebase.auth.FacebookAuthProvider;
 
   return LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
@@ -164,10 +163,19 @@ export function signInWithFacebook() {
       }
       return AccessToken.getCurrentAccessToken();
     })
-    .then(accessTokenData => {
-      const credential = provider.credential(accessTokenData.accessToken);
-      return auth.signInWithCredential(credential);
-    });
+    .then(accessTokenData => provider.credential(accessTokenData.accessToken));
+}
+
+export function signInWithFacebook() {
+  const auth = firebase.auth();
+  return getFacebookCredential()
+    .then((credential) => auth.signInWithCredential(credential));
+}
+
+export function linkWithFacebook() {
+  return requireSignedIn()
+    .then(() => getFacebookCredential())
+    .then((credential) => getUser().link(credential));
 }
 
 export function signInWithEmail(email, password) {
@@ -199,6 +207,17 @@ export function signOut() {
     .signOut();
 }
 
+export function updateEmail(newEmail) {
+  return requireSignedIn()
+    .then(() => getUser().updateEmail(newEmail))
+    .then(() => firebaseApp
+      .database()
+      .ref('/users')
+      .child(getUser().uid)
+      .update({
+        email: getUser().email,
+      }));
+}
 
 export function createUser(displayName, email) {
   if (!getUser()) {
@@ -213,7 +232,7 @@ export function createUser(displayName, email) {
         return insertUserInDatabase(displayName);
       }
       return Promise.resolve();
-    })
+    });
 }
 
 export function publishImage(base64, heightInput, widthInput) {

@@ -20,12 +20,7 @@ class CompletedFeedbackScene extends RoutableScene {
         </Text>
         <View style={styles.halfPadded} />
         <Text style={styles.friendlyTextLeft}>
-          You'll receive an email to {this.props.email} which includes our team on the 'To'
-          line.
-        </Text>
-        <View style={styles.halfPadded} />
-        <Text style={styles.friendlyTextLeft}>
-          We'll follow up with you on that email thread shortly.
+          You'll receive an email shortly and we'll follow up as soon as we can.
         </Text>
       </View>
     );

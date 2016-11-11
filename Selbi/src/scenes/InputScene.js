@@ -49,6 +49,10 @@ export default class InputScene extends RoutableScene {
     this.props.recordInput(this.parseInputValue(newText));
   }
 
+  onGoNext() {
+    this.props.recordInput(this.props.inputValue);
+  }
+
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });

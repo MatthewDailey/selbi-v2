@@ -17,10 +17,12 @@ import ListingPurchaseFlow from './src/scenes/listingPurchaseFlow';
 import ChatFlow from './src/scenes/chatFlow';
 import EditListingFlow from './src/scenes/editListingFlow';
 import AddBankFlow from './src/scenes/addBankAccountFlow';
+import AddCreditCardFlow from './src/scenes/addCreditCardFlow';
 import AddPhoneFlow from './src/scenes/addFriendsFromContactsFlow';
 import IntroFlow from './src/scenes/introFlow';
 import SellerProfileFlow from './src/scenes/sellerProfileFlow';
 import FeedbackFlow from './src/scenes/feedbackFlow';
+import SettingsFlow from './src/scenes/settingsFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -40,6 +42,8 @@ import listingDetailReducer from './src/reducers/ListingDetailReducer';
 import followFriendReducer from './src/reducers/FollowFriendReducer';
 import friendsListingsReducer from './src/reducers/FriendsListingsReducer';
 import userReducer, { setUserData, clearUserData } from './src/reducers/UserReducer';
+import userPrivateReducer, { setUserPrivateData, clearUserPrivateData }
+  from './src/reducers/UserPrivateReducer';
 import addCreditCardReducer from './src/reducers/AddCreditCardReducer';
 import addBankAccountReducer from './src/reducers/AddBankAccountReducer';
 import bulletinsReducer, { clearBulletins, setBulletins } from './src/reducers/BulletinsReducer';
@@ -49,6 +53,7 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
   from './src/reducers/BlockedUsersReducer';
 import sellerProfileReducer from './src/reducers/SellerProfileReducer';
 import feedbackReducer from './src/reducers/FeedbackReducer';
+import updateEmailReducer from './src/reducers/UpdateEmailReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus,
@@ -85,6 +90,7 @@ const store = createStore(combineReducers({
   followFriend: followFriendReducer,
   friendsListings: friendsListingsReducer,
   user: userReducer,
+  userPrivate: userPrivateReducer,
   addCreditCard: addCreditCardReducer,
   addBank: addBankAccountReducer,
   bulletins: bulletinsReducer,
@@ -93,6 +99,7 @@ const store = createStore(combineReducers({
   blockedUsers: blockedUsersReducer,
   sellerProfile: sellerProfileReducer,
   feedback: feedbackReducer,
+  updateEmail: updateEmailReducer,
 }));
 
 addAuthStateChangeListener(listenToBannedUsers);
@@ -159,10 +166,10 @@ const listenForBlockedUsers = (user) => {
 };
 addAuthStateChangeListener(listenForBlockedUsers)
 
-let unwatchUserForAnalytics;
-const listenForUserAnalytics = (user) => {
+let unwatchUserPrivate;
+const listenForUserPrivate = (user) => {
   if (user) {
-    unwatchUserForAnalytics = watchUserData((userData) => {
+    unwatchUserPrivate = watchUserData((userData) => {
       if (userData.payments && userData.payments.status === 'OK') {
         setUserAddedCreditCard(true);
       } else {
@@ -184,12 +191,15 @@ const listenForUserAnalytics = (user) => {
         });
       }
       setUserNumItemsPurchased(purchaseCount);
+
+      store.dispatch(setUserPrivateData(userData));
     });
-  } else if (unwatchUserForAnalytics) {
-    unwatchUserForAnalytics();
+  } else if (unwatchUserPrivate) {
+    unwatchUserPrivate();
+    store.dispatch(clearUserPrivateData());
   }
 };
-addAuthStateChangeListener(listenForUserAnalytics);
+addAuthStateChangeListener(listenForUserPrivate);
 
 // Listen for user listings and make sure to remove listener when
 const listenForUserListings = (user) => {
@@ -386,10 +396,12 @@ routeLinks = Object.assign(routeLinks, ListingPurchaseFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, ChatFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, EditListingFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddBankFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, AddCreditCardFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, AddPhoneFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, SellerProfileFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, FeedbackFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, SettingsFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -408,6 +420,7 @@ function renderMenu(navigator, closeMenu) {
       signInOrRegisterScene={menuSignInScene}
       sellScene={NewListingFlow.firstScene}
       feedbackScene={FeedbackFlow.firstScene}
+      settingsScene={SettingsFlow.firstScene}
     />
   );
 }
