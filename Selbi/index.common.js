@@ -30,7 +30,7 @@ import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
 import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
-import FollowFriendScene from './src/scenes/FollowFriendScene';
+import FollowFriendScene from './src/scenes/friendsFlow/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer, { setLocalListings }
