@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Alert, View, Text } from 'react-native';
+import { Alert, View, Text, TouchableHighlight } from 'react-native';
 
 import FlatButton from '../components/buttons/FlatButton';
 
 import { followUser, unfollowUser } from '../firebase/FirebaseConnector';
 
 import styles from '../../styles';
+import colors from '../../colors';
 
 export default class NewFriendListItem extends Component {
   constructor(props) {
@@ -41,7 +42,30 @@ export default class NewFriendListItem extends Component {
   }
 
   render() {
-    console.log('Rendering NewFriendListItem ', this.props.friendData);
+    const FriendDisplayName = () => {
+      if (this.props.openSellerProfile) {
+        return (
+          <TouchableHighlight
+            onPress={this.props.openSellerProfile}
+            underlayColor={colors.buttonHighlight}
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={styles.buttonTextStyle}>
+              {this.props.friendData.publicData.displayName}
+            </Text>
+          </TouchableHighlight>
+        );
+      }
+      return (
+        <Text style={styles.buttonTextStyle}>
+          {this.props.friendData.publicData.displayName}
+        </Text>
+      );
+    };
+
     return (
       <View
         style={
@@ -51,9 +75,7 @@ export default class NewFriendListItem extends Component {
           ]
         }
       >
-        <Text style={styles.buttonTextStyle}>
-          {this.props.friendData.publicData.displayName}
-        </Text>
+        <FriendDisplayName />
         <FlatButton onPress={this.toggleFollowing}>
           <Text>{this.state.following ? 'Unfollow' : 'Follow'}</Text>
         </FlatButton>
@@ -68,4 +90,5 @@ NewFriendListItem.propTypes = {
     publicData: React.PropTypes.object.isRequired,
   }).isRequired,
   isFollowing: React.PropTypes.bool.isRequired,
+  openSellerProfile: React.PropTypes.func,
 };

@@ -5,6 +5,8 @@ import { withNavigatorProps } from '../../nav/RoutableScene';
 import FriendsScene from './FriendsScene';
 import FollowFriendScene from './FollowFriendScene';
 
+import SellerProfileFlow from '../sellerProfileFlow';
+
 const friendsScene = {
   id: 'friends_scene',
   renderContent: withNavigatorProps(
@@ -30,6 +32,9 @@ const routeLinks = {};
 routeLinks[friendsScene.id] = {
   addFriend: {
     getRoute: () => followFriendScene,
+  },
+  sellerProfile: {
+    getRoute: () => SellerProfileFlow.firstScene,
   },
 };
 

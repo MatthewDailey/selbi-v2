@@ -23,6 +23,7 @@ class FriendsScene extends RoutableScene {
         <View tabLabel="Following" style={styles.container}>
           <FriendsListComponent
             friends={this.props.following}
+            openSellerProfile={() => this.goNext('sellerProfile')}
             header={
               <View style={styles.paddedContainer}>
                 <FlatButton onPress={() => this.goNext('addFriend')}>
@@ -36,6 +37,7 @@ class FriendsScene extends RoutableScene {
         <View tabLabel="Followers" style={styles.container}>
           <FriendsListComponent
             friends={this.props.followers}
+            openSellerProfile={() => this.goNext('sellerProfile')}
             emptyMessage="You have no followers."
           />
         </View>

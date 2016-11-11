@@ -6,7 +6,10 @@ import NewFriendListItem from './NewFriendListItem';
 
 import styles from '../../styles';
 
-function FriendsListComponent({ friends, following, header, emptyMessage }) {
+import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
+
+function FriendsListComponent(
+  { friends, following, header, emptyMessage, openSellerProfile, setSellerProfile }) {
   const friendsDatas = Object.keys(friends).map((friendUid) => {
     return {
       uid: friendUid,
@@ -16,7 +19,7 @@ function FriendsListComponent({ friends, following, header, emptyMessage }) {
 
   if (Object.keys(friends).length === 0) {
     return (
-      <View style>
+      <View>
         {header}
         <View style={styles.paddedCenterContainer}>
           <Text style={styles.friendlyText}>{emptyMessage}</Text>
@@ -32,7 +35,15 @@ function FriendsListComponent({ friends, following, header, emptyMessage }) {
       dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
         .cloneWithRows(friendsDatas)}
       renderRow={(data) =>
-        <NewFriendListItem isFollowing={!!following[data.uid]} friendData={data} />}
+        <NewFriendListItem
+          openSellerProfile={() => {
+            setSellerProfile(data.uid, data.publicData);
+            openSellerProfile();
+          }}
+          isFollowing={!!following[data.uid]}
+          friendData={data}
+        />
+      }
       renderHeader={() => header}
     />
   );
@@ -42,6 +53,9 @@ FriendsListComponent.propTypes = {
   friends: React.PropTypes.object.isRequired,
   following: React.PropTypes.object.isRequired,
   header: React.PropTypes.element,
+  emptyMessage: React.PropTypes.string,
+  openSellerProfile: React.PropTypes.func.isRequired,
+  setSellerProfile: React.PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -50,7 +64,13 @@ function mapStateToProps(state) {
   };
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    setSellerProfile: (uid, sellerData) => dispatch(setSellerProfileInfo(uid, sellerData))
+  };
+}
+
 export default connect(
   mapStateToProps,
-  undefined
+  mapDispatchToProps
 )(FriendsListComponent);
