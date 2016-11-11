@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 
 import { MKButton } from 'react-native-material-kit';
 
-import { awaitPhoneVerification, followPhoneNumbers, updateBulletin } from '../../firebase/FirebaseConnector';
+import { awaitPhoneVerification, followPhoneNumbers, updateBulletin }
+  from '../../firebase/FirebaseConnector';
 import { normalizePhoneNumber, loadAllContactsPhoneNumber } from './utils';
 
 import RoutableScene from '../../nav/RoutableScene';
@@ -37,6 +38,14 @@ function VerifiedCodeComponent({ followContacts }) {
   );
 }
 
+function NewFriendListItem({ friendPublicData }) {
+  return (
+    <View style={styles.halfPadded}>
+      <Text>{friendPublicData.displayName}</Text>
+    </View>
+  );
+}
+
 function AddedFriendsComponent({ usersFollowed }) {
   console.log('Added friends: ', usersFollowed);
   const numFriends = usersFollowed.length;
@@ -45,15 +54,21 @@ function AddedFriendsComponent({ usersFollowed }) {
     friendsString = 'friend';
   }
   return (
-    <View sylte={styles.paddedCenterContainer}>
-      <Text style={styles.friendlyText}>
+    <ScrollView sylte={styles.paddedCenterContainer}>
+      <Text style={styles.friendlyTextLeft}>
         Added {numFriends} {friendsString} from your phone book.
       </Text>
       <View style={styles.halfPadded} />
-      <Text style={styles.friendlyText}>
+      <Text style={styles.friendlyTextLeft}>
         Your contacts will also be able to follow you based on your phone number.
       </Text>
-    </View>
+      <View style={styles.halfPadded} />
+      <Text style={styles.friendlyTextLeft}>
+        You are now following:
+      </Text>
+      {usersFollowed.map((userData) =>
+        <NewFriendListItem key={userData.username} friendPublicData={userData} />)}
+    </ScrollView>
   );
 }
 
