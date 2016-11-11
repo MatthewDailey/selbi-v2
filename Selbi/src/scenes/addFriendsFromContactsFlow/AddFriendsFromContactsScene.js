@@ -31,7 +31,7 @@ function VerifiedCodeComponent({ followContacts }) {
   );
 }
 
-function NewFriendListItem({ friendPublicData }) {
+function NewFriendListItem({ friendData }) {
   return (
     <View
       style={
@@ -41,7 +41,7 @@ function NewFriendListItem({ friendPublicData }) {
         ]
       }
     >
-      <Text style={styles.buttonTextStyle}>{friendPublicData.displayName}</Text>
+      <Text style={styles.buttonTextStyle}>{friendData.publicData.displayName}</Text>
       <FlatButton><Text>Unfollow</Text></FlatButton>
     </View>
   );
@@ -69,7 +69,7 @@ function AddedFriendsComponent({ usersFollowed }) {
           You are now following:
         </Text>
         {usersFollowed.map((userData) =>
-          <NewFriendListItem key={userData.username} friendPublicData={userData} />)}
+          <NewFriendListItem key={userData.uid} friendData={userData} />)}
       </View>
     </ScrollView>
   );

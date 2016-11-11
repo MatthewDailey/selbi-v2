@@ -1307,7 +1307,10 @@ export function followPhoneNumbers(phoneNumbers) {
             .then(loadUserPublicData)
             .then((userPublicDataSnapshot) => {
               if (userPublicDataSnapshot.exists()) {
-                return Promise.resolve(userPublicDataSnapshot.val())
+                return Promise.resolve({
+                  uid: userPublicDataSnapshot.key,
+                  publicData: userPublicDataSnapshot.val(),
+                });
               }
               return Promise.reject(undefined);
             })
