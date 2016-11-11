@@ -23,6 +23,7 @@ import IntroFlow from './src/scenes/introFlow';
 import SellerProfileFlow from './src/scenes/sellerProfileFlow';
 import FeedbackFlow from './src/scenes/feedbackFlow';
 import SettingsFlow from './src/scenes/settingsFlow';
+import FriendsFlow from './src/scenes/friendsFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -424,6 +425,7 @@ routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, SellerProfileFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, FeedbackFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, SettingsFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, FriendsFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -436,7 +438,7 @@ function renderMenu(navigator, closeMenu) {
       friendsListingScene={friendsListingScene}
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
-      followFriendScene={followFriendScene}
+      friendsScene={FriendsFlow.firstScene}
       introScene={IntroFlow.firstScene}
       loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={menuSignInScene}

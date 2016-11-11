@@ -1199,12 +1199,40 @@ function listenToUserForRoute(route, handler, defaultValue = {}) {
   };
 }
 
+function convertUidsToPublicData(uids) {
+  const promiseUsersPublicData = [];
+
+  Object.keys(uids).forEach((uid) => {
+    if (uids[uid]) {
+      promiseUsersPublicData.push(loadUserPublicData(uid));
+    }
+  });
+
+  return Promise.all(promiseUsersPublicData)
+    .then((allUsersPublicData) => {
+      const uidToPublicData = {};
+
+      allUsersPublicData.forEach((userPublicDataSnapshot) => {
+        if (userPublicDataSnapshot.exists()) {
+          uidToPublicData[userPublicDataSnapshot.key] = userPublicDataSnapshot.val();
+        }
+      });
+
+      return uidToPublicData;
+    });
+}
+
+
 export function listenToFollowers(handler) {
-  return listenToUserForRoute('followers', handler);
+  return listenToUserForRoute('followers', (followers) => {
+    convertUidsToPublicData(followers).then(handler);
+  });
 }
 
 export function listenToFollowing(handler) {
-  return listenToUserForRoute('following', handler);
+  return listenToUserForRoute('following', (following) => {
+    convertUidsToPublicData(following).then(handler);
+  });
 }
 
 export function listenToBannedUsers() {

@@ -201,12 +201,12 @@ class Menu extends Component {
           shouldGreyOut={isSignedOut()}
           onPress={() => {
             if (!isSignedOut()) {
-              reportButtonPress('menu_follow_friend');
+              reportButtonPress('menu_friends');
             }
-            ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene);
+            ifSignedIn(setSceneAndCloseMenu)(this.props.friendsScene);
           }}
           icon={<Icon name="user-plus" size={iconSize} />}
-          title="Follow a Friend"
+          title="Friends"
         />
 
         <Divider />
@@ -252,7 +252,7 @@ Menu.propTypes = {
   friendsListingScene: React.PropTypes.object.isRequired,
   myListingScene: React.PropTypes.object.isRequired,
   chatListScene: React.PropTypes.object.isRequired,
-  followFriendScene: React.PropTypes.object.isRequired,
+  friendsScene: React.PropTypes.object.isRequired,
   signInOrRegisterScene: React.PropTypes.object.isRequired,
   sellScene: React.PropTypes.object.isRequired,
   introScene: React.PropTypes.object.isRequired,
