@@ -22,7 +22,7 @@ class FriendsScene extends RoutableScene {
       >
         <View tabLabel="Following" style={styles.container}>
           <FriendsListComponent
-            friends={this.props.followers}
+            friends={this.props.following}
             header={
               <View style={styles.paddedContainer}>
                 <FlatButton onPress={() => this.goNext('addFriend')}>

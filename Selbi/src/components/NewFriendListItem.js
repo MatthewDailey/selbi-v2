@@ -12,7 +12,7 @@ export default class NewFriendListItem extends Component {
     super(props);
 
     this.state = {
-      following: this.props.isFollower,
+      following: this.props.isFollowing,
       modifying: false,
     };
 
@@ -41,6 +41,7 @@ export default class NewFriendListItem extends Component {
   }
 
   render() {
+    console.log('Rendering NewFriendListItem ', this.props.friendData);
     return (
       <View
         style={
@@ -66,4 +67,5 @@ NewFriendListItem.propTypes = {
     uid: React.PropTypes.string.isRequired,
     publicData: React.PropTypes.object.isRequired,
   }).isRequired,
+  isFollowing: React.PropTypes.bool.isRequired,
 };

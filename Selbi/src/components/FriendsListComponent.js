@@ -4,13 +4,15 @@ import { ListView } from 'react-native';
 
 import NewFriendListItem from './NewFriendListItem';
 
-function FriendsListComponent({ friends, followers, header }) {
+function FriendsListComponent({ friends, following, header }) {
   const friendsDatas = Object.keys(friends).map((friendUid) => {
     return {
       uid: friendUid,
       publicData: friends[friendUid],
     };
   });
+
+  console.log(friends);
 
   return (
     <ListView
@@ -19,7 +21,7 @@ function FriendsListComponent({ friends, followers, header }) {
       dataSource={new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
         .cloneWithRows(friendsDatas)}
       renderRow={(data) =>
-        <NewFriendListItem isFollower={!!followers[data.uid]} friendData={data} />}
+        <NewFriendListItem isFollowing={!!following[data.uid]} friendData={data} />}
       renderHeader={() => header}
     />
   );
@@ -27,13 +29,13 @@ function FriendsListComponent({ friends, followers, header }) {
 
 FriendsListComponent.propTypes = {
   friends: React.PropTypes.object.isRequired,
-  followers: React.PropTypes.object.isRequired,
+  following: React.PropTypes.object.isRequired,
   header: React.PropTypes.element,
 };
 
 function mapStateToProps(state) {
   return {
-    followers: state.friends.followers,
+    following: state.friends.following,
   };
 }
 
