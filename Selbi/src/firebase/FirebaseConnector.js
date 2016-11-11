@@ -221,7 +221,7 @@ export function createUser(displayName, email) {
         return insertUserInDatabase(displayName);
       }
       return Promise.resolve();
-    })
+    });
 }
 
 export function publishImage(base64, heightInput, widthInput) {

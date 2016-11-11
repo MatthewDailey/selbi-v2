@@ -16,7 +16,7 @@ import styles from '../../../styles';
 const noValue = 'N/A';
 
 function BankInfoSettings({ bankInfo, onPress }) {
-  const buttonText = bankInfo ? 'Update Bank' : 'Add Bank';
+  const buttonText = bankInfo ? 'Update' : 'Add';
 
   return (
     <View style={styles.padded}>
@@ -28,7 +28,7 @@ function BankInfoSettings({ bankInfo, onPress }) {
       </View>
       <VisibilityWrapper isVisible={!!bankInfo}>
         <Text>Bank: {bankInfo ? bankInfo.bankName : noValue}</Text>
-        <Text>Last four of account: {bankInfo? bankInfo.accountNumberLastFour : noValue}</Text>
+        <Text>Last four of account: {bankInfo ? bankInfo.accountNumberLastFour : noValue}</Text>
       </VisibilityWrapper>
 
     </View>
@@ -40,7 +40,7 @@ BankInfoSettings.propTypes = {
 };
 
 function CreditCardInfoSettings({ creditCardInfo, onPress }) {
-  const buttonText = creditCardInfo ? 'Update Credit Card' : 'Add Credit Card';
+  const buttonText = creditCardInfo ? 'Update' : 'Add';
   return (
     <View style={styles.padded}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -63,16 +63,22 @@ CreditCardInfoSettings.propTypes = {
   onPress: React.PropTypes.func.isRequired,
 };
 
-function EmailSettings() {
+function EmailSettings({ email }) {
   return (
     <View style={styles.padded}>
-      <Text style={styles.friendlyTextLeft}>Email</Text>
-      <FlatButton>
-        <Text>Update Email</Text>
-      </FlatButton>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={styles.friendlyTextLeft}>Email</Text>
+        <FlatButton>
+          <Text>Update</Text>
+        </FlatButton>
+      </View>
+      <Text>{email}</Text>
     </View>
   );
 }
+EmailSettings.propTypes = {
+  email: React.PropTypes.string.isRequired,
+};
 
 const GreenCheck = () => <Icon name="check-square-o" color="green" />;
 
@@ -108,7 +114,7 @@ class SettingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ScrollView>
-        <EmailSettings />
+        <EmailSettings email={this.props.email} />
         <BankInfoSettings
           bankInfo={this.props.bankInfo}
           onPress={() => this.goNext('bank')}
@@ -127,6 +133,7 @@ function mapStateToProps(state) {
   return {
     bankInfo: state.userPrivate.merchant ? state.userPrivate.merchant.metadata : undefined,
     creditCardInfo: state.userPrivate.payment ? state.userPrivate.payment.metadata : undefined,
+    email: state.userPrivate.email,
   };
 }
 
