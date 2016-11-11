@@ -23,6 +23,7 @@ import IntroFlow from './src/scenes/introFlow';
 import SellerProfileFlow from './src/scenes/sellerProfileFlow';
 import FeedbackFlow from './src/scenes/feedbackFlow';
 import SettingsFlow from './src/scenes/settingsFlow';
+import FriendsFlow from './src/scenes/friendsFlow';
 
 import LocalListingScene from './src/scenes/rootScenes/LocalListingsScene';
 import ChatListScene from './src/scenes/rootScenes/ChatListScene';
@@ -30,7 +31,7 @@ import MyListingsScene from './src/scenes/rootScenes/MyListingsScene';
 import FriendsListingsScene from './src/scenes/rootScenes/FriendsListingsScene';
 
 import ListingLinkListener from './src/deeplinking/OpenListingDeepLinkListener';
-import FollowFriendScene from './src/scenes/FollowFriendScene';
+import FollowFriendScene from './src/scenes/friendsFlow/FollowFriendScene';
 
 import newListingReducer from './src/reducers/NewListingReducer';
 import localListingsReducer, { setLocalListings }
@@ -54,11 +55,14 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
 import sellerProfileReducer from './src/reducers/SellerProfileReducer';
 import feedbackReducer from './src/reducers/FeedbackReducer';
 import updateEmailReducer from './src/reducers/UpdateEmailReducer';
+import friendsReducer, { setFollowers, setFollowing, clearFriends }
+  from './src/reducers/FriendsReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus,
   listenToBulletins, setUserFcmToken, createShouldAddPhoneBulletin, watchUserData,
-  listenToBlockedUsers, listenToBannedUsers, loadListingByLocation }
+  listenToBlockedUsers, listenToBannedUsers, loadListingByLocation, listenToFollowers,
+  listenToFollowing }
   from './src/firebase/FirebaseConnector';
 import { subscribeToFcmTokenRefresh, unsubscribeFromFcmTokenRefresh, setBadgeNumber }
   from './src/firebase/FcmListener';
@@ -100,6 +104,7 @@ const store = createStore(combineReducers({
   sellerProfile: sellerProfileReducer,
   feedback: feedbackReducer,
   updateEmail: updateEmailReducer,
+  friends: friendsReducer,
 }));
 
 addAuthStateChangeListener(listenToBannedUsers);
@@ -264,6 +269,24 @@ const storeUserData = (user) => {
 };
 addAuthStateChangeListener(storeUserData);
 
+let unwatchFollowers;
+let unwatchFollowing;
+const watchFriends = (user) => {
+  if (user) {
+    unwatchFollowers = listenToFollowers((followers) => store.dispatch(setFollowers(followers)));
+    unwatchFollowing = listenToFollowing((following) => store.dispatch(setFollowing(following)));
+  } else {
+    if (unwatchFollowing) {
+      unwatchFollowing();
+    }
+    if (unwatchFollowers) {
+      unwatchFollowers();
+    }
+    store.dispatch(clearFriends());
+  }
+};
+addAuthStateChangeListener(watchFriends);
+
 const localListingScene = {
   id: 'local_listings_scene',
   renderContent: withNavigatorProps(
@@ -402,6 +425,7 @@ routeLinks = Object.assign(routeLinks, IntroFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, SellerProfileFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, FeedbackFlow.routeLinks);
 routeLinks = Object.assign(routeLinks, SettingsFlow.routeLinks);
+routeLinks = Object.assign(routeLinks, FriendsFlow.routeLinks);
 
 function renderMenu(navigator, closeMenu) {
   return (
@@ -414,7 +438,7 @@ function renderMenu(navigator, closeMenu) {
       friendsListingScene={friendsListingScene}
       myListingScene={myListingsScene}
       chatListScene={chatListScene}
-      followFriendScene={followFriendScene}
+      friendsScene={FriendsFlow.firstScene}
       introScene={IntroFlow.firstScene}
       loadUserPublicData={watchUserPublicData}
       signInOrRegisterScene={menuSignInScene}

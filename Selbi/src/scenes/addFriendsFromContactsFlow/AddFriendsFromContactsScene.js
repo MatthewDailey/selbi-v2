@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, Alert } from 'react-native';
+import { ScrollView, View, Text } from 'react-native';
 
-import { awaitPhoneVerification, followPhoneNumbers, updateBulletin, unfollowUser, followUser }
+import { awaitPhoneVerification, followPhoneNumbers, updateBulletin }
   from '../../firebase/FirebaseConnector';
 import { normalizePhoneNumber, loadAllContactsPhoneNumber } from './utils';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
 import FlatButton from '../../components/buttons/FlatButton';
+import NewFriendListItem from '../../components/NewFriendListItem';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles from '../../../styles';
 
@@ -29,61 +31,8 @@ function VerifiedCodeComponent({ followContacts }) {
       </FlatButton>
     </View>
   );
-}
+};
 
-class NewFriendListItem extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      following: true,
-      modifying: false,
-    };
-
-    this.toggleFollowing = this.toggleFollowing.bind(this);
-  }
-
-  toggleFollowing() {
-    if (this.state.following) {
-      this.updateFollowing(unfollowUser, false);
-    } else {
-      this.updateFollowing(followUser, true);
-    }
-  }
-
-  updateFollowing(userAction, isFollowing) {
-    this.setState({ modifying: true }, () => {
-      userAction(this.props.friendData.uid)
-        .then(() => {
-          this.setState({ following: isFollowing, modifying: false });
-        })
-        .catch((error) => {
-          Alert.alert(error.message);
-          this.setState({ following: false });
-        });
-    });
-  }
-
-  render() {
-    return (
-      <View
-        style={
-          [
-            styles.halfPadded,
-            { flex: 1, flexDirection: 'row', justifyContent: 'space-between' },
-          ]
-        }
-      >
-        <Text style={styles.buttonTextStyle}>
-          {this.props.friendData.publicData.displayName}
-        </Text>
-        <FlatButton onPress={this.toggleFollowing}>
-          <Text>{this.state.following ? 'Unfollow' : 'Follow'}</Text>
-        </FlatButton>
-      </View>
-    );
-  }
-}
 
 function AddedFriendsComponent({ usersFollowed }) {
   console.log('Added friends: ', usersFollowed);
@@ -103,9 +52,11 @@ function AddedFriendsComponent({ usersFollowed }) {
           Your contacts will also be able to follow you based on your phone number.
         </Text>
         <View style={styles.halfPadded} />
-        <Text style={{ fontWeight: 'bold' }}>
-          You are now following:
-        </Text>
+        <VisibilityWrapper isVisible={Object.keys(usersFollowed).length > 0}>
+          <Text style={{ fontWeight: 'bold' }}>
+            You are now following:
+          </Text>
+        </VisibilityWrapper>
         {usersFollowed.map((userData) =>
           <NewFriendListItem key={userData.uid} friendData={userData} />)}
       </View>

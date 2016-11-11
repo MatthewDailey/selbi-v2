@@ -40,9 +40,9 @@ class MyListingsScene extends RoutableScene {
 
     return (
       <ScrollableTabView
-        tabBarBackgroundColor={colors.primary}
-        tabBarUnderlineColor={colors.secondary}
-        tabBarActiveTextColor={colors.secondary}
+        tabBarBackgroundColor={colors.secondary}
+        tabBarUnderlineColor={colors.primary}
+        tabBarActiveTextColor={colors.primary}
         style={styles.fullScreenContainer}
       >
         <View tabLabel="Local" style={styles.container}>
