@@ -53,6 +53,8 @@ export default class ChatListComponent extends Component {
         renderRow={(data) => (
           <ChatListItem
             chatTitle={data.listingData.title}
+            thumbnailUrl={data.listingData.images.image1.url}
+            otherPersonDisplayName={data.otherPersonPublicData.displayName}
             chatType={data.type}
             openChatScene={() => {
               reportButtonPress(`chat_list_open_chat_${data.type}`);
