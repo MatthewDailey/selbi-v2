@@ -53,6 +53,7 @@ import blockedUsersReducer, { setBlockedUsers, clearBlockedUsers }
   from './src/reducers/BlockedUsersReducer';
 import sellerProfileReducer from './src/reducers/SellerProfileReducer';
 import feedbackReducer from './src/reducers/FeedbackReducer';
+import updateEmailReducer from './src/reducers/UpdateEmailReducer';
 
 import { registerWithEmail, signInWithEmail, signOut, getUser, createUser, watchUserPublicData,
   addAuthStateChangeListener, listenToListingsByStatus,
@@ -98,6 +99,7 @@ const store = createStore(combineReducers({
   blockedUsers: blockedUsersReducer,
   sellerProfile: sellerProfileReducer,
   feedback: feedbackReducer,
+  updateEmail: updateEmailReducer,
 }));
 
 addAuthStateChangeListener(listenToBannedUsers);

@@ -63,12 +63,12 @@ CreditCardInfoSettings.propTypes = {
   onPress: React.PropTypes.func.isRequired,
 };
 
-function EmailSettings({ email }) {
+function EmailSettings({ email, onPress }) {
   return (
     <View style={styles.padded}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={styles.friendlyTextLeft}>Email</Text>
-        <FlatButton>
+        <FlatButton onPress={onPress}>
           <Text>Update</Text>
         </FlatButton>
       </View>
@@ -78,6 +78,7 @@ function EmailSettings({ email }) {
 }
 EmailSettings.propTypes = {
   email: React.PropTypes.string.isRequired,
+  onPress: React.PropTypes.func.isRequired,
 };
 
 const GreenCheck = () => <Icon name="check-square-o" color="green" />;
@@ -114,7 +115,10 @@ class SettingsScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <ScrollView>
-        <EmailSettings email={this.props.email} />
+        <EmailSettings
+          email={this.props.email}
+          onPress={() => this.goNext('email')}
+        />
         <BankInfoSettings
           bankInfo={this.props.bankInfo}
           onPress={() => this.goNext('bank')}
