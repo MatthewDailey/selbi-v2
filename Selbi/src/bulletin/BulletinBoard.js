@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Alert } from 'react-native';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import styles from '../../styles';
@@ -16,9 +15,11 @@ import EmptyBulletinBoardBulletin from './EmptyBulletinBoardBulletin';
 import AddPhoneBulleting from './AddPhoneBulletin';
 
 import SpinnerOverlay from '../components/SpinnerOverlay';
+import FlatButton from '../components/buttons/FlatButton';
 
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
-import { followUser, updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
+import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
+import { updateBulletin, loadListingData } from '../firebase/FirebaseConnector';
 
 import { reportButtonPress } from '../SelbiAnalytics';
 
@@ -70,24 +71,16 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewFollowerBulletin
                     gotIt={() => {
-                      reportButtonPress('bulletin_acknowledge_follow');
+                      reportButtonPress('bulletin_follow_got_it');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
-                    followUser={(uid) => {
+                    onPress={() => {
                       reportButtonPress('bulletin_follow_back');
-                      this.startTakingAction(
-                        `Following ${bulletin.payload.newFollowerPublicData.displayName}...`,
-                        () => followUser(uid)
-                          .then(() => {
-                            updateBulletin(bulletinKey, {
-                              status: 'read',
-                              payload: {
-                                ...bulletin.payload,
-                                reciprocated: true,
-                              },
-                            });
-                          })
-                      );
+                      this.props.setSellerProfileInfo(
+                        bulletin.payload.newFollowerUid,
+                        bulletin.payload.newFollowerPublicData);
+                      this.props.goNext('sellerProfile');
+                      updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     newFollowerBulletin={bulletin}
                   />
@@ -101,6 +94,10 @@ class SignedInBulletinBoard extends Component {
                     openDetails={() => {
                       reportButtonPress('bulletin_friends_new_listing_details');
                       this.props.goNext('details');
+                      updateBulletin(bulletinKey, { status: 'read' });
+                    }}
+                    gotIt={() => {
+                      reportButtonPress('bulletin_ack_new_listing');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     bulletin={bulletin}
@@ -190,18 +187,8 @@ class SignedInBulletinBoard extends Component {
 
     return (
       <View>
-        <View
-          style={{
-            margin: 8,
-            shadowOffset:{
-              width: 2,
-              height: 2,
-            },
-            shadowColor: 'black',
-            shadowOpacity: 1.0,
-          }}
-        >
           <View style={styles.paddedContainer}>
+            <Text style={{ fontWeight: 'bold', color: colors.black }}>Notifications</Text>
             {getBulletins()}
             <SpinnerOverlay
               isVisible={this.state.takingAction}
@@ -209,7 +196,6 @@ class SignedInBulletinBoard extends Component {
               fillParent
             />
           </View>
-        </View>
       </View>
     );
   }
@@ -218,35 +204,24 @@ SignedInBulletinBoard.propTypes = {
   bulletins: React.PropTypes.object,
   goNext: React.PropTypes.func.isRequired,
   setListingDetailsForChat: React.PropTypes.func.isRequired,
+  setSellerProfileInfo: React.PropTypes.func.isRequired,
 };
 
 
 const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
-  const FlatButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-    })
-    .withBackgroundColor(colors.white)
-    .withOnPress(() => {
-      reportButtonPress('bulletin_sign_in');
-      goNext('signIn');
-    })
-    .build();
-
   return (
     <View>
       <View
         style={{
           margin: 8,
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
-          shadowColor: 'black',
-          shadowOpacity: 1.0,
         }}
       >
-        <FlatButton>
+        <FlatButton
+          onPress={() => {
+            reportButtonPress('bulletin_sign_in');
+            goNext('signIn');
+          }}
+        >
           <Text style={styles.menuText}>Sign in <Icon name="sign-in" size={20} /></Text>
         </FlatButton>
       </View>
@@ -285,6 +260,8 @@ const mapDispatchToProps = (dispatch) => {
           data: listingData,
         })
     ),
+    setSellerProfileInfo: (sellerId, sellerData) =>
+      dispatch(setSellerProfileInfo(sellerId, sellerData)),
   };
 };
 

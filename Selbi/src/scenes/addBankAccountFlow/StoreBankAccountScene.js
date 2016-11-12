@@ -1,12 +1,13 @@
 import React from 'react';
 import { ScrollView, View, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import RoutableScene from '../../nav/RoutableScene';
 import VisibilityWrapper from '../../components/VisibilityWrapper';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import FlatButton from '../../components/buttons/FlatButton';
+
 import { stripeServiceAgreementScene } from '../legal';
 
 import { createBankToken } from '../../stripe/StripeConnector';
@@ -18,14 +19,6 @@ import { setNewListingId, setNewListingLocation, setNewListingStatus, clearNewLi
 import { reportAddBankInfo, reportError } from '../../SelbiAnalytics';
 
 import styles from '../../../styles';
-import colors from '../../../colors';
-
-const Button = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
 
 const PublishStatus = {
   notStarted: 'not started',
@@ -87,7 +80,7 @@ class ChooseVisibilityScene extends RoutableScene {
         reportAddBankInfo();
         console.log(result);
         Alert.alert('Successfully added the bank account!');
-        this.goHome();
+        this.goReturn();
       })
       .catch((error) => {
         this.setState({ publishStatus: PublishStatus.failure });
@@ -156,9 +149,9 @@ class ChooseVisibilityScene extends RoutableScene {
 
           <View style={styles.padded} />
 
-          <Button onPress={this.createAccount}>
-            <Text style={styles.padded}><Icon name="university" /> Submit</Text>
-          </Button>
+          <FlatButton onPress={this.createAccount}>
+            <Text><Icon name="university" /> Submit</Text>
+          </FlatButton>
 
           <View style={styles.halfPadded} />
 

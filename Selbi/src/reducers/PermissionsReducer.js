@@ -8,6 +8,7 @@ const undeterminedPerms = {
   location: 'undetermined',
   photo: 'undetermined',
   camera: 'undetermined',
+  notification: 'undetermined',
 };
 
 export default function (priorState = undeterminedPerms, action) {

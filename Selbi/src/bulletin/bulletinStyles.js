@@ -1,13 +1,17 @@
 import { StyleSheet } from 'react-native';
 import colors from '../../colors';
 
-export const notificationDescriptionFontSize = 18;
+export const notificationDescriptionFontSize = 14;
 
 export default StyleSheet.create({
-  bulletinText: {
-    fontSize: notificationDescriptionFontSize,
-  },
   actionButtonText: {
-    fontSize: notificationDescriptionFontSize + 2,
+    color: colors.black,
+    fontSize: notificationDescriptionFontSize,
+    fontWeight: '300',
+  },
+  dismissButtonText: {
+    color: colors.black,
+    fontSize: notificationDescriptionFontSize - 4,
+    fontWeight: '300',
   },
 });

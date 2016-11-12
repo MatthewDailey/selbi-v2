@@ -1,9 +1,10 @@
 import React from 'react';
 import { InteractionManager, View, Text, Alert, TextInput } from 'react-native';
-import { AutoGrowingTextInput } from 'react-native-autogrow-textinput';
 
 import { isStringFloat, isStringInt } from '../utils';
 import styles, { paddingSize } from '../../styles';
+import colors from '../../colors';
+
 import RoutableScene from '../nav/RoutableScene';
 
 export default class InputScene extends RoutableScene {
@@ -48,6 +49,10 @@ export default class InputScene extends RoutableScene {
     this.props.recordInput(this.parseInputValue(newText));
   }
 
+  onGoNext() {
+    this.props.recordInput(this.props.inputValue);
+  }
+
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ renderPlaceholderOnly: false });
@@ -79,13 +84,14 @@ export default class InputScene extends RoutableScene {
             <InputTitle />
           </View>
           <View style={{ paddingLeft: paddingSize, paddingRight: paddingSize }}>
-            <AutoGrowingTextInput
+            <TextInput
               autoFocus
-              multiline
               floatingLabelEnabled={this.props.floatingLabel}
               placeholder={this.props.placeholder}
               style={{
-                fontSize: 30,
+                color: colors.black,
+                fontSize: 25,
+                height: 40,
               }}
               value={this.props.inputValue}
               onChangeText={this.onInputTextChange}

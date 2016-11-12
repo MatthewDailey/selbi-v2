@@ -38,6 +38,7 @@ export default Object.assign(
     black: '#000000',
     greyedOut: '#dddddd',
     transparent: '#00000000',
+    buttonHighlight: `${paletteFour.primary}64`,
   }
 );
 

@@ -5,17 +5,20 @@ import { Image } from 'react-native';
 import RoutableScene from '../../nav/RoutableScene';
 import { setNewListingImageDimensions } from '../../reducers/NewListingReducer';
 
-import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
-
 import styles from '../../../styles';
 
 class ApproveImageScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <Image
+        onLoadEnd={this.setImageSize}
         onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          this.props.setNewListingImageDimensions(height, width);
+          Image.getSize(this.props.imageUri,
+            this.props.setNewListingImageDimensions,
+            () => {
+              const { width, height } = event.nativeEvent.layout;
+              this.props.setNewListingImageDimensions(width, height);
+            });
         }}
         style={styles.container}
         source={{ uri: this.props.imageUri }}
@@ -25,7 +28,6 @@ class ApproveImageScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.newListing);
   return {
     imageUri: state.newListing.imageUri,
   };
@@ -33,7 +35,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setNewListingImageDimensions: (height, width) => {
+    setNewListingImageDimensions: (width, height) => {
       dispatch(setNewListingImageDimensions(height, width));
     },
   };

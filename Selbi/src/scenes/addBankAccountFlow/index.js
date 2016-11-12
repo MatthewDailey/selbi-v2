@@ -15,7 +15,7 @@ import AddEmailScene from './AddBankEmailScene';
 const titleString = 'Add Bank';
 
 const legalNameInput = {
-  id: 'input_bank_legal_name_scene',
+  id: 'i_bank_legal_name_s',
   renderContent: withNavigatorProps(
     <LegalNameInputScene
       title={`${titleString} (1/6)`}
@@ -25,7 +25,7 @@ const legalNameInput = {
 };
 
 const dobPicker = {
-  id: 'input_bank_dob_scene',
+  id: 'i_bank_dob_s',
   renderContent: withNavigatorProps(
     <DateOfBirthPickerScene
       title={`${titleString} (2/6)`}
@@ -37,7 +37,7 @@ const dobPicker = {
 
 
 const addressAutocompleteScene = {
-  id: 'input_bank_address_scene',
+  id: 'i_bank_address_s',
   renderContent: withNavigatorProps(
     <AddressAutocompleteScene
       title={`${titleString} (3/6)`}
@@ -47,7 +47,7 @@ const addressAutocompleteScene = {
 };
 
 const addressVerifyScene = {
-  id: 'input_address_verify_scene',
+  id: 'i_bank_address_verify_s',
   renderContent: withNavigatorProps(
     <AddressVerifyScene
       title=""
@@ -58,7 +58,7 @@ const addressVerifyScene = {
 };
 
 const routingNumberInput = {
-  id: 'input_bank_routing_number_scene',
+  id: 'i_bank_routing_number_s',
   renderContent: withNavigatorProps(
     <RoutingNumberInputScene
       title={`${titleString} (4/6)`}
@@ -69,7 +69,7 @@ const routingNumberInput = {
 };
 
 const accountNumberInput = {
-  id: 'input_bank_account_number_scene',
+  id: 'i_bank_account_number_s',
   renderContent: withNavigatorProps(
     <AccountNumberInputScene
       title={`${titleString} (5/6)`}
@@ -80,7 +80,7 @@ const accountNumberInput = {
 };
 
 const ssnInput = {
-  id: 'input_bank_ssn_scene',
+  id: 'i_bank_ssn_s',
   renderContent: withNavigatorProps(
     <SsnInputScene
       title={`${titleString} (6/6)`}
@@ -91,7 +91,7 @@ const ssnInput = {
 };
 
 const emailInput = {
-  id: 'input_bank_email_scene',
+  id: 'i_bank_email_s',
   renderContent: withNavigatorProps(
     <AddEmailScene
       title="Check Email"
@@ -102,7 +102,7 @@ const emailInput = {
 };
 
 const storeAccountScene = {
-  id: 'bank_submit_scene',
+  id: 'bank_submit_s',
   renderContent: withNavigatorProps(
     <StoreBankAccountScene
       title="Review Account Details"
@@ -166,6 +166,12 @@ routeLinks[ssnInput.id] = {
   next: {
     title: 'OK',
     getRoute: () => storeAccountScene,
+  },
+};
+
+routeLinks[storeAccountScene.id] = {
+  return: {
+    numScenes: 9,
   },
 };
 

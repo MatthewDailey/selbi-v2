@@ -1,27 +1,45 @@
-import ImageReader from '@selbi/react-native-image-reader';
-import { publishImage, createListing, changeListingStatus, updateListing, loadListingData }
-  from './FirebaseConnector';
+import RNFetchBlob from 'react-native-fetch-blob';
+import ImageResizer from 'react-native-image-resizer';
+
+import { createListing, changeListingStatus, updateListing, loadListingData,
+  uploadFile } from './FirebaseConnector';
+
+const Blob = RNFetchBlob.polyfill.Blob;
 
 export default undefined;
+
+function writeImageUriToFirebase(rnfbURI) {
+  // create Blob from file path
+  return Blob
+    .build(RNFetchBlob.wrap(rnfbURI), { type: 'image/jpg;' })
+    .then((blob) => uploadFile(blob));
+}
 
 export function createNewListingFromStore(newListingData) {
   if (!newListingData.imageUri) {
     return Promise.reject('Error loading image.');
   }
 
-  return ImageReader
-    .readImage(newListingData.imageUri)
-    .then((imageBase64) => publishImage(
-      imageBase64[0],
-      newListingData.imageHeight,
-      newListingData.imageWidth))
-    .then((imageKey) => createListing(
+  return writeImageUriToFirebase(newListingData.imageUri)
+    .then((imageUrl) => ImageResizer.createResizedImage(
+        newListingData.imageUri,
+          newListingData.imageWidth / 4,
+          newListingData.imageHeight / 4,
+        'JPEG',
+        10)
+        .then(writeImageUriToFirebase)
+        .then((thumbnailUrl) => Promise.resolve({
+          thumbnailUrl,
+          imageUrl,
+        })))
+    .then(({ thumbnailUrl, imageUrl }) => createListing(
       newListingData.title,
       '', // description
       newListingData.price,
       {
         image1: {
-          imageId: imageKey,
+          url: imageUrl,
+          thumbnailUrl,
           width: newListingData.imageWidth,
           height: newListingData.imageHeight,
         },
@@ -62,20 +80,15 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   let updateImagePromise = Promise.resolve();
 
   if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
-    updateImagePromise = ImageReader
-      .readImage(newListingData.imageUri)
-      .then((imageBase64) => publishImage(
-        imageBase64[0],
-        newListingData.imageHeight,
-        newListingData.imageWidth))
-      .then((imageKey) => updateListing(
+    updateImagePromise = writeImageUriToFirebase(newListingData.imageUri)
+      .then((imageUri) => updateListing(
         listingId,
         newListingData.title,
         newListingData.description,
         newListingData.price,
         {
           image1: {
-            imageId: imageKey,
+            url: imageUri,
             width: newListingData.imageWidth,
             height: newListingData.imageHeight,
           },

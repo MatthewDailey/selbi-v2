@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
-import ExpandingText from '../components/ExpandingText';
+import EmojiAlignedText from '../components/EmojiAlignedText';
 
 import { setListingKey } from '../reducers/ListingDetailReducer';
 
@@ -15,11 +15,10 @@ function NewFollowerBulletin({ bulletin, openDetails, setDetailSceneListingKey }
 
   return (
     <View>
-      <ExpandingText style={bulletinStyles.bulletinText}>
-        🎁 {sellerDisplayName} posted a new listing!
-      </ExpandingText>
       <BulletinActionButton
-        text="Check it out"
+        emoji="🎁"
+        text={`${sellerDisplayName} posted a new listing!`}
+        onDismiss={() => {console.log('pressed dismiss')}}
         onPress={() => {
           setDetailSceneListingKey(bulletin.payload.listingId);
           openDetails();

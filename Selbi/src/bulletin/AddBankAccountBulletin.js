@@ -3,18 +3,16 @@ import React from 'react';
 import { View } from 'react-native';
 
 import BulletinActionButton from './BulletinActionButton';
-import ExpandingText from '../components/ExpandingText';
+import EmojiAlignedText from '../components/EmojiAlignedText';
 
 import bulletinStyles from './bulletinStyles';
 
 export default function AddBankAccountBulletin({ addBankAccount }) {
   return (
     <View>
-      <ExpandingText style={bulletinStyles.bulletinText}>
-        💰 Get paid fast by setting up a way to receive payments.
-      </ExpandingText>
       <BulletinActionButton
-        text="Connect bank account"
+        emoji="💰"
+        text="Connect a bank account"
         onPress={addBankAccount}
       />
     </View>

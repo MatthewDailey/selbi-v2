@@ -6,7 +6,7 @@ import EnterPhoneCodeScene from './EnterPhoneCodeScene';
 import AddFriendsFromContactsScene from './AddFriendsFromContactsScene';
 
 const phoneNumberScene = {
-  id: 'input_phone_number_scene',
+  id: 'i_phone_number_s',
   renderContent: withNavigatorProps(
     <EnterPhoneNumberScene
       title=""
@@ -17,7 +17,7 @@ const phoneNumberScene = {
 };
 
 const phoneCodeScene = {
-  id: 'input_phone_code_scene',
+  id: 'i_phone_code_s',
   renderContent: withNavigatorProps(
     <EnterPhoneCodeScene
       title=""
@@ -28,7 +28,7 @@ const phoneCodeScene = {
 };
 
 const addFriendsScene = {
-  id: 'phone_add_friends_scene',
+  id: 'phone_add_friends_s',
   renderContent: withNavigatorProps(
     <AddFriendsFromContactsScene
       title=""

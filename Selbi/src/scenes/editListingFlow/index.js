@@ -14,7 +14,7 @@ const editListingScene = {
 };
 
 const cameraScene = {
-  id: 'edit_listing_camera_scene',
+  id: 'edit_camera_s',
   renderContent: withNavigatorProps(
     <SimpleCamera
       title="New Picture"
@@ -24,7 +24,7 @@ const cameraScene = {
 };
 
 const imageScene = {
-  id: 'edit_listing_image_approve_scene',
+  id: 'edit_image_approve_s',
   renderContent: withNavigatorProps(
     <ApproveImageScene
       title=""

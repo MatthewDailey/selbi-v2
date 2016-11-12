@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text } from 'react-native';
 
-import { MKSpinner } from 'react-native-material-kit';
+import { View, Text } from 'react-native';
+import { MKButton } from 'react-native-material-kit';
+
+import styles from '../../../styles';
 
 import RoutableScene from '../../nav/RoutableScene';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
@@ -14,49 +16,65 @@ import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-import styles from '../../../styles';
-import colors from '../../../colors';
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-function EmptyView() {
+
+
+function EmptyView({ openSell }) {
+  const EmptySellButton = MKButton.flatButton()
+    .withStyle({
+      borderRadius: 5,
+      borderWidth: 1,
+    })
+    .withOnPress(() => {
+      this.props.refresh();
+    })
+    .build();
+
   return (
-    <View style={styles.paddedCenterContainerClear}>
-      <Text style={styles.friendlyText}>Searching for listings near you...</Text>
-      <MKSpinner strokeColor={colors.primary} />
+    <View>
+
+      <Text style={styles.friendlyText}>No listings near you.</Text>
+      <Text>Be the first to sell in your area!</Text>
+      <View style={styles.halfPadded} />
+      <EmptySellButton
+        onPress={() => {
+          reportButtonPress('local_listing_open_details');
+          openSell();
+        }}
+      >
+        <Text>Sell something</Text>
+      </EmptySellButton>
+      <View style={styles.padded} />
     </View>
   );
 }
+
+EmptyView.propTypes = {
+  openSell: React.PropTypes.func.isRequired,
+};
 
 class ListingsScene extends RoutableScene {
   onGoNext() {
     this.props.clearNewListingData();
   }
 
-  getLocalListingsView() {
+  renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
       return <OpenSettingsComponent missingPermission="location" />;
     }
-
-    this.props.startWatchingLocalListings();
-
     return (
       <ListingsListComponent
+        header={<BulletinBoard goNext={this.goNext} />}
+        refresh={this.props.fetchLocalListings}
         listings={this.props.listings}
-        emptyView={EmptyView}
+        emptyMessage="Be the first to post a listing in your area!"
+        emptyView={() => <EmptyView openSell={this.goNext} />}
         openDetailScene={() => {
           reportButtonPress('local_listing_open_details');
           this.goNext('details');
         }}
       />
-    );
-  }
-
-  renderWithNavBar() {
-    return (
-      <ScrollView>
-        <BulletinBoard goNext={this.goNext} />
-        {this.getLocalListingsView()}
-      </ScrollView>
     );
   }
 }

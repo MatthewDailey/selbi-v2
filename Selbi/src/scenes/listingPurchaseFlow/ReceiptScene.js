@@ -13,22 +13,18 @@ import { storeImage } from '../../reducers/ImagesReducer';
 
 import LoadingListingComponent from '../../components/LoadingListingComponent';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import VisibilityWrapper from '../../components/VisibilityWrapper';
 
 import styles from '../../../styles';
 import colors from '../../../colors';
+import { toDollarString } from '../../utils';
 import { reportPurchase, reportButtonPress } from '../../SelbiAnalytics';
 
 
-const FlatButton = MKButton.flatButton()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
-
-const Button = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
+    borderWidth: 1,
   })
   .withBackgroundColor(colors.white)
   .build();
@@ -49,13 +45,12 @@ function CheckBox({ checked, title, takeAction, actionText }) {
       <Text style={styles.friendlyTextLeft}>
         <EmptyCheck /> {title}
       </Text>
-      <View style={{ alignItems: 'flex-end' }}>
-        <FlatButton onPress={takeAction}>
-          <Text style={{ fontSize: 16 }}>
-            {actionText} <Icon name="arrow-right" />
-          </Text>
-        </FlatButton>
-      </View>
+      <View style={styles.halfPadded} />
+      <Button onPress={takeAction}>
+        <Text>
+          {actionText}
+        </Text>
+      </Button>
     </View>
   );
 }
@@ -92,8 +87,10 @@ class ListingReceiptScene extends RoutableScene {
   }
 
   renderWithNavBar() {
-    if (this.state.renderPlaceholderOnly || !this.props.imageData || !this.props.sellerData) {
-      if (!this.props.imageData) {
+    if (this.state.renderPlaceholderOnly
+      || (!this.props.imageUrl && !this.props.imageData)
+      || !this.props.sellerData) {
+      if (!this.props.imageUrl && !this.props.imageData) {
         loadImage(this.props.imageKey).then((imageSnapshot) =>
           this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
       }
@@ -105,78 +102,91 @@ class ListingReceiptScene extends RoutableScene {
       return <LoadingListingComponent />;
     }
 
+    let imageUri = this.props.imageUrl;
+    if (this.props.imageData) {
+      imageUri = `data:image/png;base64,${this.props.imageData.base64}`;
+    }
+
     // TODO ScrollView Could be in a better place.
     return (
       <View style={styles.container}>
-        <Image
-          source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
-          style={{ flex: 1, backgroundColor: colors.dark }}
-        />
-        <ScrollView style={{ flex: 2, padding: 16 }}>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
-            <Text>{this.props.sellerData.displayName}</Text>
-          </View>
-          <View style={styles.halfPadded}>
-            <Text style={styles.friendlyTextLeftMed}>{`$${this.props.listingData.price}`}</Text>
-          </View>
+        <ScrollView>
+          <Image
+            source={{ uri: imageUri }}
+            style={{ flex: 1, backgroundColor: colors.dark }}
+          />
+          <View style={{ flex: 1, padding: 16 }}>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
+              <Text>{this.props.sellerData.displayName}</Text>
+            </View>
+            <View style={styles.halfPadded}>
+              <Text style={styles.friendlyTextLeftMed}>
+                {toDollarString(this.props.listingData.price)}
+              </Text>
+            </View>
 
-          <View style={styles.halfPadded} />
+            <View style={styles.halfPadded} />
 
-          <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.sellerData.hasBankAccount}
-              title="Seller accepts Pay with Selbi"
-              takeAction={() => {
-                reportButtonPress('request_seller_accept_payment');
-                this.goNext('chat');
-              }}
-              actionText="Request seller accept Pay with Selbi"
-            />
-          </View>
-          <View style={styles.halfPadded}>
-            <CheckBox
-              checked={this.props.hasPaymentMethod}
-              title="Payment method set up"
-              takeAction={() => {
-                reportButtonPress('add_payment');
-                this.goNext('addPayment');
-              }}
-              actionText="Add a credit card"
-            />
-          </View>
+            <View style={styles.halfPadded}>
+              <CheckBox
+                checked={this.props.sellerData.hasBankAccount}
+                title="Seller accepts payment"
+                takeAction={() => {
+                  reportButtonPress('request_seller_accept_payment');
+                  this.goNext('chat');
+                }}
+                actionText="Ask seller to accept payments"
+              />
+            </View>
+            <View style={styles.halfPadded}>
+              <CheckBox
+                checked={this.props.hasPaymentMethod}
+                title="Payment method set up"
+                takeAction={() => {
+                  reportButtonPress('add_payment');
+                  this.goNext('addPayment');
+                }}
+                actionText="Add a credit card"
+              />
+            </View>
 
-          <View style={styles.halfPadded} />
+            <View style={styles.halfPadded} />
 
-          <View style={styles.halfPadded}>
-            <Button
-              onPress={() => {
-                const doPayment = () => this.setState({ purchasing: true }, () => {
-                  reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
-                  purchaseListing(this.props.listingKey)
-                    .then(() => {
-                      reportPurchase(this.props.listingData.price, this.props.listingKey);
-                      this.setState({ purchasing: false });
-                      this.goNext();
-                    })
-                    .catch((error) => {
-                      Alert.alert(error);
-                      console.log(error);
-                      this.setState({ purchasing: false });
-                    });
-                });
-
-                Alert.alert(
-                  'Confirm Purchase',
-                  `Your credit card will be charged $${this.props.listingData.price}`,
-                  [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
-              }}
+            <VisibilityWrapper
+              isVisible={this.props.hasPaymentMethod && this.props.sellerData.hasBankAccount}
+              style={styles.halfPadded}
             >
-              <Text>Pay with Selbi</Text>
-            </Button>
-          </View>
+              <Button
+                onPress={() => {
+                  const doPayment = () => this.setState({ purchasing: true }, () => {
+                    reportButtonPress('pay_with_selbi', { listing_id: this.props.listingKey });
+                    purchaseListing(this.props.listingKey)
+                      .then(() => {
+                        reportPurchase(this.props.listingData.price, this.props.listingKey);
+                        this.setState({ purchasing: false });
+                        this.goNext();
+                      })
+                      .catch((error) => {
+                        Alert.alert(error);
+                        console.log(error);
+                        this.setState({ purchasing: false });
+                      });
+                  });
 
-          <View style={styles.padded} />
+                  Alert.alert(
+                    'Confirm Purchase',
+                    'Your credit card will be charged '
+                      + `${toDollarString(this.props.listingData.price)}`,
+                    [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
+                }}
+              >
+                <Text>Submit Payment</Text>
+              </Button>
+            </VisibilityWrapper>
+
+            <View style={styles.padded} />
+          </View>
         </ScrollView>
         <SpinnerOverlay isVisible={this.state.purchasing} message="Completing payment..." />
       </View>
@@ -187,12 +197,14 @@ class ListingReceiptScene extends RoutableScene {
 
 const mapStateToProps = (state) => {
   const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
+  const imageUrl = state.listingDetails.listingData.images.image1.url;
   return {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
     listingDistance: state.listingDetails.listingDistance,
     sellerData: state.listingDetails.sellerData,
     imageKey: imageStoreKey,
+    imageUrl,
     imageData: state.images[imageStoreKey],
     buyerUid: state.listingDetails.buyerUid,
     hasPaymentMethod: state.user.hasPayment,

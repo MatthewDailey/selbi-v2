@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 
-import InputScene from './InputScene';
-import SpinnerOverlay from '../components/SpinnerOverlay';
+import InputScene from '../InputScene';
+import SpinnerOverlay from '../../components/SpinnerOverlay';
 
-import { setPossibleFriendUsername } from '../reducers/FollowFriendReducer';
-import { addFriendByUsername } from '../firebase/FirebaseConnector';
+import { setPossibleFriendUsername } from '../../reducers/FollowFriendReducer';
+import { addFriendByUsername } from '../../firebase/FirebaseConnector';
 
-import styles from '../../styles';
+import styles from '../../../styles';
 
 class FollowFriendScene extends InputScene {
   constructor(props) {

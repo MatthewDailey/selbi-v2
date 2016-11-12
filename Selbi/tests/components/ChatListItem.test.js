@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 
 import ChatListItem from '../../src/components/ChatListItem';
 
-describe('ChatListItem', () => {
+describe('<ChatListItem />', () => {
   let consoleErrorOutputStub;
   beforeEach(() => {
     // Proptype will log error on failure.
@@ -16,7 +16,12 @@ describe('ChatListItem', () => {
   });
 
   it('can shallow render', () => {
-    shallow(<ChatListItem chatTitle={'test title'} chatType={'buying'} openChatScene={() => {}} />);
+    shallow(<ChatListItem
+      chatTitle={'test title'}
+      chatType={'buying'}
+      openChatScene={() => {}}
+      otherPersonDisplayName="Courtney"
+    />);
     expect(consoleErrorOutputStub.called, 'PropTypes error was logged, see logs for failure')
       .to.be.false();
   });
