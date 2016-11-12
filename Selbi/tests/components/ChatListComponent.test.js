@@ -6,14 +6,16 @@ import ChatListComponent from '../../src/components/ChatListComponent';
 
 const testChats = [
   {
-    listingData: { title: 'Coasters' },
+    listingData: { title: 'Coasters', images: { image1: { url: 'url' } } },
+    otherPersonPublicData: { displayName: 'Courtney' },
     listingKey: '-KQfYCq4TWSaR_EvGO9n',
     sellerUid: '2xcY7hZKe6O6QHWlsRJsZmdZAZn1',
     buyerUid: 'AFDjatxUmhUrtP7qKZ8ozHqr2NE3',
     type: 'selling',
   },
   {
-    listingData: { title: 'Courts glasses' },
+    listingData: { title: 'Courts glasses', images: { image1: { url: 'url' } } },
+    otherPersonPublicData: { displayName: 'Courtney' },
     listingKey: '-KQfYYZF7IsKCQGiQO69',
     sellerUid: '2xcY7hZKe6O6QHWlsRJsZmdZAZn1',
     buyerUid: 'AFDjatxUmhUrtP7qKZ8ozHqr2NE3',
