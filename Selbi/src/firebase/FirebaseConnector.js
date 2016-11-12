@@ -676,10 +676,7 @@ export function loadAllUserChats() {
     .child(getUser().uid)
     .once('value')
     .then(loadChatDetailsFromUserChats)
-    .then((allChats) => {
-      console.log('ALL CHATS:::::', allChats)
-      return allChats.filter(Boolean)
-    });
+    .then((allChats) => allChats.filter(Boolean));
 }
 
 export function watchUserData(handler) {

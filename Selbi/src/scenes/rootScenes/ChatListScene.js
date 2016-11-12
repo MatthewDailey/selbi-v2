@@ -44,7 +44,7 @@ class ChatListScene extends RoutableScene {
           allChats: allUserChats,
           buyingChats: loadedBuyingChats,
           sellingChats: loadedSellingChats,
-        }, () => console.log(this.state));
+        });
       })
       .catch(console.log);
   }
