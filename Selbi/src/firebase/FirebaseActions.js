@@ -23,10 +23,10 @@ export function createNewListingFromStore(newListingData) {
   return writeImageUriToFirebase(newListingData.imageUri)
     .then((imageUrl) => ImageResizer.createResizedImage(
         newListingData.imageUri,
-          newListingData.imageWidth / 2,
-          newListingData.imageHeight / 2,
+          newListingData.imageWidth / 4,
+          newListingData.imageHeight / 4,
         'JPEG',
-        50)
+        10)
         .then(writeImageUriToFirebase)
         .then((thumbnailUrl) => Promise.resolve({
           thumbnailUrl,
