@@ -11,9 +11,14 @@ class ApproveImageScene extends RoutableScene {
   renderWithNavBar() {
     return (
       <Image
+        onLoadEnd={this.setImageSize}
         onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          this.props.setNewListingImageDimensions(height, width);
+          Image.getSize(this.props.imageUri,
+            this.props.setNewListingImageDimensions,
+            () => {
+              const { width, height } = event.nativeEvent.layout;
+              this.props.setNewListingImageDimensions(width, height);
+            });
         }}
         style={styles.container}
         source={{ uri: this.props.imageUri }}
@@ -30,7 +35,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setNewListingImageDimensions: (height, width) => {
+    setNewListingImageDimensions: (width, height) => {
       dispatch(setNewListingImageDimensions(height, width));
     },
   };
