@@ -4,11 +4,7 @@ import ImageResizer from 'react-native-image-resizer';
 import { createListing, changeListingStatus, updateListing, loadListingData,
   uploadFile } from './FirebaseConnector';
 
-const fs = RNFetchBlob.fs;
 const Blob = RNFetchBlob.polyfill.Blob;
-
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
-window.Blob = Blob;
 
 export default undefined;
 
@@ -27,10 +23,10 @@ export function createNewListingFromStore(newListingData) {
   return writeImageUriToFirebase(newListingData.imageUri)
     .then((imageUrl) => ImageResizer.createResizedImage(
         newListingData.imageUri,
-          newListingData.imageWidth / 2,
-          newListingData.imageHeight / 2,
+          newListingData.imageWidth / 4,
+          newListingData.imageHeight / 4,
         'JPEG',
-        70)
+        10)
         .then(writeImageUriToFirebase)
         .then((thumbnailUrl) => Promise.resolve({
           thumbnailUrl,

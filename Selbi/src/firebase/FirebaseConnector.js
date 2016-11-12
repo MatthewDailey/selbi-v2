@@ -4,7 +4,6 @@ import FCM from 'react-native-fcm';
 import RNRestart from 'react-native-restart';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
-
 import { convertToUsername } from './FirebaseUtils';
 import config from '../../config';
 
@@ -69,11 +68,9 @@ export function setUserFcmToken(fcmToken) {
 export function uploadFile(blob) {
   return requireSignedIn()
     .then(() => firebase.storage()
-      .ref(`images/${getUser().uid}/${new Date().getTime()}`)
-      .put(blob, { contentType: 'image/jpg' })
-      .then((snapshot) => {
-        return Promise.resolve(snapshot.downloadURL);
-      }));
+        .ref(`images/${getUser().uid}/${new Date().getTime()}`)
+        .put(blob, { contentType: 'image/jpg' })
+        .then((snapshot) => Promise.resolve(snapshot.downloadURL)));
 }
 
 /*

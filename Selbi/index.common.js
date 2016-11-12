@@ -6,6 +6,8 @@ import { setTheme } from 'react-native-material-kit';
 import codePush from 'react-native-code-push';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import RNFetchBlob from 'react-native-fetch-blob';
+
 import SignInOrRegisterScene from './src/scenes/SignInOrRegisterScene';
 
 import Menu from './src/nav/Menu';
@@ -78,6 +80,10 @@ import Analytics, { setUserAddedBank, setUserAddedCreditCard, setUserAddedPhone,
 
 // Necessary for code-push to not error out.
 const RCTLog = require('RCTLog');
+
+// Initialize RNFetchBlob polyfills at beginning.
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest;
+window.Blob = RNFetchBlob.polyfill.Blob;
 
 // Used to set camera shutter button color.
 setTheme({
