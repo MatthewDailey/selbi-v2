@@ -21,7 +21,7 @@ import { registerWithEmail, signInWithEmail, getUser, createUser }
 
 
 const sellerProfileScene = {
-  id: 'seller_profile_scene',
+  id: 'seller_profile_s',
   renderContent: withNavigatorProps(
     <SellerProfileScene
       leftIs="back"
@@ -29,22 +29,22 @@ const sellerProfileScene = {
 };
 
 const chatFromDetailScene = {
-  id: 'seller_profile_details_chat_scene',
+  id: 'sp_details_chat_s',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const chatFromReceiptScene = {
-  id: 'seller_profile_receipt_chat_scene',
+  id: 'sp_receipt_chat_s',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const listingDetailScene = {
-  id: 'seller_profile_detail_scene',
+  id: 'sp_detail_s',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
 };
 
 const addEmailScene = {
-  id: 'seller_profile_input_credit_card_email_scene',
+  id: 'i_sp_cc_email_s',
   renderContent: withNavigatorProps(
     <AddEmailScene
       leftIs="back"
@@ -54,7 +54,7 @@ const addEmailScene = {
 };
 
 const receiptScene = {
-  id: 'seller_profile_receipt_scene',
+  id: 'sp_receipt_s',
   renderContent: withNavigatorProps(
     <ReceiptScene
       title="Confirm Purchase"
@@ -78,7 +78,7 @@ const PurchaseFlowSignIn = connect(
 
 
 const chatSignInScene = {
-  id: 'seller_profile_signin_to_chat_scene',
+  id: 'sp_signin_chat_s',
   renderContent: withNavigatorProps(
     <PurchaseFlowSignIn
       title="Sign in to chat."
@@ -91,7 +91,7 @@ const chatSignInScene = {
 };
 
 const buySignInScene = {
-  id: 'seller_profile_signin_to_buy_scene',
+  id: 'sp_signin_buy_s',
   renderContent: withNavigatorProps(
     <PurchaseFlowSignIn
       title="Sign in to pay."
@@ -104,7 +104,7 @@ const buySignInScene = {
 };
 
 const creditCardInputScene = {
-  id: 'seller_profile_input_credit_card_scene',
+  id: 'i_sp_cc_s',
   renderContent: withNavigatorProps(
     <CreditCardInputScene
       title="Add Credit Card (2/2)"
@@ -113,7 +113,7 @@ const creditCardInputScene = {
 };
 
 const completedPurchaseScene = {
-  id: 'seller_profile_completed_purchase_scene',
+  id: 'sp_completed_purchase_s',
   renderContent: withNavigatorProps(
     <CompletedPurchaseScene
       title="Purchase Complete"
@@ -183,7 +183,6 @@ routeLinks[listingDetailScene.id] = {
   },
   buy: {
     getRoute: () => {
-      console.log('called get route for buy')
       if (getUser()) {
         return receiptScene;
       }

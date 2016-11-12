@@ -5,7 +5,7 @@ import FeedbackScene from './FeedbackScene';
 import CompletedFeedbackScene from './CompletedFeedbackScene';
 
 const feedbackScene = {
-  id: 'feedback_scene',
+  id: 'feedback_s',
   renderContent: withNavigatorProps(
     <FeedbackScene
       title="Feedback"
@@ -15,7 +15,7 @@ const feedbackScene = {
 };
 
 const completedFeedbackScene = {
-  id: 'completed_feedback_scene',
+  id: 'completed_feedback_s',
   renderContent: withNavigatorProps(
     <CompletedFeedbackScene
       rightIs="home"

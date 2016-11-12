@@ -6,7 +6,7 @@ import CreditCardInputScene from './CreditCardInputScene';
 import AddCreditCardEmailScene from './AddCreditCardEmailScene';
 
 const creditCardInputScene = {
-  id: 'settings_input_credit_card_scene',
+  id: 'i_settings_cc_s',
   renderContent: withNavigatorProps(
     <CreditCardInputScene
       title="Add Credit Card (2/2)"
@@ -15,7 +15,7 @@ const creditCardInputScene = {
 };
 
 const addEmailScene = {
-  id: 'settings_input_credit_card_email_scene',
+  id: 'i_settings_cc_email_s',
   renderContent: withNavigatorProps(
     <AddCreditCardEmailScene
       leftIs="back"

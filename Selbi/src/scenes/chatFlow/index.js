@@ -7,7 +7,7 @@ import ListingPurchaseFlow from '../listingPurchaseFlow';
 import ChatScene from '../ChatScene';
 
 const chatScene = {
-  id: 'chat_scene',
+  id: 'chat_s',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
