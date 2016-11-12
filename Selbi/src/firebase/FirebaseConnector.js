@@ -454,6 +454,14 @@ function getListingKeyAndData(listingId) {
     });
 }
 
+export function loadUserPublicData(uid) {
+  return firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .once('value');
+}
+
 function loadChatDetailsFromUserChats(userChatsData) {
   const chatPromises = [];
 
@@ -471,10 +479,18 @@ function loadChatDetailsFromUserChats(userChatsData) {
               return Promise.resolve(undefined);
             }
 
-            return Promise.resolve(Object.assign(listingKeyAndData, {
-              buyerUid: getUser().uid,
-              type: 'buying',
-            }));
+            return loadUserPublicData(listingKeyAndData.listingData.sellerId)
+              .then((sellerPublicData) => {
+                if (!sellerPublicData.exists()) {
+                  return Promise.resolve(undefined);
+                }
+                return Promise.resolve(Object.assign(listingKeyAndData, {
+                  buyerUid: getUser().uid,
+                  type: 'buying',
+                  otherPersonUid: sellerPublicData.key,
+                  otherPersonPublicData: sellerPublicData.val(),
+                }));
+              });
           })
       ));
     }
@@ -487,11 +503,18 @@ function loadChatDetailsFromUserChats(userChatsData) {
               if (!listingKeyAndData) {
                 return Promise.resolve(undefined);
               }
-
-              return Promise.resolve(Object.assign(listingKeyAndData, {
-                buyerUid,
-                type: 'selling',
-              }));
+              return loadUserPublicData(buyerUid)
+                .then((buyerPublicData) => {
+                  if (!buyerPublicData.exists()){
+                    return Promise.resolve(undefined);
+                  }
+                  return Promise.resolve(Object.assign(listingKeyAndData, {
+                    buyerUid,
+                    type: 'selling',
+                    otherPersonUid: buyerUid,
+                    otherPersonPublicData: buyerPublicData.val(),
+                  }));
+                });
             })
           )
         );
@@ -652,15 +675,8 @@ export function loadAllUserChats() {
     .ref('chats')
     .child(getUser().uid)
     .once('value')
-    .then(loadChatDetailsFromUserChats);
-}
-
-export function loadUserPublicData(uid) {
-  return firebaseApp
-    .database()
-    .ref('userPublicData')
-    .child(uid)
-    .once('value');
+    .then(loadChatDetailsFromUserChats)
+    .then((allChats) => allChats.filter(Boolean));
 }
 
 export function watchUserData(handler) {
