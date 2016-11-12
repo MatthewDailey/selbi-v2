@@ -10,7 +10,7 @@ import { withNavigatorProps } from '../../nav/RoutableScene';
 import SettingsScene from './SettingsScene';
 
 const settingsScene = {
-  id: 'settings_scene',
+  id: 'settings_s',
   renderContent: withNavigatorProps(
     <SettingsScene
       title="Settings"
@@ -20,7 +20,7 @@ const settingsScene = {
 };
 
 const newEmailInputScene = {
-  id: 'new_email_input_scene',
+  id: 'i_settings_new_email_s',
   renderContent: withNavigatorProps(
     <NewEmailInputScene
       title="Update Email"

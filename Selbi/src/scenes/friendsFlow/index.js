@@ -9,7 +9,7 @@ import SellerProfileFlow from '../sellerProfileFlow';
 import AddFriendsFromContactsFlow from '../addFriendsFromContactsFlow';
 
 const friendsScene = {
-  id: 'friends_scene',
+  id: 'friends_s',
   renderContent: withNavigatorProps(
     <FriendsScene
       title="Friends"
@@ -18,7 +18,7 @@ const friendsScene = {
 };
 
 const followFriendScene = {
-  id: 'follow_friend_scene',
+  id: 'follow_friend_s',
   renderContent: withNavigatorProps(
     <FollowFriendScene
       title=""

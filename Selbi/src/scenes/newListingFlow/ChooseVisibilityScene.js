@@ -65,7 +65,7 @@ class ChooseVisibilityScene extends RoutableScene {
             onPress={
               () => {
                 reportButtonPress('choose_visibility_private');
-                this.setState({ publishing: true })
+                this.setState({ publishing: true });
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
                     this.props.setNewListingId(newListingId);

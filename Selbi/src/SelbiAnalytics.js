@@ -46,15 +46,18 @@ export function reportPurchase(price, listingId) {
 }
 
 export function reportEvent(title, params) {
+  if (title.length > 32) {
+    console.warn(`Cannot report event ${title} because it is more than 32 char.`);
+  }
   Analytics.logEvent(title, params);
 }
 
 export function reportOpenScene(sceneName, params) {
-  Analytics.logEvent(`open_${sceneName}`, params);
+  reportEvent(`o_${sceneName}`, params);
 }
 
 export function reportButtonPress(buttonName, params) {
-  Analytics.logEvent(`press_${buttonName}`, params);
+  reportEvent(`p_${buttonName}`, params);
 }
 
 export function setUserNumItemsSold(numItemsSold) {
