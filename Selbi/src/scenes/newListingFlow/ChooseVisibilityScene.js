@@ -19,7 +19,7 @@ import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
 
 import styles from '../../../styles';
 
-import { reportButtonPress } from '../../SelbiAnalytics';
+import { reportButtonPress, reportEvent } from '../../SelbiAnalytics';
 
 class ChooseVisibilityScene extends RoutableScene {
   constructor(props) {
@@ -51,6 +51,7 @@ class ChooseVisibilityScene extends RoutableScene {
   }
 
   handleSuccess() {
+    reportEvent('created_listing');
     this.setState({ publishing: false });
     this.goNext();
   }
@@ -72,6 +73,7 @@ class ChooseVisibilityScene extends RoutableScene {
                   .then(() => makeListingPrivate(this.props.newListing))
                   .then(() => {
                     this.props.setListingStatus('private');
+                    reportEvent('created_private_listing');
                   })
                   .then(this.handleSuccess)
                   .catch(this.handleError);
@@ -98,6 +100,7 @@ class ChooseVisibilityScene extends RoutableScene {
                   .then(() => makeListingPublic(this.props.newListing))
                   .then(() => {
                     this.props.setListingStatus('public');
+                    reportEvent('created_public_listing');
                   })
                   .then(this.handleSuccess)
                   .catch(this.handleError);
