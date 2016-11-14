@@ -103,7 +103,7 @@ class SellerProfileScene extends RoutableScene {
     };
 
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={[styles.padded, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <Text style={styles.friendlyTextLeft}>{this.props.sellerData.displayName}</Text>
           <View style={styles.halfPadded} />
