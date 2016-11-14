@@ -15,27 +15,28 @@ function writeImageUriToFirebase(rnfbURI) {
     .then((blob) => uploadFile(blob));
 }
 
-function uploadImageAndThumbnail(imageUri, imageWidth, imageHeight) {
+function uploadThumbnailAndImage(imageUri, imageWidth, imageHeight) {
   if (!imageUri) {
     return Promise.reject('Error loading image.');
   }
 
-  return writeImageUriToFirebase(imageUri)
-    .then((imageUrl) => ImageResizer.createResizedImage(
-      imageUri,
+  return ImageResizer.createResizedImage(
+    imageUri,
       imageWidth / 4,
       imageHeight / 4,
-      'JPEG',
-      10)
-      .then(writeImageUriToFirebase)
-      .then((thumbnailUrl) => Promise.resolve({
-        thumbnailUrl,
-        imageUrl,
-      })));
+    'JPEG',
+    30)
+    .then(writeImageUriToFirebase)
+    .then((thumbnailUrl) =>
+      writeImageUriToFirebase(imageUri)
+        .then((fullUrl) => Promise.resolve({
+          thumbnailUrl,
+          imageUrl: fullUrl,
+        })));
 }
 
 export function createNewListingFromStore(newListingData) {
-  return uploadImageAndThumbnail(
+  return uploadThumbnailAndImage(
       newListingData.imageUri,
       newListingData.imageWidth,
       newListingData.imageHeight)
@@ -87,7 +88,7 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   let updateImagePromise = Promise.resolve();
 
   if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
-    updateImagePromise = uploadImageAndThumbnail(
+    updateImagePromise = uploadThumbnailAndImage(
       newListingData.imageUri,
       newListingData.imageWidth,
       newListingData.imageHeight)

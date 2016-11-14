@@ -34,7 +34,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
   handleError(message) {
     this.setState({ publishing: false });
-    console.log(message);
+    console.error(JSON.stringify(message));
 
     if (message === 'location permission error') {
       Alert.alert(

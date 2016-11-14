@@ -18,8 +18,6 @@ import { clearNewListing } from '../../reducers/NewListingReducer';
 
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-
-
 function EmptyView({ openSell }) {
   const EmptySellButton = MKButton.flatButton()
     .withStyle({
