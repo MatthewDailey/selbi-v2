@@ -40,7 +40,7 @@ deployment:
       - cd selbi-backend && ./deploy staging
       - cd selbi-stripe-worker && sudo ./deploy staging
       - cd selbi-web && sudo ./deploy staging
-      - cd Selbi && sudo ./deploy staging js
+      # - cd Selbi && sudo ./deploy staging js
   production:
     branch: production
     commands:

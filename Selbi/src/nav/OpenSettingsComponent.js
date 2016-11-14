@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { TouchableHighlight, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import Permissions from 'react-native-permissions';
 import TimerMixin from 'react-timer-mixin';
 
 import { setPermissionsData } from '../reducers/PermissionsReducer';
+
+import FlatButton from '../components/buttons/FlatButton';
 
 import styles from '../../styles';
 
@@ -17,28 +19,38 @@ class OpenSettingsComponent extends TimerComponent {
   componentDidMount() {
     this.setInterval(() => {
       Permissions.checkMultiplePermissions(['camera', 'photo', 'location'])
-        .then(this.props.storePermissions);
+        .then((permissionStatus) => {
+          this.props.storePermissions(permissionStatus);
+          if (this.props.missingPermission
+              && this.props.missingPermission
+              .map((permission) => permissionStatus[permission] === 'authorized')
+              .reduce((a, b) => a || b, false)) {
+            this.props.onPermissionGranted(permissionStatus);
+          }
+        });
     }, 500);
   }
 
   render() {
     return (
-      <TouchableHighlight onPress={Permissions.openSettings}>
-        <View style={styles.paddedContainer}>
-          <Text style={styles.friendlyText}>
-            Selbi requires {this.props.missingPermission} permission.
-          </Text>
-          <View style={styles.padded} />
-          <Text style={styles.friendlyText}>Tap to open settings.</Text>
-        </View>
-      </TouchableHighlight>
+      <View style={styles.paddedContainer}>
+        <Text style={styles.friendlyTextLeft}>
+          Selbi requires {this.props.missingPermissionDisplayString} permission.
+        </Text>
+        <View style={styles.padded} />
+        <FlatButton onPress={Permissions.openSettings}>
+          <Text>Open Settings</Text>
+        </FlatButton>
+      </View>
     );
   }
 }
 
 OpenSettingsComponent.propTypes = {
-  missingPermission: React.PropTypes.string.isRequired,
+  missingPermissionDisplayString: React.PropTypes.string.isRequired,
+  missingPermission: React.PropTypes.array,
   storePermissions: React.PropTypes.func.isRequired,
+  onPermissionGranted: React.PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {

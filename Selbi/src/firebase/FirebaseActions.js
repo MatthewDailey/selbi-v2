@@ -15,23 +15,31 @@ function writeImageUriToFirebase(rnfbURI) {
     .then((blob) => uploadFile(blob));
 }
 
-export function createNewListingFromStore(newListingData) {
-  if (!newListingData.imageUri) {
+function uploadThumbnailAndImage(imageUri, imageWidth, imageHeight) {
+  if (!imageUri) {
     return Promise.reject('Error loading image.');
   }
 
-  return writeImageUriToFirebase(newListingData.imageUri)
-    .then((imageUrl) => ImageResizer.createResizedImage(
-        newListingData.imageUri,
-          newListingData.imageWidth / 4,
-          newListingData.imageHeight / 4,
-        'JPEG',
-        10)
-        .then(writeImageUriToFirebase)
-        .then((thumbnailUrl) => Promise.resolve({
+  return ImageResizer.createResizedImage(
+    imageUri,
+      imageWidth / 4,
+      imageHeight / 4,
+    'JPEG',
+    30)
+    .then(writeImageUriToFirebase)
+    .then((thumbnailUrl) =>
+      writeImageUriToFirebase(imageUri)
+        .then((fullUrl) => Promise.resolve({
           thumbnailUrl,
-          imageUrl,
-        })))
+          imageUrl: fullUrl,
+        })));
+}
+
+export function createNewListingFromStore(newListingData) {
+  return uploadThumbnailAndImage(
+      newListingData.imageUri,
+      newListingData.imageWidth,
+      newListingData.imageHeight)
     .then(({ thumbnailUrl, imageUrl }) => createListing(
       newListingData.title,
       '', // description
@@ -80,15 +88,19 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
   let updateImagePromise = Promise.resolve();
 
   if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
-    updateImagePromise = writeImageUriToFirebase(newListingData.imageUri)
-      .then((imageUri) => updateListing(
+    updateImagePromise = uploadThumbnailAndImage(
+      newListingData.imageUri,
+      newListingData.imageWidth,
+      newListingData.imageHeight)
+      .then(({ thumbnailUrl, imageUrl }) => updateListing(
         listingId,
         newListingData.title,
         newListingData.description,
         newListingData.price,
         {
           image1: {
-            url: imageUri,
+            url: imageUrl,
+            thumbnailUrl,
             width: newListingData.imageWidth,
             height: newListingData.imageHeight,
           },

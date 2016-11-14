@@ -15,7 +15,7 @@ export default function EmptyBulletinBoardBulletin({ goNext }) {
         emoji="😇"
         text="You have no new notifications. Sell something!"
         onPress={() => {
-          reportButtonPress('bulletin_empty_sell_something');
+          reportButtonPress('b_empty_sell');
           goNext();
         }}
       />

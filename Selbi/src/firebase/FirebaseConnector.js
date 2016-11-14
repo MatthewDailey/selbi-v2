@@ -61,7 +61,7 @@ export function setUserFcmToken(fcmToken) {
     .ref('/users')
     .child(getUser().uid)
     .update({
-      fcmToken
+      fcmToken,
     });
 }
 
