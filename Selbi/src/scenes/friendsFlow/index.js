@@ -42,5 +42,11 @@ routeLinks[friendsScene.id] = {
   },
 };
 
+routeLinks[followFriendScene.id] = {
+  return: {
+    title: 'Add Friend',
+  },
+};
+
 module.exports.firstScene = friendsScene;
 module.exports.routeLinks = routeLinks;
