@@ -87,7 +87,9 @@ export function updateListingFromStoreAndLoadResult(listingId, newListingData) {
 
   let updateImagePromise = Promise.resolve();
 
-  if (newListingData.imageUri && !newListingData.imageUri.startsWith('data:image/png;base64')) {
+  if (newListingData.imageUri
+    && !newListingData.imageUri.startsWith('data:image/png;base64')
+    && !newListingData.imageUri.startsWith('https://firebasestorage')) {
     updateImagePromise = uploadThumbnailAndImage(
       newListingData.imageUri,
       newListingData.imageWidth,
