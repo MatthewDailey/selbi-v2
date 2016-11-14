@@ -11,6 +11,7 @@ import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
@@ -19,29 +20,19 @@ import { clearNewListing } from '../../reducers/NewListingReducer';
 import { reportButtonPress } from '../../SelbiAnalytics';
 
 function EmptyView({ openSell }) {
-  const EmptySellButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-      borderWidth: 1,
-    })
-    .withOnPress(() => {
-      this.props.refresh();
-    })
-    .build();
-
   return (
     <View>
       <Text style={styles.friendlyText}>No listings near you.</Text>
       <Text>Be the first to sell in your area!</Text>
       <View style={styles.halfPadded} />
-      <EmptySellButton
+      <FlatButton
         onPress={() => {
           reportButtonPress('ll_open_details');
           openSell();
         }}
       >
         <Text>Sell something</Text>
-      </EmptySellButton>
+      </FlatButton>
       <View style={styles.padded} />
     </View>
   );
