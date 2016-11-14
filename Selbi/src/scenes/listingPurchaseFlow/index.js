@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import SellerProfileFlow from '../sellerProfileFlow';
+
 import { withNavigatorProps } from '../../nav/RoutableScene';
 import { setBuyerUid } from '../../reducers/ListingDetailReducer';
 
@@ -9,9 +11,9 @@ import ChatScene from '../ChatScene';
 import ListingDetailScene from '../ListingDetailScene';
 
 import ReceiptScene from './ReceiptScene';
-import CreditCardInputScene from './CreditCardInputScene';
+import CreditCardInputScene from '../addCreditCardFlow/CreditCardInputScene';
 import CompletedPurchaseScene from './CompletedPurchaseScene';
-import AddEmailScene from './AddCreditCardEmailScene';
+import AddEmailScene from '../addCreditCardFlow/AddCreditCardEmailScene';
 
 import { registerWithEmail, signInWithEmail, getUser, createUser }
   from '../../firebase/FirebaseConnector';
@@ -20,22 +22,22 @@ import EditListingFlow from '../editListingFlow';
 
 
 const chatFromDetailScene = {
-  id: 'listing_purchase_details_chat_scene',
+  id: 'purchase_details_chat_s',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const chatFromReceiptScene = {
-  id: 'listing_purchase_receipt_chat_scene',
+  id: 'purchase_receipt_chat_s',
   renderContent: withNavigatorProps(<ChatScene leftIs="back" rightIs="actionSheet" />),
 };
 
 const listingDetailScene = {
-  id: 'listing_details_scene',
+  id: 'details_s',
   renderContent: withNavigatorProps(<ListingDetailScene leftIs="back" rightIs="next" />),
 };
 
 const addEmailScene = {
-  id: 'input_credit_card_email_scene',
+  id: 'i_cc_email_scene',
   renderContent: withNavigatorProps(
     <AddEmailScene
       leftIs="back"
@@ -45,7 +47,7 @@ const addEmailScene = {
 };
 
 const receiptScene = {
-  id: 'receipt_scene',
+  id: 'receipt_s',
   renderContent: withNavigatorProps(
     <ReceiptScene
       title="Confirm Purchase"
@@ -69,7 +71,7 @@ const PurchaseFlowSignIn = connect(
 
 
 const chatSignInScene = {
-  id: 'signin_to_chat_scene',
+  id: 'signin_chat_s',
   renderContent: withNavigatorProps(
     <PurchaseFlowSignIn
       title="Sign in to chat."
@@ -82,7 +84,7 @@ const chatSignInScene = {
 };
 
 const buySignInScene = {
-  id: 'signin_to_buy_scene',
+  id: 'signin_buy_s',
   renderContent: withNavigatorProps(
     <PurchaseFlowSignIn
       title="Sign in to pay."
@@ -95,7 +97,7 @@ const buySignInScene = {
 };
 
 const creditCardInputScene = {
-  id: 'input_credit_card_scene',
+  id: 'i_cc_s',
   renderContent: withNavigatorProps(
     <CreditCardInputScene
       title="Add Credit Card (2/2)"
@@ -104,7 +106,7 @@ const creditCardInputScene = {
 };
 
 const completedPurchaseScene = {
-  id: 'completed_purchase_scene',
+  id: 'completed_purchase_s',
   renderContent: withNavigatorProps(
     <CompletedPurchaseScene
       title="Purchase Complete"
@@ -184,6 +186,9 @@ routeLinks[listingDetailScene.id] = {
       return buySignInScene;
     },
   },
+  sellerProfile: {
+    getRoute: () => SellerProfileFlow.firstScene,
+  },
 };
 
 routeLinks[chatSignInScene.id] = {
@@ -206,5 +211,5 @@ routeLinks[completedPurchaseScene.id] = {
   },
 };
 
-module.exports.routesLinks = routeLinks;
+module.exports.routeLinks = routeLinks;
 module.exports.firstScene = listingDetailScene;

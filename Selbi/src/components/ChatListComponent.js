@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, RefreshControl } from 'react-native';
+import { ScrollView, View, Text, ListView, RefreshControl } from 'react-native';
 
 import ChatListItem from './ChatListItem';
 
@@ -30,14 +30,22 @@ export default class ChatListComponent extends Component {
   }
 
   render() {
+    const refreshController =
+      <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />;
+
+    if (this.props.chats.length === 0) {
+      return (
+        <ScrollView refreshControl={refreshController}>
+          <View style={styles.paddedCenterContainer}>
+            <Text style={styles.friendlyTextLeft}>{this.props.emptyMessage}</Text>
+          </View>
+        </ScrollView>
+      );
+    }
+
     return (
       <ListView
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh}
-          />
-        }
+        refreshControl={refreshController}
         enableEmptySections
         style={styles.container}
         removeClippedSubviews={false}
@@ -45,9 +53,11 @@ export default class ChatListComponent extends Component {
         renderRow={(data) => (
           <ChatListItem
             chatTitle={data.listingData.title}
+            thumbnailUrl={data.listingData.images.image1.url}
+            otherPersonDisplayName={data.otherPersonPublicData.displayName}
             chatType={data.type}
             openChatScene={() => {
-              reportButtonPress(`chat_list_open_chat_${data.type}`);
+              reportButtonPress(`open_chat_${data.type}`);
               this.props.openChatScene(data);
             }}
           />)}
@@ -59,6 +69,7 @@ export default class ChatListComponent extends Component {
 ChatListComponent.propTypes = {
   refresh: React.PropTypes.func.isRequired,
   openChatScene: React.PropTypes.func.isRequired,
+  emptyMessage: React.PropTypes.string,
   chats: React.PropTypes.arrayOf((propValue, key) => {
     const chatData = propValue[key];
     if (!chatData.buyerUid

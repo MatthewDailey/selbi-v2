@@ -1,62 +1,74 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, ScrollView, Text } from 'react-native';
 
-import { MKSpinner } from 'react-native-material-kit';
+import { View, Text } from 'react-native';
+import { MKButton } from 'react-native-material-kit';
+
+import styles from '../../../styles';
 
 import RoutableScene from '../../nav/RoutableScene';
 import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
 import { clearNewListing } from '../../reducers/NewListingReducer';
 
-import styles from '../../../styles';
-import colors from '../../../colors';
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-function EmptyView() {
+function EmptyView({ openSell }) {
   return (
-    <View style={styles.paddedCenterContainerClear}>
-      <Text style={styles.friendlyText}>Searching for listings near you...</Text>
-      <MKSpinner strokeColor={colors.primary} />
+    <View>
+      <Text style={styles.friendlyText}>No listings near you.</Text>
+      <Text>Be the first to sell in your area!</Text>
+      <View style={styles.halfPadded} />
+      <FlatButton
+        onPress={() => {
+          reportButtonPress('ll_open_details');
+          openSell();
+        }}
+      >
+        <Text>Sell something</Text>
+      </FlatButton>
+      <View style={styles.padded} />
     </View>
   );
 }
+
+EmptyView.propTypes = {
+  openSell: React.PropTypes.func.isRequired,
+};
 
 class ListingsScene extends RoutableScene {
   onGoNext() {
     this.props.clearNewListingData();
   }
 
-  getLocalListingsView() {
+  renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
-      return <OpenSettingsComponent missingPermission="location" />;
+      return (
+        <OpenSettingsComponent
+          missingPermissionDisplayString="location"
+          missingPermission={['location']}
+          onPermissionGranted={this.props.fetchLocalListings}
+        />
+      );
     }
-
-    this.props.startWatchingLocalListings();
-
     return (
       <ListingsListComponent
+        header={<BulletinBoard goNext={this.goNext} />}
+        refresh={this.props.fetchLocalListings}
         listings={this.props.listings}
-        emptyView={EmptyView}
+        emptyMessage="Be the first to post a listing in your area!"
+        emptyView={() => <EmptyView openSell={this.goNext} />}
         openDetailScene={() => {
-          reportButtonPress('local_listing_open_details');
+          reportButtonPress('ll_open_details');
           this.goNext('details');
         }}
       />
-    );
-  }
-
-  renderWithNavBar() {
-    return (
-      <ScrollView>
-        <BulletinBoard goNext={this.goNext} />
-        {this.getLocalListingsView()}
-      </ScrollView>
     );
   }
 }
@@ -64,7 +76,7 @@ class ListingsScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     listings: state.localListings,
-    locationPermissionDenied: state.permissions.location === 'denied',
+    locationPermissionDenied: state.permissions.location !== 'authorized',
   };
 };
 

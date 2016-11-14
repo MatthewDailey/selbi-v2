@@ -6,11 +6,12 @@ import { MKButton } from 'react-native-material-kit';
 import colors from '../../../colors';
 import { paddingSize } from '../../../styles';
 import { isPaymentsEnabled } from '../../../features';
+import { toDollarString } from '../../utils';
 
-const buttonStyle = { fontSize: 20 };
+const buttonStyle = { fontSize: 20, color: colors.black };
 const buttonMargin = paddingSize / 2;
 
-const Button = MKButton.button()
+const Button = MKButton.flatButton()
   .withStyle({
     borderRadius: 5,
     padding: 15,
@@ -46,18 +47,20 @@ ShareButton.propTypes = {
 
 const unsupported = () => Alert.alert('Sorry, not yet supported.');
 
-const LeftButton = MKButton.button()
+const LeftButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginRight: buttonMargin / 2,
+    borderRadius: 5,
   })
   .withBackgroundColor(colors.primary)
   .build();
 
-const RightButton = MKButton.button()
+const RightButton = MKButton.flatButton()
   .withStyle({
     flex: 1,
     marginLeft: buttonMargin / 2,
+    borderRadius: 5,
   })
   .withBackgroundColor(colors.primary)
   .build();
@@ -91,7 +94,7 @@ export function BuyButton({ price, onPress = unsupported }) {
       }}
     >
       <Text style={buttonStyle}>
-        ${price}
+        {toDollarString(price)}
       </Text>
     </RightButton>
   );

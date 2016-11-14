@@ -40,37 +40,37 @@ class MyListingsScene extends RoutableScene {
 
     return (
       <ScrollableTabView
-        tabBarBackgroundColor={colors.primary}
-        tabBarUnderlineColor={colors.secondary}
-        tabBarActiveTextColor={colors.secondary}
+        tabBarBackgroundColor={colors.secondary}
+        tabBarUnderlineColor={colors.primary}
+        tabBarActiveTextColor={colors.primary}
         style={styles.fullScreenContainer}
       >
-        <View tabLabel="Local" style={styles.fullScreenContainer}>
+        <View tabLabel="Local" style={styles.container}>
           <ListingsListComponent
             listings={this.props.public}
             emptyMessage="You have no public listings."
             openDetailScene={() => {
-              reportButtonPress('my_listings_public_open_detail');
+              reportButtonPress('ml_public_open_detail');
               this.goNext('details');
             }}
           />
         </View>
-        <View tabLabel="Friends Only" style={styles.fullScreenContainer}>
+        <View tabLabel="Friends Only" style={styles.container}>
           <ListingsListComponent
             listings={this.props.private}
             emptyMessage="You have no private listings."
             openDetailScene={() => {
-              reportButtonPress('my_listings_private_open_detail');
+              reportButtonPress('ml_private_open_detail');
               this.goNext('details');
             }}
           />
         </View>
-        <View tabLabel="Sold" style={styles.fullScreenContainer}>
+        <View tabLabel="Sold" style={styles.container}>
           <ListingsListComponent
             listings={this.props.sold}
             emptyMessage="You have not sold any listings."
             openDetailScene={() => {
-              reportButtonPress('my_listings_sold_open_detail');
+              reportButtonPress('ml_sold_open_detail');
               this.goNext('details');
             }}
           />

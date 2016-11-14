@@ -15,7 +15,7 @@ function Divider() {
   return (
     <View
       style={{
-        margin: 8,
+        margin: 4,
         borderBottomWidth: 1,
         borderBottomColor: `${colors.dark}64`,
       }}
@@ -28,8 +28,8 @@ const iconStyle = {
   textAlign: 'center',
   width: 40,
 };
-const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16 };
-const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14 };
+const menuHeaderStyle = { fontWeight: 'bold', fontSize: 16, color: colors.black };
+const menuSubheaderStyle = { fontWeight: 'normal', fontSize: 14, color: colors.black };
 
 function MenuItem({ onPress, icon, title, shouldGreyOut }) {
   let textColor = colors.black;
@@ -38,7 +38,7 @@ function MenuItem({ onPress, icon, title, shouldGreyOut }) {
   }
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={colors.secondary}>
+    <TouchableHighlight onPress={onPress} underlayColor={colors.buttonHighlight}>
       <View style={styles.row}>
         <Text style={{ ...iconStyle, color: textColor }}>{icon}</Text>
         <Text style={{ ...flattenStyle(styles.menuText), color: textColor }}>{title}</Text>
@@ -134,7 +134,7 @@ class Menu extends Component {
     const isSignedOut = () => !this.props.userDisplayName;
 
     return (
-      <View style={styles.paddedContainerClear}>
+      <View style={[styles.paddedContainerClear, { backgroundColor: colors.white }]}>
         {getHeader()}
 
         <Divider />
@@ -166,11 +166,9 @@ class Menu extends Component {
             }
             ifSignedIn(setSceneAndCloseMenu)(this.props.friendsListingScene);
           }}
-          icon={<Icon name="users" size={iconSize} />}
+          icon={<Icon name="shopping-bag" size={iconSize} />}
           title="Friends' Listings"
         />
-
-        <Divider />
 
         <MenuItem
           shouldGreyOut={isSignedOut()}
@@ -182,6 +180,20 @@ class Menu extends Component {
           }}
           icon={<Icon name="gift" size={iconSize} />}
           title="My Listings"
+        />
+
+        <Divider />
+
+        <MenuItem
+          shouldGreyOut={isSignedOut()}
+          onPress={() => {
+            if (!isSignedOut()) {
+              reportButtonPress('menu_friends');
+            }
+            ifSignedIn(setSceneAndCloseMenu)(this.props.friendsScene);
+          }}
+          icon={<Icon name="users" size={iconSize} />}
+          title="Friends"
         />
         <MenuItem
           shouldGreyOut={isSignedOut()}
@@ -201,12 +213,21 @@ class Menu extends Component {
           shouldGreyOut={isSignedOut()}
           onPress={() => {
             if (!isSignedOut()) {
-              reportButtonPress('menu_follow_friend');
+              reportButtonPress('menu_settings');
             }
-            ifSignedIn(pushSceneAndCloseMenu)(this.props.followFriendScene);
+            ifSignedIn(pushSceneAndCloseMenu)(this.props.settingsScene);
           }}
-          icon={<Icon name="user-plus" size={iconSize} />}
-          title="Follow a Friend"
+          icon={<Icon name="gear" size={iconSize} />}
+          title="Settings"
+        />
+
+        <MenuItem
+          onPress={() => {
+            reportButtonPress('menu_feedback');
+            pushSceneAndCloseMenu(this.props.feedbackScene);
+          }}
+          icon={<Icon name="envelope-o" size={iconSize} />}
+          title="Give Feedback"
         />
 
         {getFooter()}
@@ -225,9 +246,12 @@ Menu.propTypes = {
   friendsListingScene: React.PropTypes.object.isRequired,
   myListingScene: React.PropTypes.object.isRequired,
   chatListScene: React.PropTypes.object.isRequired,
-  followFriendScene: React.PropTypes.object.isRequired,
+  friendsScene: React.PropTypes.object.isRequired,
   signInOrRegisterScene: React.PropTypes.object.isRequired,
   sellScene: React.PropTypes.object.isRequired,
+  introScene: React.PropTypes.object.isRequired,
+  feedbackScene: React.PropTypes.object.isRequired,
+  settingsScene: React.PropTypes.object.isRequired,
 };
 
 export default connect(

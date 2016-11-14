@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai'
 import dirtyChai from 'dirty-chai';
 
-import { isStringFloat, distanceInMilesString } from '../../src/utils';
+import { isStringFloat, distanceInMilesString, toDollarString } from '../../src/utils';
 
 chai.use(dirtyChai);
 
@@ -80,4 +80,18 @@ describe('utils', () => {
       expect(distanceInMilesString(pointOne, pointTwo)).to.equal('5');
     });
   });
+
+  describe('toDollarString', () => {
+    it('handle integer', () => {
+      expect(toDollarString(1)).to.equal('$1');
+    });
+
+    it('handle 1 digit decimal', () => {
+      expect(toDollarString(1.1)).to.equal('$1.10');
+    });
+
+    it('handle 2 digit decimal', () => {
+      expect(toDollarString(1.11)).to.equal('$1.11');
+    });
+  })
 });

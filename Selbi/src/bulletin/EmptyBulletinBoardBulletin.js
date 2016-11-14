@@ -11,13 +11,11 @@ import { reportButtonPress } from '../SelbiAnalytics';
 export default function EmptyBulletinBoardBulletin({ goNext }) {
   return (
     <View>
-      <Text style={bulletinStyles.bulletinText}>
-        😇 You have no new notifications.
-      </Text>
       <BulletinActionButton
-        text="Sell something"
+        emoji="😇"
+        text="You have no new notifications. Sell something!"
         onPress={() => {
-          reportButtonPress('bulletin_empty_sell_something');
+          reportButtonPress('b_empty_sell');
           goNext();
         }}
       />

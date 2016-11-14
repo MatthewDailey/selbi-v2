@@ -1,20 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { View } from 'react-native';
-import Camera from 'react-native-camera';
-import { MKButton } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Permissions from 'react-native-permissions';
-import RoutableScene from '../../nav/RoutableScene';
-
-import { setNewListingImageLocalUri } from '../../reducers/NewListingReducer';
-import { setSinglePermission } from '../../reducers/PermissionsReducer';
-
-import SpinnerOverlay from '../../components/SpinnerOverlay';
-import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
-
-import styles from '../../../styles';
-import colors from '../../../colors';
+import React from "react";
+import {connect} from "react-redux";
+import {View, InteractionManager} from "react-native";
+import Camera from "react-native-camera";
+import {MKButton} from "react-native-material-kit";
+import Icon from "react-native-vector-icons/FontAwesome";
+import Permissions from "react-native-permissions";
+import RoutableScene from "../../nav/RoutableScene";
+import {setNewListingImageLocalUri} from "../../reducers/NewListingReducer";
+import {setSinglePermission} from "../../reducers/PermissionsReducer";
+import SpinnerOverlay from "../../components/SpinnerOverlay";
+import OpenSettingsComponent from "../../nav/OpenSettingsComponent";
+import styles from "../../../styles";
+import colors from "../../../colors";
 
 const ColoredRaisedButton = MKButton
   .accentColoredFab()
@@ -45,9 +42,16 @@ class CameraScene extends RoutableScene {
     super(props);
     this.state = {
       capturing: false,
+      renderPlaceholderOnly: true,
     };
 
     this.takePicture = this.takePicture.bind(this);
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ renderPlaceholderOnly: false });
+    });
   }
 
   toggleCapturing() {
@@ -73,8 +77,19 @@ class CameraScene extends RoutableScene {
         .then(this.props.setCameraPermission);
       Permissions.requestPermission('photo')
         .then(this.props.setPhotoPermission);
-      return <OpenSettingsComponent missingPermission="camera and photo" />;
+      return (
+        <OpenSettingsComponent
+          missingPermissionDisplayString="camera and photo"
+        />
+      );
     }
+
+    if (this.state.renderPlaceholderOnly) {
+      return (
+        <View style={styles.container} />
+      );
+    }
+
     // Unclear why the subview in camara is needed. The camera preview would not show up properly
     // without it.
     return (

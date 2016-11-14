@@ -1,12 +1,13 @@
 import React from 'react';
 import { Alert, View, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Permissions from 'react-native-permissions';
+import flattenStyle from 'flattenStyle';
 
 import RoutableScene from '../../nav/RoutableScene';
 import SpinnerOverlay from '../../components/SpinnerOverlay';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { getGeolocation } from '../../utils';
 
@@ -17,21 +18,8 @@ import { createNewListingFromStore, makeListingPrivate, makeListingPublic }
   from '../../firebase/FirebaseActions';
 
 import styles from '../../../styles';
-import colors from '../../../colors';
 
-import { reportButtonPress } from '../../SelbiAnalytics';
-
-const buttonTextStyle = {
-  fontSize: 20,
-};
-
-const Button = MKButton.button()
-  .withStyle({
-    borderRadius: 5,
-    padding: 8,
-  })
-  .withBackgroundColor(colors.white)
-  .build();
+import { reportButtonPress, reportEvent } from '../../SelbiAnalytics';
 
 class ChooseVisibilityScene extends RoutableScene {
   constructor(props) {
@@ -46,7 +34,7 @@ class ChooseVisibilityScene extends RoutableScene {
 
   handleError(message) {
     this.setState({ publishing: false });
-    console.log(message);
+    console.error(JSON.stringify(message));
 
     if (message === 'location permission error') {
       Alert.alert(
@@ -63,6 +51,7 @@ class ChooseVisibilityScene extends RoutableScene {
   }
 
   handleSuccess() {
+    reportEvent('created_listing');
     this.setState({ publishing: false });
     this.goNext();
   }
@@ -72,11 +61,11 @@ class ChooseVisibilityScene extends RoutableScene {
       <View style={styles.paddedContainer}>
         <Text style={styles.friendlyText}>Who would you like to be able to see your listing?</Text>
         <View style={styles.halfPadded}>
-          <Button
+          <FlatButton
             onPress={
               () => {
                 reportButtonPress('choose_visibility_private');
-                this.setState({ publishing: true })
+                this.setState({ publishing: true });
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
                     this.props.setNewListingId(newListingId);
@@ -84,21 +73,24 @@ class ChooseVisibilityScene extends RoutableScene {
                   .then(() => makeListingPrivate(this.props.newListing))
                   .then(() => {
                     this.props.setListingStatus('private');
+                    reportEvent('created_private_listing');
                   })
                   .then(this.handleSuccess)
                   .catch(this.handleError);
               }
             }
           >
-            <Text style={buttonTextStyle}><Icon name="users" size={buttonTextStyle.fontSize} />  My Friends</Text>
-          </Button>
+            <Text style={styles.buttonTextStyle}>
+              <Icon name="users" size={flattenStyle(styles.buttonTextStyle).fontSize} />  My Friends
+            </Text>
+          </FlatButton>
         </View>
         <View style={styles.halfPadded}>
-          <Button
+          <FlatButton
             onPress={
               () => {
                 reportButtonPress('choose_visibility_public');
-                this.setState({ publishing: true })
+                this.setState({ publishing: true });
                 createNewListingFromStore(this.props.newListing)
                   .then((newListingId) => {
                     this.props.setNewListingId(newListingId);
@@ -108,14 +100,17 @@ class ChooseVisibilityScene extends RoutableScene {
                   .then(() => makeListingPublic(this.props.newListing))
                   .then(() => {
                     this.props.setListingStatus('public');
+                    reportEvent('created_public_listing');
                   })
                   .then(this.handleSuccess)
                   .catch(this.handleError);
               }
             }
           >
-            <Text style={buttonTextStyle}><Icon name="globe" size={buttonTextStyle.fontSize} />  Anyone Nearby</Text>
-          </Button>
+            <Text style={styles.buttonTextStyle}>
+              <Icon name="globe" size={flattenStyle(styles.buttonTextStyle).fontSize} />  Anyone Nearby
+            </Text>
+          </FlatButton>
         </View>
         <SpinnerOverlay isVisible={this.state.publishing} />
       </View>

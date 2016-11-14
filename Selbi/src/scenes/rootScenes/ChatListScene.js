@@ -35,26 +35,26 @@ class ChatListScene extends RoutableScene {
   loadChatData() {
     return loadAllUserChats()
       .then((allUserChats) => {
-        const allValidUserChats = allUserChats.filter(Boolean);
-        const loadedBuyingChats = allValidUserChats.filter(
+        const loadedBuyingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'buying');
-        const loadedSellingChats = allValidUserChats.filter(
+        const loadedSellingChats = allUserChats.filter(
           (chatDetails) => chatDetails.type === 'selling');
         this.setState({
           loading: false,
-          allChats: allValidUserChats,
+          allChats: allUserChats,
           buyingChats: loadedBuyingChats,
           sellingChats: loadedSellingChats,
-        }, () => console.log(this.state));
+        });
       })
       .catch(console.log);
   }
 
-  getChatListComponentForChats(chats) {
+  getChatListComponentForChats(chats, emptyMessage) {
     return (
       <ChatListComponent
         refresh={this.loadChatData}
         chats={chats}
+        emptyMessage={emptyMessage}
         openChatScene={(data) => {
           this.props.setListingDetails(data.buyerUid, data.listingKey, data.listingData);
           this.goNext('chat');
@@ -74,16 +74,18 @@ class ChatListScene extends RoutableScene {
 
     return (
       <ScrollableTabView
-        tabBarBackgroundColor={colors.primary}
-        tabBarUnderlineColor={colors.secondary}
-        tabBarActiveTextColor={colors.secondary}
+        tabBarBackgroundColor={colors.secondary}
+        tabBarUnderlineColor={colors.primary}
+        tabBarActiveTextColor={colors.primary}
         style={styles.fullScreenContainer}
       >
         <View tabLabel="Buying" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.buyingChats)}
+          {this.getChatListComponentForChats(this.state.buyingChats,
+            'No chats about items you might buy.')}
         </View>
         <View tabLabel="Selling" style={styles.container}>
-          {this.getChatListComponentForChats(this.state.sellingChats)}
+          {this.getChatListComponentForChats(this.state.sellingChats,
+            'No chats about items you\'re selling.')}
         </View>
       </ScrollableTabView>
     );

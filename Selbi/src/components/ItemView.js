@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text, View, Image, TouchableHighlight } from 'react-native';
-import { MKSpinner } from 'react-native-material-kit';
 
 import { loadImage, getUser } from '../firebase/FirebaseConnector';
 import { storeImage } from '../reducers/ImagesReducer';
 import { setBuyerAndListingDetails } from '../reducers/ListingDetailReducer';
+import { toDollarString } from '../utils';
 
 // noinspection Eslint - Dimensions provided by react-native env.
 import Dimensions from 'Dimensions';
@@ -14,46 +14,56 @@ import styles from '../../styles';
 import colors from '../../colors';
 
 class ItemView extends Component {
-  getImageView(fitHeight) {
-    if (this.props.imageData) {
-      const openDetailView = () => {
-        this.props.setListingDetails(this.props.listing.key, this.props.listing.val());
-        this.props.openDetailScene();
-      };
-      return (
-        <TouchableHighlight onPress={openDetailView}>
-          <Image
-            key={this.props.imageKey}
-            source={{ uri: `data:image/png;base64,${this.props.imageData.base64}` }}
-            style={{ height: fitHeight, borderRadius: 3 }}
-          >
-            <Text
-              style={{
-                margin: 5,
-                color: 'white',
-                textShadowColor: colors.dark,
-                textShadowOffset: {
-                  width: 1,
-                  height: 1,
-                },
-                textShadowRadius: 2,
-                fontWeight: 'bold',
-                backgroundColor: 'transparent',
-              }}
-            >
-              {`$${this.props.listing.val().price}`}
-            </Text>
-          </Image>
-        </TouchableHighlight>
-      );
-    }
+  getImageFromUri(uri, fitHeight, openDetailView) {
     return (
-      <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }}>
-        <View style={styles.paddedCenterContainerClear}>
-          <MKSpinner strokeColor={colors.secondary} />
-        </View>
-      </View>
+      <TouchableHighlight onPress={openDetailView}>
+        <Image
+          key={this.props.imageKey}
+          source={{ uri }}
+          style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }}
+        >
+          <Text
+            style={{
+              margin: 5,
+              color: 'white',
+              textShadowColor: colors.dark,
+              textShadowOffset: {
+                width: 1,
+                height: 1,
+              },
+              textShadowRadius: 2,
+              fontWeight: 'bold',
+              backgroundColor: 'transparent',
+            }}
+          >
+            {toDollarString(this.props.listing.val().price)}
+          </Text>
+        </Image>
+      </TouchableHighlight>
     );
+  }
+
+  getImageView(fitHeight) {
+    const openDetailView = () => {
+      this.props.setListingDetails(this.props.listing.key, this.props.listing.val());
+      this.props.openDetailScene();
+    };
+
+    if (this.props.imageData) {
+      return this.getImageFromUri(
+        `data:image/png;base64,${this.props.imageData.base64}`,
+        fitHeight,
+        openDetailView);
+    }
+
+    if (this.props.imageUri) {
+      return this.getImageFromUri(
+        this.props.imageUri,
+        fitHeight,
+        openDetailView);
+    }
+
+    return <View style={{ height: fitHeight, borderRadius: 3, backgroundColor: colors.primary }} />;
   }
 
   render() {
@@ -63,9 +73,10 @@ class ItemView extends Component {
 
     const image = this.props.listing.val().images.image1;
 
-    if (!this.props.imageData || this.props.imageKey !== image.imageId) {
+    if (!this.props.imageUri && (!this.props.imageData || this.props.imageKey !== image.imageId) ) {
       loadImage(this.props.imageKey)
-        .then((imageSnapshot) => this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()));
+        .then((imageSnapshot) => this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()))
+        .catch(console.log);
     }
 
     const widthRatio = image.width / columnWidth;
@@ -87,7 +98,8 @@ class ItemView extends Component {
 
 ItemView.propTypes = {
   listing: React.PropTypes.object.isRequired, // Should be the entire firebase ref value.
-  imageKey: React.PropTypes.string.isRequired,
+  imageUri: React.PropTypes.string,
+  imageKey: React.PropTypes.string,
   imageData: React.PropTypes.object, // Value for /images/$imageKey
   storeImageData: React.PropTypes.func.isRequired,
   openDetailScene: React.PropTypes.func.isRequired,
@@ -97,6 +109,14 @@ ItemView.propTypes = {
 // TODO: Get ride of hard coded image1.
 const mapStateToProps = (state, currentProps) => {
   const imageId = currentProps.listing.val().images.image1.imageId;
+  const imageUri = currentProps.listing.val().images.image1.thumbnailUrl;
+
+  if (imageUri) {
+    return {
+      imageUri,
+    };
+  }
+
   return {
     imageKey: imageId,
     imageData: state.images[imageId],

@@ -20,7 +20,7 @@ const CANCEL_INDEX = 2;
 
 export default function DetailMenuButton({ listingId }) {
   const reportContent = () => {
-    reportButtonPress('flag_content');
+    reportButtonPress('as_flag_content');
     Alert.alert('Inappropriate Content?',
       'Do you want to flag this listing as inappropriate content?',
       [
@@ -41,7 +41,7 @@ export default function DetailMenuButton({ listingId }) {
   };
 
   const shareListing = () => {
-    reportButtonPress('action_sheet_share');
+    reportButtonPress('as_share');
     Share.open({ url: getListingShareUrl(listingId) })
       .then(console.log)
       .catch(console.log);

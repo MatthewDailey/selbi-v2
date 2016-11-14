@@ -4,7 +4,6 @@ import FCM from 'react-native-fcm';
 import RNRestart from 'react-native-restart';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
-
 import { convertToUsername } from './FirebaseUtils';
 import config from '../../config';
 
@@ -36,6 +35,20 @@ export function getUser() {
     .currentUser;
 }
 
+function getUserIdSafe() {
+  if (getUser()) {
+    return getUser().uid;
+  }
+  return 'user-not-signed-in';
+}
+
+function requireSignedIn() {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in.');
+  }
+  return Promise.resolve();
+}
+
 export function setUserFcmToken(fcmToken) {
   if (!getUser()) {
     return Promise.reject('Not signed in.');
@@ -48,8 +61,16 @@ export function setUserFcmToken(fcmToken) {
     .ref('/users')
     .child(getUser().uid)
     .update({
-      fcmToken
+      fcmToken,
     });
+}
+
+export function uploadFile(blob) {
+  return requireSignedIn()
+    .then(() => firebase.storage()
+        .ref(`images/${getUser().uid}/${new Date().getTime()}`)
+        .put(blob, { contentType: 'image/jpg' })
+        .then((snapshot) => Promise.resolve(snapshot.downloadURL)));
 }
 
 /*
@@ -120,14 +141,13 @@ function insertUserInDatabase(userDisplayName) {
     .child(getUser().uid)
     .set({
       email: getUser().email,
-      userAgreementAccepted: false,
+      userAgreementAccepted: true,
     });
 
   return Promise.all([promiseUsers, promiseUserPublicDataAndUsername]);
 }
 
-export function signInWithFacebook() {
-  const auth = firebase.auth();
+function getFacebookCredential() {
   const provider = firebase.auth.FacebookAuthProvider;
 
   return LoginManager.logInWithReadPermissions(['public_profile', 'user_friends', 'email'])
@@ -140,10 +160,19 @@ export function signInWithFacebook() {
       }
       return AccessToken.getCurrentAccessToken();
     })
-    .then(accessTokenData => {
-      const credential = provider.credential(accessTokenData.accessToken);
-      return auth.signInWithCredential(credential);
-    });
+    .then(accessTokenData => provider.credential(accessTokenData.accessToken));
+}
+
+export function signInWithFacebook() {
+  const auth = firebase.auth();
+  return getFacebookCredential()
+    .then((credential) => auth.signInWithCredential(credential));
+}
+
+export function linkWithFacebook() {
+  return requireSignedIn()
+    .then(() => getFacebookCredential())
+    .then((credential) => getUser().link(credential));
 }
 
 export function signInWithEmail(email, password) {
@@ -175,6 +204,17 @@ export function signOut() {
     .signOut();
 }
 
+export function updateEmail(newEmail) {
+  return requireSignedIn()
+    .then(() => getUser().updateEmail(newEmail))
+    .then(() => firebaseApp
+      .database()
+      .ref('/users')
+      .child(getUser().uid)
+      .update({
+        email: getUser().email,
+      }));
+}
 
 export function createUser(displayName, email) {
   if (!getUser()) {
@@ -189,7 +229,7 @@ export function createUser(displayName, email) {
         return insertUserInDatabase(displayName);
       }
       return Promise.resolve();
-    })
+    });
 }
 
 export function publishImage(base64, heightInput, widthInput) {
@@ -266,8 +306,6 @@ export function updateListing(listingId, title, description, price, images) {
   if (images) {
     listing.images = images;
   }
-
-  console.log(listing)
 
   const listingRef = firebaseApp.database().ref('/listings').child(listingId);
 
@@ -413,6 +451,14 @@ function getListingKeyAndData(listingId) {
     });
 }
 
+export function loadUserPublicData(uid) {
+  return firebaseApp
+    .database()
+    .ref('userPublicData')
+    .child(uid)
+    .once('value');
+}
+
 function loadChatDetailsFromUserChats(userChatsData) {
   const chatPromises = [];
 
@@ -430,10 +476,18 @@ function loadChatDetailsFromUserChats(userChatsData) {
               return Promise.resolve(undefined);
             }
 
-            return Promise.resolve(Object.assign(listingKeyAndData, {
-              buyerUid: getUser().uid,
-              type: 'buying',
-            }));
+            return loadUserPublicData(listingKeyAndData.listingData.sellerId)
+              .then((sellerPublicData) => {
+                if (!sellerPublicData.exists()) {
+                  return Promise.resolve(undefined);
+                }
+                return Promise.resolve(Object.assign(listingKeyAndData, {
+                  buyerUid: getUser().uid,
+                  type: 'buying',
+                  otherPersonUid: sellerPublicData.key,
+                  otherPersonPublicData: sellerPublicData.val(),
+                }));
+              });
           })
       ));
     }
@@ -446,11 +500,18 @@ function loadChatDetailsFromUserChats(userChatsData) {
               if (!listingKeyAndData) {
                 return Promise.resolve(undefined);
               }
-
-              return Promise.resolve(Object.assign(listingKeyAndData, {
-                buyerUid,
-                type: 'selling',
-              }));
+              return loadUserPublicData(buyerUid)
+                .then((buyerPublicData) => {
+                  if (!buyerPublicData.exists()){
+                    return Promise.resolve(undefined);
+                  }
+                  return Promise.resolve(Object.assign(listingKeyAndData, {
+                    buyerUid,
+                    type: 'selling',
+                    otherPersonUid: buyerUid,
+                    otherPersonPublicData: buyerPublicData.val(),
+                  }));
+                });
             })
           )
         );
@@ -461,7 +522,7 @@ function loadChatDetailsFromUserChats(userChatsData) {
   return Promise.all(chatPromises);
 }
 
-function loadUserListingsByStatus(uid, status) {
+export function loadUserListingsByStatus(uid, status) {
   return firebaseApp
     .database()
     .ref('/userListings')
@@ -487,6 +548,20 @@ function loadUserListingsByStatus(uid, status) {
         });
       return Promise.all(allListings);
     });
+}
+
+export function isFollowing(uid) {
+  return requireSignedIn()
+    .then(() => firebaseApp.database()
+      .ref('following')
+      .child(getUser().uid)
+      .once('value')
+      .then((followingSnapshot) => {
+        if (followingSnapshot.exists() && followingSnapshot.val()[uid]) {
+          return Promise.resolve(true);
+        }
+        return Promise.resolve(false);
+      }));
 }
 
 export function loadFriendsListings() {
@@ -541,6 +616,42 @@ export function followUser(uid) {
       }));
 }
 
+export function unfollowUser(uid) {
+  if (!getUser()) {
+    return Promise.reject('Must be signed in to unfollow another user.')
+  }
+
+  const removeFollowingPromise = firebaseApp.database()
+    .ref('following')
+    .child(getUser().uid)
+    .child(uid)
+    .remove();
+
+  const removeFollowerPromise = firebaseApp.database()
+    .ref('followers')
+    .child(uid)
+    .child(getUser().uid)
+    .remove();
+
+  return Promise.all([removeFollowerPromise, removeFollowingPromise]);
+}
+
+export function sendFeedback(email, message) {
+  return firebaseApp
+    .database()
+    .ref('events/tasks')
+    .push()
+    .set({
+      owner: getUserIdSafe(),
+      type: 'feedback',
+      timestamp: new Date().getTime(),
+      payload: {
+        email,
+        message,
+      },
+    });
+}
+
 export function addFriendByUsername(friendUsername) {
   return firebaseApp.database()
     .ref('usernames')
@@ -561,15 +672,8 @@ export function loadAllUserChats() {
     .ref('chats')
     .child(getUser().uid)
     .once('value')
-    .then(loadChatDetailsFromUserChats);
-}
-
-export function loadUserPublicData(uid) {
-  return firebaseApp
-    .database()
-    .ref('userPublicData')
-    .child(uid)
-    .once('value');
+    .then(loadChatDetailsFromUserChats)
+    .then((allChats) => allChats.filter(Boolean));
 }
 
 export function watchUserData(handler) {
@@ -1108,6 +1212,44 @@ function listenToUserForRoute(route, handler, defaultValue = {}) {
   };
 }
 
+function convertUidsToPublicData(uids) {
+  const promiseUsersPublicData = [];
+
+  Object.keys(uids).forEach((uid) => {
+    if (uids[uid]) {
+      promiseUsersPublicData.push(loadUserPublicData(uid));
+    }
+  });
+
+  return Promise.all(promiseUsersPublicData)
+    .then((allUsersPublicData) => {
+      const uidToPublicData = {};
+
+      allUsersPublicData.forEach((userPublicDataSnapshot) => {
+        if (userPublicDataSnapshot.exists()) {
+          uidToPublicData[userPublicDataSnapshot.key] = userPublicDataSnapshot.val();
+        }
+      });
+
+      return uidToPublicData;
+    });
+}
+
+
+export function listenToFollowers(handler) {
+  return listenToUserForRoute('followers', (followers) => {
+    console.log('Update to followers', followers);
+    convertUidsToPublicData(followers).then(handler);
+  });
+}
+
+export function listenToFollowing(handler) {
+  return listenToUserForRoute('following', (following) => {
+    console.log('Update to following', following);
+    convertUidsToPublicData(following).then(handler);
+  });
+}
+
 export function listenToBannedUsers() {
   listenToUserForRoute(
     'bannedUsers',
@@ -1142,13 +1284,6 @@ export function updateBulletin(bulletinId, updatedValue) {
     .child(getUser().uid)
     .child(bulletinId)
     .update(updatedValue);
-}
-
-function requireSignedIn() {
-  if (!getUser()) {
-    return Promise.reject('Must be signed in.');
-  }
-  return Promise.resolve();
 }
 
 export function enqueuePhoneNumber(phoneNumber) {
@@ -1235,15 +1370,33 @@ export function followPhoneNumbers(phoneNumbers) {
               if (phoneToUserSnapshot.exists()
                 && !hasWhiteSpace(phoneToUserSnapshot.val())
                 && phoneToUserSnapshot.val() !== getUser().uid) {
-                return followUser(phoneToUserSnapshot.val()).then(() => Promise.resolve(1));
+                return Promise.resolve(phoneToUserSnapshot.val());
               }
-              return Promise.resolve(0);
-            }));
+              return Promise.reject(undefined);
+            })
+            .then((contactUid) => followUser(contactUid).then(() => contactUid))
+            .then(loadUserPublicData)
+            .then((userPublicDataSnapshot) => {
+              if (userPublicDataSnapshot.exists()) {
+                return Promise.resolve({
+                  uid: userPublicDataSnapshot.key,
+                  publicData: userPublicDataSnapshot.val(),
+                });
+              }
+              return Promise.reject(undefined);
+            })
+            .catch((error) => {
+              if (error) {
+                console.log('ERROR while following phone numbers', error);
+              }
+              return Promise.resolve(undefined);
+            })
+        );
       });
 
       return Promise.all(followPhonesPromises);
     })
-    .then((results) => results.reduce((a, b) => a + b, 0));
+    .then((results) => results.filter(n => n));
 }
 
 export function createShouldAddPhoneBulletin() {
@@ -1262,17 +1415,12 @@ export function createShouldAddPhoneBulletin() {
 }
 
 export function flagListingAsInappropriate(listingId, listingUrl) {
-  let reporterId = 'user-not-signed-in';
-  if (getUser()) {
-    reporterId = getUser().uid;
-  }
-
   return firebaseApp
       .database()
       .ref('events/tasks')
       .push()
       .set({
-        owner: reporterId,
+        owner: getUserIdSafe(),
         type: 'inappropriate-content',
         timestamp: new Date().getTime(),
         payload: {

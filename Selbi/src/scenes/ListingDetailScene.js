@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { InteractionManager, Image, View, Text, TouchableHighlight } from 'react-native';
+import { InteractionManager, Platform, View, Text, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Share from 'react-native-share';
 
@@ -12,12 +12,14 @@ import { getUser, loadImage, loadLocationForListing, loadUserPublicData, listenT
 import { setFromExistingListing, clearNewListing } from '../reducers/NewListingReducer';
 import { setListingDistance, setListingDetailsSellerData, setListingData }
   from '../reducers/ListingDetailReducer';
+import { setSellerProfileInfo } from '../reducers/SellerProfileReducer';
 import { storeImage } from '../reducers/ImagesReducer';
 
 import styles, { paddingSize } from '../../styles';
 import colors from '../../colors';
 import RoutableScene from '../nav/RoutableScene';
 
+import ProgressiveImage from '../components/ProgressiveImage';
 import LoadingListingComponent from '../components/LoadingListingComponent';
 import TopLeftBackButton from '../components/TopLeftBackButton';
 import DetailMenuButton from '../components/DetailMenuButton';
@@ -53,7 +55,7 @@ function DescriptionText({ description, showFullDescription }) {
 
   if (showFullDescription && description) {
     return (
-      <Text style={{ flex: 1, fontSize: descriptionFontSize }}>
+      <Text style={{ flex: 1, fontSize: descriptionFontSize, color: colors.black }}>
         {description}
       </Text>
     );
@@ -65,6 +67,7 @@ function DescriptionText({ description, showFullDescription }) {
       style={{
         flex: 1,
         fontSize: descriptionFontSize,
+        color: colors.black,
       }}
     >
       {description}
@@ -118,24 +121,54 @@ class DetailBottomButtons extends Component {
 
     const SellerName = () => {
       if (this.props.sellerData) {
+        if (this.props.openSellerProfile) {
+          return (
+            <VisibilityWrapper isVisible={!!this.props.sellerData}>
+              <View style={{ flexDirection: 'row' }}>
+                <TouchableHighlight
+                  underlayColor={colors.primary}
+                  onPress={() => {
+                    this.props.setSellerProfileInfo(
+                      this.props.listingData.sellerId,
+                      this.props.sellerData);
+                    this.props.openSellerProfile();
+                  }}
+                >
+                  <Text style={{ color: colors.black, textDecorationLine: 'underline' }}>
+                    {this.props.sellerData.displayName}
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            </VisibilityWrapper>
+          );
+        }
         return (
-          <VisibilityWrapper isVisible={this.state.showDescription && !!this.props.sellerData}>
-            <Text>{this.props.sellerData.displayName}</Text>
-          </VisibilityWrapper>
+          <Text style={{ color: colors.black }}>
+            {this.props.sellerData.displayName}
+          </Text>
         );
       }
       return <View />;
     };
 
     const Title = () => (
-      <Text style={{ fontSize: 30, fontWeight: '300' }}>{this.props.listingData.title}</Text>
+      <Text
+        style={{
+          color: colors.black,
+          fontSize: 30,
+          fontWeight: '300',
+          fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
+        }}
+      >
+        {this.props.listingData.title}
+      </Text>
     );
 
     const ListingDistance = ({ distanceString }) => {
       if (this.props.listingDistance) {
         const distanceFontSize = 16;
         return (
-          <Text style={{ fontSize: distanceFontSize }}>
+          <Text style={{ fontSize: distanceFontSize, color: colors.black }}>
             <Icon name="map-marker" size={distanceFontSize} /> {`${distanceString} mi.`}
           </Text>
         );
@@ -175,12 +208,12 @@ class DetailBottomButtons extends Component {
               </View>
               <View style={styles.quarterPadded} />
               <VisibilityWrapper isVisible={isSold}>
-                <Text style={{ flex: 1, fontSize: 20 }}>
+                <Text style={{ flex: 1, fontSize: 20, color: colors.black }}>
                   SOLD - ${this.props.listingData.price}
                 </Text>
               </VisibilityWrapper>
               <VisibilityWrapper isVisible={isDeleted}>
-                <Text style={{ flex: 1, fontSize: 20 }}>
+                <Text style={{ flex: 1, fontSize: 20, color: colors.black }}>
                   This listing has been deleted.
                 </Text>
               </VisibilityWrapper>
@@ -214,6 +247,8 @@ DetailBottomButtons.propTypes = {
   openChat: React.PropTypes.func.isRequired,
   openEdit: React.PropTypes.func.isRequired,
   openBuy: React.PropTypes.func.isRequired,
+  openSellerProfile: React.PropTypes.func,
+  setSellerProfileInfo: React.PropTypes.func.isRequired,
 };
 
 class ListingDetailScene extends RoutableScene {
@@ -262,12 +297,19 @@ class ListingDetailScene extends RoutableScene {
   onGoNext(routeName) {
     if (routeName === 'edit') {
       this.props.clearListingDataForEditing();
-      this.props.setListingDataForEditing(
-        this.props.imageKey,
-        this.props.imageData,
-        this.props.listingKey,
-        this.props.listingData
-      );
+      if (this.props.imageUri) {
+        this.props.setListingDataForEditing(
+          this.props.imageUri,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      } else {
+        this.props.setListingDataForEditing(
+          `data:image/png;base64,${this.props.imageData.base64}`,
+          this.props.listingKey,
+          this.props.listingData
+        );
+      }
     }
   }
 
@@ -319,8 +361,8 @@ class ListingDetailScene extends RoutableScene {
       this.loadAndStoreSellerData();
     }
 
-    if (this.state.renderPlaceholderOnly || !this.props.imageData) {
-      if (!this.props.imageData && this.props.imageKey) {
+    if (this.state.renderPlaceholderOnly || (!this.props.imageUri && !this.props.imageData)) {
+      if (!this.props.imageUri && !this.props.imageData && this.props.imageKey) {
         loadImage(this.props.imageKey)
           .then((imageSnapshot) =>
             this.props.storeImageData(imageSnapshot.key, imageSnapshot.val()))
@@ -334,6 +376,18 @@ class ListingDetailScene extends RoutableScene {
     const listingData = this.props.listingData;
     const isSeller = !!getUser() && listingData.sellerId === getUser().uid;
 
+    const imageUri = this.props.imageUri ? this.props.imageUri :
+      `data:image/png;base64,${imageData.base64}`;
+
+    const thumbnailUri = this.props.imageThumbnailUrl ? this.props.imageThumbnailUrl :
+      `data:image/png;base64,${imageData.base64}`;
+
+    const openSellerProfile = this.props.routeLinks.sellerProfile ?
+      () => {
+        reportButtonPress('ld_open_seller');
+        this.goNext('sellerProfile');
+      } : undefined;
+
     return (
       <TouchableHighlight
         underlayColor={colors.transparent}
@@ -341,43 +395,47 @@ class ListingDetailScene extends RoutableScene {
         style={{ flex: 1, backgroundColor: colors.dark }}
         onPress={this.toggleShowExtraDetails}
       >
-        <Image
-          key={this.props.imageKey}
-          source={{ uri: `data:image/png;base64,${imageData.base64}` }}
-          style={{ flex: 1, backgroundColor: colors.dark }}
-        >
-          <TopLeftBackButton onPress={this.goBack} />
-          <DetailMenuButton listingId={this.props.listingKey} />
-          <VisibilityWrapper
-            isVisible={this.state.showExtraDetails}
-            style={{
-              flex: 1,
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
+        <View style={{ flex: 1 }}>
+          <ProgressiveImage
+            thumbnailSource={{ uri: thumbnailUri }}
+            imageSource={{ uri: imageUri }}
+            style={{ flex: 1, backgroundColor: colors.dark }}
           >
-            <DetailBottomButtons
-              isSeller={isSeller}
-              listingKey={this.props.listingKey}
-              listingData={listingData}
-              listingDistance={this.props.listingDistance}
-              sellerData={this.props.sellerData}
-              isChatButtonVisible={!!this.props.routeLinks.chat}
-              openChat={() => {
-                reportButtonPress('listing_details_chat');
-                this.goNext('chat');
+            <TopLeftBackButton onPress={this.goBack} />
+            <DetailMenuButton listingId={this.props.listingKey} />
+            <VisibilityWrapper
+              isVisible={this.state.showExtraDetails}
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
               }}
-              openEdit={() => {
-                reportButtonPress('listing_details_edit');
-                this.goNext('edit');
-              }}
-              openBuy={() => {
-                reportButtonPress('listing_details_buy');
-                this.goNext('buy');
-              }}
-            />
-          </VisibilityWrapper>
-        </Image>
+            >
+              <DetailBottomButtons
+                isSeller={isSeller}
+                listingKey={this.props.listingKey}
+                listingData={listingData}
+                listingDistance={this.props.listingDistance}
+                sellerData={this.props.sellerData}
+                isChatButtonVisible={!!this.props.routeLinks.chat}
+                openChat={() => {
+                  reportButtonPress('ld_chat');
+                  this.goNext('chat');
+                }}
+                openEdit={() => {
+                  reportButtonPress('ld_edit');
+                  this.goNext('edit');
+                }}
+                openBuy={() => {
+                  reportButtonPress('ld_buy');
+                  this.goNext('buy');
+                }}
+                openSellerProfile={openSellerProfile}
+                setSellerProfileInfo={this.props.setSellerProfileInfo}
+              />
+            </VisibilityWrapper>
+          </ProgressiveImage>
+        </View>
       </TouchableHighlight>
     );
   }
@@ -396,8 +454,15 @@ const mapStateToProps = (state) => {
 
   if (state.listingDetails.listingData) {
     const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-    props.imageKey = imageStoreKey;
-    props.imageData = state.images[imageStoreKey];
+    const imageUri = state.listingDetails.listingData.images.image1.url;
+
+    if (imageUri) {
+      props.imageUri = imageUri;
+      props.imageThumbnailUrl = state.listingDetails.listingData.images.image1.thumbnailUrl;
+    } else {
+      props.imageKey = imageStoreKey;
+      props.imageData = state.images[imageStoreKey];
+    }
   }
 
   return props;
@@ -406,12 +471,14 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     storeImageData: (imageKey, imageData) => dispatch(storeImage(imageKey, imageData)),
-    setListingDataForEditing: (imageKey, imageData, listingKey, listingData) =>
-      dispatch(setFromExistingListing(imageKey, imageData, listingKey, listingData)),
+    setListingDataForEditing: (imageUri, listingKey, listingData) =>
+      dispatch(setFromExistingListing(imageUri, listingKey, listingData)),
     clearListingDataForEditing: () => dispatch(clearNewListing()),
     setListingDistanceForDetails: (distance) => dispatch(setListingDistance(distance)),
     setSellerData: (sellerData) => dispatch(setListingDetailsSellerData(sellerData)),
     setListingDetailsData: (listingData) => dispatch(setListingData(listingData)),
+    setSellerProfileInfo: (sellerId, sellerData) =>
+      dispatch(setSellerProfileInfo(sellerId, sellerData)),
   };
 };
 
