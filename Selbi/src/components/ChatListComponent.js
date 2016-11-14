@@ -57,7 +57,7 @@ export default class ChatListComponent extends Component {
             otherPersonDisplayName={data.otherPersonPublicData.displayName}
             chatType={data.type}
             openChatScene={() => {
-              reportButtonPress(`chat_list_open_chat_${data.type}`);
+              reportButtonPress(`open_chat_${data.type}`);
               this.props.openChatScene(data);
             }}
           />)}

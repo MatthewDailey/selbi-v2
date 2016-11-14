@@ -71,11 +71,11 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <NewFollowerBulletin
                     gotIt={() => {
-                      reportButtonPress('bulletin_follow_got_it');
+                      reportButtonPress('b_follow_got_it');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     onPress={() => {
-                      reportButtonPress('bulletin_follow_back');
+                      reportButtonPress('b_follow_back');
                       this.props.setSellerProfileInfo(
                         bulletin.payload.newFollowerUid,
                         bulletin.payload.newFollowerPublicData);
@@ -92,12 +92,12 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <FriendPostedNewListingBulletin
                     openDetails={() => {
-                      reportButtonPress('bulletin_friends_new_listing_details');
+                      reportButtonPress('b_view_new_listing');
                       this.props.goNext('details');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     gotIt={() => {
-                      reportButtonPress('bulletin_ack_new_listing');
+                      reportButtonPress('b_ack_new_listing');
                       updateBulletin(bulletinKey, { status: 'read' });
                     }}
                     bulletin={bulletin}
@@ -110,7 +110,7 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddBankAccountBulletin
                     addBankAccount={() => {
-                      reportButtonPress('bulletin_add_bank');
+                      reportButtonPress('b_add_bank');
                       this.props.goNext('addBank');
                     }}
                   />
@@ -122,7 +122,7 @@ class SignedInBulletinBoard extends Component {
                 <View key={bulletinKey} style={{ paddingTop: 4, paddingBottom: 4 }}>
                   <AddPhoneBulleting
                     takeAction={() => {
-                      reportButtonPress('bulletin_add_phone');
+                      reportButtonPress('b_add_phone');
                       this.props.goNext('addPhone');
                     }}
                   />
@@ -135,7 +135,7 @@ class SignedInBulletinBoard extends Component {
                   <NewMessagesBulletin
                     bulletin={bulletin}
                     takeAction={() => {
-                      reportButtonPress('bulletin_new_message');
+                      reportButtonPress('b_new_message');
                       this.startTakingAction('Opening chat...',
                         () => loadListingData(bulletin.payload.chat.listingId)
                           .then((listingSnapshot) => {
@@ -161,7 +161,7 @@ class SignedInBulletinBoard extends Component {
                   <PurchaseBulletin
                     bulletin={bulletin}
                     gotIt={() => {
-                      reportButtonPress('bulletin_acknowledge_purchase');
+                      reportButtonPress('b_ack_purchase');
                       updateBulletin(bulletinKey, { status: 'read' })
                     }}
                   />
@@ -218,7 +218,7 @@ const SignedOutBulletinBoard = function SellerInfoOverlay({ goNext }) {
       >
         <FlatButton
           onPress={() => {
-            reportButtonPress('bulletin_sign_in');
+            reportButtonPress('b_sign_in');
             goNext('signIn');
           }}
         >

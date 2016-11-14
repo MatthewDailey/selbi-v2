@@ -39,7 +39,7 @@ function EmptyView({ openSell }) {
       <View style={styles.halfPadded} />
       <EmptySellButton
         onPress={() => {
-          reportButtonPress('local_listing_open_details');
+          reportButtonPress('ll_open_details');
           openSell();
         }}
       >
@@ -71,7 +71,7 @@ class ListingsScene extends RoutableScene {
         emptyMessage="Be the first to post a listing in your area!"
         emptyView={() => <EmptyView openSell={this.goNext} />}
         openDetailScene={() => {
-          reportButtonPress('local_listing_open_details');
+          reportButtonPress('ll_open_details');
           this.goNext('details');
         }}
       />

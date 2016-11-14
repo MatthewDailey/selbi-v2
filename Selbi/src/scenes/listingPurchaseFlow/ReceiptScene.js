@@ -133,7 +133,7 @@ class ListingReceiptScene extends RoutableScene {
                 checked={this.props.sellerData.hasBankAccount}
                 title="Seller accepts payment"
                 takeAction={() => {
-                  reportButtonPress('request_seller_accept_payment');
+                  reportButtonPress('request_seller_payment');
                   this.goNext('chat');
                 }}
                 actionText="Ask seller to accept payments"

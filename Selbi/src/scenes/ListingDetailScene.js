@@ -384,7 +384,7 @@ class ListingDetailScene extends RoutableScene {
 
     const openSellerProfile = this.props.routeLinks.sellerProfile ?
       () => {
-        reportButtonPress('listing_details_open_seller');
+        reportButtonPress('ld_open_seller');
         this.goNext('sellerProfile');
       } : undefined;
 
@@ -419,15 +419,15 @@ class ListingDetailScene extends RoutableScene {
                 sellerData={this.props.sellerData}
                 isChatButtonVisible={!!this.props.routeLinks.chat}
                 openChat={() => {
-                  reportButtonPress('listing_details_chat');
+                  reportButtonPress('ld_chat');
                   this.goNext('chat');
                 }}
                 openEdit={() => {
-                  reportButtonPress('listing_details_edit');
+                  reportButtonPress('ld_edit');
                   this.goNext('edit');
                 }}
                 openBuy={() => {
-                  reportButtonPress('listing_details_buy');
+                  reportButtonPress('ld_buy');
                   this.goNext('buy');
                 }}
                 openSellerProfile={openSellerProfile}
