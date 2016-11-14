@@ -11,6 +11,7 @@ import OpenSettingsComponent from '../../nav/OpenSettingsComponent';
 
 import ListingsListComponent from '../../components/ListingsListComponent';
 import BulletinBoard from '../../bulletin/BulletinBoard';
+import FlatButton from '../../components/buttons/FlatButton';
 
 import { addLocalListing, removeLocalListing, clearLocalListings }
   from '../../reducers/LocalListingsReducer';
@@ -18,33 +19,20 @@ import { clearNewListing } from '../../reducers/NewListingReducer';
 
 import { reportButtonPress } from '../../SelbiAnalytics';
 
-
-
 function EmptyView({ openSell }) {
-  const EmptySellButton = MKButton.flatButton()
-    .withStyle({
-      borderRadius: 5,
-      borderWidth: 1,
-    })
-    .withOnPress(() => {
-      this.props.refresh();
-    })
-    .build();
-
   return (
     <View>
-
       <Text style={styles.friendlyText}>No listings near you.</Text>
       <Text>Be the first to sell in your area!</Text>
       <View style={styles.halfPadded} />
-      <EmptySellButton
+      <FlatButton
         onPress={() => {
-          reportButtonPress('local_listing_open_details');
+          reportButtonPress('ll_open_details');
           openSell();
         }}
       >
         <Text>Sell something</Text>
-      </EmptySellButton>
+      </FlatButton>
       <View style={styles.padded} />
     </View>
   );
@@ -61,7 +49,13 @@ class ListingsScene extends RoutableScene {
 
   renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
-      return <OpenSettingsComponent missingPermission="location" />;
+      return (
+        <OpenSettingsComponent
+          missingPermissionDisplayString="location"
+          missingPermission={['location']}
+          onPermissionGranted={this.props.fetchLocalListings}
+        />
+      );
     }
     return (
       <ListingsListComponent
@@ -71,7 +65,7 @@ class ListingsScene extends RoutableScene {
         emptyMessage="Be the first to post a listing in your area!"
         emptyView={() => <EmptyView openSell={this.goNext} />}
         openDetailScene={() => {
-          reportButtonPress('local_listing_open_details');
+          reportButtonPress('ll_open_details');
           this.goNext('details');
         }}
       />
@@ -82,7 +76,7 @@ class ListingsScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     listings: state.localListings,
-    locationPermissionDenied: state.permissions.location === 'denied',
+    locationPermissionDenied: state.permissions.location !== 'authorized',
   };
 };
 

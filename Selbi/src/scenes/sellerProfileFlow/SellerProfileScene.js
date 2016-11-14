@@ -65,7 +65,7 @@ class SellerProfileScene extends RoutableScene {
             listings={this.props.privateListings}
             emptyMessage={`${this.props.sellerData.displayName} has no private listings.`}
             openDetailScene={() => {
-              reportButtonPress('seller-profile_private_open_detail');
+              reportButtonPress('sp_private_open_detail');
               this.goNext('details');
             }}
           />
@@ -103,7 +103,7 @@ class SellerProfileScene extends RoutableScene {
     };
 
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={[styles.padded, { flexDirection: 'row', justifyContent: 'space-between' }]}>
           <Text style={styles.friendlyTextLeft}>{this.props.sellerData.displayName}</Text>
           <View style={styles.halfPadded} />
@@ -121,7 +121,7 @@ class SellerProfileScene extends RoutableScene {
               listings={this.props.publicListings}
               emptyMessage={`${this.props.sellerData.displayName} has no public listings.`}
               openDetailScene={() => {
-                reportButtonPress('seller-profile_public_open_detail');
+                reportButtonPress('sp_public_open_detail');
                 this.goNext('details');
               }}
             />

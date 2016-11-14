@@ -36,7 +36,7 @@ class ListingsScene extends RoutableScene {
         listings={this.props.listings}
         refresh={this.fetchListings}
         openDetailScene={() => {
-          reportButtonPress('friends_listings_open_detail');
+          reportButtonPress('fl_open_detail');
           this.goNext('details');
         }}
       />

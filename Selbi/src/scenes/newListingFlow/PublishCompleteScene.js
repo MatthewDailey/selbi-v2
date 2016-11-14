@@ -33,7 +33,7 @@ class PublishCompleteScene extends RoutableScene {
         <View style={styles.halfPadded}>
           <FlatButton
             onPress={() => {
-              reportButtonPress('publish_complete_share');
+              reportButtonPress('pc_share');
               reportShare(this.props.listingKey);
               Share.open({ url: getListingShareUrl(this.props.listingKey) })
                 .catch(console.log);
@@ -47,7 +47,7 @@ class PublishCompleteScene extends RoutableScene {
         <View style={styles.halfPadded}>
           <FlatButton
             onPress={() => {
-              reportButtonPress('publish_complete_add_details');
+              reportButtonPress('pc_add_details');
               this.goNext();
             }}
           >
@@ -62,7 +62,7 @@ class PublishCompleteScene extends RoutableScene {
             <View style={styles.halfPadded}>
               <FlatButton
                 onPress={() => {
-                  reportButtonPress('publish_complete_add_bank');
+                  reportButtonPress('pc_add_bank');
                   this.goNext('addBank');
                 }}
               >
