@@ -31,7 +31,6 @@ function EmptyView({ openSell }) {
 
   return (
     <View>
-
       <Text style={styles.friendlyText}>No listings near you.</Text>
       <Text>Be the first to sell in your area!</Text>
       <View style={styles.halfPadded} />
@@ -59,7 +58,13 @@ class ListingsScene extends RoutableScene {
 
   renderWithNavBar() {
     if (this.props.locationPermissionDenied) {
-      return <OpenSettingsComponent missingPermission="location" />;
+      return (
+        <OpenSettingsComponent
+          missingPermissionDisplayString="location"
+          missingPermission={['location']}
+          onPermissionGranted={this.props.fetchLocalListings}
+        />
+      );
     }
     return (
       <ListingsListComponent
@@ -80,7 +85,7 @@ class ListingsScene extends RoutableScene {
 const mapStateToProps = (state) => {
   return {
     listings: state.localListings,
-    locationPermissionDenied: state.permissions.location === 'denied',
+    locationPermissionDenied: state.permissions.location !== 'authorized',
   };
 };
 

@@ -19,7 +19,15 @@ class OpenSettingsComponent extends TimerComponent {
   componentDidMount() {
     this.setInterval(() => {
       Permissions.checkMultiplePermissions(['camera', 'photo', 'location'])
-        .then(this.props.storePermissions);
+        .then((permissionStatus) => {
+          this.props.storePermissions(permissionStatus);
+          if (this.props.missingPermission
+              && this.props.missingPermission
+              .map((permission) => permissionStatus[permission] === 'authorized')
+              .reduce((a, b) => a || b, false)) {
+            this.props.onPermissionGranted(permissionStatus);
+          }
+        });
     }, 500);
   }
 
@@ -27,7 +35,7 @@ class OpenSettingsComponent extends TimerComponent {
     return (
       <View style={styles.paddedContainer}>
         <Text style={styles.friendlyTextLeft}>
-          Selbi requires {this.props.missingPermission} permission.
+          Selbi requires {this.props.missingPermissionDisplayString} permission.
         </Text>
         <View style={styles.padded} />
         <FlatButton onPress={Permissions.openSettings}>
@@ -39,8 +47,10 @@ class OpenSettingsComponent extends TimerComponent {
 }
 
 OpenSettingsComponent.propTypes = {
-  missingPermission: React.PropTypes.string.isRequired,
+  missingPermissionDisplayString: React.PropTypes.string.isRequired,
+  missingPermission: React.PropTypes.array,
   storePermissions: React.PropTypes.func.isRequired,
+  onPermissionGranted: React.PropTypes.func,
 };
 
 function mapDispatchToProps(dispatch) {

@@ -77,7 +77,11 @@ class CameraScene extends RoutableScene {
         .then(this.props.setCameraPermission);
       Permissions.requestPermission('photo')
         .then(this.props.setPhotoPermission);
-      return <OpenSettingsComponent missingPermission="camera and photo" />;
+      return (
+        <OpenSettingsComponent
+          missingPermissionDisplayString="camera and photo"
+        />
+      );
     }
 
     if (this.state.renderPlaceholderOnly) {
