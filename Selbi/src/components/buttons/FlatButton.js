@@ -1,6 +1,6 @@
 import React from 'react';
-import { View } from 'react-native';
-import { MKRipple } from 'react-native-material-kit';
+import { View, Platform } from 'react-native';
+import { MKRipple, MKButton } from 'react-native-material-kit';
 
 import colors from '../../../colors';
 import styles from '../../../styles';
@@ -14,6 +14,50 @@ export default function Button({
   underlayColor = colors.primary,
   backgroundColor = colors.white,
 }) {
+
+  if (Platform.OS === 'android') {
+    const androidButton = MKButton.flatButton()
+      .withStyle({
+        borderRadius: 5,
+        borderWidth,
+        backgroundColor,
+        overflow: 'hidden',
+      })
+      .withOnPress(onPress);
+    return (
+      <MKButton
+        rippleColor={`${underlayColor}64`}
+        maskBorderRadius={5}
+        onTouch={(event) => {
+          if (event.type === 'TOUCH_UP') {
+            onPress();
+          }
+        }}
+        style={
+          [
+            styles.halfPadded,
+            {
+              borderRadius: 5,
+              borderWidth,
+              backgroundColor,
+              overflow: 'hidden',
+            },
+          ]
+        }
+      >
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            borderRadius: 5,
+          }}
+        >
+          {children}
+        </View>
+      </MKButton>
+    );
+  }
+
   return (
     <MKRipple
       rippleColor={`${underlayColor}64`}
