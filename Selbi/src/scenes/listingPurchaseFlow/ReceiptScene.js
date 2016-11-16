@@ -107,18 +107,16 @@ class ListingReceiptScene extends RoutableScene {
       imageUri = `data:image/png;base64,${this.props.imageData.base64}`;
     }
 
-    // TODO ScrollView Could be in a better place.
     return (
-      <View style={styles.container}>
         <ScrollView>
           <Image
             source={{ uri: imageUri }}
-            style={{ flex: 1, backgroundColor: colors.dark }}
+            style={{ height: 150, backgroundColor: colors.dark }}
           />
           <View style={{ flex: 1, padding: 16 }}>
             <View style={styles.halfPadded}>
               <Text style={styles.friendlyTextLeftLarge}>{this.props.listingData.title}</Text>
-              <Text>{this.props.sellerData.displayName}</Text>
+              <Text style={{ color: colors.black }}>{this.props.sellerData.displayName}</Text>
             </View>
             <View style={styles.halfPadded}>
               <Text style={styles.friendlyTextLeftMed}>
@@ -181,15 +179,14 @@ class ListingReceiptScene extends RoutableScene {
                     [{ text: 'Pay', onPress: doPayment }, { text: 'Cancel', style: 'cancel' }]);
                 }}
               >
-                <Text>Submit Payment</Text>
+                <Text style={styles.buttonText}>Submit Payment</Text>
               </Button>
             </VisibilityWrapper>
 
             <View style={styles.padded} />
           </View>
+          <SpinnerOverlay isVisible={this.state.purchasing} message="Completing payment..." />
         </ScrollView>
-        <SpinnerOverlay isVisible={this.state.purchasing} message="Completing payment..." />
-      </View>
     );
   }
 }
@@ -197,7 +194,7 @@ class ListingReceiptScene extends RoutableScene {
 
 const mapStateToProps = (state) => {
   const imageStoreKey = state.listingDetails.listingData.images.image1.imageId;
-  const imageUrl = state.listingDetails.listingData.images.image1.url;
+  const imageUrl = state.listingDetails.listingData.images.image1.thumbnailUrl;
   return {
     listingKey: state.listingDetails.listingKey,
     listingData: state.listingDetails.listingData,
