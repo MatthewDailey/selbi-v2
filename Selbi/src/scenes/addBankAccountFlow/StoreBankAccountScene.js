@@ -178,6 +178,7 @@ class ChooseVisibilityScene extends RoutableScene {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state.addBank.dob);
   return {
     bankAccount: state.addBank,
     dob: {

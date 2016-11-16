@@ -122,6 +122,14 @@ export default StyleSheet.create({
     textAlign: 'center',
     padding: paddingSize / 2,
   },
+  friendlyTextLarge: {
+    color: colors.black,
+    fontSize: 30,
+    fontWeight: '300',
+    fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
+    textAlign: 'center',
+    padding: paddingSize / 2,
+  },
   labelTextLeft: {
     fontSize: 15,
     fontWeight: '500',
@@ -143,6 +151,9 @@ export default StyleSheet.create({
     fontSize: 25,
     fontWeight: '300',
     fontFamily: Platform.OS === 'android' ? 'sans-serif-light' : undefined,
+  },
+  buttonText: {
+    color: colors.black,
   },
   buttonTextStyle: {
     color: colors.black,

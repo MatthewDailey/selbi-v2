@@ -1,12 +1,56 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, Text, DatePickerIOS } from 'react-native';
+import { Platform, View, Text, DatePickerIOS, DatePickerAndroid } from 'react-native';
 
-
-import styles from '../../../styles';
 import RoutableScene from '../../nav/RoutableScene';
 
+import FlatButton from '../../components/buttons/FlatButton';
+
+import styles from '../../../styles';
+
 import { setDob } from '../../reducers/AddBankAccountReducer';
+
+function DatePicker({ date, recordDob }) {
+  const dob = {
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+  };
+
+  if (Platform.OS === 'android') {
+    return (
+      <View>
+        <Text style={styles.friendlyTextLarge}>{`${dob.month}/${dob.day}/${dob.year}`}</Text>
+        <FlatButton
+          onPress={() => {
+            DatePickerAndroid.open({ date })
+              .then(({ action, year, month, day }) => {
+                if (action !== DatePickerAndroid.dismissedAction) {
+                  recordDob(new Date(year, month, day));
+                }
+              });
+          }}
+        >
+          <Text style={styles.buttonText}>Set Date of Birth</Text>
+        </FlatButton>
+      </View>
+    );
+  }
+  return (
+    <DatePickerIOS
+      date={date}
+      mode="date"
+      onDateChange={(newDate) => {
+        console.log('Dob: ', newDate);
+        recordDob(newDate);
+      }}
+    />
+  );
+}
+DatePicker.propTypes = {
+  date: React.PropTypes.object.isRequired,
+  recordDob: React.PropTypes.func.isRequired,
+};
 
 class DateOfBirthPicker extends RoutableScene {
   renderWithNavBar() {
@@ -19,11 +63,7 @@ class DateOfBirthPicker extends RoutableScene {
             </Text>
           </View>
           <View style={styles.padded}>
-            <DatePickerIOS
-              date={this.props.date}
-              mode="date"
-              onDateChange={this.props.recordDob}
-            />
+            <DatePicker {...this.props} />
           </View>
         </View>
       </View>
