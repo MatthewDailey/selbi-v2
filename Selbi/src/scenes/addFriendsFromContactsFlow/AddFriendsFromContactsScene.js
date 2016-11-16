@@ -97,9 +97,12 @@ class AddFriendsFromContactsScene extends RoutableScene {
       });
     };
 
-    const error = (error) => this.setState({
-      view: <FailureComponent />,
-    });
+    const error = (error) => {
+      console.error(error);
+      this.setState({
+        view: <FailureComponent />,
+      });
+    };
 
     this.setState({
       view: <SpinnerOverlay message="Adding friends from contacts..." />,
