@@ -5,6 +5,10 @@ npm install babel-core --save
 npm install babel-cli --save
 npm install babel-preset-es2015 --save
 
+# Flow dependencies
+npm install flow-bin --save
+npm install babel-plugin-transform-flow-strip-types --save
+
 npm install eslint --save-dev
 npm install eslint-config-airbnb --save-dev
 npm install eslint-plugin-import --save-dev
